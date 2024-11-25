@@ -2,8 +2,13 @@ import courses from "../search.json";
 
 type CourseKey = keyof typeof courses;
 
-export default function Page({ params }: { params: { course: string } }) {
-  const course = courses[params.course as CourseKey];
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ course: CourseKey }>;
+}) {
+  const courseKey = (await params).course;
+  const course = courses[courseKey];
   if (!course) {
     return <h1>Course not found</h1>;
   }
