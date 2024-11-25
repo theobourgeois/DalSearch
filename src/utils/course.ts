@@ -49,4 +49,6 @@ export type Course = {
 
 export type CourseByCode = Record<CourseAndSubjectCode, Course>;
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - This is a JSON file
 export const courses = searchData as CourseByCode;
