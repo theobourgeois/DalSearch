@@ -1,11 +1,9 @@
-import courses from "../search.json";
-
-type CourseKey = keyof typeof courses;
+import { CourseAndSubjectCode, courses } from "@/utils/course";
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ course: CourseKey }>;
+  params: Promise<{ course: CourseAndSubjectCode }>;
 }) {
   const courseKey = (await params).course;
   const course = courses[courseKey];
