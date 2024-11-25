@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
+import { Poppins } from "next/font/google";
+import Image from "next/image";
+import Link from "next/link";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const poppins = Poppins({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-poppins",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -26,8 +24,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.variable} antialiased`}
       >
+        <header className="flex justify-between items-center p-4 drop-shadow-md w-full bg-white">
+          <div className="flex items-center gap-2">
+            <Image src="/dal.svg" alt="Dalhousie University" width={50} height={50} />
+            <Link href="/">
+              <h1 className="text-4xl font-bold"><span className="text-yellow-400">Dal</span>Search</h1>
+            </Link>
+          </div>
+
+
+        </header>
         {children}
       </body>
     </html>

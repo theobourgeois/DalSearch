@@ -14,7 +14,7 @@ type TimeSlot = {
   end: Time; // Time in 24-hour format, e.g., "1125"
 };
 
-type ClassSession = {
+export type ClassSession = {
   term: TermCode; // Term code, e.g., "202520"
   classes: CourseAndSubjectCode[]; // List of class IDs (if any)
   section: string; // Section identifier, e.g., "T01"
