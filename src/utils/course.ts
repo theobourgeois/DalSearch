@@ -5,17 +5,16 @@ export type SubjectCode =
   `${CapitalLetter}${CapitalLetter}${CapitalLetter}${CapitalLetter}`;
 export type CourseCode = `${number}${number}${number}${number}`;
 export type CourseAndSubjectCode = `${SubjectCode}${CourseCode}`;
-type TermCode = `${number}${number}${number}${number}${number}${number}`;
-type Time = `${number}${number}${number}${number}`;
-type Day = "M" | "T" | "W" | "R" | "F" | "S" | "U";
+type Time = `${number}${number}${number}${number}` | "C/D";
+export type Day = typeof days[number];
 
-type TimeSlot = {
+export type TimeSlot = {
   start: Time; // Time in 24-hour format, e.g., "1005"
   end: Time; // Time in 24-hour format, e.g., "1125"
 };
 
 export type ClassSession = {
-  term: TermCode; // Term code, e.g., "202520"
+  term: Term; // Term code, e.g., "202520"
   classes: CourseAndSubjectCode[]; // List of class IDs (if any)
   section: string; // Section identifier, e.g., "T01"
   type: "Lec" | "Tut" | "Lab"; // Class type, e.g., Lecture or Tutorial
@@ -33,6 +32,7 @@ type InstructorsByTerm = {
   [term: string]: string[]; // Term code mapping to a list of instructor names
 };
 
+
 export type Course = {
   prerequisites: CourseAndSubjectCode[]; // List of prerequisite course codes
   equivalent: string | null; // Equivalent course, if any
@@ -48,7 +48,13 @@ export type Course = {
 };
 
 export type CourseByCode = Record<CourseAndSubjectCode, Course>;
+export type Term = keyof typeof terms;
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - This is a JSON file
 export const courses = searchData as CourseByCode;
+export const days = ["M", "T", "W", "R", "F", "S"] as const;
+export const terms = {
+  "202510": "2024/2025 Fall",
+  "202520": "2024/2025 Winter",
+}
