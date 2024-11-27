@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import type { Metadata } from "next";
 import React from "react";
 import { InstructorList } from "../_components/instructor-list";
-import { BackButton } from "../_components/back-button";
+import { headers } from "next/headers";
 
 type Props = {
   params: Promise<{ course: CourseAndSubjectCode }>;
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${course.subjectCode} ${course.courseCode} - ${course.title} - Dalhousie University`,
+    title: `${course.subjectCode} ${course.courseCode} - ${course.title}`,
     description: course.description,
   };
 }
@@ -35,6 +35,9 @@ export default async function CoursePage({
 }) {
   const courseKey = (await params).course;
   const course = courses[courseKey];
+  const headerList = await headers();
+  const referer = headerList.get("referer");
+  console.log(referer)
 
   if (!course) {
     return (
@@ -59,9 +62,8 @@ export default async function CoursePage({
   const uniqueInstructors = [...new Set(Object.values(course.instructorsByTerm).flat())];
 
   return (
-    <main className="container mx-auto px-4 pb-8 pt-4">
-      <BackButton />
-      <Card className="mb-8 mt-2">
+    <main className="container mx-auto px-4 py-8">
+      <Card className="mb-8">
         <CardHeader>
           <CardTitle className="text-3xl md:text-4xl font-bold text-gray-900">
             {course.subjectCode} {course.courseCode} - {course.title}
@@ -102,7 +104,7 @@ export default async function CoursePage({
         </CardContent>
       </Card>
 
-      <Card className="pb-8">
+      <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Course Schedule</CardTitle>
         </CardHeader>

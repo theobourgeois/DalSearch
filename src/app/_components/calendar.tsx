@@ -337,7 +337,7 @@ function ScheduleCourse({
     }
     const otherClassStartRow = findClosestTimeSlotRow(
       otherClass.time.start
-    );
+    ) + 1;
     const otherClassEndRow =
       findClosestTimeSlotRow(otherClass.time.end) + 1;
     if (otherClass.days.includes(day)) {
