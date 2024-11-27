@@ -1,4 +1,4 @@
-import { CourseAndSubjectCode, courses, terms } from "@/utils/course";
+import { CourseAndSubjectCode, courses, instructors, terms } from "@/utils/course";
 import Link from "next/link";
 import { Schedule } from "../_components/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 
 import type { Metadata } from "next";
 import React from "react";
+import { StarRating } from "../_components/start-rating";
 
 type Props = {
   params: Promise<{ course: CourseAndSubjectCode }>;
@@ -81,7 +82,7 @@ export default async function CoursePage({
                 <div className="flex flex-wrap gap-2">
                   {course.prerequisites.map((prereq) => (
                     <Link key={prereq} href={`/${prereq}`}>
-                      <Badge variant="outline" className="text-blue-600 hover:bg-blue-100 transition-colors">
+                      <Badge variant="outline" className="text-blue-600 hover:bg-blue-100 transition-colors p-2">
                         {prereq}
                       </Badge>
                     </Link>
@@ -94,10 +95,21 @@ export default async function CoursePage({
               <h2 className="text-xl font-semibold mb-2">
                 {uniqueInstructors.length > 1 ? 'Instructors' : 'Instructor'}
               </h2>
-              {Object.entries(course.instructorsByTerm).map(([term, instructors]) => (
+              {Object.entries(course.instructorsByTerm).map(([term, instructorList]) => (
                 <div key={term} className="mb-2">
                   <span className="font-medium">{terms[term]}: </span>
-                  {instructors.join(', ')}
+                  {instructorList.map((instructor) => {
+                    return (
+                      <Link key={instructor} href={`/instructors/${instructor}`}>
+                        <Badge variant="outline" className="p-2 text-blue-600 hover:bg-blue-100 transition-colors">
+                          {instructor}
+                          {Number(instructors[instructor.trim()]?.overallRating) > 0 && (
+                            <StarRating rating={Number(instructors[instructor.trim()].overallRating)} className="ml-2" />
+                          )}
+                        </Badge>
+                      </Link>
+                    )
+                  })}
                 </div>
               ))}
             </div>

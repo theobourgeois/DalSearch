@@ -255,7 +255,7 @@ export function Schedule({ course }: { course: Course }) {
         </div>
 
 
-        <div>
+        <div className="w-full">
           <div className="grid grid-cols-[repeat(6,minmax(0,1fr))] w-full relative">
             {days.map((day, index) => (
               <div
@@ -331,11 +331,8 @@ function ScheduleCourse({
 
   const dayIndex = days.indexOf(day);
   const dayName = getDay(day);
-  const isPerfectConflict = termClasses.some((otherClass, otherIndex) => {
-    if (index > otherIndex) {
-      return false;
-    }
-    if (termClass === otherClass) {
+  const conflictIndex = termClasses.findIndex((otherClass, otherIndex) => {
+    if (index === otherIndex) {
       return false;
     }
     const otherClassStartRow = findClosestTimeSlotRow(
@@ -349,20 +346,27 @@ function ScheduleCourse({
       return isSameTime;
     }
   });
+  const isConflict = conflictIndex > 0;
+  const isRight = isConflict && conflictIndex < index;
+
+  const translateX = isRight ? "100%" : "0";
+  const width = isConflict ? "50%" : "100%";
 
   return (
     <div
-      className={cn(`rounded-md font-medium text-white mx-[2px]`)}
+      className={cn(`rounded-md font-medium text-white p-[4px]`)}
       style={{
-        transform: isPerfectConflict ? "translate(8px, -8px)" : "",
-        backgroundColor: isPerfectConflict ? color : `${color}90`,
+        backgroundColor: `${color}90`,
         border: `1px solid ${color}`,
+        width,
+        transform: `translateX(${translateX})`,
         gridRow: `${startRow} / ${endRow}`,
-        gridColumn: `${dayIndex + 1} / ${dayIndex + 2}`,
+        gridColumn: `${dayIndex + 1} / ${(dayIndex + 2) / 2}`,
         height: CELL_HEIGHT * (endRow - startRow),
+        fontSize: isConflict ? "0.8vw" : "1vw",
       }}
     >
-      <div className="text-[1vw]">
+      <div>
         <p>{dayName}</p>
         <p>
           {formatTime(termClass.time.start)} -{" "}

@@ -1,4 +1,5 @@
 import searchData from "./search.json";
+import instructorsData from "./ratemyprofessor.json";
 
 type CapitalLetter = `${Uppercase<string>}`;
 export type SubjectCode =
@@ -49,12 +50,26 @@ export type Course = {
 
 export type CourseByCode = Record<CourseAndSubjectCode, Course>;
 export type Term = keyof typeof terms;
+export type Instructor = {
+  firstName: string;
+  lastName: string;
+  rateMyProfLink: string;
+  overallRating: `${number}` | null;
+  takeAgainRating: number;
+  difficultyRating: number;
+  numberOfRatings: number;
+}
+
+export type InstructorsByName = Record<string, Instructor>;
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - This is a JSON file
 export const courses = searchData as CourseByCode;
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - This is a JSON file
+export const instructors = instructorsData as InstructorsByName;
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
-export const terms = {
+export const terms: Record<string, string> = {
   "202510": "2024/2025 Fall",
   "202520": "2024/2025 Winter",
 }
