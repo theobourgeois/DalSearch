@@ -19,7 +19,7 @@ export function Search({
 }: {
     courses: CourseByCode;
     isOnHeader?: boolean;
-    numOfRecommendations: number;
+    numOfRecommendations?: number;
 }) {
     const pathname = usePathname();
     const [value, setValue] = React.useState("");
