@@ -3,6 +3,9 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
+import { Github } from "lucide-react";
+import { courses } from "@/utils/course";
+import { Search } from "./_components/combobox";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -12,7 +15,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-    title: "Dal Course Search Tool",
+    title: "DalSearch - Dalhousie University Course Search Tool",
     description:
         "Easily search and discover classes offered at Dalhousie University. Find course details, schedules, and more with our comprehensive search tool.",
     keywords: [
@@ -26,6 +29,86 @@ export const metadata: Metadata = {
         "academic",
         "calendar",
     ],
+
+    authors: [
+        { name: "Théo Bourgeois" },
+        { name: "Chris Langille" },
+        { name: "Dalhousie University" },
+    ],
+
+    generator: "Next.js",
+
+    applicationName: "Dalhousie University Course Search Tool",
+
+    referrer: "origin-when-cross-origin",
+
+    openGraph: {
+        type: "website",
+        locale: "en_CA",
+        url: "https://dalsearch.com",
+        title: "DalSearch - Dalhousie Univers`ity Course Search Tool",
+        description:
+            "Easily search and discover classes offered at Dalhousie University. Find course details, schedules, and more with our comprehensive search tool.",
+        siteName: "DalSearch",
+        images: [
+            {
+                url: "/og-image.png",
+                width: 1200,
+                height: 630,
+                alt: "DalSearch - Dalhousie University Course Search Tool",
+            },
+        ],
+    },
+
+    // Icons
+    icons: {
+        icon: "/favicon.ico",
+        shortcut: "/favicon-16x16.png",
+        apple: "/apple-touch-icon.png",
+        other: [
+            {
+                rel: "icon",
+                type: "image/png",
+                sizes: "32x32",
+                url: "/favicon-32x32.png",
+            },
+        ],
+    },
+
+    // Robots directives
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
+    },
+
+    // Verification for search console
+    verification: {
+        google: process.env.GOOGLE_VERIFICATION, // Add your Google verification code
+        //yandex: "yandex-verification",
+        //yahoo: "yahoo-verification",
+    },
+
+    // Alternate languages/versions if you have them
+    alternates: {
+        canonical: "https://dalsearch.com",
+        languages: {
+            "en-US": "https://dalsearch.com/en-US",
+            "fr-CA": "https://dalsearch.com/fr-CA",
+        },
+    },
+
+    // Additional metadata
+    category: "technology",
+
+    // For apps/PWA
+    manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -37,7 +120,7 @@ export default function RootLayout({
         <html lang="en">
             <body className={`${poppins.variable} antialiased`}>
                 <header className="flex justify-between items-center px-6 py-2 shadow-md w-full bg-white">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 w-full">
                         {/* Logo */}
                         <Image
                             src="/dal.svg"
@@ -57,6 +140,21 @@ export default function RootLayout({
                                 Search
                             </h1>
                         </Link>
+                        <div className="w-96">
+                            <Search
+                                numOfRecommendations={5}
+                                isOnHeader
+                                courses={courses}
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <Link
+                            title="View source code"
+                            href="https://github.com/theobourgeois/DalSearch"
+                        >
+                            <Github className="w-6 h-6 text-gray-800 hover:text-yellow-400" />
+                        </Link>
                     </div>
                 </header>
                 {children}
@@ -69,7 +167,7 @@ export default function RootLayout({
                             <ul className="space-y-2">
                                 <li>
                                     <Link
-                                        href="/about"
+                                        href="https://www.dal.ca/"
                                         className="hover:text-yellow-400 transition-colors"
                                     >
                                         About Dalhousie
@@ -77,63 +175,56 @@ export default function RootLayout({
                                 </li>
                                 <li>
                                     <Link
-                                        href="/contact"
+                                        href="https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable"
                                         className="hover:text-yellow-400 transition-colors"
                                     >
-                                        Contact Us
+                                        Dal Academic Timetable
                                     </Link>
                                 </li>
                                 <li>
                                     <Link
-                                        href="/faq"
+                                        href="https://github.com/theobourgeois/DalSearch"
                                         className="hover:text-yellow-400 transition-colors"
                                     >
-                                        FAQ
+                                        Source Code
                                     </Link>
                                 </li>
                             </ul>
                         </div>
                         <div>
                             <h3 className="text-xl font-semibold mb-4">
-                                Resources
+                                Created By
                             </h3>
                             <ul className="space-y-2">
                                 <li>
                                     <Link
-                                        href="/academic-calendar"
+                                        href="https://theobourgeois.com"
                                         className="hover:text-yellow-400 transition-colors"
                                     >
-                                        Academic Calendar
+                                        Théo Bourgeois
                                     </Link>
                                 </li>
                                 <li>
                                     <Link
-                                        href="/faculties"
+                                        href="https://chrislangille.github.io/portfolio"
                                         className="hover:text-yellow-400 transition-colors"
                                     >
-                                        Faculties
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        href="/student-services"
-                                        className="hover:text-yellow-400 transition-colors"
-                                    >
-                                        Student Services
+                                        Chris Langille
                                     </Link>
                                 </li>
                             </ul>
                         </div>
+
                         <div>
                             <h3 className="text-xl font-semibold mb-4">
-                                Connect With Us
+                                Connect With Dal
                             </h3>
                             <p className="mb-2">
                                 Stay updated with Dalhousie news and events.
                             </p>
                             <div className="flex space-x-4">
                                 <a
-                                    href="#"
+                                    href="https://www.facebook.com/DalhousieU/"
                                     aria-label="Facebook"
                                     className="text-white hover:text-yellow-400 transition-colors"
                                 >
@@ -151,7 +242,7 @@ export default function RootLayout({
                                     </svg>
                                 </a>
                                 <a
-                                    href="#"
+                                    href="https://twitter.com/DalhousieU?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
                                     aria-label="Twitter"
                                     className="text-white hover:text-yellow-400 transition-colors"
                                 >
@@ -165,7 +256,7 @@ export default function RootLayout({
                                     </svg>
                                 </a>
                                 <a
-                                    href="#"
+                                    href="https://www.instagram.com/dalhousieu/?hl=en"
                                     aria-label="Instagram"
                                     className="text-white hover:text-yellow-400 transition-colors"
                                 >
@@ -185,10 +276,11 @@ export default function RootLayout({
                             </div>
                         </div>
                     </div>
+
                     <div className="mt-8 text-center text-sm">
                         <p>
-                            &copy; {new Date().getFullYear()} Dalhousie
-                            University. All rights reserved.
+                            &copy; {new Date().getFullYear()}. DalSearch All
+                            rights reserved.
                         </p>
                     </div>
                 </footer>{" "}
