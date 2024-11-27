@@ -39,7 +39,9 @@ export function InstructorList({
                     if (!acc[trimmed]) {
                         acc[trimmed] = [];
                     }
-                    acc[trimmed].push(courseKey);
+                    if (!acc[trimmed].includes(courseKey)) {
+                        acc[trimmed].push(courseKey);
+                    }
                 }
             });
         return acc;
@@ -77,7 +79,7 @@ export function InstructorList({
                         <div className="flex items-center">
                             <BarChart className="mr-2 h-4 w-4" />
                             <span className="text-sm">
-                                Difficulty: {instructorData.difficultyRating}/5
+                                Difficulty: {instructorData.difficultyLevel}/5
                             </span>
                         </div>
                         <div className="flex items-center">
@@ -105,11 +107,10 @@ export function InstructorList({
                 </div>
             </div>
             {instructorData && (
-                <p className="text-xs text-muted-foreground mt-2">
-                    Rating information provided by{" "}
-                    <Link href="https://www.ratemyprofessors.com/">
-                        Rate My Professors
-                    </Link>
+                <p className="text-xs">
+                    These ratings are from Rate My Professor and may not reflect
+                    your future experience. Use your discretion to assess the
+                    reviews&apos; quality
                 </p>
             )}
         </div>

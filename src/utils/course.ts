@@ -56,7 +56,7 @@ export type Instructor = {
   rateMyProfLink: string;
   overallRating: `${number}` | null;
   takeAgainRating: number;
-  difficultyRating: number;
+  difficultyLevel: number;
   numberOfRatings: number;
 }
 
