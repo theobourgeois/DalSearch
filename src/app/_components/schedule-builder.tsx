@@ -228,7 +228,7 @@ export default function ScheduleBuilder({
                                             key={course.course}
                                             className="mt-2"
                                         >
-                                            <CardHeader className="flex flex-row justify-between items-center pb-2 pt-4">
+                                            <CardHeader className="flex flex-row justify-between items-start pb-2 pt-4">
                                                 <h3 className="text-xl font-semibold">
                                                     {course.course} -{" "}
                                                     {
