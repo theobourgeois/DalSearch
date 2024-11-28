@@ -60,7 +60,7 @@ export function InstructorList({
                     ? `${instructorData.firstName} ${instructorData.lastName}`
                     : instructor}
             </h4>
-            {instructorData && (
+            {instructorData && Number(instructorData.overallRating) > 0 && (
                 <>
                     <div className="flex flex-wrap gap-2">
                         <div className="flex items-center">
@@ -106,7 +106,7 @@ export function InstructorList({
                     ))}
                 </div>
             </div>
-            {instructorData && (
+            {instructorData && Number(instructorData.overallRating) > 0 && (
                 <p className="text-xs">
                     These ratings are from Rate My Professor and may not reflect
                     your future experience. Use your discretion to assess the
@@ -137,14 +137,18 @@ export function InstructorList({
                                                     {instructorData
                                                         ? `${instructorData.firstName} ${instructorData.lastName}`
                                                         : instructor}
-                                                    {instructorData?.overallRating && (
-                                                        <StarRating
-                                                            rating={Number(
-                                                                instructorData.overallRating
-                                                            )}
-                                                            className="ml-2"
-                                                        />
-                                                    )}
+                                                    {instructorData?.overallRating &&
+                                                        Number(
+                                                            instructorData?.overallRating ||
+                                                                ""
+                                                        ) > 0 && (
+                                                            <StarRating
+                                                                rating={Number(
+                                                                    instructorData.overallRating
+                                                                )}
+                                                                className="ml-2"
+                                                            />
+                                                        )}
                                                 </Badge>
                                             </HoverCardTrigger>
                                         </PopoverTrigger>

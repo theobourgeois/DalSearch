@@ -119,42 +119,51 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={`${poppins.variable} antialiased`}>
-                <header className="flex justify-between items-center px-6 py-2 shadow-md w-full bg-white">
-                    <div className="flex items-center gap-3 w-full">
-                        {/* Logo */}
-                        <Image
-                            src="/dal.svg"
-                            alt="Dalhousie University Logo"
-                            width={40}
-                            height={40}
-                            className="object-contain"
-                        />
-
-                        {/* Homepage Link */}
-                        <Link
-                            href="/"
-                            className="no-underline hover:opacity-90"
-                        >
-                            <h1 className="text-3xl font-extrabold leading-tight text-gray-800">
-                                <span className="text-yellow-400">Dal</span>
-                                Search
-                            </h1>
-                        </Link>
-                        <div className="w-96">
-                            <Search
-                                numOfRecommendations={5}
-                                isOnHeader
-                                courses={courses}
+                <header className="flex flex-col px-6 py-2 shadow-md w-full bg-white">
+                    <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3 w-full">
+                            {/* Logo */}
+                            <Image
+                                src="/dal.svg"
+                                alt="Dalhousie University Logo"
+                                width={40}
+                                height={40}
+                                className="object-contain"
                             />
+
+                            {/* Homepage Link */}
+                            <Link
+                                href="/"
+                                className="no-underline hover:opacity-90"
+                            >
+                                <h1 className="text-3xl font-extrabold leading-tight text-gray-800">
+                                    <span className="text-yellow-400">Dal</span>
+                                    Search
+                                </h1>
+                            </Link>
+                            <div className="hidden sm:block w-96">
+                                <Search
+                                    numOfRecommendations={5}
+                                    isOnHeader
+                                    courses={courses}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <Link
+                                title="View source code"
+                                href="https://github.com/theobourgeois/DalSearch"
+                            >
+                                <Github className="w-6 h-6 text-gray-800 hover:text-yellow-400 m-2" />
+                            </Link>
                         </div>
                     </div>
-                    <div>
-                        <Link
-                            title="View source code"
-                            href="https://github.com/theobourgeois/DalSearch"
-                        >
-                            <Github className="w-6 h-6 text-gray-800 hover:text-yellow-400" />
-                        </Link>
+                    <div className="block sm:hidden mt-4">
+                        <Search
+                            numOfRecommendations={5}
+                            isOnHeader
+                            courses={courses}
+                        />
                     </div>
                 </header>
                 {children}

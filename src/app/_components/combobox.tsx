@@ -75,6 +75,38 @@ export function Search({
         setValue("");
     }, [pathname]);
 
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const focusableElements = document.querySelectorAll(
+                'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
+            );
+            const currentIndex = Array.prototype.indexOf.call(
+                focusableElements,
+                document.activeElement
+            );
+
+            if (e.key === "ArrowDown" && recommendations.length > 0) {
+                e.preventDefault();
+                // Move focus to the next focusable element
+                const nextIndex = (currentIndex + 1) % focusableElements.length;
+                (focusableElements[nextIndex] as HTMLElement).focus();
+            } else if (e.key === "ArrowUp" && recommendations.length > 0) {
+                e.preventDefault();
+                // Move focus to the previous focusable element
+                const prevIndex =
+                    (currentIndex - 1 + focusableElements.length) %
+                    focusableElements.length;
+                (focusableElements[prevIndex] as HTMLElement).focus();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [recommendations]);
+
     // dont show header search bar on home page
     if (pathname === "/" && isOnHeader) {
         return <></>;
