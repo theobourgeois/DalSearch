@@ -383,8 +383,10 @@ export function ScheduleCourse({
             otherClass.term === termClass.term
         ) {
             return (
-                otherClass.time.start === termClass.time.start &&
-                otherClass.time.end === termClass.time.end
+                (otherClass.time.start <= termClass.time.start &&
+                    otherClass.time.end > termClass.time.start) ||
+                (otherClass.time.start < termClass.time.end &&
+                    otherClass.time.end >= termClass.time.end)
             );
         }
     });

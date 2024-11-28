@@ -49,7 +49,7 @@ export default function Header({ courses }: Props) {
                     >
                         <Github className="w-6 h-6 text-gray-800 hover:text-yellow-400" />
                     </Link>
-                    <Link
+                    {/* <Link
                         title="Schedule Builder"
                         href="/schedule-builder"
                         className="flex items-center text-gray-800 hover:text-yellow-400"
@@ -58,7 +58,7 @@ export default function Header({ courses }: Props) {
                         <span className="hidden text-sm md:inline">
                             Schedule Builder
                         </span>
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
             <div className="block md:hidden mt-4">
