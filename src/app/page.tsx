@@ -4,7 +4,7 @@ import { Search } from "./_components/combobox";
 export default function Home() {
     return (
         <main className="w-full min-h-screen flex justify-center items-center flex-col px-4 bg-gradient-to-b from-blue-50 to-white">
-            <section className="w-full max-w-3xl text-center mb-8">
+            <section className="w-full max-w-3xl text-center mb-8 mt-8">
                 <h1 className="text-4xl font-bold mb-4 text-gray-800">
                     Discover Dalhousie&apos;s Courses
                 </h1>

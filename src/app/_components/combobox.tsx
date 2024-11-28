@@ -10,7 +10,7 @@ import { Course, CourseAndSubjectCode, CourseByCode } from "@/utils/course";
 import { cn } from "@/lib/utils";
 import ClickAwayListener from "react-click-away-listener";
 
-const NUM_RECOMMENDATIONS = 100;
+const NUM_RECOMMENDATIONS = 50;
 
 export function Search({
     courses,
@@ -21,7 +21,54 @@ export function Search({
     isOnHeader?: boolean;
     numOfRecommendations?: number;
 }) {
+    const router = useRouter();
     const pathname = usePathname();
+
+    const handleSelect = (course: CourseAndSubjectCode) => {
+        router.push(`/${course}`);
+    };
+
+    // dont show header search bar on home page
+    if (pathname === "/" && isOnHeader) {
+        return <></>;
+    }
+
+    return (
+        <div className="flex flex-col gap-2 items-center w-full">
+            <SearchInput
+                isListLinks
+                isOnHeader={isOnHeader}
+                numOfRecommendations={numOfRecommendations}
+                onSelect={handleSelect}
+                courses={courses}
+                hasButton
+                hoveredList={isOnHeader}
+            />
+        </div>
+    );
+}
+
+type SearchInputProps = {
+    courses: CourseByCode;
+    onSelect: (course: CourseAndSubjectCode) => void;
+    numOfRecommendations?: number;
+    hasButton?: boolean;
+    isOnHeader?: boolean;
+    isListLinks?: boolean;
+    hoveredList?: boolean;
+};
+
+export function SearchInput({
+    hoveredList = false,
+    courses,
+    onSelect,
+    isOnHeader,
+    numOfRecommendations,
+    isListLinks = false,
+    hasButton = false,
+}: SearchInputProps) {
+    const pathname = usePathname();
+
     const [value, setValue] = React.useState("");
     const [recommendations, setRecommendations] = React.useState<
         CourseAndSubjectCode[]
@@ -31,7 +78,6 @@ export function Search({
         () => Object.keys(courses) as CourseAndSubjectCode[],
         [courses]
     );
-    const router = useRouter();
     const fuse = React.useMemo(() => {
         return new Fuse(
             courseKeys.map((course) => courses[course]),
@@ -62,12 +108,12 @@ export function Search({
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            router.push(`/${recommendations[0] || ""}`);
+            onSelect(recommendations[0]);
+            setValue("");
         }
-    };
-
-    const handleSearch = () => {
-        router.push(`/${recommendations[0] || ""}`);
+        if (e.key === "Escape") {
+            setRecommendations([]);
+        }
     };
 
     React.useEffect(() => {
@@ -75,45 +121,17 @@ export function Search({
         setValue("");
     }, [pathname]);
 
-    React.useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            const focusableElements = document.querySelectorAll(
-                'a, button, input, textarea, select, [tabindex]:not([tabindex="-1"])'
-            );
-            const currentIndex = Array.prototype.indexOf.call(
-                focusableElements,
-                document.activeElement
-            );
+    const handleSubmit = () => {
+        onSelect(recommendations[0]);
+    };
 
-            if (e.key === "ArrowDown" && recommendations.length > 0) {
-                e.preventDefault();
-                // Move focus to the next focusable element
-                const nextIndex = (currentIndex + 1) % focusableElements.length;
-                (focusableElements[nextIndex] as HTMLElement).focus();
-            } else if (e.key === "ArrowUp" && recommendations.length > 0) {
-                e.preventDefault();
-                // Move focus to the previous focusable element
-                const prevIndex =
-                    (currentIndex - 1 + focusableElements.length) %
-                    focusableElements.length;
-                (focusableElements[prevIndex] as HTMLElement).focus();
-            }
-        };
-
-        window.addEventListener("keydown", handleKeyDown);
-
-        return () => {
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, [recommendations]);
-
-    // dont show header search bar on home page
-    if (pathname === "/" && isOnHeader) {
-        return <></>;
-    }
+    const handleClickCourse = (course: CourseAndSubjectCode) => () => {
+        onSelect(course);
+        setRecommendations([]);
+    };
 
     return (
-        <div className="flex flex-col gap-2 items-center w-full">
+        <>
             <div
                 className="relative px-2 shadow-black rounded-xl w-full border-2 border-slate-200"
                 onKeyDown={handleKeyDown}
@@ -133,8 +151,8 @@ export function Search({
                 <ClickAwayListener onClickAway={() => setRecommendations([])}>
                     <div
                         className={cn("overflow-y-auto w-full flex flex-col", {
-                            "rounded-b-2xl border-b-2 border-l-2 border-r-2 border-slate-200 bg-white absolute left-0 top-[33px] px-2":
-                                isOnHeader,
+                            "rounded-b-2xl z-10 border-b-2 border-l-2 border-r-2 border-slate-200 bg-white absolute left-0 top-[33px] px-2":
+                                hoveredList,
                         })}
                         style={{
                             maxHeight: open ? "300px" : 0,
@@ -142,29 +160,47 @@ export function Search({
                             transition: "max-height height 0.2s",
                         }}
                     >
-                        {recommendations.map((course) => (
-                            <Link
-                                key={course}
-                                className="flex items-center text-sm gap-1 w-full focus:bg-slate-100 focus:outline-none hover:bg-slate-100 py-1"
-                                href={`/${course}`}
-                            >
-                                <SearchIcon size={14} />
-                                {courses[course].subjectCode}{" "}
-                                {courses[course].courseCode} -{" "}
-                                {courses[course].title}
-                            </Link>
-                        ))}
+                        {recommendations.map((course) => {
+                            if (isListLinks) {
+                                return (
+                                    <Link
+                                        key={course}
+                                        className="flex items-center text-sm gap-1 w-full focus:bg-slate-100 focus:outline-none hover:bg-slate-100 py-1"
+                                        href={`/${course}`}
+                                    >
+                                        <SearchIcon size={14} />
+                                        {courses[course].subjectCode}{" "}
+                                        {courses[course].courseCode} -{" "}
+                                        {courses[course].title}
+                                    </Link>
+                                );
+                            }
+
+                            return (
+                                <div
+                                    key={course}
+                                    className="flex items-center text-sm gap-1 w-full focus:bg-slate-100 focus:outline-none hover:bg-slate-100 py-1 cursor-pointer"
+                                    onClick={handleClickCourse(course)}
+                                    tabIndex={0}
+                                >
+                                    <SearchIcon size={14} />
+                                    {courses[course].subjectCode}{" "}
+                                    {courses[course].courseCode} -{" "}
+                                    {courses[course].title}
+                                </div>
+                            );
+                        })}
                     </div>
                 </ClickAwayListener>
             </div>
-            {!isOnHeader && (
+            {!isOnHeader && hasButton && (
                 <Button
-                    onClick={handleSearch}
+                    onClick={handleSubmit}
                     className="w-max bg-yellow-400 hover:bg-yellow-500 text-black"
                 >
                     Search
                 </Button>
             )}
-        </div>
+        </>
     );
 }

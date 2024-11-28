@@ -26,8 +26,9 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from "next/link";
 
-const colors = [
+export const colors = [
     "#3498db", // Bright Blue
     "#2ecc71", // Emerald Green
     "#e74c3c", // Vibrant Red
@@ -52,11 +53,11 @@ const colors = [
     "#6c3483", // Deep Violet
 ];
 
-const CELL_HEIGHT = 60;
-const TIME_QUANTUM_MIN = 30;
-const NUM_HOURS = 14;
-const NUM_TIME_SLOTS = NUM_HOURS * (60 / TIME_QUANTUM_MIN);
-const START_HOUR = 8;
+export const CELL_HEIGHT = 40;
+export const TIME_QUANTUM_MIN = 30;
+export const NUM_HOURS = 13;
+export const NUM_TIME_SLOTS = NUM_HOURS * (60 / TIME_QUANTUM_MIN);
+export const START_HOUR = 8;
 
 const getDay = (day: string) => {
     switch (day) {
@@ -75,7 +76,7 @@ const getDay = (day: string) => {
     }
 };
 
-const scheduleTimes = Array.from({ length: NUM_TIME_SLOTS }, (_, i) => {
+export const scheduleTimes = Array.from({ length: NUM_TIME_SLOTS }, (_, i) => {
     const hour = Math.floor(i / (60 / TIME_QUANTUM_MIN)) + START_HOUR;
     const minute = (i % (60 / TIME_QUANTUM_MIN)) * TIME_QUANTUM_MIN;
     return `${hour.toString().padStart(2, "0")}${minute
@@ -106,6 +107,74 @@ function formatTime(time: string) {
     return `${parseInt(hour) % 12 || 12}:${time.slice(2, 4)} ${
         isAm ? "AM" : "PM"
     }`;
+}
+
+export function ScheduleBackground({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <div className="flex bg-white rounded-md  overflow-hidden border border-gray-200">
+            <div className="bg-gray-50 border-r border-gray-200">
+                {scheduleTimes.map((time) => (
+                    <div
+                        key={time}
+                        style={{
+                            height: CELL_HEIGHT,
+                        }}
+                        className="px-2 flex items-center justify-end text-sm text-gray-500 font-medium"
+                    >
+                        {formatTime(time)}
+                    </div>
+                ))}
+            </div>
+
+            <div className="flex-1">
+                <div className="grid grid-cols-6 border-b border-gray-200">
+                    {days.map((day, index) => (
+                        <div key={day} className="py-2 text-center bg-gray-50">
+                            <p className="hidden lg:block text-sm font-semibold text-gray-700">
+                                {getDay(day)}
+                            </p>
+                            <p className="block lg:hidden text-xs font-medium text-gray-600">
+                                {day}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+                <div className="relative">
+                    <div className="absolute inset-0">
+                        <div className="grid grid-cols-6 h-full">
+                            {Array.from({ length: 6 }).map((_, index) => (
+                                <div
+                                    key={index}
+                                    className="border-r border-gray-200 last:border-r-0"
+                                />
+                            ))}
+                        </div>
+                        <div className="grid grid-rows-4">
+                            {scheduleTimes.map((time) => (
+                                <div
+                                    key={time}
+                                    style={{ height: CELL_HEIGHT }}
+                                    className="border-b border-gray-200 last:border-b-0"
+                                />
+                            ))}
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            gridTemplateRows: `repeat(${scheduleTimes.length},minmax(0,1fr))`,
+                        }}
+                        className="grid grid-cols-6 relative"
+                    >
+                        {children}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export function Schedule({ course }: { course: Course }) {
@@ -263,95 +332,45 @@ export function Schedule({ course }: { course: Course }) {
                         );
                     })}
             </ToggleGroup>
-            <div className="flex">
-                <div>
-                    {scheduleTimes.map((time) => (
-                        <div
-                            key={time}
-                            style={{
-                                height: CELL_HEIGHT,
-                                // dont break the word
-                                whiteSpace: "nowrap",
-                            }}
-                            className="bg-gray-100 border border-r-5 border-gray-200 translate-y-[26px]"
-                        >
-                            {formatTime(time)}
-                        </div>
-                    ))}
-                </div>
-
-                <div className="w-full">
-                    <div className="grid grid-cols-[repeat(6,minmax(0,1fr))] w-full relative">
-                        {days.map((day, index) => (
-                            <div
-                                key={day}
-                                style={{
-                                    gridRow: 1,
-                                    gridColumn: index + 1,
-                                }}
-                                className="bg-gray-100 border border-gray-200 text-center px-8"
-                            >
-                                <p className="hidden lg:block">{getDay(day)}</p>
-                                <p className="block lg:hidden">{day}</p>
-                            </div>
+            <ScheduleBackground>
+                {termClasses.map((termClass, index) => (
+                    <Fragment key={index}>
+                        {termClass.days.map((day) => (
+                            <ScheduleCourse
+                                key={termClass.section + day}
+                                day={day}
+                                termClass={termClass}
+                                classColors={classColors}
+                                termClasses={termClasses}
+                                index={index}
+                                course={""}
+                            />
                         ))}
-                    </div>
-                    <div className="relative">
-                        <div className="w-full grid grid-cols-1 grid-rows-4 absolute">
-                            {scheduleTimes.map((time) => (
-                                <div
-                                    key={time}
-                                    style={{
-                                        height: CELL_HEIGHT,
-                                    }}
-                                    className="bg-gray-100 border border-r-5 border-gray-200"
-                                ></div>
-                            ))}
-                        </div>
-                    </div>
-                    <div
-                        style={{
-                            gridTemplateRows: `repeat(${scheduleTimes.length},minmax(0,1fr)`,
-                        }}
-                        className="grid grid-cols-[repeat(6,minmax(0,1fr))] w-full relative"
-                    >
-                        {termClasses.map((termClass, index) => (
-                            <Fragment key={index}>
-                                {termClass.days.map((day) => (
-                                    <ScheduleCourse
-                                        key={termClass.section + day}
-                                        day={day}
-                                        termClass={termClass}
-                                        classColors={classColors}
-                                        termClasses={termClasses}
-                                        index={index}
-                                    />
-                                ))}
-                            </Fragment>
-                        ))}
-                    </div>
-                </div>
-            </div>
+                    </Fragment>
+                ))}
+            </ScheduleBackground>
         </div>
     );
 }
 
-function ScheduleCourse({
+export function ScheduleCourse({
     day,
     termClass,
     classColors,
     termClasses,
     index,
+    course,
 }: {
     termClass: ClassSession;
     classColors: Record<string, string>;
     termClasses: ClassSession[];
     index: number;
     day: Day;
+    course: string;
 }) {
     const startRow = findClosestTimeSlotRow(termClass.time.start);
     const endRow = findClosestTimeSlotRow(termClass.time.end) + 1;
-    const color = classColors[termClass.section + termClass.term];
+    const color = classColors[termClass.section + termClass.term + course];
 
     const dayIndex = days.indexOf(day);
     const dayName = getDay(day);
@@ -395,8 +414,18 @@ function ScheduleCourse({
                     >
                         <CardContent className="p-2 h-full flex flex-col justify-between">
                             <div>
+                                {course && (
+                                    <h3 className="font-bold">
+                                        <Link
+                                            href={`/${course}`}
+                                            className="hover:underline"
+                                        >
+                                            {course}
+                                        </Link>
+                                    </h3>
+                                )}
                                 <p className="font-bold text-sm">
-                                    {termClass.section}
+                                    {termClass.type} {termClass.section}
                                 </p>
                                 <p className="text-xs text-muted-foreground">
                                     {dayName}
@@ -414,6 +443,7 @@ function ScheduleCourse({
                 </TooltipTrigger>
                 <TooltipContent side="right">
                     <div className="p-2">
+                        {course && <h3 className="font-bold mb-2">{course}</h3>}
                         <h3 className="font-bold mb-2">{termClass.section}</h3>
                         <p className="text-sm mb-1">
                             {dayName}, {formatTime(termClass.time.start)} -{" "}
