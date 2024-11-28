@@ -132,7 +132,7 @@ export function ScheduleBackground({
 
             <div className="flex-1">
                 <div className="grid grid-cols-6 border-b border-gray-200">
-                    {days.map((day, index) => (
+                    {days.map((day) => (
                         <div key={day} className="py-2 text-center bg-gray-50">
                             <p className="hidden lg:block text-sm font-semibold text-gray-700">
                                 {getDay(day)}

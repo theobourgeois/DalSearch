@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
-import Image from "next/image";
 import Link from "next/link";
-import { Github } from "lucide-react";
 import { courses } from "@/utils/course";
-import { Search } from "./_components/combobox";
 import Header from "./_components/header";
 
 const poppins = Poppins({

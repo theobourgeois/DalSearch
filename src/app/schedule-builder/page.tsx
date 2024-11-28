@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import { ScheduleBackground } from "../_components/calendar";
 import ScheduleBuilder from "../_components/schedule-builder";
 import { courses } from "@/utils/course";
 
