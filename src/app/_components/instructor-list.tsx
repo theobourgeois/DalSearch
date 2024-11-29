@@ -56,9 +56,16 @@ export function InstructorList({
     }) => (
         <div className="space-y-2">
             <h4 className="text-sm font-semibold">
-                {instructorData
-                    ? `${instructorData.firstName} ${instructorData.lastName}`
-                    : instructor}
+                {instructorData ? (
+                    <Link
+                        className="hover:underline"
+                        href={instructorData.rateMyProfLink}
+                    >
+                        {instructorData.firstName} {instructorData.lastName}
+                    </Link>
+                ) : (
+                    instructor
+                )}
             </h4>
             {instructorData && Number(instructorData.overallRating) > 0 && (
                 <>
