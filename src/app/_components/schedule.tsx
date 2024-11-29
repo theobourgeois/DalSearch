@@ -453,7 +453,7 @@ export function ScheduleCourse({
                                     borderLeft: `6px solid ${color}`,
                                 }}
                             >
-                                <CardContent className="p-2 h-full flex flex-col justify-between">
+                                <CardContent className="p-1 sm:p-2 h-full flex flex-col justify-between">
                                     <div className="overflow-hidden">
                                         {course && (
                                             <h3 className="font-bold text-xs sm:text-sm md:text-base truncate">
@@ -465,14 +465,14 @@ export function ScheduleCourse({
                                                 </Link>
                                             </h3>
                                         )}
-                                        <p className="font-bold text-xs sm:text-sm truncate">
+                                        <p className="font-bold text-xs sm:text-sm">
                                             {termClass.type} {termClass.section}
                                         </p>
                                         <p className="text-xs text-muted-foreground hidden sm:block">
                                             {dayName}
                                         </p>
                                     </div>
-                                    <div className="text-xs">
+                                    <div className="text-xs hidden sm:block">
                                         <p className="truncate">
                                             {formatTime(termClass.time.start)} -{" "}
                                             {formatTime(termClass.time.end)}
