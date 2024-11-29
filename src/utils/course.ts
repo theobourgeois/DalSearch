@@ -46,6 +46,7 @@ export type Course = {
   location: string; // Default location for the course
   enrollement: Enrollment; // Enrollment information
   instructorsByTerm: InstructorsByTerm; // Mapping of term codes to instructors
+  crn: string; // Course registration number
 };
 
 export type CourseByCode = Record<CourseAndSubjectCode, Course>;

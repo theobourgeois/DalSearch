@@ -88,9 +88,15 @@ export default async function CoursePage({
                         {course.subjectCode} {course.courseCode} -{" "}
                         {course.title}
                     </CardTitle>
-                    <Badge variant="secondary" className="text-lg w-max">
-                        {course.creditHours} Credit Hours
-                    </Badge>
+                    <div className="flex gap-2 ">
+                        <Badge variant="secondary" className="text-lg w-max">
+                            {course.creditHours} Credit Hours
+                        </Badge>
+
+                        <Badge variant="secondary" className="text-lg w-max">
+                            CRN: {course.crn}
+                        </Badge>
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <article
