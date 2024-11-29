@@ -6,9 +6,9 @@ import {
     Term,
     terms,
 } from "@/utils/course";
-import { colors, ScheduleBackground, ScheduleCourse } from "./calendar";
+import { colors, ScheduleBackground, ScheduleCourse } from "./schedule";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { SearchInput } from "./combobox";
+import { SearchInput } from "./search";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { ToggleGroup } from "@radix-ui/react-toggle-group";
 import { ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -190,7 +190,7 @@ export default function ScheduleBuilder({
             <Card className="pb-8">
                 <CardHeader className="flex justify-between flex-row">
                     <h2 className="text-3xl font-bold mb-4">
-                        Schedule Builder
+                        Schedule Builder (Beta)
                     </h2>
                     <Popover>
                         <PopoverTrigger>

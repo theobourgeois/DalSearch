@@ -5,7 +5,7 @@ import {
     terms,
 } from "@/utils/course";
 import Link from "next/link";
-import { Schedule } from "../_components/calendar";
+import { Schedule } from "../_components/schedule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";

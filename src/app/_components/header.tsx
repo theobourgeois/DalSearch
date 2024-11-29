@@ -1,8 +1,8 @@
 import { CourseByCode } from "@/utils/course";
-import { Github } from "lucide-react";
+import { Calendar, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Search } from "./combobox";
+import { Search } from "./search";
 
 interface Props {
     courses: CourseByCode;
@@ -41,7 +41,17 @@ export default function Header({ courses }: Props) {
                         />
                     </div>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center gap-4">
+                    <Link
+                        title="Schedule Builder"
+                        href="/schedule-builder"
+                        className="flex items-center text-gray-800 hover:text-yellow-400"
+                    >
+                        <Calendar className="w-6 h-6 mr-2" />
+                        <span className="hidden text-nowrap text-sm md:inline">
+                            Schedule Builder (Beta)
+                        </span>
+                    </Link>
                     <Link
                         title="View source code"
                         href="https://github.com/theobourgeois/DalSearch"
@@ -49,16 +59,6 @@ export default function Header({ courses }: Props) {
                     >
                         <Github className="w-6 h-6 text-gray-800 hover:text-yellow-400" />
                     </Link>
-                    {/* <Link
-                        title="Schedule Builder"
-                        href="/schedule-builder"
-                        className="flex items-center text-gray-800 hover:text-yellow-400"
-                    >
-                        <Calendar className="w-6 h-6 mr-2" />
-                        <span className="hidden text-sm md:inline">
-                            Schedule Builder
-                        </span>
-                    </Link> */}
                 </div>
             </div>
             <div className="block md:hidden mt-4">

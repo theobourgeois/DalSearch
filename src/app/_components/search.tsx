@@ -74,19 +74,12 @@ export function SearchInput({
         CourseAndSubjectCode[]
     >([]);
     const open = recommendations.length > 0;
-    const courseKeys = React.useMemo(
-        () => Object.keys(courses) as CourseAndSubjectCode[],
-        [courses]
-    );
     const fuse = React.useMemo(() => {
-        return new Fuse(
-            courseKeys.map((course) => courses[course]),
-            {
-                includeScore: true,
-                keys: ["subjectCode", "courseCode", "title"],
-            }
-        );
-    }, [courseKeys, courses]);
+        return new Fuse(Object.values(courses), {
+            includeScore: true,
+            keys: ["subjectCode", "courseCode", "title"],
+        });
+    }, [courses]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -97,8 +90,8 @@ export function SearchInput({
     const loadRecommendations = (value: string) => {
         const results = fuse.search(value);
         const recommendations = results
-            .slice(0, numOfRecommendations)
-            .map((result) => result.item) as Course[];
+            .map((result) => result.item)
+            .slice(0, numOfRecommendations) as Course[];
         setRecommendations(
             recommendations.map(
                 (course) => course.subjectCode + course.courseCode

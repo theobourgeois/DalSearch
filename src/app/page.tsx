@@ -1,5 +1,5 @@
 import { courses } from "@/utils/course";
-import { Search } from "./_components/combobox";
+import { Search } from "./_components/search";
 
 export default function Home() {
     return (
