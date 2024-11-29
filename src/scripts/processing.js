@@ -275,7 +275,7 @@ async function main() {
     let newCourses = replaceClassesAndInstructors(previousCourses, courses);
 
     const args = process.argv.slice(2);
-    const outputFilename = args[0] || "search.json";
+    const outputFilename = args[0] || "../utils/search.json";
     const getDescriptions = args[1] === "-d";
 
     if (getDescriptions) {
@@ -296,36 +296,6 @@ function replaceClassesAndInstructors(courses1, courses2) {
 
     return newCourses;
 }
-
-// function merge(courses1, courses2) {
-//     const newCourses = { ...courses1 };
-
-//     for (const course in newCourses) {
-//         const newTermClasses = courses1[course].termClasses;
-//         const oldTermClasses = courses2[course]?.termClasses || [];
-//         newCourses[course].termClasses = [...newTermClasses, ...oldTermClasses];
-//         const newInstructorsByTerm = courses1[course].instructorsByTerm;
-//         const oldInstructorsByTerm = courses2[course]?.instructorsByTerm || {};
-//         for (const term in oldInstructorsByTerm) {
-//             if (!newInstructorsByTerm[term]) {
-//                 newInstructorsByTerm[term] = [];
-//             }
-//             newInstructorsByTerm[term].push(...oldInstructorsByTerm[term]);
-//         }
-
-//         newCourses[course].instructorsByTerm = newInstructorsByTerm;
-//     }
-
-//     const filtedCourse2Keys = Object.keys(courses2).filter(
-//         (course) => !Object.keys(newCourses).includes(course)
-//     );
-
-//     for (const course of filtedCourse2Keys) {
-//         newCourses[course] = courses2[course];
-//     }
-
-//     return newCourses;
-// }
 
 function writeToFile(data, filename = "data.json") {
     fs.writeFile(filename, JSON.stringify(data), (err) => {
@@ -502,6 +472,7 @@ function transformAcademicCalendar(timetableBySubjectCode) {
                 days: getTimetableDays(timetable),
                 time: formatTime(timetable.TIMES),
                 location,
+                crn: timetable.CRN,
             };
 
             const course = {

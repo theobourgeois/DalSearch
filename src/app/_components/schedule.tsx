@@ -267,18 +267,28 @@ export function Schedule({ course }: { course: Course }) {
                               "80"
                             : "";
 
+                        const isOnline = termClass.time.start === "C/D";
+
                         return (
                             <HoverCard key={id}>
                                 <HoverCardTrigger asChild>
                                     <ToggleGroupItem
                                         value={id}
-                                        className="px-3 py-2 rounded-md transition-colors duration-200"
-                                        style={{ backgroundColor: bgColor }}
+                                        className="px-3 py-2 rounded-md transition-colors duration-200 select-text"
+                                        style={{
+                                            backgroundColor: bgColor,
+                                        }}
                                     >
                                         <span className="font-medium">
                                             {termClass.type} {termClass.section}
                                         </span>
-                                        {termClass.time.start === "C/D" && (
+                                        {/* <Badge
+                                            variant="secondary"
+                                            className="ml-2 hover:bg-blue-100"
+                                        >
+                                            {termClass.crn}
+                                        </Badge> */}
+                                        {isOnline && (
                                             <Badge
                                                 variant="secondary"
                                                 className="ml-2"
@@ -322,7 +332,12 @@ export function Schedule({ course }: { course: Course }) {
                                                 </div>
                                             )}
                                         </div>
-                                        {termClass.time.start !== "C/D" && (
+                                        <div>
+                                            <p className="text-sm text-muted-foreground">
+                                                CRN: {termClass.crn}
+                                            </p>
+                                        </div>
+                                        {!isOnline && (
                                             <div className="flex flex-wrap gap-1 mt-2">
                                                 {termClass.days.map((day) => (
                                                     <Badge
@@ -413,6 +428,7 @@ export function ScheduleCourse({
                 {formatTime(termClass.time.end)}
             </p>
             <p className="text-sm mb-2">{termClass.location}</p>
+            <p className="text-sm mb-2">CRN: {termClass.crn}</p>
         </div>
     );
 

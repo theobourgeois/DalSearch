@@ -92,10 +92,6 @@ export default async function CoursePage({
                         <Badge variant="secondary" className="text-lg w-max">
                             {course.creditHours} Credit Hours
                         </Badge>
-
-                        <Badge variant="secondary" className="text-lg w-max">
-                            CRN: {course.crn}
-                        </Badge>
                     </div>
                 </CardHeader>
                 <CardContent>

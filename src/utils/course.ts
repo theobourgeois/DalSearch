@@ -22,6 +22,7 @@ export type ClassSession = {
   days: Day[]; // Days of the week, e.g., ["M", "T", "R"]
   time: TimeSlot; // Start and end times
   location: string; // Classroom or location
+  crn: string; // Course Registration Number
 };
 
 type Enrollment = {
@@ -46,7 +47,6 @@ export type Course = {
   location: string; // Default location for the course
   enrollement: Enrollment; // Enrollment information
   instructorsByTerm: InstructorsByTerm; // Mapping of term codes to instructors
-  crn: string; // Course registration number
 };
 
 export type CourseByCode = Record<CourseAndSubjectCode, Course>;
