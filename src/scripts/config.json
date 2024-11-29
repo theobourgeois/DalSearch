@@ -1,5 +1,6 @@
 {
     "BASE_URL": "https://www.ratemyprofessors.com/{path}",
+    "rateprofessor_graphql_endpoint": "https://www.ratemyprofessors.com/graphql",
     "headers": {
        "Accept": "*/*",
        "Accept-Encoding": "gzip, deflate, br, zstd", 
