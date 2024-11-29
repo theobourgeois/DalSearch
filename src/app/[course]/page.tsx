@@ -126,6 +126,9 @@ export default async function CoursePage({
                                     ? "Instructors"
                                     : "Instructor"}
                             </h2>
+                            {uniqueInstructors.length === 0 && (
+                                <p className="text-gray-600">TBA</p>
+                            )}
                             <InstructorList
                                 instructorsByTerm={filteredInstructorsByTerm}
                                 terms={terms}

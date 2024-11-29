@@ -31,6 +31,7 @@ import html2canvas from "html2canvas";
 import { Popover, PopoverArrow, PopoverClose } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import jsPDF from "jspdf";
+import Link from "next/link";
 
 export default function ScheduleBuilder({
     courses,
@@ -229,13 +230,19 @@ export default function ScheduleBuilder({
                                             className="mt-2"
                                         >
                                             <CardHeader className="flex flex-row justify-between items-start pb-2 pt-4">
-                                                <h3 className="text-xl font-semibold">
-                                                    {course.course} -{" "}
-                                                    {
-                                                        courses[course.course]
-                                                            .title
-                                                    }
-                                                </h3>
+                                                <Link
+                                                    href={`/${course.course}`}
+                                                    className="hover:underline"
+                                                >
+                                                    <h3 className="text-xl font-semibold">
+                                                        {course.course} -{" "}
+                                                        {
+                                                            courses[
+                                                                course.course
+                                                            ].title
+                                                        }
+                                                    </h3>
+                                                </Link>
                                                 <Button
                                                     variant="ghost"
                                                     onClick={handleRemoveClass(

@@ -16,7 +16,7 @@ export default function Home() {
             <section className="w-full max-w-2xl">
                 <Search courses={courses} />
             </section>
-            <section className="w-full max-w-3xl mt-12 text-center">
+            <section className="w-full max-w-3xl mt-12 mb-8 text-center">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-800">
                     Why Use Our Course Searcher?
                 </h2>
