@@ -27,6 +27,14 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+    DialogTitle,
+    DialogHeader,
+    DialogDescription,
+} from "@/components/ui/dialog";
 
 export const colors = [
     "#3498db", // Bright Blue
@@ -396,63 +404,85 @@ export function ScheduleCourse({
     const translateX = isRight ? "100%" : "0";
     const width = isConflict ? "50%" : "100%";
 
+    const CourseContent = () => (
+        <div className="p-2">
+            {course && <h3 className="font-bold mb-2">{course}</h3>}
+            <h3 className="font-bold mb-2">{termClass.section}</h3>
+            <p className="text-sm mb-1">
+                {dayName}, {formatTime(termClass.time.start)} -{" "}
+                {formatTime(termClass.time.end)}
+            </p>
+            <p className="text-sm mb-2">{termClass.location}</p>
+        </div>
+    );
+
     return (
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Card
-                        className={cn(
-                            `rounded-md font-medium text-foreground overflow-hidden`
-                        )}
-                        style={{
-                            width,
-                            transform: `translateX(${translateX})`,
-                            gridRow: `${startRow} / ${endRow}`,
-                            gridColumn: `${dayIndex + 1} / ${dayIndex + 1}`,
-                            height: CELL_HEIGHT * (endRow - startRow),
-                            fontSize: isConflict ? "0.8vw" : "1vw",
-                            borderLeft: `6px solid ${color}`,
-                        }}
-                    >
-                        <CardContent className="p-2 h-full flex flex-col justify-between">
-                            <div>
-                                {course && (
-                                    <h3 className="font-bold">
-                                        <Link
-                                            href={`/${course}`}
-                                            className="hover:underline"
-                                        >
-                                            {course}
-                                        </Link>
-                                    </h3>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Card
+                                className={cn(
+                                    "rounded-md font-medium text-foreground overflow-hidden cursor-pointer"
                                 )}
-                                <p className="font-bold text-sm">
-                                    {termClass.type} {termClass.section}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                    {dayName}
-                                </p>
-                            </div>
-                            <div className="text-xs">
-                                <p>
-                                    {formatTime(termClass.time.start)} -{" "}
-                                    {formatTime(termClass.time.end)}
-                                </p>
-                                <p className="truncate">{termClass.location}</p>
-                            </div>
-                        </CardContent>
-                    </Card>
+                                style={{
+                                    width,
+                                    transform: `translateX(${translateX})`,
+                                    gridRow: `${startRow} / ${endRow}`,
+                                    gridColumn: `${dayIndex + 1} / ${
+                                        dayIndex + 1
+                                    }`,
+                                    height: CELL_HEIGHT * (endRow - startRow),
+                                    borderLeft: `6px solid ${color}`,
+                                }}
+                            >
+                                <CardContent className="p-2 h-full flex flex-col justify-between">
+                                    <div className="overflow-hidden">
+                                        {course && (
+                                            <h3 className="font-bold text-xs sm:text-sm md:text-base truncate">
+                                                <Link
+                                                    href={`/${course}`}
+                                                    className="hover:underline"
+                                                >
+                                                    {course}
+                                                </Link>
+                                            </h3>
+                                        )}
+                                        <p className="font-bold text-xs sm:text-sm truncate">
+                                            {termClass.type} {termClass.section}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground hidden sm:block">
+                                            {dayName}
+                                        </p>
+                                    </div>
+                                    <div className="text-xs">
+                                        <p className="truncate">
+                                            {formatTime(termClass.time.start)} -{" "}
+                                            {formatTime(termClass.time.end)}
+                                        </p>
+                                        <p className="truncate hidden sm:block">
+                                            {termClass.location}
+                                        </p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>
+                                    {course} {termClass.type}{" "}
+                                    {termClass.section} Details
+                                </DialogTitle>
+                                <DialogDescription></DialogDescription>
+                            </DialogHeader>
+
+                            <CourseContent />
+                        </DialogContent>
+                    </Dialog>
                 </TooltipTrigger>
-                <TooltipContent side="right">
-                    <div className="p-2">
-                        {course && <h3 className="font-bold mb-2">{course}</h3>}
-                        <h3 className="font-bold mb-2">{termClass.section}</h3>
-                        <p className="text-sm mb-1">
-                            {dayName}, {formatTime(termClass.time.start)} -{" "}
-                            {formatTime(termClass.time.end)}
-                        </p>
-                        <p className="text-sm mb-2">{termClass.location}</p>
-                    </div>
+                <TooltipContent side="right" className="hidden sm:block">
+                    <CourseContent />
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

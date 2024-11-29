@@ -78,7 +78,6 @@ export default async function CoursePage({
         acc[term] = removedDuplicates;
         return acc;
     }, {} as Record<string, string[]>);
-    console.log(course);
 
     return (
         <main className="container mx-auto px-4 pb-8 pt-4">
