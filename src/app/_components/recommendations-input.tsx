@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Fuse from "fuse.js";
 import { SearchIcon } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import ClickAwayListener from "react-click-away-listener";
 
 type RecommendationInputProps<T extends any[]> = {
@@ -56,11 +56,20 @@ export function RecommendationInput<T extends any[]>({
             keys: fuzzyKeys as string[],
         });
     }, [fuzzyKeys, allItems]);
+    const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setValue(value);
-        loadRecommendations(value);
+
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+        }
+
+        // Set new timer
+        debounceTimerRef.current = setTimeout(() => {
+            loadRecommendations(value);
+        }, 200);
     };
 
     const loadRecommendations = (value: string) => {
