@@ -62,7 +62,11 @@ export default function Header({ courses }: Props) {
                 </div>
             </div>
             <div className="block md:hidden mt-4">
-                <Search numOfRecommendations={5} isOnHeader courses={courses} />
+                <Search
+                    numberOfRecommendations={5}
+                    isOnHeader
+                    courses={courses}
+                />
             </div>
         </header>
     );
