@@ -73,6 +73,9 @@ export function SearchInput({
     const [recommendations, setRecommendations] = React.useState<
         CourseAndSubjectCode[]
     >([]);
+
+    const debounceTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
     const open = recommendations.length > 0;
     const fuse = React.useMemo(() => {
         return new Fuse(Object.values(courses), {
@@ -82,9 +85,17 @@ export function SearchInput({
     }, [courses]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setValue(value);
-        loadRecommendations(value);
+        const newValue = e.target.value;
+        setValue(newValue);
+        // Clear previous timer
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+        }
+
+        // Set new timer
+        debounceTimerRef.current = setTimeout(() => {
+            loadRecommendations(newValue);
+        }, 200);
     };
 
     const loadRecommendations = (value: string) => {
