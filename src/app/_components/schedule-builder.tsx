@@ -1,6 +1,7 @@
 "use client";
 import {
     ClassSession,
+    Course,
     CourseAndSubjectCode,
     CourseByCode,
     Term,
@@ -8,7 +9,6 @@ import {
 } from "@/utils/course";
 import { colors, ScheduleBackground, ScheduleCourse } from "./schedule";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { SearchInput } from "./search";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { ToggleGroup } from "@radix-ui/react-toggle-group";
 import { ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -20,7 +20,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { DeleteIcon, Download } from "lucide-react";
+import { DeleteIcon, Download, SearchIcon } from "lucide-react";
 import {
     ResizableHandle,
     ResizablePanel,
@@ -32,6 +32,8 @@ import { Popover, PopoverArrow, PopoverClose } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import jsPDF from "jspdf";
 import Link from "next/link";
+import { RecommendationInput } from "./recommendations-input";
+import { cn } from "@/lib/utils";
 
 export default function ScheduleBuilder({
     courses,
@@ -52,8 +54,9 @@ export default function ScheduleBuilder({
     >([]);
     const scheduleRef = useRef<HTMLDivElement>(null);
 
-    const handleSelectCourse = (course: CourseAndSubjectCode) => {
-        const courseData = courses[course];
+    const handleSelectCourse = (courseData: Course) => {
+        const course = (courseData.subjectCode +
+            courseData.courseCode) as CourseAndSubjectCode;
         const newSelectedCourses = [...selectedCourses];
         // term with the most classes
         const selectedTerm = Object.keys(courseData.instructorsByTerm).reduce(
@@ -217,11 +220,36 @@ export default function ScheduleBuilder({
                                 <h3 className="text-xl font-semibold mb-4">
                                     Search for courses
                                 </h3>
-                                <SearchInput
-                                    hoveredList
-                                    courses={courses}
+                                <RecommendationInput
+                                    isHoveredList
+                                    allItems={Object.values(courses)}
                                     onSelect={handleSelectCourse}
                                     numOfRecommendations={10}
+                                    fuzzyKeys={[
+                                        "subjectCode",
+                                        "courseCode",
+                                        "title",
+                                    ]}
+                                    renderRecommendation={(
+                                        course,
+                                        isCurrentSelected
+                                    ) => (
+                                        <div
+                                            className={cn(
+                                                "flex items-center text-sm gap-1 w-full focus:outline-none hover:bg-slate-100 py-1",
+
+                                                isCurrentSelected &&
+                                                    "bg-slate-100"
+                                            )}
+                                        >
+                                            <SearchIcon size={14} />
+                                            {course.subjectCode}{" "}
+                                            {course.courseCode} - {course.title}
+                                        </div>
+                                    )}
+                                    transformItem={(course) =>
+                                        course.subjectCode + course.courseCode
+                                    }
                                 />
                                 <div>
                                     {selectedCourses.map((course) => (
