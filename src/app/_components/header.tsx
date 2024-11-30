@@ -35,7 +35,7 @@ export default function Header({ courses }: Props) {
 
                     <div className="hidden md:block w-96">
                         <Search
-                            numOfRecommendations={5}
+                            numberOfRecommendations={5}
                             isOnHeader
                             courses={courses}
                         />
