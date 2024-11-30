@@ -17,7 +17,7 @@ def fetch_all_teachers(school_id):
     # Headers based on the request you provided
     headers = config.get_property("headers")
 
-    all_teachers = []
+    all_teachers = {}
     has_next_page = True
     cursor = None
 
@@ -56,7 +56,7 @@ def fetch_all_teachers(school_id):
                     "difficultyLevel": str(teacher.get('avgDifficulty', '')),
                     "numberOfRatings": str(teacher.get('numRatings', ''))
                 }
-                all_teachers.append(processed_teacher)
+                all_teachers[f"{teacher.get('lastName', '')} {teacher.get('firstName', '')[0]}."] = processed_teacher
 
             # Update pagination info
             page_info = teachers_data['pageInfo']
@@ -85,4 +85,4 @@ with open(output_name, 'w', encoding='utf-8') as f:
 
 # give some stats
 print(f"Total teachers retrieved: {len(all_teachers)}")
-print("Professors data saved to all_profs.json")
+print(f"Professors data saved to {output_name}")
