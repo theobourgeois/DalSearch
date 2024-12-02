@@ -1,4 +1,5 @@
 import {
+    Course,
     CourseAndSubjectCode,
     courses,
     instructors,
@@ -12,6 +13,7 @@ import type { Metadata } from "next";
 import React from "react";
 import { InstructorList } from "../_components/instructor-list";
 import { BackButton } from "../_components/back-button";
+import Script from "next/script";
 
 type Props = {
     params: Promise<{ course: CourseAndSubjectCode }>;
@@ -92,8 +94,28 @@ export default async function CoursePage({
         return acc;
     }, {} as Record<string, string[]>);
 
+    // for SEO
+    const seoSchema = {
+        "@context": "https://schema.org",
+        "@type": "Course",
+        name: course.subjectCode + course.courseCode,
+        description: course.description,
+        provider: {
+            "@type": "Organization",
+            name: "DalSearch",
+            url: "https://dalsearch.com",
+        },
+    };
+
     return (
         <main className="container mx-auto px-4 pb-8 pt-4">
+            <Script
+                id="faq-schema"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(seoSchema),
+                }}
+            />
             <BackButton />
             <Card className="mb-8 mt-2">
                 <CardHeader>
