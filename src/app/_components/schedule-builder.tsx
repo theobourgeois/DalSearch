@@ -6,7 +6,7 @@ import {
     Term,
     terms,
 } from "@/utils/course";
-import { colors, ScheduleBackground, ScheduleCourse } from "./schedule";
+import { colors, ScheduleBackground, ScheduleTimeSlot } from "./schedule";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { SearchInput } from "./search";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -359,12 +359,12 @@ export default function ScheduleBuilder({
                         <ResizableHandle withHandle />
 
                         <ResizablePanel minSize={30}>
-                            <div ref={scheduleRef}>
+                            <div ref={scheduleRef} className="overflow-x-auto">
                                 <ScheduleBackground>
                                     {selectedClasses.map((termClass, index) => (
                                         <Fragment key={index}>
                                             {termClass.class.days.map((day) => (
-                                                <ScheduleCourse
+                                                <ScheduleTimeSlot
                                                     key={
                                                         termClass.class
                                                             .section +
