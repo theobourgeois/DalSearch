@@ -1,5 +1,4 @@
 import {
-    Course,
     CourseAndSubjectCode,
     courses,
     instructors,
