@@ -30,6 +30,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: `${course.subjectCode} ${course.courseCode} - ${course.title} - Dalhousie University`,
         description: course.description,
+        keywords: [
+            course.subjectCode,
+            course.courseCode,
+            course.title,
+            ...course.prerequisites,
+            "Dalhousie University",
+            "dalsearch",
+            "Halifax",
+            "dal search",
+            "Nova Scotia",
+            "dal",
+            "search",
+        ],
     };
 }
 
