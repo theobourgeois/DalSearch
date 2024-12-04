@@ -7,6 +7,8 @@ import { useState, useMemo, useRef } from "react";
 import ClickAwayListener from "react-click-away-listener";
 
 type RecommendationInputProps<T extends any[]> = {
+    showAllItemsByDefault?: boolean;
+    placeholder?: string;
     allItems: T;
     onSelect: (item: T[number]) => void;
     numOfRecommendations?: number | null;
@@ -18,6 +20,7 @@ type RecommendationInputProps<T extends any[]> = {
         isCurrentSelected: boolean
     ) => React.ReactNode;
     hasSubmitButton?: boolean;
+    closeOnSelect?: boolean;
 };
 
 function DefaultRenderRecommendation<T extends any[]>(
@@ -37,6 +40,7 @@ function DefaultRenderRecommendation<T extends any[]>(
 }
 
 export function RecommendationInput<T extends any[]>({
+    showAllItemsByDefault = false,
     allItems,
     onSelect,
     numOfRecommendations = 5,
@@ -45,6 +49,8 @@ export function RecommendationInput<T extends any[]>({
     transformItem = (item: T) => item.toString(),
     renderRecommendation = DefaultRenderRecommendation,
     hasSubmitButton = false,
+    closeOnSelect = true,
+    placeholder = "Search for course...",
 }: RecommendationInputProps<T>) {
     const [tabbedIndex, setTabbedIndex] = useState(0);
     const [value, setValue] = useState("");
@@ -84,11 +90,12 @@ export function RecommendationInput<T extends any[]>({
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
-            const recommendation = recommendations[tabbedIndex - 1];
+            const recommendation = recommendations[tabbedIndex];
             onSelect(recommendation);
-            setValue(transformItem(recommendation));
-            setTabbedIndex(0);
-            setRecommendations([]);
+            if (closeOnSelect) {
+                setTabbedIndex(0);
+                setRecommendations([]);
+            }
         }
         if (e.key === "Escape") {
             setRecommendations([]);
@@ -98,8 +105,8 @@ export function RecommendationInput<T extends any[]>({
             setTabbedIndex((prev) => (prev + 1) % recommendations.length);
         }
         if (e.key === "ArrowUp") {
-            setTabbedIndex((prev) =>
-                prev === 0 ? recommendations.length - 1 : prev - 1
+            setTabbedIndex(
+                (prev) => (prev === 0 ? recommendations.length : prev) - 1
             );
         }
         if (e.key === "Tab" && !e.shiftKey) {
@@ -117,9 +124,10 @@ export function RecommendationInput<T extends any[]>({
 
     const handleClickCourse = (recommendation: T) => () => {
         onSelect(recommendation);
-        setValue(transformItem(recommendation));
-        setRecommendations([]);
-        setTabbedIndex(0);
+        if (closeOnSelect) {
+            setRecommendations([]);
+            setTabbedIndex(0);
+        }
     };
 
     const handleSubmit = () => {
@@ -127,9 +135,20 @@ export function RecommendationInput<T extends any[]>({
         setTabbedIndex(0);
     };
 
+    const handleFocus = () => {
+        if (showAllItemsByDefault) {
+            const items =
+                value === ""
+                    ? allItems
+                    : fuse.search(value).map((result) => result.item);
+            setRecommendations(items);
+        }
+    };
+
     return (
         <>
             <div
+                onClick={handleFocus}
                 className="relative px-2 shadow-black rounded-xl w-full border-2 border-slate-200"
                 onKeyDown={handleKeyDown}
             >
@@ -142,7 +161,7 @@ export function RecommendationInput<T extends any[]>({
                         className="file:text-base focus-visible:ring-0 translate-x-6 p-0 rounded-none shadow-none outline-none border-none"
                         value={value}
                         onChange={handleChange}
-                        placeholder="Search for a course.."
+                        placeholder={placeholder}
                     />
                 </div>
                 <ClickAwayListener onClickAway={() => setRecommendations([])}>
@@ -165,7 +184,7 @@ export function RecommendationInput<T extends any[]>({
                                 >
                                     {renderRecommendation(
                                         rec,
-                                        index === tabbedIndex - 1
+                                        index === tabbedIndex
                                     )}
                                 </div>
                             );
