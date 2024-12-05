@@ -1,5 +1,6 @@
 import searchData from "./search.json";
 import instructorsData from "./ratemyprofessor.json";
+import subjectsData from "./subjects.json";
 
 type CapitalLetter = `${Uppercase<string>}`;
 export type SubjectCode =
@@ -7,7 +8,7 @@ export type SubjectCode =
 export type CourseCode = `${number}${number}${number}${number}`;
 export type CourseAndSubjectCode = `${SubjectCode}${CourseCode}`;
 type Time = `${number}${number}${number}${number}` | "C/D";
-export type Day = typeof days[number];
+export type Day = (typeof days)[number];
 
 export type TimeSlot = {
   start: Time; // Time in 24-hour format, e.g., "1005"
@@ -34,6 +35,10 @@ type InstructorsByTerm = {
   [term: string]: string[]; // Term code mapping to a list of instructor names
 };
 
+export type Subject = {
+  code: string;
+  description: string;
+};
 
 export type Course = {
   prerequisites: CourseAndSubjectCode[]; // List of prerequisite course codes
@@ -59,7 +64,7 @@ export type Instructor = {
   takeAgainRating: number;
   difficultyLevel: number;
   numberOfRatings: number;
-}
+};
 
 export type InstructorsByName = Record<string, Instructor>;
 
@@ -73,4 +78,6 @@ export const days = ["M", "T", "W", "R", "F", "S"] as const;
 export const terms: Record<string, string> = {
   "202510": "2024/2025 Fall",
   "202520": "2024/2025 Winter",
-}
+};
+
+export const subjects = subjectsData as Subject[];

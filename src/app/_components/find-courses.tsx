@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Course, Term, terms } from "@/utils/course";
+import { Course, Subject, subjects, Term, terms } from "@/utils/course";
 import { useEffect, useMemo, useState } from "react";
 import { RecommendationInput } from "./recommendations-input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -12,176 +12,13 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDebounce } from "@uidotdev/usehooks";
+import Link from "next/link";
 
 const NUM_COURSE_LEVELS = 9;
 const ALL_COURSE_LEVELS = Array.from({ length: NUM_COURSE_LEVELS }, (_, i) =>
     ((i + 1) * 1000).toString()
 );
-export const ALL_SUBJECT_CODES = [
-    "ACAD",
-    "ACSC",
-    "AGRI",
-    "AGRN",
-    "ANAT",
-    "ANSC",
-    "APSC",
-    "AQUA",
-    "ARBC",
-    "ARCH",
-    "ARTS",
-    "ASSC",
-    "BIOC",
-    "BIOE",
-    "BIOL",
-    "BIOA",
-    "BMNG",
-    "BVSC",
-    "BAFD",
-    "BUSS",
-    "BUSI",
-    "CANA",
-    "CHEE",
-    "CHEM",
-    "CHMA",
-    "CHIN",
-    "CIVL",
-    "CLAS",
-    "COMM",
-    "CMSD",
-    "CPST",
-    "CSCA",
-    "CSCI",
-    "CTMP",
-    "CRWR",
-    "DEHY",
-    "DENT",
-    "DMUT",
-    "DGIN",
-    "DISM",
-    "EMSP",
-    "EESC",
-    "ERTH",
-    "ECON",
-    "ECOA",
-    "ECED",
-    "ECMM",
-    "ENGI",
-    "INWK",
-    "ENGM",
-    "ENGN",
-    "ENGL",
-    "ENSL",
-    "EGLA",
-    "ENVA",
-    "ENVE",
-    "ENVS",
-    "ENVI",
-    "EPAH",
-    "EURO",
-    "EXTE",
-    "FILM",
-    "FIGS",
-    "FOSC",
-    "FOOD",
-    "FREN",
-    "GWST",
-    "GENE",
-    "GEOG",
-    "GERM",
-    "HESA",
-    "HINF",
-    "HLTH",
-    "HPRO",
-    "HSCE",
-    "HAHP",
-    "HSTC",
-    "HIST",
-    "HORT",
-    "INDG",
-    "IENG",
-    "INFO",
-    "INFB",
-    "INTE",
-    "INTD",
-    "INTA",
-    "IPHE",
-    "ITAL",
-    "JPHD",
-    "JOUR",
-    "KINE",
-    "KING",
-    "LARC",
-    "LAWS",
-    "LJSO",
-    "LEIS",
-    "MRIT",
-    "MGMT",
-    "MGTA",
-    "MARA",
-    "MARI",
-    "MATL",
-    "MATH",
-    "MTHA",
-    "MECH",
-    "MNSC",
-    "MEDP",
-    "MEDR",
-    "MICI",
-    "MCRA",
-    "MINE",
-    "MUSC",
-    "NESC",
-    "NUMT",
-    "NURS",
-    "NUTR",
-    "OCCU",
-    "OCEA",
-    "ORAL",
-    "PHDP",
-    "PATH",
-    "PERF",
-    "PERI",
-    "PHAC",
-    "PHAR",
-    "PHIL",
-    "PHLA",
-    "MPAS",
-    "PHYC",
-    "PHYS",
-    "PHYL",
-    "PHYT",
-    "PLAN",
-    "PLSC",
-    "POLI",
-    "PGPH",
-    "PEAS",
-    "PSYR",
-    "PSYO",
-    "PSYC",
-    "PUAD",
-    "RADT",
-    "REGN",
-    "RELS",
-    "RESM",
-    "RSPT",
-    "RUSN",
-    "SCIE",
-    "SLWK",
-    "SOSA",
-    "SOCI",
-    "SOIL",
-    "SPAN",
-    "SPNA",
-    "SPEC",
-    "STAT",
-    "STAA",
-    "SUST",
-    "THEA",
-    "TYPR",
-    "VTEC",
-    "VISC",
-    "WPUB",
-];
+const MAX_NUM_COURSES = 10;
 
 type CourseFilter = {
     terms: Term[];
@@ -191,6 +28,7 @@ type CourseFilter = {
 };
 
 export function FindCourses({ courses }: { courses: Course[] }) {
+    const [maxNumCourses, setMaxNumCourses] = useState(MAX_NUM_COURSES);
     const [filter, setFilter] = useState<CourseFilter>({
         terms: Object.keys(terms),
         courseLevels: ALL_COURSE_LEVELS,
@@ -229,8 +67,8 @@ export function FindCourses({ courses }: { courses: Course[] }) {
             );
         });
 
-        return filteredCourses;
-    }, [courses, deferredFilter, fuse]);
+        return filteredCourses.slice(0, maxNumCourses);
+    }, [courses, deferredFilter, fuse, maxNumCourses]);
 
     useEffect(() => {
         const storedFilter = localStorage.getItem("filter");
@@ -252,14 +90,14 @@ export function FindCourses({ courses }: { courses: Course[] }) {
             setFilter(newFilter);
         };
 
-    const handleAddSubjectCode = (subjectCode: string) => {
+    const handleAddSubjectCode = (subject: Subject) => {
         const newFilter = { ...filter };
-        if (newFilter.subjectCodes.includes(subjectCode)) {
+        if (newFilter.subjectCodes.includes(subject.code)) {
             newFilter.subjectCodes = newFilter.subjectCodes.filter(
-                (code) => code !== subjectCode
+                (code) => code !== subject.code
             );
         } else {
-            newFilter.subjectCodes = [...newFilter.subjectCodes, subjectCode];
+            newFilter.subjectCodes = [...newFilter.subjectCodes, subject.code];
         }
         localStorage.setItem("filter", JSON.stringify(newFilter));
         setFilter(newFilter);
@@ -293,6 +131,10 @@ export function FindCourses({ courses }: { courses: Course[] }) {
         newFilter.courseLevels = [];
         localStorage.setItem("filter", JSON.stringify(newFilter));
         setFilter(newFilter);
+    };
+
+    const handlShowMoreCourses = () => {
+        setMaxNumCourses((prev) => prev + 10);
     };
 
     return (
@@ -405,12 +247,13 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                                 showAllItemsByDefault
                                 placeholder="Search for a subject code.."
                                 isHoveredList
-                                allItems={ALL_SUBJECT_CODES}
+                                allItems={subjects}
+                                fuzzyKeys={["code", "description"]}
                                 onSelect={handleAddSubjectCode}
                                 closeOnSelect={false}
-                                numOfRecommendations={ALL_SUBJECT_CODES.length}
+                                numOfRecommendations={subjects.length}
                                 renderRecommendation={(
-                                    subjectCode,
+                                    subject,
                                     isCurrentSelected
                                 ) => (
                                     <div
@@ -421,14 +264,14 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                                     >
                                         <Checkbox
                                             checked={filter.subjectCodes.includes(
-                                                subjectCode
+                                                subject.code
                                             )}
                                             onCheckedChange={handleCheckFilter(
                                                 "subjectCodes",
-                                                subjectCode
+                                                subject.code
                                             )}
                                         />
-                                        {subjectCode}
+                                        {subject.description}
                                     </div>
                                 )}
                             />
@@ -456,13 +299,20 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                 </CardContent>
             </Card>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-2 justify-center items-center">
                 {filteredCourses.map((course) => (
-                    <Card key={course.subjectCode + course.courseCode}>
+                    <Card
+                        className="w-full"
+                        key={course.subjectCode + course.courseCode}
+                    >
                         <CardHeader>
-                            <CardTitle className="text-xl">
-                                {course.subjectCode} {course.courseCode} -{" "}
-                                {course.title}
+                            <CardTitle className="text-xl hover:underline">
+                                <Link
+                                    href={`/courses/${course.subjectCode}/${course.courseCode}`}
+                                >
+                                    {course.subjectCode} {course.courseCode} -{" "}
+                                    {course.title}
+                                </Link>
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -472,6 +322,11 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                         </CardContent>
                     </Card>
                 ))}
+                {filteredCourses.length > MAX_NUM_COURSES && (
+                    <Button onClick={handlShowMoreCourses} className="w-max">
+                        Show More
+                    </Button>
+                )}
             </div>
         </div>
     );
