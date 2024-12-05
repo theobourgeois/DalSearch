@@ -112,8 +112,12 @@ function replaceClassesAndInstructors(courses1, courses2) {
   return newCourses;
 }
 
-function writeToFile(data, filename = "data.json") {
-  fs.writeFile(filename, JSON.stringify(data), (err) => {
+function writeToFile(data, filename = "data.json", append = false) {
+  let func = fs.writeFileSync;
+  if (append) {
+    func = fs.appendFileSync;
+  }
+  func(filename, JSON.stringify(data), (err) => {
     if (err) {
       console.error(err);
       return;
@@ -175,23 +179,22 @@ async function fillInMissingData(courses) {
 
         const html = await response.text();
         const $ = cheerio.load(html);
-        const mainContent = $(".maincontent").html();
+        const mainContent = $(".maincontent").html() ?? "";
 
-        console.log(
-          `------ [${i + 1}/${
-            codes.length
-          }: FETCHING DESCRIPTION AND PREREQS FOR COURSE: ${code}] ------`,
-        );
-        i++;
-
-        const desc = mainContent
-          .split("CREDIT HOURS")[1]
-          .split("<br>")[1]
-          .trim();
+        const desc =
+          mainContent?.split("CREDIT HOURS")[1]?.split("<br>")[1]?.trim() ?? "";
         const prerequisites = getPreReqs(mainContent, newCourses);
 
         newCourses[code].description = desc;
         newCourses[code].prerequisites = prerequisites;
+        console.log(
+          `------ [${i + 1}/${
+            codes.length
+          }: COURSE: ${code} - DESCRIPTION: ${desc
+            .split("")
+            .slice(0, 10)} - PREREQS: ${prerequisites.join(",")}] ------`,
+        );
+        i++;
         console.log(
           `------ [DESCRIPTION: ${desc
             .split("")
@@ -360,7 +363,7 @@ function logDifferences(prevCourses, newCourses) {
     }
   }
 
-  writeToFile(data, "differences.json");
+  writeToFile(data, "differences.json", true);
 }
 async function getSubjectCodes() {
   try {

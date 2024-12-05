@@ -5,13 +5,13 @@ import {
     terms,
 } from "@/utils/course";
 import Link from "next/link";
-import { Schedule } from "../_components/schedule";
+import { Schedule } from "../../components/schedule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 import React from "react";
-import { InstructorList } from "../_components/instructor-list";
-import { BackButton } from "../_components/back-button";
+import { InstructorList } from "../../components/instructor-list";
+import { BackButton } from "../../components/back-button";
 
 type Props = {
     params: Promise<{ course: CourseAndSubjectCode }>;

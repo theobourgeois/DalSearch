@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import ScheduleBuilder from "../_components/schedule-builder";
-import { courses } from "@/utils/course";
+import UserSchedule from "../../components/user-schedule";
 
 export const metadata: Metadata = {
     title: "Schedule Builder - DalSearch",
@@ -11,7 +10,7 @@ export default function Page() {
     return (
         <main className="w-full flex justify-center">
             <section className="m-8 w-full">
-                <ScheduleBuilder courses={courses} />
+                <UserSchedule />
             </section>
         </main>
     );
