@@ -13,6 +13,21 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDebounce } from "@uidotdev/usehooks";
 import Link from "next/link";
+import { ClassSession } from "@/utils/course";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useSchedule } from "@/store/schedule";
+import { useToast } from "@/hooks/use-toast";
+import {
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+    Accordion,
+} from "./ui/accordion";
 
 const NUM_COURSE_LEVELS = 9;
 const ALL_COURSE_LEVELS = Array.from({ length: NUM_COURSE_LEVELS }, (_, i) =>
@@ -277,21 +292,37 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                             />
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {filter.subjectCodes.map((subjectCode) => (
-                                    <Badge
-                                        key={subjectCode}
-                                        variant="secondary"
-                                        className="flex items-center gap-1"
-                                    >
-                                        {subjectCode}
-                                        <X
-                                            className="h-3 w-3 cursor-pointer"
-                                            onClick={() =>
-                                                handleRemoveSubjectCode(
-                                                    subjectCode
-                                                )
-                                            }
-                                        />
-                                    </Badge>
+                                    <TooltipProvider key={subjectCode}>
+                                        <Tooltip>
+                                            <TooltipTrigger>
+                                                {" "}
+                                                <Badge
+                                                    key={subjectCode}
+                                                    variant="secondary"
+                                                    className="flex items-center gap-1"
+                                                >
+                                                    {subjectCode}
+                                                    <X
+                                                        className="h-3 w-3 cursor-pointer"
+                                                        onClick={() =>
+                                                            handleRemoveSubjectCode(
+                                                                subjectCode
+                                                            )
+                                                        }
+                                                    />
+                                                </Badge>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                {
+                                                    subjects.find(
+                                                        (code) =>
+                                                            code.code ==
+                                                            subjectCode
+                                                    )?.description
+                                                }
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 ))}
                             </div>
                         </div>
@@ -301,26 +332,10 @@ export function FindCourses({ courses }: { courses: Course[] }) {
 
             <div className="flex flex-col gap-2 justify-center items-center">
                 {filteredCourses.map((course) => (
-                    <Card
-                        className="w-full"
+                    <CourseCard
                         key={course.subjectCode + course.courseCode}
-                    >
-                        <CardHeader>
-                            <CardTitle className="text-xl hover:underline">
-                                <Link
-                                    href={`/courses/${course.subjectCode}/${course.courseCode}`}
-                                >
-                                    {course.subjectCode} {course.courseCode} -{" "}
-                                    {course.title}
-                                </Link>
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">
-                                {course.description}
-                            </p>
-                        </CardContent>
-                    </Card>
+                        course={course}
+                    />
                 ))}
                 {filteredCourses.length > MAX_NUM_COURSES && (
                     <Button onClick={handlShowMoreCourses} className="w-max">
@@ -329,5 +344,130 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                 )}
             </div>
         </div>
+    );
+}
+
+function CourseCard({ course }: { course: Course }) {
+    const { addTimeSlot, removeTimeSlot, timeSlots } = useSchedule();
+    const { toast } = useToast();
+
+    const handleToggleTimeSlot = (termClass: ClassSession) => () => {
+        const isAdded = timeSlots.some((ts) => ts.class.crn === termClass.crn);
+        if (isAdded) {
+            removeTimeSlot(termClass.crn);
+            toast({
+                title: "Class Removed",
+                description: `${course.subjectCode} ${course.courseCode} - ${termClass.section} has been removed from your schedule.`,
+            });
+        } else {
+            addTimeSlot(termClass);
+            toast({
+                title: "Class Added",
+                description: `${course.subjectCode} ${course.courseCode} - ${termClass.section} has been added to your schedule.`,
+            });
+        }
+    };
+
+    const addedTermClasses = course.termClasses.filter((termClass) =>
+        timeSlots.some((ts) => ts.class.crn === termClass.crn)
+    );
+    const unaddedTermClasses = course.termClasses.filter(
+        (termClass) => !timeSlots.some((ts) => ts.class.crn === termClass.crn)
+    );
+
+    const TermClassCard = ({
+        termClass,
+        isAdded,
+    }: {
+        termClass: ClassSession;
+        isAdded: boolean;
+    }) => (
+        <div
+            key={termClass.crn}
+            className="mb-4 p-3 bg-secondary/20 rounded-lg"
+        >
+            <div className="flex justify-between items-center mb-2">
+                <div>
+                    <span className="font-semibold">{termClass.section}</span>
+                    <Badge variant="outline" className="ml-2">
+                        {termClass.type}
+                    </Badge>
+                </div>
+                <Badge>{termClass.term}</Badge>
+            </div>
+            <div className="text-sm text-muted-foreground mb-2">
+                {termClass.days.join(", ")} • {termClass.time.start} -{" "}
+                {termClass.time.end}
+            </div>
+            <div className="text-sm text-muted-foreground mb-2">
+                Location: {termClass.location}
+            </div>
+            {termClass.time.start !== "C/D" && (
+                <Button
+                    variant={isAdded ? "destructive" : "default"}
+                    onClick={handleToggleTimeSlot(termClass)}
+                    className="w-full mt-2"
+                >
+                    {isAdded ? "Remove from Schedule" : "Add to Schedule"}
+                </Button>
+            )}
+        </div>
+    );
+
+    return (
+        <Card
+            className="w-full shadow-lg hover:shadow-xl transition-shadow duration-300"
+            key={course.subjectCode + course.courseCode}
+        >
+            <CardHeader className="bg-primary/10">
+                <CardTitle className="text-2xl font-bold">
+                    <Link
+                        href={`/courses/${course.subjectCode}/${course.courseCode}`}
+                        className="hover:underline"
+                    >
+                        {course.subjectCode} {course.courseCode} -{" "}
+                        {course.title}
+                    </Link>
+                </CardTitle>
+                <div className="flex items-center space-x-2 mt-2">
+                    <Badge variant="secondary">
+                        {course.creditHours} Credits
+                    </Badge>
+                    <Badge variant="outline">{course.location}</Badge>
+                </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+                <p className="text-muted-foreground mb-4">
+                    {course.description}
+                </p>
+                {addedTermClasses.map((termClass) => (
+                    <TermClassCard
+                        key={termClass.crn}
+                        termClass={termClass}
+                        isAdded
+                    />
+                ))}
+                <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="classes">
+                        <AccordionTrigger>Available Classes</AccordionTrigger>
+                        <AccordionContent>
+                            {unaddedTermClasses.map((termClass) => (
+                                <TermClassCard
+                                    key={
+                                        termClass.crn +
+                                        termClass.section +
+                                        termClass.term +
+                                        course.courseCode +
+                                        course.subjectCode
+                                    }
+                                    termClass={termClass}
+                                    isAdded={false}
+                                />
+                            ))}
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+            </CardContent>
+        </Card>
     );
 }

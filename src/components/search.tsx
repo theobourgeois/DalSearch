@@ -49,9 +49,6 @@ export function Search({
                         {course.title}
                     </Link>
                 )}
-                transformItem={(course) =>
-                    course.subjectCode + course.courseCode
-                }
                 hasSubmitButton={!isOnHeader}
                 isHoveredList={isOnHeader}
             />

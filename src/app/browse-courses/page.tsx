@@ -1,5 +1,5 @@
 import { courses } from "@/utils/course";
-import { FindCourses } from "../_components/find-courses";
+import { FindCourses } from "../../components/find-courses";
 
 export default function Home() {
     return (

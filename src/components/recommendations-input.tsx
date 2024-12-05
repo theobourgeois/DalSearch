@@ -46,7 +46,6 @@ export function RecommendationInput<T extends any[]>({
     numOfRecommendations = 5,
     isHoveredList,
     fuzzyKeys = [],
-    transformItem = (item: T) => item.toString(),
     renderRecommendation = DefaultRenderRecommendation,
     hasSubmitButton = false,
     closeOnSelect = true,
