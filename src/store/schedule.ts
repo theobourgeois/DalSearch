@@ -1,3 +1,4 @@
+import { colors } from '@/components/schedule';
 import { ClassSession } from '@/utils/course'
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -64,11 +65,11 @@ function downloadSchedule(container: HTMLElement, format: DownloadFormat) {
 const useScheduleStore = create<ScheduleStore>((set) => ({
   timeSlots: getDefaultScheduleTimeSlots(),
   addTimeSlot: (termClass) => set((state) => {
-    const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    const color = colors[state.timeSlots.length % colors.length];
     const newTimeSlot = { class: termClass, color };
     const newTimeSlots = [...state.timeSlots, newTimeSlot];
     updateLocalStorage(newTimeSlots);
-    return { timeSlots: newTimeSlots, notificationNum: state.notificationNum + 1 }
+    return { timeSlots: newTimeSlots }
   }),
   removeTimeSlot: (crn: string) => set((state) => {
     const newTimeSlots = state.timeSlots.filter((slot) => slot.class.crn !== crn);

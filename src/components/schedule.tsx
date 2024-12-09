@@ -62,7 +62,7 @@ export const colors = [
     "#6c3483", // Deep Violet
 ];
 
-export const CELL_HEIGHT = 40;
+export const CELL_HEIGHT = 60;
 export const TIME_QUANTUM_MIN = 30;
 export const NUM_HOURS = 13;
 export const NUM_TIME_SLOTS = NUM_HOURS * (60 / TIME_QUANTUM_MIN);
@@ -124,7 +124,7 @@ export function ScheduleBackground({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex bg-white rounded-md  overflow-hidden border border-gray-200">
+        <div className="flex bg-white rounded-md overflow-hidden border border-gray-200 min-w-[600px]">
             <div className="bg-gray-50 border-r border-gray-200">
                 {scheduleTimes.map((time) => (
                     <div
@@ -366,32 +366,34 @@ export function Schedule({ course }: { course: Course }) {
                         );
                     })}
             </ToggleGroup>
-            <ScheduleBackground>
-                {termClasses.map((termClass, index) => (
-                    <Fragment key={index}>
-                        {termClass.days.map((day) => (
-                            <ScheduleCourse
-                                key={termClass.section + day}
-                                day={day}
-                                termClass={termClass}
-                                color={
-                                    classColors[
-                                        termClass.section + termClass.term
-                                    ]
-                                }
-                                termClasses={termClasses}
-                                index={index}
-                                course={""}
-                            />
-                        ))}
-                    </Fragment>
-                ))}
-            </ScheduleBackground>
+            <div className="overflow-x-auto">
+                <ScheduleBackground>
+                    {termClasses.map((termClass, index) => (
+                        <Fragment key={index}>
+                            {termClass.days.map((day) => (
+                                <ScheduleTimeslot
+                                    key={termClass.section + day}
+                                    day={day}
+                                    termClass={termClass}
+                                    color={
+                                        classColors[
+                                            termClass.section + termClass.term
+                                        ]
+                                    }
+                                    termClasses={termClasses}
+                                    index={index}
+                                    course={""}
+                                />
+                            ))}
+                        </Fragment>
+                    ))}
+                </ScheduleBackground>
+            </div>
         </div>
     );
 }
 
-export function ScheduleCourse({
+export function ScheduleTimeslot({
     day,
     termClass,
     termClasses,
@@ -490,16 +492,16 @@ export function ScheduleCourse({
                                         <p className="font-bold text-xs sm:text-sm">
                                             {termClass.type} {termClass.section}
                                         </p>
-                                        <p className="text-xs text-muted-foreground hidden sm:block">
+                                        <p className="text-xs text-muted-foreground">
                                             {dayName}
                                         </p>
                                     </div>
-                                    <div className="text-xs hidden sm:block">
+                                    <div className="text-xs">
                                         <p className="truncate">
                                             {formatTime(termClass.time.start)} -{" "}
                                             {formatTime(termClass.time.end)}
                                         </p>
-                                        <p className="truncate hidden sm:block">
+                                        <p className="truncate">
                                             {termClass.location}
                                         </p>
                                     </div>

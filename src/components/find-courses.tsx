@@ -7,7 +7,7 @@ import { RecommendationInput } from "./recommendations-input";
 import { Checkbox } from "@/components/ui/checkbox";
 import Fuse from "fuse.js";
 import { Input } from "@/components/ui/input";
-import { Search, X } from "lucide-react";
+import { ChevronDown, Clock, Filter, MapPin, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,15 @@ import {
     AccordionTrigger,
     Accordion,
 } from "./ui/accordion";
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer";
 
 const NUM_COURSE_LEVELS = 9;
 const ALL_COURSE_LEVELS = Array.from({ length: NUM_COURSE_LEVELS }, (_, i) =>
@@ -44,10 +53,12 @@ type CourseFilter = {
 
 export function FindCourses({ courses }: { courses: Course[] }) {
     const [maxNumCourses, setMaxNumCourses] = useState(MAX_NUM_COURSES);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+
     const [filter, setFilter] = useState<CourseFilter>({
         terms: Object.keys(terms),
         courseLevels: ALL_COURSE_LEVELS,
-        subjectCodes: [],
+        subjectCodes: subjects.map((subject) => subject.code),
         searchTerm: "",
     });
 
@@ -152,188 +163,244 @@ export function FindCourses({ courses }: { courses: Course[] }) {
         setMaxNumCourses((prev) => prev + MAX_NUM_COURSES);
     };
 
+    const handleSelectAllSubjectCodes = () => {
+        const newFilter = { ...filter };
+        newFilter.subjectCodes = subjects.map((subject) => subject.code);
+        localStorage.setItem("filter", JSON.stringify(newFilter));
+        setFilter(newFilter);
+    };
+
     return (
         <div className="container mx-auto p-4 space-y-6">
-            <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                    className="pl-10 w-full"
-                    value={filter.searchTerm}
-                    onChange={(e) =>
-                        setFilter((prev) => ({
-                            ...prev,
-                            searchTerm: e.target.value,
-                        }))
-                    }
-                    placeholder="Search for course name, code, or subject code"
-                />
-            </div>
-
-            <Card className="w-full">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold">
-                        Filter Courses
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div>
-                            <Label className="text-lg font-semibold mb-2 block">
-                                Course Levels
-                            </Label>
-                            <div className="mb-2 flex gap-2 items-center">
-                                <Button
-                                    size="sm"
-                                    onClick={handleSelectAllCourseLevels}
-                                >
-                                    Select All
-                                </Button>
-                                <Button
-                                    size="sm"
-                                    onClick={handleDeselectAllCourseLevels}
-                                >
-                                    Deselect All
-                                </Button>
-                            </div>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                {ALL_COURSE_LEVELS.map((courseLevel) => (
-                                    <div
-                                        key={courseLevel}
-                                        className="flex items-center space-x-2"
-                                    >
-                                        <Checkbox
-                                            id={`level-${courseLevel}`}
-                                            checked={filter.courseLevels.includes(
-                                                courseLevel
-                                            )}
-                                            onCheckedChange={handleCheckFilter(
-                                                "courseLevels",
-                                                courseLevel
-                                            )}
-                                        />
-                                        <Label htmlFor={`level-${courseLevel}`}>
-                                            {courseLevel}
-                                        </Label>
+            <div className="flex items-center space-x-2">
+                <div className="relative flex-grow">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input
+                        className="pl-10 w-full rounded-full"
+                        value={filter.searchTerm}
+                        onChange={(e) =>
+                            setFilter((prev) => ({
+                                ...prev,
+                                searchTerm: e.target.value,
+                            }))
+                        }
+                        placeholder="Search for course name, code, or subject code"
+                    />
+                </div>
+                <Drawer open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+                    <DrawerTrigger asChild>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="rounded-full"
+                        >
+                            <Filter className="w-5 h-5" />
+                        </Button>
+                    </DrawerTrigger>
+                    <DrawerContent className="h-[40vh]">
+                        <DrawerHeader>
+                            <DrawerTitle className="text-3xl">
+                                Filter Courses
+                            </DrawerTitle>
+                        </DrawerHeader>
+                        <div className="overflow-y-auto px-4 space-y-6">
+                            <div className="flex flex-col md:flex-row gap-4">
+                                <div>
+                                    <Label className="text-lg font-semibold mb-2 block">
+                                        Course Levels
+                                    </Label>
+                                    <div className="mb-2 flex gap-2 items-center">
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={
+                                                handleSelectAllCourseLevels
+                                            }
+                                        >
+                                            Select All
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={
+                                                handleDeselectAllCourseLevels
+                                            }
+                                        >
+                                            Deselect All
+                                        </Button>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
+                                    <div className="flex gap-2">
+                                        {Array.from({ length: 3 }, (_, i) => {
+                                            return (
+                                                <div
+                                                    key={i}
+                                                    className="flex flex-col gap-2"
+                                                >
+                                                    {ALL_COURSE_LEVELS.slice(
+                                                        i * 3,
+                                                        i * 3 + 3
+                                                    ).map((courseLevel) => (
+                                                        <div
+                                                            key={courseLevel}
+                                                            className="flex items-center space-x-2"
+                                                        >
+                                                            <Checkbox
+                                                                id={`level-${courseLevel}`}
+                                                                checked={filter.courseLevels.includes(
+                                                                    courseLevel
+                                                                )}
+                                                                onCheckedChange={handleCheckFilter(
+                                                                    "courseLevels",
+                                                                    courseLevel
+                                                                )}
+                                                            />
+                                                            <Label
+                                                                htmlFor={`level-${courseLevel}`}
+                                                            >
+                                                                {courseLevel}
+                                                            </Label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
 
-                        <div>
-                            <Label className="text-lg font-semibold mb-2 block">
-                                Terms
-                            </Label>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                                {Object.entries(terms).map(
-                                    ([term, termName]) => (
+                                <div>
+                                    <Label className="text-lg font-semibold mb-2 block">
+                                        Terms
+                                    </Label>
+                                    <div className="flex gap-4 flex-wrap">
+                                        {Object.entries(terms).map(
+                                            ([term, termName]) => (
+                                                <div
+                                                    key={term}
+                                                    className="flex items-center space-x-2"
+                                                >
+                                                    <Checkbox
+                                                        id={`term-${term}`}
+                                                        checked={filter.terms.includes(
+                                                            term as Term
+                                                        )}
+                                                        onCheckedChange={handleCheckFilter(
+                                                            "terms",
+                                                            term
+                                                        )}
+                                                    />
+                                                    <Label
+                                                        htmlFor={`term-${term}`}
+                                                    >
+                                                        {termName}
+                                                    </Label>
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <Label className="text-lg font-semibold mb-2 block">
+                                    Subject Codes
+                                </Label>
+                                <div className="flex gap-2 items-center mb-2">
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={handleClearAllSubjectCodes}
+                                    >
+                                        Clear All
+                                    </Button>
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={handleSelectAllSubjectCodes}
+                                    >
+                                        Select All
+                                    </Button>
+                                </div>
+                                <RecommendationInput
+                                    showAllItemsByDefault
+                                    placeholder="Search for a subject code.."
+                                    isHoveredList
+                                    allItems={subjects}
+                                    fuzzyKeys={["code", "description"]}
+                                    onSelect={handleAddSubjectCode}
+                                    closeOnSelect={false}
+                                    numOfRecommendations={subjects.length}
+                                    renderRecommendation={(
+                                        subject,
+                                        isCurrentSelected
+                                    ) => (
                                         <div
-                                            key={term}
-                                            className="flex items-center space-x-2"
+                                            className={cn(
+                                                `flex cursor-pointer hover:bg-slate-100 items-center text-sm gap-2 w-full focus:outline-none py-2 px-2 rounded-lg`,
+                                                {
+                                                    "bg-slate-100":
+                                                        isCurrentSelected,
+                                                }
+                                            )}
                                         >
                                             <Checkbox
-                                                id={`term-${term}`}
-                                                checked={filter.terms.includes(
-                                                    term as Term
+                                                checked={filter.subjectCodes.includes(
+                                                    subject.code
                                                 )}
-                                                onCheckedChange={handleCheckFilter(
-                                                    "terms",
-                                                    term
-                                                )}
-                                            />
-                                            <Label htmlFor={`term-${term}`}>
-                                                {termName}
-                                            </Label>
-                                        </div>
-                                    )
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="md:col-span-2 lg:col-span-1">
-                            <Label className="text-lg font-semibold mb-2 block">
-                                Subject Codes
-                            </Label>
-                            <div className="flex justify-between items-center mb-2">
-                                <Button
-                                    size="sm"
-                                    onClick={handleClearAllSubjectCodes}
-                                >
-                                    Clear All
-                                </Button>
-                            </div>
-                            <RecommendationInput
-                                showAllItemsByDefault
-                                placeholder="Search for a subject code.."
-                                isHoveredList
-                                allItems={subjects}
-                                fuzzyKeys={["code", "description"]}
-                                onSelect={handleAddSubjectCode}
-                                closeOnSelect={false}
-                                numOfRecommendations={subjects.length}
-                                renderRecommendation={(
-                                    subject,
-                                    isCurrentSelected
-                                ) => (
-                                    <div
-                                        className={cn(
-                                            `flex cursor-pointer hover:bg-slate-100 items-center text-sm gap-2 w-full focus:outline-none py-2 px-2 rounded-lg`,
-                                            {
-                                                "bg-slate-100":
-                                                    isCurrentSelected,
-                                            }
-                                        )}
-                                    >
-                                        <Checkbox
-                                            checked={filter.subjectCodes.includes(
-                                                subject.code
-                                            )}
-                                            onCheckedChange={() =>
-                                                handleAddSubjectCode(subject)
-                                            }
-                                        />
-                                        {subject.description}
-                                    </div>
-                                )}
-                            />
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                {filter.subjectCodes.map((subjectCode) => (
-                                    <TooltipProvider key={subjectCode}>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <Badge
-                                                    variant="secondary"
-                                                    className="flex items-center gap-1"
-                                                >
-                                                    {subjectCode}
-                                                    <X
-                                                        className="h-3 w-3 cursor-pointer"
-                                                        onClick={() =>
-                                                            handleRemoveSubjectCode(
-                                                                subjectCode
-                                                            )
-                                                        }
-                                                    />
-                                                </Badge>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                {
-                                                    subjects.find(
-                                                        (code) =>
-                                                            code.code ===
-                                                            subjectCode
-                                                    )?.description
+                                                onCheckedChange={() =>
+                                                    handleAddSubjectCode(
+                                                        subject
+                                                    )
                                                 }
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                ))}
+                                            />
+                                            {subject.description}
+                                        </div>
+                                    )}
+                                />
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                    {filter.subjectCodes.map((subjectCode) => (
+                                        <TooltipProvider key={subjectCode}>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <Badge
+                                                        variant="secondary"
+                                                        className="flex items-center gap-1"
+                                                    >
+                                                        {subjectCode}
+                                                        <X
+                                                            className="h-3 w-3 cursor-pointer"
+                                                            onClick={() =>
+                                                                handleRemoveSubjectCode(
+                                                                    subjectCode
+                                                                )
+                                                            }
+                                                        />
+                                                    </Badge>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    {
+                                                        subjects.find(
+                                                            (code) =>
+                                                                code.code ===
+                                                                subjectCode
+                                                        )?.description
+                                                    }
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                    ))}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                        <DrawerFooter>
+                            <DrawerClose asChild>
+                                <Button variant="outline">Close</Button>
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+            </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
                 {filteredCourses.map((course) => (
                     <CourseCard
                         key={course.subjectCode + course.courseCode}
@@ -344,14 +411,23 @@ export function FindCourses({ courses }: { courses: Course[] }) {
 
             {filteredCourses.length >= maxNumCourses && (
                 <div className="flex justify-center mt-4">
-                    <Button onClick={handleShowMoreCourses}>Show More</Button>
+                    <Button onClick={handleShowMoreCourses} variant="outline">
+                        Show More Courses
+                        <ChevronDown className="ml-2 w-4 h-4" />
+                    </Button>
                 </div>
             )}
         </div>
     );
 }
 
-function CourseCard({ course }: { course: Course }) {
+export function CourseCard({
+    course,
+    showDescription = true,
+}: {
+    course: Course;
+    showDescription?: boolean;
+}) {
     const { addTimeSlot, removeTimeSlot, timeSlots } = useSchedule();
     const { toast } = useToast();
 
@@ -386,46 +462,57 @@ function CourseCard({ course }: { course: Course }) {
         termClass: ClassSession;
         isAdded: boolean;
     }) => (
-        <div key={termClass.crn} className="bg-slate-100/50 rounded-lg">
-            <CardHeader>
-                <div className="flex flex-wrap justify-between items-center mb-2">
-                    <div className="flex items-center space-x-2 mb-2 sm:mb-0">
-                        <span className="font-semibold">
+        <div
+            key={termClass.crn}
+            className="bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
+        >
+            <div className="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                <div className="flex items-center space-x-3">
+                    <div className="bg-primary/10 px-2 py-1 rounded-full">
+                        <span className="text-sm font-medium text-primary">
                             {termClass.section}
                         </span>
-                        <Badge variant="outline">{termClass.type}</Badge>
                     </div>
-                    <Badge>{terms[termClass.term]}</Badge>
+                    <Badge variant="outline" className="uppercase">
+                        {termClass.type}
+                    </Badge>
                 </div>
-            </CardHeader>
-            <CardContent>
+                <Badge variant="secondary">{terms[termClass.term]}</Badge>
+            </div>
+            <div className="p-4">
                 {termClass.time?.start && termClass.time?.start !== "C/D" ? (
-                    <>
-                        <div className="text-sm text-muted-foreground mb-2">
-                            {termClass.days.join(", ")} •{" "}
-                            {termClass.time?.start} - {termClass.time?.end}
+                    <div className="space-y-3">
+                        <div className="flex items-center space-x-2 text-muted-foreground">
+                            <Clock className="w-4 h-4" />
+                            <span className="text-sm">
+                                {termClass.days.join(", ")} •{" "}
+                                {termClass.time?.start} - {termClass.time?.end}
+                            </span>
                         </div>
-                        <div className="text-sm text-muted-foreground mb-2">
-                            Location: {termClass.location}
+                        <div className="flex items-center space-x-2 text-muted-foreground">
+                            <MapPin className="w-4 h-4" />
+                            <span className="text-sm">
+                                {termClass.location}
+                            </span>
                         </div>
-
                         <Button
                             variant={isAdded ? "destructive" : "default"}
                             size="sm"
                             onClick={handleToggleTimeSlot(termClass)}
-                            className="w-max mt-2"
+                            className="w-full mt-2"
                         >
                             {isAdded
                                 ? "Remove from Schedule"
                                 : "Add to Schedule"}
                         </Button>
-                    </>
+                    </div>
                 ) : (
-                    <div className="text-sm text-muted-foreground mb-2">
-                        {termClass.location}
+                    <div className="flex items-center space-x-2 text-muted-foreground">
+                        <MapPin className="w-4 h-4" />
+                        <Badge variant="outline">Online</Badge>
                     </div>
                 )}
-            </CardContent>
+            </div>
         </div>
     );
 
@@ -448,12 +535,14 @@ function CourseCard({ course }: { course: Course }) {
                 </div>
             </CardHeader>
             <CardContent className="pt-4 flex-grow">
-                <p
-                    dangerouslySetInnerHTML={{
-                        __html: course.description,
-                    }}
-                    className="text-muted-foreground mb-4"
-                ></p>
+                {showDescription && (
+                    <p
+                        dangerouslySetInnerHTML={{
+                            __html: course.description,
+                        }}
+                        className="text-muted-foreground mb-4"
+                    ></p>
+                )}
                 {addedTermClasses.length > 0 && (
                     <div className="space-y-2">
                         <h3 className="font-semibold mb-2">Added Classes</h3>

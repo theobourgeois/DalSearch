@@ -2,7 +2,7 @@
 
 import { useSchedule } from "@/store/schedule";
 import { Fragment, useRef } from "react";
-import { ScheduleBackground, ScheduleCourse } from "./schedule";
+import { ScheduleBackground, ScheduleTimeslot } from "./schedule";
 
 export default function UserSchedule() {
     const scheduleRef = useRef<HTMLDivElement>(null);
@@ -10,23 +10,25 @@ export default function UserSchedule() {
 
     return (
         <div ref={scheduleRef}>
-            <ScheduleBackground>
-                {timeSlots.map((timeSlot, index) => (
-                    <Fragment key={index}>
-                        {timeSlot.class.days.map((day) => (
-                            <ScheduleCourse
-                                key={timeSlot.class.crn + day}
-                                course={timeSlot.class.course}
-                                day={day}
-                                termClass={timeSlot.class}
-                                termClasses={timeSlots.map((c) => c.class)}
-                                color={timeSlot.color}
-                                index={index}
-                            />
-                        ))}
-                    </Fragment>
-                ))}
-            </ScheduleBackground>
+            <div className="overflow-x-auto">
+                <ScheduleBackground>
+                    {timeSlots.map((timeSlot, index) => (
+                        <Fragment key={index}>
+                            {timeSlot.class.days.map((day) => (
+                                <ScheduleTimeslot
+                                    key={timeSlot.class.crn + day}
+                                    course={timeSlot.class.course}
+                                    day={day}
+                                    termClass={timeSlot.class}
+                                    termClasses={timeSlots.map((c) => c.class)}
+                                    color={timeSlot.color}
+                                    index={index}
+                                />
+                            ))}
+                        </Fragment>
+                    ))}
+                </ScheduleBackground>
+            </div>
         </div>
     );
 }

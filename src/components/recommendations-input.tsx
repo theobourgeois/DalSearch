@@ -6,7 +6,7 @@ import { SearchIcon } from "lucide-react";
 import { useState, useMemo, useRef } from "react";
 import ClickAwayListener from "react-click-away-listener";
 
-type RecommendationInputProps<T extends any[]> = {
+type RecommendationInputProps<T extends unknown[]> = {
     showAllItemsByDefault?: boolean;
     placeholder?: string;
     allItems: T;
@@ -23,7 +23,7 @@ type RecommendationInputProps<T extends any[]> = {
     closeOnSelect?: boolean;
 };
 
-function DefaultRenderRecommendation<T extends any[]>(
+function DefaultRenderRecommendation<T extends unknown[]>(
     item: T[number],
     isCurrentSelected: boolean
 ) {
@@ -34,12 +34,12 @@ function DefaultRenderRecommendation<T extends any[]>(
                 isCurrentSelected && "bg-gray-200"
             )}
         >
-            {item}
+            {item as unknown as string}
         </div>
     );
 }
 
-export function RecommendationInput<T extends any[]>({
+export function RecommendationInput<T extends unknown[]>({
     showAllItemsByDefault = false,
     allItems,
     onSelect,
@@ -122,6 +122,7 @@ export function RecommendationInput<T extends any[]>({
     };
 
     const handleClickCourse = (recommendation: T) => () => {
+        console.log("clicked");
         onSelect(recommendation);
         if (closeOnSelect) {
             setRecommendations([]);
@@ -140,7 +141,7 @@ export function RecommendationInput<T extends any[]>({
                 value === ""
                     ? allItems
                     : fuse.search(value).map((result) => result.item);
-            setRecommendations(items);
+            setRecommendations(items as T[]);
         }
     };
 
@@ -166,7 +167,7 @@ export function RecommendationInput<T extends any[]>({
                 <ClickAwayListener onClickAway={() => setRecommendations([])}>
                     <div
                         className={cn("overflow-y-auto w-full flex flex-col", {
-                            "rounded-b-2xl z-10 border-b-2 border-l-2 border-r-2 border-slate-200 bg-white absolute left-0 top-[33px] px-2":
+                            "rounded-b-2xl z-[9999] border-b-2 border-l-2 border-r-2 border-slate-200 bg-white absolute left-0 top-[33px] px-2":
                                 isHoveredList,
                         })}
                         style={{
