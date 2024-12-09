@@ -17,13 +17,13 @@ export type TimeSlot = {
 
 export type ClassSession = {
   term: Term; // Term code, e.g., "202520"
-  classes: CourseAndSubjectCode[]; // List of class IDs (if any)
   section: string; // Section identifier, e.g., "T01"
   type: "Lec" | "Tut" | "Lab"; // Class type, e.g., Lecture or Tutorial
   days: Day[]; // Days of the week, e.g., ["M", "T", "R"]
   time: TimeSlot; // Start and end times
   location: string; // Classroom or location
   crn: string; // Course Registration Number
+  course: CourseAndSubjectCode; // Course code, e.g., "MGMT2305"
 };
 
 type Enrollment = {

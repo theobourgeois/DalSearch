@@ -68,7 +68,7 @@ const useScheduleStore = create<ScheduleStore>((set) => ({
     const newTimeSlot = { class: termClass, color };
     const newTimeSlots = [...state.timeSlots, newTimeSlot];
     updateLocalStorage(newTimeSlots);
-    return { timeSlots: newTimeSlots }
+    return { timeSlots: newTimeSlots, notificationNum: state.notificationNum + 1 }
   }),
   removeTimeSlot: (crn: string) => set((state) => {
     const newTimeSlots = state.timeSlots.filter((slot) => slot.class.crn !== crn);

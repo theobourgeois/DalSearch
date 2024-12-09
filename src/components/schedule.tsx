@@ -435,7 +435,7 @@ export function ScheduleCourse({
 
     const CourseContent = () => (
         <div className="p-2">
-            {course && <h3 className="font-bold mb-2">{course}</h3>}
+            <h3 className="font-bold mb-2">{termClass.course}</h3>
             <h3 className="font-bold mb-2">{termClass.section}</h3>
             <p className="text-sm mb-1">
                 {dayName}, {formatTime(termClass.time.start)} -{" "}
@@ -509,8 +509,7 @@ export function ScheduleCourse({
                         <DialogContent className="sm:max-w-[425px]">
                             <DialogHeader>
                                 <DialogTitle>
-                                    {course} {termClass.type}{" "}
-                                    {termClass.section} Details
+                                    {termClass.type} {termClass.section} Details
                                 </DialogTitle>
                                 <DialogDescription></DialogDescription>
                             </DialogHeader>

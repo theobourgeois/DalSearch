@@ -58,10 +58,10 @@ export function FindCourses({ courses }: { courses: Course[] }) {
         });
     }, [courses]);
 
-    const deferredFilter = useDebounce(filter, 300);
+    const debouncedFilter = useDebounce(filter, 300);
 
     const filteredCourses = useMemo(() => {
-        const filter = deferredFilter;
+        const filter = debouncedFilter;
         const fuzzySearchedCourses = filter.searchTerm
             ? fuse.search(filter.searchTerm).map((result) => result.item)
             : courses;
@@ -83,7 +83,7 @@ export function FindCourses({ courses }: { courses: Course[] }) {
         });
 
         return filteredCourses.slice(0, maxNumCourses);
-    }, [courses, deferredFilter, fuse, maxNumCourses]);
+    }, [courses, debouncedFilter, fuse, maxNumCourses]);
 
     useEffect(() => {
         const storedFilter = localStorage.getItem("filter");
@@ -148,34 +148,35 @@ export function FindCourses({ courses }: { courses: Course[] }) {
         setFilter(newFilter);
     };
 
-    const handlShowMoreCourses = () => {
-        setMaxNumCourses((prev) => prev + 10);
+    const handleShowMoreCourses = () => {
+        setMaxNumCourses((prev) => prev + MAX_NUM_COURSES);
     };
 
     return (
         <div className="container mx-auto p-4 space-y-6">
-            <div className="flex items-center space-x-2">
-                <Search className="w-5 h-5 text-muted-foreground" />
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
-                    className="flex-1"
+                    className="pl-10 w-full"
                     value={filter.searchTerm}
                     onChange={(e) =>
-                        setFilter({
-                            ...filter,
+                        setFilter((prev) => ({
+                            ...prev,
                             searchTerm: e.target.value,
-                        })
+                        }))
                     }
                     placeholder="Search for course name, code, or subject code"
                 />
             </div>
-            <Card>
+
+            <Card className="w-full">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold">
                         Filter Courses
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
                             <Label className="text-lg font-semibold mb-2 block">
                                 Course Levels
@@ -194,7 +195,7 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                                     Deselect All
                                 </Button>
                             </div>
-                            <div className="space-y-2">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                 {ALL_COURSE_LEVELS.map((courseLevel) => (
                                     <div
                                         key={courseLevel}
@@ -217,11 +218,12 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                                 ))}
                             </div>
                         </div>
+
                         <div>
                             <Label className="text-lg font-semibold mb-2 block">
                                 Terms
                             </Label>
-                            <div className="space-y-2">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                 {Object.entries(terms).map(
                                     ([term, termName]) => (
                                         <div
@@ -246,7 +248,8 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                                 )}
                             </div>
                         </div>
-                        <div className="col-span-3">
+
+                        <div className="md:col-span-2 lg:col-span-1">
                             <Label className="text-lg font-semibold mb-2 block">
                                 Subject Codes
                             </Label>
@@ -273,18 +276,20 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                                 ) => (
                                     <div
                                         className={cn(
-                                            "flex cursor-pointer hover:bg-slate-100 items-center text-sm gap-2 w-full focus:outline-none py-2 px-2 rounded",
-                                            isCurrentSelected && "bg-slate-100"
+                                            `flex cursor-pointer hover:bg-slate-100 items-center text-sm gap-2 w-full focus:outline-none py-2 px-2 rounded-lg`,
+                                            {
+                                                "bg-slate-100":
+                                                    isCurrentSelected,
+                                            }
                                         )}
                                     >
                                         <Checkbox
                                             checked={filter.subjectCodes.includes(
                                                 subject.code
                                             )}
-                                            onCheckedChange={handleCheckFilter(
-                                                "subjectCodes",
-                                                subject.code
-                                            )}
+                                            onCheckedChange={() =>
+                                                handleAddSubjectCode(subject)
+                                            }
                                         />
                                         {subject.description}
                                     </div>
@@ -295,9 +300,7 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                                     <TooltipProvider key={subjectCode}>
                                         <Tooltip>
                                             <TooltipTrigger>
-                                                {" "}
                                                 <Badge
-                                                    key={subjectCode}
                                                     variant="secondary"
                                                     className="flex items-center gap-1"
                                                 >
@@ -316,7 +319,7 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                                                 {
                                                     subjects.find(
                                                         (code) =>
-                                                            code.code ==
+                                                            code.code ===
                                                             subjectCode
                                                     )?.description
                                                 }
@@ -330,19 +333,20 @@ export function FindCourses({ courses }: { courses: Course[] }) {
                 </CardContent>
             </Card>
 
-            <div className="flex flex-col gap-2 justify-center items-center">
+            <div className="flex flex-col gap-2">
                 {filteredCourses.map((course) => (
                     <CourseCard
                         key={course.subjectCode + course.courseCode}
                         course={course}
                     />
                 ))}
-                {filteredCourses.length > MAX_NUM_COURSES && (
-                    <Button onClick={handlShowMoreCourses} className="w-max">
-                        Show More
-                    </Button>
-                )}
             </div>
+
+            {filteredCourses.length >= maxNumCourses && (
+                <div className="flex justify-center mt-4">
+                    <Button onClick={handleShowMoreCourses}>Show More</Button>
+                </div>
+            )}
         </div>
     );
 }
@@ -382,47 +386,55 @@ function CourseCard({ course }: { course: Course }) {
         termClass: ClassSession;
         isAdded: boolean;
     }) => (
-        <div
-            key={termClass.crn}
-            className="mb-4 p-3 bg-secondary/20 rounded-lg"
-        >
-            <div className="flex justify-between items-center mb-2">
-                <div>
-                    <span className="font-semibold">{termClass.section}</span>
-                    <Badge variant="outline" className="ml-2">
-                        {termClass.type}
-                    </Badge>
+        <div key={termClass.crn} className="bg-slate-100/50 rounded-lg">
+            <CardHeader>
+                <div className="flex flex-wrap justify-between items-center mb-2">
+                    <div className="flex items-center space-x-2 mb-2 sm:mb-0">
+                        <span className="font-semibold">
+                            {termClass.section}
+                        </span>
+                        <Badge variant="outline">{termClass.type}</Badge>
+                    </div>
+                    <Badge>{terms[termClass.term]}</Badge>
                 </div>
-                <Badge>{termClass.term}</Badge>
-            </div>
-            <div className="text-sm text-muted-foreground mb-2">
-                {termClass.days.join(", ")} • {termClass.time.start} -{" "}
-                {termClass.time.end}
-            </div>
-            <div className="text-sm text-muted-foreground mb-2">
-                Location: {termClass.location}
-            </div>
-            {termClass.time.start !== "C/D" && (
-                <Button
-                    variant={isAdded ? "destructive" : "default"}
-                    onClick={handleToggleTimeSlot(termClass)}
-                    className="w-full mt-2"
-                >
-                    {isAdded ? "Remove from Schedule" : "Add to Schedule"}
-                </Button>
-            )}
+            </CardHeader>
+            <CardContent>
+                {termClass.time?.start && termClass.time?.start !== "C/D" ? (
+                    <>
+                        <div className="text-sm text-muted-foreground mb-2">
+                            {termClass.days.join(", ")} •{" "}
+                            {termClass.time?.start} - {termClass.time?.end}
+                        </div>
+                        <div className="text-sm text-muted-foreground mb-2">
+                            Location: {termClass.location}
+                        </div>
+
+                        <Button
+                            variant={isAdded ? "destructive" : "default"}
+                            size="sm"
+                            onClick={handleToggleTimeSlot(termClass)}
+                            className="w-max mt-2"
+                        >
+                            {isAdded
+                                ? "Remove from Schedule"
+                                : "Add to Schedule"}
+                        </Button>
+                    </>
+                ) : (
+                    <div className="text-sm text-muted-foreground mb-2">
+                        {termClass.location}
+                    </div>
+                )}
+            </CardContent>
         </div>
     );
 
     return (
-        <Card
-            className="w-full shadow-lg hover:shadow-xl transition-shadow duration-300"
-            key={course.subjectCode + course.courseCode}
-        >
-            <CardHeader className="bg-primary/10">
-                <CardTitle className="text-2xl font-bold">
+        <Card className="w-full h-full flex flex-col shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader className="bg-primary/10 flex-grow">
+                <CardTitle className="text-xl font-bold">
                     <Link
-                        href={`/courses/${course.subjectCode}/${course.courseCode}`}
+                        href={`/${course.subjectCode}${course.courseCode}`}
                         className="hover:underline"
                     >
                         {course.subjectCode} {course.courseCode} -{" "}
@@ -431,39 +443,42 @@ function CourseCard({ course }: { course: Course }) {
                 </CardTitle>
                 <div className="flex items-center space-x-2 mt-2">
                     <Badge variant="secondary">
-                        {course.creditHours} Credits
+                        {course.creditHours} Credit Hours
                     </Badge>
-                    <Badge variant="outline">{course.location}</Badge>
                 </div>
             </CardHeader>
-            <CardContent className="pt-4">
-                <p className="text-muted-foreground mb-4">
-                    {course.description}
-                </p>
-                {addedTermClasses.map((termClass) => (
-                    <TermClassCard
-                        key={termClass.crn}
-                        termClass={termClass}
-                        isAdded
-                    />
-                ))}
+            <CardContent className="pt-4 flex-grow">
+                <p
+                    dangerouslySetInnerHTML={{
+                        __html: course.description,
+                    }}
+                    className="text-muted-foreground mb-4"
+                ></p>
+                {addedTermClasses.length > 0 && (
+                    <div className="space-y-2">
+                        <h3 className="font-semibold mb-2">Added Classes</h3>
+                        {addedTermClasses.map((termClass) => (
+                            <TermClassCard
+                                key={termClass.crn}
+                                termClass={termClass}
+                                isAdded={true}
+                            />
+                        ))}
+                    </div>
+                )}
                 <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="classes">
                         <AccordionTrigger>Available Classes</AccordionTrigger>
                         <AccordionContent>
-                            {unaddedTermClasses.map((termClass) => (
-                                <TermClassCard
-                                    key={
-                                        termClass.crn +
-                                        termClass.section +
-                                        termClass.term +
-                                        course.courseCode +
-                                        course.subjectCode
-                                    }
-                                    termClass={termClass}
-                                    isAdded={false}
-                                />
-                            ))}
+                            <div className="grid md:grid-cols-2 gap-2 grid-cols-1">
+                                {unaddedTermClasses.map((termClass) => (
+                                    <TermClassCard
+                                        key={`${termClass.crn}-${termClass.section}-${termClass.term}-${course.courseCode}-${course.subjectCode}`}
+                                        termClass={termClass}
+                                        isAdded={false}
+                                    />
+                                ))}
+                            </div>
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
