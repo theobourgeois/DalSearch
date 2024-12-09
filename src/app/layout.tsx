@@ -5,7 +5,7 @@ import Link from "next/link";
 import { courses } from "@/utils/course";
 import Header from "../components/header";
 import { Toaster } from "@/components/ui/toaster";
-import FloatingDiv from "@/components/floating-div";
+import FloatingSchedule from "@/components/floating-schedule";
 import UserSchedule from "@/components/user-schedule";
 
 const poppins = Poppins({
@@ -128,7 +128,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${poppins.variable} antialiased`}>
+            <body
+                className={`${poppins.variable} antialiased bg-gradient-to-t from-slate-200 to-slate-50/50`}
+            >
                 <Header courses={courses} />
                 {children}
                 <footer className="bg-gradient-to-r from-gray-800 to-black text-white py-8 px-4">
@@ -258,9 +260,9 @@ export default function RootLayout({
                     </div>
                 </footer>{" "}
                 <Toaster />
-                <FloatingDiv>
+                <FloatingSchedule>
                     <UserSchedule />
-                </FloatingDiv>
+                </FloatingSchedule>
             </body>
         </html>
     );

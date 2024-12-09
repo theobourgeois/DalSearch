@@ -29,7 +29,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
-    "framer-motion": "^11.13.1",
+    "framer-motion": "^11.13.3",
     "fuse.js": "^7.0.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
@@ -41,6 +41,7 @@
     "react-resizable-panels": "^2.1.7",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.1",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
