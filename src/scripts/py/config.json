@@ -1,5 +1,5 @@
 {
-    "BASE_URL": "https://www.ratemyprofessors.com/{path}",
+    "BASE_URL": "https://www.ratemyprofessors.com/professor/{path}",
     "rateprofessor_graphql_endpoint": "https://www.ratemyprofessors.com/graphql",
     "headers": {
        "Accept": "*/*",

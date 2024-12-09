@@ -15,21 +15,30 @@ const poppins = Poppins({
     weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
+export const keywords = [
+    "dalhousie",
+    "university",
+    "course",
+    "search",
+    "schedule",
+    "catalog",
+    "classes",
+    "academic",
+    "timetable",
+    "dalhousie university timetable",
+    "dal search",
+    "dalhousie university",
+    "course search",
+    "dalsearch",
+    "dal",
+    "halifax",
+];
+
 export const metadata: Metadata = {
     title: "DalSearch - Dalhousie University Course Search Tool",
     description:
         "Easily search and discover classes offered at Dalhousie University. Find course details, schedules, and more with our comprehensive search tool.",
-    keywords: [
-        "dalhousie",
-        "university",
-        "course",
-        "search",
-        "schedule",
-        "catalog",
-        "classes",
-        "academic",
-        "calendar",
-    ],
+    keywords,
 
     authors: [
         { name: "Théo Bourgeois" },
