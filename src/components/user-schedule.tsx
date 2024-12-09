@@ -15,12 +15,8 @@ export default function UserSchedule() {
                     <Fragment key={index}>
                         {timeSlot.class.days.map((day) => (
                             <ScheduleCourse
-                                key={
-                                    timeSlot.class.section +
-                                    timeSlot.course +
-                                    day
-                                }
-                                course={timeSlot.course}
+                                key={timeSlot.class.crn + day}
+                                course={timeSlot.class.course}
                                 day={day}
                                 termClass={timeSlot.class}
                                 termClasses={timeSlots.map((c) => c.class)}

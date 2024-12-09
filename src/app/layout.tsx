@@ -5,6 +5,8 @@ import Link from "next/link";
 import { courses } from "@/utils/course";
 import Header from "../components/header";
 import { Toaster } from "@/components/ui/toaster";
+import FloatingDiv from "@/components/floating-div";
+import UserSchedule from "@/components/user-schedule";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -247,6 +249,9 @@ export default function RootLayout({
                     </div>
                 </footer>{" "}
                 <Toaster />
+                <FloatingDiv>
+                    <UserSchedule />
+                </FloatingDiv>
             </body>
         </html>
     );
