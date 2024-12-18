@@ -7,6 +7,7 @@ import Header from "../components/header";
 import { Toaster } from "@/components/ui/toaster";
 import FloatingSchedule from "@/components/floating-schedule";
 import UserSchedule from "@/components/user-schedule";
+import { ScheduleControls } from "@/components/schedule-controls";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -261,6 +262,7 @@ export default function RootLayout({
                 </footer>{" "}
                 <Toaster />
                 <FloatingSchedule>
+                    <ScheduleControls />
                     <UserSchedule />
                 </FloatingSchedule>
             </body>

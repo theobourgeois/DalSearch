@@ -68,6 +68,23 @@ export type Instructor = {
 
 export type InstructorsByName = Record<string, Instructor>;
 
+export type CourseFilter = {
+  terms: Term[];
+  courseLevels: string[]; // 1000, 2000, 3000, 4000...
+  subjectCodes: string[]; // CSCI, MATH, etc.
+  searchTerm: string;
+};
+
+export type CourseOrderByKey =
+  | "title"
+  | "creditHours"
+  | "numClasses"
+
+export type CourseOrderBy = {
+  key: CourseOrderByKey;
+  direction: "asc" | "desc";
+};
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - This is a JSON file
 export const courses = searchData as CourseByCode;
@@ -75,9 +92,9 @@ export const courses = searchData as CourseByCode;
 // @ts-ignore - This is a JSON file
 export const instructors = instructorsData as InstructorsByName;
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
-export const terms: Record<string, string> = {
+export const terms = {
   "202510": "2024/2025 Fall",
   "202520": "2024/2025 Winter",
-};
+} as const;
 
 export const subjects = subjectsData as Subject[];
