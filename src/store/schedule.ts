@@ -24,14 +24,28 @@ type ScheduleStore = {
     setContainer: (container: HTMLElement) => void;
 };
 
-function getDefaultScheduleTimeSlots() {
-    const timeSlots = localStorage?.getItem("timeSlots") || null;
-    return (timeSlots ? JSON.parse(timeSlots) : []) as ScheduleTimeSlot[];
+function getDefaultScheduleTimeSlots(): ScheduleTimeSlot[] {
+    if (typeof window === 'undefined') return [];
+
+    try {
+        const timeSlots = localStorage.getItem("timeSlots");
+        return timeSlots ? JSON.parse(timeSlots) : [];
+    } catch (error) {
+        console.error('Error reading from localStorage:', error);
+        return [];
+    }
 }
 
-function updateLocalStorage(timeSlots: ScheduleTimeSlot[]) {
-    localStorage?.setItem("timeSlots", JSON.stringify(timeSlots));
+function updateLocalStorage(timeSlots: ScheduleTimeSlot[]): void {
+    if (typeof window === 'undefined') return;
+
+    try {
+        localStorage.setItem("timeSlots", JSON.stringify(timeSlots));
+    } catch (error) {
+        console.error('Error writing to localStorage:', error);
+    }
 }
+
 
 const downloadPNG = (container: HTMLElement) => {
     html2canvas(container).then((canvas) => {
