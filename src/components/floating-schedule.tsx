@@ -16,6 +16,19 @@ export const FloatingSchedule = ({
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const isEscapeKey = e.key === "Escape" || e.key === "Esc";
+            if (isEscapeKey) {
+                setIsFullScreen(false);
+                setIsHovered(false);
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
+    useEffect(() => {
         const toast = toasts.find((t) => t.title === "Class Added");
         if (toast) {
             setIsHovered(true);
@@ -32,6 +45,13 @@ export const FloatingSchedule = ({
         }, 300);
     };
 
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (e.target === e.currentTarget && isFullScreen) {
+            setIsFullScreen(false);
+            setIsHovered(false);
+        }
+    };
+
     return (
         <>
             {isFullScreen ? (
@@ -40,6 +60,7 @@ export const FloatingSchedule = ({
                         "fixed inset-0 z-50 flex items-center justify-center bg-black/50 overflow-hidden transition-opacity duration-300",
                         isVisible ? "opacity-100" : "opacity-0"
                     )}
+                    onClick={handleClick}
                 >
                     <div
                         className={cn(

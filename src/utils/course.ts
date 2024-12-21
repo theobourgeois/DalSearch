@@ -73,12 +73,14 @@ export type CourseFilter = {
   courseLevels: string[]; // 1000, 2000, 3000, 4000...
   subjectCodes: string[]; // CSCI, MATH, etc.
   searchTerm: string;
+  creditHours: number[];
 };
 
 export type CourseOrderByKey =
   | "title"
   | "creditHours"
   | "numClasses"
+  | "courseCode"
 
 export type CourseOrderBy = {
   key: CourseOrderByKey;
@@ -97,4 +99,7 @@ export const terms = {
   "202520": "2024/2025 Winter",
 } as const;
 
+
 export const subjects = subjectsData as Subject[];
+
+export const creditHours = Array.from(new Set(Object.values(courses).map((course) => Number(course.creditHours)))).sort((a, b) => a - b);

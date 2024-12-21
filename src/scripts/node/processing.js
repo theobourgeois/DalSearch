@@ -101,13 +101,14 @@ export function encodeText(obj) {
 }
 
 function replaceClassesAndInstructors(prevCourses, newCourses) {
-    const newCourses = { ...newCourses };
+    const updatedCourses = { ...newCourses };
 
     for (const course in newCourses) {
-        newCourses[course].description = prevCourses[course]?.description || "";
+        updatedCourses[course].description =
+            prevCourses[course]?.description || "";
     }
 
-    return newCourses;
+    return updatedCourses;
 }
 
 function writeToFile(data, filename = "data.json", append = false) {
