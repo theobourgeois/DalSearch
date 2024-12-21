@@ -25,12 +25,12 @@ type ScheduleStore = {
 };
 
 function getDefaultScheduleTimeSlots() {
-    const timeSlots = localStorage.getItem("timeSlots") || null;
+    const timeSlots = localStorage?.getItem("timeSlots") || null;
     return (timeSlots ? JSON.parse(timeSlots) : []) as ScheduleTimeSlot[];
 }
 
 function updateLocalStorage(timeSlots: ScheduleTimeSlot[]) {
-    localStorage.setItem("timeSlots", JSON.stringify(timeSlots));
+    localStorage?.setItem("timeSlots", JSON.stringify(timeSlots));
 }
 
 const downloadPNG = (container: HTMLElement) => {
