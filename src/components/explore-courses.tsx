@@ -9,7 +9,6 @@ import {
     Course,
     CourseFilter,
     CourseOrderBy,
-    CourseOrderByKey,
     subjects,
     Term,
     terms,
@@ -25,7 +24,7 @@ const ALL_COURSE_LEVELS = Array.from({ length: NUM_COURSE_LEVELS }, (_, i) =>
 );
 const MAX_NUM_COURSES = 10;
 
-export function FindCourses({ courses }: { courses: Course[] }) {
+export function ExploreCourses({ courses }: { courses: Course[] }) {
     const [maxNumCourses, setMaxNumCourses] = useState(MAX_NUM_COURSES);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
