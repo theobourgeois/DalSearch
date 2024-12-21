@@ -1,5 +1,5 @@
 import { courses } from "@/utils/course";
-import { FindCourses } from "../../components/explore-courses";
+import { ExploreCourses } from "../../components/explore-courses";
 
 export default function Home() {
     return (
@@ -8,7 +8,7 @@ export default function Home() {
                 <h2 className="text-4xl font-bold mb-4 text-gray-800">
                     Explore Dalhousie&apos;s Courses
                 </h2>
-                <FindCourses courses={Object.values(courses)} />
+                <ExploreCourses courses={Object.values(courses)} />
             </section>
         </main>
     );
