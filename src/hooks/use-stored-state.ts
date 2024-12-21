@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-let localStorage: Storage | null = null;
+const localStorage: Storage | null = null;
 
 // This hook is used to store a state in the local storage
 export function useStoredState<T>(defaultValue: T, key: string) {
