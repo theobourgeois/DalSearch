@@ -3,7 +3,11 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { courses } from "@/utils/course";
-import Header from "./_components/header";
+import Header from "../components/header";
+import { Toaster } from "@/components/ui/toaster";
+import FloatingSchedule from "@/components/floating-schedule";
+import UserSchedule from "@/components/user-schedule";
+import { ScheduleControls } from "@/components/schedule-controls";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -125,7 +129,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${poppins.variable} antialiased`}>
+            <body
+                className={`${poppins.variable} antialiased bg-gradient-to-t from-slate-200 to-slate-50/50`}
+            >
                 <Header courses={courses} />
                 {children}
                 <footer className="bg-gradient-to-r from-gray-800 to-black text-white py-8 px-4">
@@ -254,6 +260,11 @@ export default function RootLayout({
                         </p>
                     </div>
                 </footer>{" "}
+                <Toaster />
+                <FloatingSchedule>
+                    <ScheduleControls />
+                    <UserSchedule />
+                </FloatingSchedule>
             </body>
         </html>
     );
