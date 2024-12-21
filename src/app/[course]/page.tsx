@@ -5,14 +5,14 @@ import {
     terms,
 } from "@/utils/course";
 import Link from "next/link";
-import { Schedule } from "../_components/schedule";
+import { Schedule } from "../../components/schedule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 import React from "react";
-import { InstructorList } from "../_components/instructor-list";
-import { BackButton } from "../_components/back-button";
 import Script from "next/script";
+import { BackButton } from "@/components/back-button";
+import { InstructorList } from "@/components/instructor-list";
 
 type Props = {
     params: Promise<{ course: CourseAndSubjectCode }>;
@@ -21,21 +21,31 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const courseKey = (await params).course;
     const course = courses[courseKey];
-    if (!course) {
+    if (course) {
         return {
-            title: "Course not found",
-            description: "The requested course could not be found.",
+            title: `${course.subjectCode} ${course.courseCode} - ${course.title} - Dalhousie University`,
+            description: course.description,
+            keywords: [
+                course.subjectCode,
+                course.courseCode,
+                course.title,
+                ...course.prerequisites,
+                "Dalhousie University",
+                "dalsearch",
+                "Halifax",
+                "dal search",
+                "Nova Scotia",
+                "dal",
+                "search",
+            ],
         };
     }
 
     return {
-        title: `${course.subjectCode} ${course.courseCode} - ${course.title} - Dalhousie University`,
-        description: course.description,
+        title: "Course Not Found - Dalhousie University",
+        description:
+            "The course you're looking for doesn't exist. Please check the course code and try again.",
         keywords: [
-            course.subjectCode,
-            course.courseCode,
-            course.title,
-            ...course.prerequisites,
             "Dalhousie University",
             "dalsearch",
             "Halifax",
@@ -89,7 +99,10 @@ export default async function CoursePage({
     ).reduce((acc, [term, instructors]) => {
         const filtered = instructors.filter((i) => i !== "Staff");
         const removedDuplicates = [...new Set(filtered)];
-        acc[term] = removedDuplicates;
+        if (removedDuplicates.length > 0) {
+            acc[term] = removedDuplicates;
+        }
+
         return acc;
     }, {} as Record<string, string[]>);
 
