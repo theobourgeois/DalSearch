@@ -24,6 +24,7 @@ const orderByOptions: OrderByOption[] = [
     { key: "title", label: "Title" },
     { key: "creditHours", label: "Credit Hours" },
     { key: "numClasses", label: "Number of Classes" },
+    { key: "courseCode", label: "Course Code" },
 ];
 
 export function OrderByCourses({

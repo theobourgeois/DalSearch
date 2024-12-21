@@ -14,7 +14,14 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Filter, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CourseFilter, Subject, subjects, Term, terms } from "@/utils/course";
+import {
+    CourseFilter,
+    creditHours,
+    Subject,
+    subjects,
+    Term,
+    terms,
+} from "@/utils/course";
 import { RecommendationInput } from "./recommendations-input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -40,7 +47,8 @@ export function CourseFilterDrawer({
     onOpenChange: (open: boolean) => void;
 }) {
     const handleCheckFilter =
-        (key: keyof CourseFilter, value: string) => (checked: boolean) => {
+        (key: keyof CourseFilter, value: string | number) =>
+        (checked: boolean) => {
             const currentValues = filter[key] as string[];
             const newValues = checked
                 ? [...currentValues, value]
@@ -80,6 +88,14 @@ export function CourseFilterDrawer({
 
     const handleDeselectAllCourseLevels = () => {
         onFilterUpdate({ courseLevels: [] });
+    };
+
+    const handleSelectAllCreditHours = () => {
+        onFilterUpdate({ creditHours });
+    };
+
+    const handleDeselectAllCreditHours = () => {
+        onFilterUpdate({ creditHours: [] });
     };
 
     return (
@@ -184,6 +200,46 @@ export function CourseFilterDrawer({
                                         </div>
                                     )
                                 )}
+                            </div>
+                        </div>
+                        <div>
+                            <Label className="text-lg font-semibold mb-2 block">
+                                Credit Hours
+                            </Label>
+                            <div className="mb-2 flex gap-2 items-center">
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={handleSelectAllCreditHours}
+                                >
+                                    Select All
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={handleDeselectAllCreditHours}
+                                >
+                                    Deselect All
+                                </Button>
+                            </div>
+                            <div className="flex gap-2 flex-wrap">
+                                {creditHours.map((creditHour) => (
+                                    <div
+                                        key={creditHour}
+                                        className="flex items-center space-x-2"
+                                    >
+                                        <Checkbox
+                                            checked={filter.creditHours?.includes(
+                                                creditHour
+                                            )}
+                                            onCheckedChange={handleCheckFilter(
+                                                "creditHours",
+                                                creditHour
+                                            )}
+                                        />
+                                        <Label>{creditHour}</Label>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

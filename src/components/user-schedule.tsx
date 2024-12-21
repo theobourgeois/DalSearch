@@ -29,7 +29,12 @@ export default function UserSchedule() {
                                     course={timeSlot.class.course}
                                     day={day}
                                     termClass={timeSlot.class}
-                                    termClasses={timeSlots.map((c) => c.class)}
+                                    termClasses={timeSlots
+                                        .map((c) => c.class)
+                                        .filter(
+                                            (c) =>
+                                                c.term === timeSlot.class.term
+                                        )}
                                     color={timeSlot.color}
                                     index={index}
                                 />

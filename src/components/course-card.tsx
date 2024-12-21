@@ -8,12 +8,41 @@ import { Clock, MapPin, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 
+function KeywordHighlightedText({
+    text,
+    keyword,
+}: {
+    text: string;
+    keyword: string;
+}) {
+    const parts = text.split(new RegExp(`(${keyword})`, "gi"));
+
+    return (
+        <span>
+            {parts.map((part, index) => (
+                <span
+                    key={index}
+                    style={
+                        part.toLowerCase() === keyword.toLowerCase()
+                            ? { fontWeight: "bold", backgroundColor: "yellow" }
+                            : {}
+                    }
+                >
+                    {part}
+                </span>
+            ))}
+        </span>
+    );
+}
+
 const DEFAULT_VISIBLE_CLASSES = 4;
 
 export function CourseCard({
+    keyword,
     course,
     showDescription = true,
 }: {
+    keyword: string;
     course: Course;
     showDescription?: boolean;
 }) {
@@ -128,8 +157,10 @@ export function CourseCard({
                         href={`/${course.subjectCode}${course.courseCode}`}
                         className="hover:underline"
                     >
-                        {course.subjectCode} {course.courseCode} -{" "}
-                        {course.title}
+                        <KeywordHighlightedText
+                            text={`${course.subjectCode} ${course.courseCode} - ${course.title}`}
+                            keyword={keyword}
+                        />
                     </Link>
                 </CardTitle>
                 <div className="flex items-center space-x-2 mt-2">

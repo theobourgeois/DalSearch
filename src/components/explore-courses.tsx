@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, ChevronDown } from "lucide-react";
 import { useDebounce } from "@uidotdev/usehooks";
-import Fuse from "fuse.js";
 import {
     Course,
     CourseFilter,
     CourseOrderBy,
+    creditHours,
     subjects,
     Term,
     terms,
@@ -34,6 +34,7 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
             courseLevels: ALL_COURSE_LEVELS,
             subjectCodes: subjects.map((subject) => subject.code),
             searchTerm: "",
+            creditHours,
         },
         "filter"
     );
@@ -45,21 +46,20 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
         "orderBy"
     );
 
-    const fuse = useMemo(() => {
-        return new Fuse(courses, {
-            includeScore: true,
-            keys: ["subjectCode", "courseCode", "title"],
-        });
-    }, [courses]);
-
     const debouncedFilter = useDebounce(filter, 300);
 
     const filteredCourses = useMemo(() => {
         const filter = debouncedFilter;
-        const fuzzySearchedCourses = filter.searchTerm
-            ? fuse.search(filter.searchTerm).map((result) => result.item)
-            : courses;
-        const filteredCourses = fuzzySearchedCourses.filter((course) => {
+        const keywordFilteredCourses = courses.filter((course) => {
+            const keyword = filter.searchTerm.toLowerCase();
+            return (
+                course.title.toLowerCase().includes(keyword) ||
+                course.subjectCode.toLowerCase().includes(keyword) ||
+                course.courseCode.toLowerCase().includes(keyword)
+            );
+        });
+
+        const filteredCourses = keywordFilteredCourses.filter((course) => {
             const hasSelectedTerm = course.termClasses.some((termClass) => {
                 return filter.terms.includes(termClass.term);
             });
@@ -69,9 +69,13 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
             const hasSelectedSubjectCode = filter.subjectCodes.includes(
                 course.subjectCode
             );
+            const hasSelectedCreditHours = filter.creditHours.includes(
+                course.creditHours
+            );
             return (
                 hasSelectedTerm &&
                 hasSelectedCourseLevel &&
+                hasSelectedCreditHours &&
                 hasSelectedSubjectCode
             );
         });
@@ -79,6 +83,21 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
         // order by
 
         switch (orderBy.key) {
+            case "courseCode":
+                if (orderBy.direction === "asc") {
+                    filteredCourses.sort((a, b) =>
+                        (a.subjectCode + a.subjectCode).localeCompare(
+                            b.subjectCode + b.subjectCode
+                        )
+                    );
+                } else {
+                    filteredCourses.sort((a, b) =>
+                        (b.subjectCode + b.subjectCode).localeCompare(
+                            a.subjectCode + a.subjectCode
+                        )
+                    );
+                }
+                break;
             case "title":
                 if (orderBy.direction === "asc") {
                     filteredCourses.sort((a, b) =>
@@ -86,7 +105,7 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
                     );
                 } else {
                     filteredCourses.sort((a, b) =>
-                        a.title.localeCompare(b.title)
+                        b.title.localeCompare(a.title)
                     );
                 }
                 break;
@@ -115,7 +134,7 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
         }
 
         return filteredCourses.slice(0, maxNumCourses);
-    }, [courses, debouncedFilter, fuse, maxNumCourses, orderBy]);
+    }, [courses, debouncedFilter, maxNumCourses, orderBy]);
 
     const handleSearchTermChange = (searchTerm: string) => {
         setFilter((prev) => ({
@@ -164,6 +183,7 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
             <div className="flex flex-col gap-4">
                 {filteredCourses.map((course) => (
                     <CourseCard
+                        keyword={filter.searchTerm}
                         key={course.subjectCode + course.courseCode}
                         course={course}
                     />
