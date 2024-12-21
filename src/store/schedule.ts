@@ -1,3 +1,4 @@
+"use client"
 import { colors } from "@/components/schedule";
 import { ClassSession, Term } from "@/utils/course";
 import html2canvas from "html2canvas";
