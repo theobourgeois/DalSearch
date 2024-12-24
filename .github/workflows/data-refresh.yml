@@ -1,7 +1,7 @@
 name: Data Refresh
 on:
   schedule:
-    - cron: "0 19 * * *"
+    - cron: "22 19 * * *"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,4 +10,4 @@ jobs:
       - name: Make run.sh executable
         run: chmod +x ./src/scripts/run.sh
       - name: Run the script
-        run: ./src/scripts/run.sh
+        run: cd src/scripts/ && ./run.sh
