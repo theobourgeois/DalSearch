@@ -1,0 +1,13 @@
+name: Data Refresh
+on:
+  schedule:
+    - cron: "0 19 * * *"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Make run.sh executable
+        run: chmod +x ./src/scripts/run.sh
+      - name: Run the script
+        run: ./src/scripts/run.sh
