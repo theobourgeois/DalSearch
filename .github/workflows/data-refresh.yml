@@ -1,13 +1,25 @@
 name: Data Refresh
 on:
   schedule:
-    - cron: "22 19 * * *"
+    - cron: "0 8 * * 1"
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v1 # Checkout the repository
       - name: Make run.sh executable
         run: chmod +x ./src/scripts/run.sh
       - name: Run the script
         run: cd src/scripts/ && ./run.sh
+      - name: Set up Git config
+        run: |
+          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global user.name "$(gh api /users/${GITHUB_ACTOR} | jq .name -r)"
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "Data refresh update"
+          git push origin main
+        env:
+          # Use the GitHub token to authenticate the push
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
