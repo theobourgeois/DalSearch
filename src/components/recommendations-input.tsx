@@ -149,7 +149,7 @@ export function RecommendationInput<T extends unknown[]>({
         <>
             <div
                 onClick={handleFocus}
-                className="relative px-2 shadow-black rounded-xl w-full border-2 border-slate-200"
+                className="relative px-2 shadow-black rounded-xl w-full border-2 border-slate-200 bg-white"
                 onKeyDown={handleKeyDown}
             >
                 <div className="relative">
