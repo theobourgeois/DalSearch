@@ -6,15 +6,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1 # Checkout the repository
+      - uses: actions/checkout@v1
       - name: Make run.sh executable
         run: chmod +x ./src/scripts/run.sh
       - name: Run the script
         run: cd src/scripts/ && ./run.sh
-      - name: Set up Git config
+      - name: Set up Git configdso I
         run: |
-          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
-          git config --global user.name "$(gh api /users/${GITHUB_ACTOR} | jq .name -r)"
+          git config --global user.email "${{ secrets.GH_USER_EMAIL }}"
+          git config --global user.name "${{ secrets.GH_USER_NAME }}"
       - name: Commit and push changes
         run: |
           git add .
