@@ -70,7 +70,7 @@ export function RecentSearches() {
     }
 
     return (
-        <div className="w-3/4 mx-auto max-w-2xl mt-4 bg-white/60 p-4 rounded-lg">
+        <div className="md:w-3/4 w-11/12 mx-auto max-w-2xl mt-4 bg-white/60 p-4 rounded-lg">
             <h2 className="text-lg font-medium mb-2 text-gray-700">
                 Recent Searches
             </h2>
