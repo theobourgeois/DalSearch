@@ -70,7 +70,7 @@ export function RecentSearches() {
     }
 
     return (
-        <div className="md:w-3/4 w-11/12 mx-auto max-w-2xl mt-4 bg-white/60 p-4 rounded-lg">
+        <div className="md:w-3/4 w-11/12 mx-auto max-w-2xl mt-4 border-slate-200 bg-white drop-shadow-md border p-4 rounded-lg">
             <h2 className="text-lg font-medium mb-2 text-gray-700">
                 Recent Searches
             </h2>
@@ -82,7 +82,7 @@ export function RecentSearches() {
                     >
                         <Link
                             href={`/${course.subjectCode}${course.courseCode}`}
-                            className="flex-grow"
+                            className="flex-grow hover:underline"
                         >
                             <span className="font-medium">
                                 {course.subjectCode} {course.courseCode}
