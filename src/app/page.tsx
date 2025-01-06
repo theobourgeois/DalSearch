@@ -1,5 +1,6 @@
 import { courses } from "@/utils/course";
 import { Search } from "../components/search";
+import { RecentSearches } from "@/components/recent-searches";
 
 export default function Home() {
     return (
@@ -15,6 +16,9 @@ export default function Home() {
             </section>
             <section className="w-full max-w-2xl">
                 <Search courses={courses} />
+            </section>
+            <section className="w-full">
+                <RecentSearches />
             </section>
             <section className="w-full max-w-3xl mt-12 mb-8 text-center">
                 <h2 className="text-2xl font-semibold mb-4 text-gray-800">
