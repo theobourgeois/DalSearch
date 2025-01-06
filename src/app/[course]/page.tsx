@@ -13,6 +13,7 @@ import React from "react";
 import Script from "next/script";
 import { BackButton } from "@/components/back-button";
 import { InstructorList } from "@/components/instructor-list";
+import { RecentSearchHandler } from "@/components/recent-searches";
 
 type Props = {
     params: Promise<{ course: CourseAndSubjectCode }>;
@@ -126,6 +127,13 @@ export default async function CoursePage({
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
                     __html: JSON.stringify(seoSchema),
+                }}
+            />
+            <RecentSearchHandler
+                recentCourse={{
+                    subjectCode: course.subjectCode,
+                    courseCode: course.courseCode,
+                    title: course.title,
                 }}
             />
             <BackButton />
