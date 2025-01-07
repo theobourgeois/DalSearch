@@ -106,6 +106,8 @@ function replaceClassesAndInstructors(prevCourses, newCourses) {
     for (const course in newCourses) {
         updatedCourses[course].description =
             prevCourses[course]?.description || "";
+        updatedCourses[course].prerequisites =
+            prevCourses[course]?.prerequisites || [];
     }
 
     return updatedCourses;
@@ -152,7 +154,7 @@ async function fillInMissingData(courses) {
         "https://academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&topicgroupid=37708&entitytype=CID&entitycode=";
     let codes = Object.keys(courses);
     // filter course that already have descriptions
-    // codes = codes.filter((code) => !courses[code].description);
+    codes = codes.filter((code) => !courses[code].description);
 
     console.log(`------ [FETCHING ${codes.length} DESCRIPTIONS] ------`);
 
