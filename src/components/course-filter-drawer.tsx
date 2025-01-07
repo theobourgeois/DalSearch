@@ -1,13 +1,4 @@
 "use client";
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-} from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -30,6 +21,15 @@ import {
     TooltipTrigger,
     TooltipContent,
 } from "@/components/ui/tooltip";
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "./ui/sheet";
 
 const ALL_COURSE_LEVELS = Array.from({ length: 9 }, (_, i) =>
     ((i + 1) * 1000).toString()
@@ -99,18 +99,16 @@ export function CourseFilterDrawer({
     };
 
     return (
-        <Drawer open={isOpen} onOpenChange={onOpenChange}>
-            <DrawerTrigger asChild>
+        <Sheet open={isOpen} onOpenChange={onOpenChange}>
+            <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="rounded-full">
                     <Filter className="w-5 h-5" />
                 </Button>
-            </DrawerTrigger>
-            <DrawerContent className="h-[40vh]">
-                <DrawerHeader>
-                    <DrawerTitle className="text-3xl">
-                        Filter Courses
-                    </DrawerTitle>
-                </DrawerHeader>
+            </SheetTrigger>
+            <SheetContent side="bottom">
+                <SheetHeader className="mb-4">
+                    <SheetTitle className="text-3xl">Filter Courses</SheetTitle>
+                </SheetHeader>
                 <div className="overflow-y-auto px-4 space-y-6">
                     <div className="flex flex-col md:flex-row gap-4">
                         <div>
@@ -286,6 +284,9 @@ export function CourseFilterDrawer({
                                             "bg-slate-100": isCurrentSelected,
                                         }
                                     )}
+                                    onClick={() =>
+                                        handleAddSubjectCode(subject)
+                                    }
                                 >
                                     <Checkbox
                                         checked={filter.subjectCodes.includes(
@@ -299,7 +300,7 @@ export function CourseFilterDrawer({
                                 </div>
                             )}
                         />
-                        <div className="flex flex-wrap gap-2 mt-2">
+                        <div className="flex flex-wrap gap-2 mt-2 min-h-60 items-start">
                             {filter.subjectCodes.map((subjectCode) => (
                                 <TooltipProvider key={subjectCode}>
                                     <Tooltip>
@@ -334,12 +335,12 @@ export function CourseFilterDrawer({
                         </div>
                     </div>
                 </div>
-                <DrawerFooter>
-                    <DrawerClose asChild>
+                <SheetFooter className="mx-auto">
+                    <SheetClose asChild>
                         <Button variant="outline">Close</Button>
-                    </DrawerClose>
-                </DrawerFooter>
-            </DrawerContent>
-        </Drawer>
+                    </SheetClose>
+                </SheetFooter>
+            </SheetContent>
+        </Sheet>
     );
 }
