@@ -103,6 +103,7 @@ export function CourseCard({
                 </div>
                 <Badge variant="secondary">{terms[termClass.term]}</Badge>
             </div>
+
             <div className="p-4">
                 {termClass.time?.start && termClass.time?.start !== "C/D" ? (
                     <div className="space-y-3">
@@ -168,8 +169,27 @@ export function CourseCard({
                         {course.creditHours} Credit Hours
                     </Badge>
                 </div>
+                {course.prerequisites.length > 0 && (
+                    <div>
+                        <h2 className="text-base font-semibold mb-1 mt-1">
+                            Prerequisites
+                        </h2>
+                        <div className="flex flex-wrap gap-2">
+                            {course.prerequisites.map((prereq) => (
+                                <Link key={prereq} href={`/${prereq}`}>
+                                    <Badge
+                                        variant="outline"
+                                        className="text-blue-600 hover:bg-blue-100 transition-colors"
+                                    >
+                                        {prereq}
+                                    </Badge>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </CardHeader>
-            <CardContent className="pt-4 flex-grow">
+            <CardContent className="flex-grow">
                 {showDescription && (
                     <p
                         dangerouslySetInnerHTML={{
