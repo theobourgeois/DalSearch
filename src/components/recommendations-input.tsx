@@ -122,7 +122,6 @@ export function RecommendationInput<T extends unknown[]>({
     };
 
     const handleClickCourse = (recommendation: T) => () => {
-        console.log("clicked");
         onSelect(recommendation);
         if (closeOnSelect) {
             setRecommendations([]);
