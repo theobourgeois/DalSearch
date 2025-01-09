@@ -8,20 +8,14 @@ import {
     Course,
     CourseFilter,
     CourseOrderBy,
-    creditHours,
-    subjects,
-    Term,
-    terms,
+    defaultFilter,
+    getFilteredCourses,
 } from "@/utils/course";
 import { CourseCard } from "./course-card";
 import { CourseFilterDrawer } from "./course-filter-drawer";
 import { useStoredState } from "@/hooks/use-stored-state";
 import { OrderByCourses } from "./order-courses";
 
-const NUM_COURSE_LEVELS = 9;
-const ALL_COURSE_LEVELS = Array.from({ length: NUM_COURSE_LEVELS }, (_, i) =>
-    ((i + 1) * 1000).toString()
-);
 const MAX_NUM_COURSES = 10;
 
 export function ExploreCourses({ courses }: { courses: Course[] }) {
@@ -29,13 +23,7 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const [filter, setFilter] = useStoredState<CourseFilter>(
-        {
-            terms: Object.keys(terms) as Term[],
-            courseLevels: ALL_COURSE_LEVELS,
-            subjectCodes: subjects.map((subject) => subject.code),
-            searchTerm: "",
-            creditHours,
-        },
+        defaultFilter,
         "filter"
     );
     const [orderBy, setOrderBy] = useStoredState<CourseOrderBy>(
@@ -48,93 +36,16 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
 
     const debouncedFilter = useDebounce(filter, 300);
 
-    const filteredCourses = useMemo(() => {
-        const filter = debouncedFilter;
-        const keywordFilteredCourses = courses.filter((course) => {
-            const keyword = filter.searchTerm.toLowerCase();
-            return (
-                course.title.toLowerCase().includes(keyword) ||
-                course.subjectCode.toLowerCase().includes(keyword) ||
-                course.courseCode.toLowerCase().includes(keyword)
-            );
-        });
-
-        const filteredCourses = keywordFilteredCourses.filter((course) => {
-            const hasSelectedTerm = course.termClasses.some((termClass) => {
-                return filter.terms.includes(termClass.term);
-            });
-            const hasSelectedCourseLevel = filter.courseLevels.includes(
-                course.courseCode[0] + "000"
-            );
-            const hasSelectedSubjectCode = filter.subjectCodes.includes(
-                course.subjectCode
-            );
-            const hasSelectedCreditHours = filter.creditHours.includes(
-                course.creditHours
-            );
-            return (
-                hasSelectedTerm &&
-                hasSelectedCourseLevel &&
-                hasSelectedCreditHours &&
-                hasSelectedSubjectCode
-            );
-        });
-
-        // order by
-
-        switch (orderBy.key) {
-            case "courseCode":
-                if (orderBy.direction === "asc") {
-                    filteredCourses.sort((a, b) =>
-                        (a.subjectCode + a.subjectCode).localeCompare(
-                            b.subjectCode + b.subjectCode
-                        )
-                    );
-                } else {
-                    filteredCourses.sort((a, b) =>
-                        (b.subjectCode + b.subjectCode).localeCompare(
-                            a.subjectCode + a.subjectCode
-                        )
-                    );
-                }
-                break;
-            case "title":
-                if (orderBy.direction === "asc") {
-                    filteredCourses.sort((a, b) =>
-                        a.title.localeCompare(b.title)
-                    );
-                } else {
-                    filteredCourses.sort((a, b) =>
-                        b.title.localeCompare(a.title)
-                    );
-                }
-                break;
-            case "creditHours":
-                if (orderBy.direction === "asc") {
-                    filteredCourses.sort(
-                        (a, b) => a.creditHours - b.creditHours
-                    );
-                } else {
-                    filteredCourses.sort(
-                        (a, b) => b.creditHours - a.creditHours
-                    );
-                }
-                break;
-            case "numClasses":
-                if (orderBy.direction === "asc") {
-                    filteredCourses.sort(
-                        (a, b) => a.termClasses.length - b.termClasses.length
-                    );
-                } else {
-                    filteredCourses.sort(
-                        (a, b) => a.termClasses.length - b.termClasses.length
-                    );
-                }
-                break;
-        }
-
-        return filteredCourses.slice(0, maxNumCourses);
-    }, [courses, debouncedFilter, maxNumCourses, orderBy]);
+    const filteredCourses = useMemo(
+        () =>
+            getFilteredCourses(
+                courses,
+                debouncedFilter,
+                orderBy,
+                maxNumCourses
+            ),
+        [courses, debouncedFilter, maxNumCourses, orderBy]
+    );
 
     const handleSearchTermChange = (searchTerm: string) => {
         setFilter((prev) => ({
