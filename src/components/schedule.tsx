@@ -64,7 +64,7 @@ export const colors = [
 
 export const CELL_HEIGHT = 60;
 export const TIME_QUANTUM_MIN = 30;
-export const NUM_HOURS = 13;
+export const NUM_HOURS = 15;
 export const NUM_TIME_SLOTS = NUM_HOURS * (60 / TIME_QUANTUM_MIN);
 export const START_HOUR = 8;
 
@@ -437,7 +437,11 @@ export function ScheduleTimeslot({
 
     const CourseContent = () => (
         <div className="p-2">
-            <h3 className="font-bold mb-2">{termClass.course}</h3>
+            <Link href={termClass.course}>
+                <h3 className="font-bold hover:underline mb-2">
+                    {termClass.course}
+                </h3>
+            </Link>
             <h3 className="font-bold mb-2">{termClass.section}</h3>
             <p className="text-sm mb-1">
                 {dayName}, {formatTime(termClass.time.start)} -{" "}

@@ -1,5 +1,5 @@
 import { CourseByCode } from "@/utils/course";
-import { CompassIcon, Github } from "lucide-react";
+import { BuildingIcon, CompassIcon, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "./search";
@@ -48,6 +48,16 @@ export default function Header({ courses }: Props) {
                         <CompassIcon className="w-6 h-6 mr-2" />
                         <span className="hidden text-nowrap text-sm md:inline">
                             Explore Courses
+                        </span>
+                    </Link>
+                    <Link
+                        title="Search Rooms"
+                        href="/rooms"
+                        className="flex items-center text-gray-800 hover:text-yellow-400"
+                    >
+                        <BuildingIcon className="w-6 h-6 mr-2" />
+                        <span className="hidden text-nowrap text-sm md:inline">
+                            Search rooms
                         </span>
                     </Link>
                     <Link
