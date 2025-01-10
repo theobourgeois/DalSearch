@@ -73,7 +73,7 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
                 <div className="relative flex-grow">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input
-                        className="pl-10 w-full rounded-full"
+                        className="pl-10 w-full rounded-full bg-white"
                         value={filter.searchTerm}
                         onChange={(e) => handleSearchTermChange(e.target.value)}
                         placeholder="Search for course name, code, or subject code"
@@ -90,6 +90,11 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
                     onOpenChange={setIsFilterOpen}
                 />
             </div>
+            {filteredCourses.length === 0 && (
+                <div className="text-center text-gray-500">
+                    No courses found
+                </div>
+            )}
 
             <div className="flex flex-col gap-4">
                 {filteredCourses.map((course) => (
