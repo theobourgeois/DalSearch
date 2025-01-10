@@ -1,18 +1,18 @@
-import { BuildingSchedules } from "@/components/building-schedules";
+import { RoomSchedules } from "@/components/room-schedules";
 import { ClassSession, courses } from "@/utils/course";
 
-const EXCLUDED_BUILDINGS = [
+const EXCLUDED_ROOMS = [
     " C/D, C/D",
     "Online-ASYNCHRONOUS SESSION",
     "Online-SYNCHRONOUS SESSION",
 ];
 
-export default function Buildings() {
-    const buildings = Object.values(courses).reduce((acc, course) => {
+function getRooms() {
+    return Object.values(courses).reduce((acc, course) => {
         course.termClasses.forEach((termClass) => {
             if (
                 !termClass.location ||
-                EXCLUDED_BUILDINGS.includes(termClass.location) ||
+                EXCLUDED_ROOMS.includes(termClass.location) ||
                 !termClass.time.start ||
                 !termClass.time.end
             ) {
@@ -25,14 +25,18 @@ export default function Buildings() {
         });
         return acc;
     }, {} as Record<string, ClassSession[]>);
+}
+
+export default function Rooms() {
+    const rooms = getRooms();
 
     return (
         <main className="flex justify-center">
             <section className="w-4/5 sm:w-3/4 m-8">
                 <h2 className="text-4xl font-bold mb-4 text-gray-800">
-                    Explore Dalhousie&apos;s Buildings
+                    Explore Dalhousie&apos;s Rooms
                 </h2>
-                <BuildingSchedules buildings={buildings} />
+                <RoomSchedules rooms={rooms} />
             </section>
         </main>
     );
