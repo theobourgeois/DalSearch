@@ -57,7 +57,6 @@ const downloadPNG = (container: HTMLElement) => {
 };
 
 const downloadPDF = (container: HTMLElement) => {
-    console.log(container)
     html2canvas(container).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const pdf = new jsPDF({
@@ -82,7 +81,7 @@ function downloadSchedule(
             downloadPNG(container);
             break;
         default:
-            console.log("Unsupported format");
+            console.error("Unsupported format");
     }
 }
 
