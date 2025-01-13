@@ -35,6 +35,7 @@ export async function GET(request: Request) {
 
 export async function OPTIONS() {
   return new Response(null, {
+    status: 204,
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
