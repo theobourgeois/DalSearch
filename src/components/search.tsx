@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 export function Search({
     courses,
     isOnHeader = false,
-    numberOfRecommendations = 50,
+    numberOfRecommendations = 5,
 }: {
     courses: CourseByCode;
     isOnHeader?: boolean;
