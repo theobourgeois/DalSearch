@@ -123,6 +123,31 @@ export function ScheduleBackground({
 }: {
     children: React.ReactNode;
 }) {
+    const [currentTime, setCurrentTime] = useState<string>("");
+    const hour = parseInt(currentTime.slice(0, 2));
+    const minute = parseInt(currentTime.slice(2, 4));
+    const top =
+        CELL_HEIGHT *
+        (hour - START_HOUR + minute / 60) *
+        (60 / TIME_QUANTUM_MIN);
+
+    useEffect(() => {
+        const updateTime = () => {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const timeString = `${hours.toString().padStart(2, "0")}${minutes
+                .toString()
+                .padStart(2, "0")}`;
+            setCurrentTime(timeString);
+        };
+
+        updateTime();
+        const interval = setInterval(updateTime, 60000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div className="flex bg-white rounded-md overflow-hidden border border-gray-200 min-w-[600px]">
             <div className="bg-gray-50 border-r border-gray-200">
@@ -153,6 +178,21 @@ export function ScheduleBackground({
                     ))}
                 </div>
                 <div className="relative">
+                    {currentTime && (
+                        <div
+                            className="absolute left-0 right-0 z-10 pointer-events-none"
+                            style={{
+                                top: `${top}px`,
+                            }}
+                        >
+                            <div className="flex items-center">
+                                <div className="bg-red-500 text-white text-xs px-1 py-0.5 rounded-r">
+                                    {formatTime(currentTime)}
+                                </div>
+                                <div className="flex-1 border-t-2 border-red-500"></div>
+                            </div>
+                        </div>
+                    )}
                     <div className="absolute inset-0">
                         <div className="grid grid-cols-6 h-full">
                             {Array.from({ length: 6 }).map((_, index) => (
