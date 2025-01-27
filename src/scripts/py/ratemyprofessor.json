@@ -6290,6 +6290,15 @@
     "difficultyLevel": "2.3",
     "numberOfRatings": "9"
   },
+  "Spencer R.": {
+    "firstName": "Rebecca Becky",
+    "lastName": "Spencer",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2226753",
+    "overallRating": "2.8",
+    "takeAgainRating": "37.5%",
+    "difficultyLevel": "2.3",
+    "numberOfRatings": "8"
+  },
   "Slonim J.": {
     "firstName": "Jacob",
     "lastName": "Slonim",
@@ -6360,15 +6369,6 @@
     "overallRating": "5",
     "takeAgainRating": "100%",
     "difficultyLevel": "2.4",
-    "numberOfRatings": "8"
-  },
-  "Spencer R.": {
-    "firstName": "Rebecca Becky",
-    "lastName": "Spencer",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2226753",
-    "overallRating": "2.8",
-    "takeAgainRating": "37.5%",
-    "difficultyLevel": "2.3",
     "numberOfRatings": "8"
   },
   "Hoskin D.": {
@@ -6650,15 +6650,6 @@
     "difficultyLevel": "3.1",
     "numberOfRatings": "8"
   },
-  "Kephart G.": {
-    "firstName": "George",
-    "lastName": "Kephart",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1748178",
-    "overallRating": "1.3",
-    "takeAgainRating": "12.5%",
-    "difficultyLevel": "4.1",
-    "numberOfRatings": "8"
-  },
   "Huber P.": {
     "firstName": "Paul",
     "lastName": "Huber",
@@ -6729,6 +6720,15 @@
     "overallRating": "4",
     "takeAgainRating": "66.6667%",
     "difficultyLevel": "3.6",
+    "numberOfRatings": "8"
+  },
+  "Kephart G.": {
+    "firstName": "George",
+    "lastName": "Kephart",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1748178",
+    "overallRating": "1.3",
+    "takeAgainRating": "12.5%",
+    "difficultyLevel": "4.1",
     "numberOfRatings": "8"
   },
   "Ibarra D.": {
@@ -13886,24 +13886,6 @@
     "difficultyLevel": "0",
     "numberOfRatings": "0"
   },
-  "Shafaii Y.": {
-    "firstName": "Yaqub",
-    "lastName": "Shafaii",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1995032",
-    "overallRating": "0",
-    "takeAgainRating": "-1%",
-    "difficultyLevel": "0",
-    "numberOfRatings": "0"
-  },
-  "Ozbilge A.": {
-    "firstName": "Armagan",
-    "lastName": "Ozbilge",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3063981",
-    "overallRating": "0",
-    "takeAgainRating": "-1%",
-    "difficultyLevel": "0",
-    "numberOfRatings": "0"
-  },
   "Parra A.": {
     "firstName": "Alvaro",
     "lastName": "Parra",
@@ -13919,6 +13901,24 @@
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3063245",
     "overallRating": "0",
     "takeAgainRating": "100%",
+    "difficultyLevel": "0",
+    "numberOfRatings": "0"
+  },
+  "Ozbilge A.": {
+    "firstName": "Armagan",
+    "lastName": "Ozbilge",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3063981",
+    "overallRating": "0",
+    "takeAgainRating": "-1%",
+    "difficultyLevel": "0",
+    "numberOfRatings": "0"
+  },
+  "Shafaii Y.": {
+    "firstName": "Yaqub",
+    "lastName": "Shafaii",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1995032",
+    "overallRating": "0",
+    "takeAgainRating": "-1%",
     "difficultyLevel": "0",
     "numberOfRatings": "0"
   },

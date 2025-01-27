@@ -96,6 +96,7 @@ export const instructors = instructorsData as InstructorsByName;
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 export const terms = {
   "202520": "2024/2025 Winter",
+  "202530": "2024/2025 Summer",
 } as const;
 
 
