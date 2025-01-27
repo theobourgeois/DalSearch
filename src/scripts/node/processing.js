@@ -14,7 +14,7 @@ function log(...args) {
     logResult += logString + "\n";
 }
 
-const TERMS = ["202520"];
+const TERMS = ["202520", "202530"];
 
 const headers = {
     accept: "application/json, text/plain, */*",
