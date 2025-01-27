@@ -13,7 +13,7 @@
     "lastName": "Gadbois",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/235211",
     "overallRating": "4.2",
-    "takeAgainRating": "77.3585%",
+    "takeAgainRating": "75.9259%",
     "difficultyLevel": "3.1",
     "numberOfRatings": "158"
   },
@@ -31,7 +31,7 @@
     "lastName": "Sampalli",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/51148",
     "overallRating": "4.8",
-    "takeAgainRating": "97.5904%",
+    "takeAgainRating": "97.619%",
     "difficultyLevel": "2.3",
     "numberOfRatings": "151"
   },
@@ -67,7 +67,7 @@
     "lastName": "Kalyaniwalla",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/445181",
     "overallRating": "1.9",
-    "takeAgainRating": "9.8039%",
+    "takeAgainRating": "9.7087%",
     "difficultyLevel": "4.3",
     "numberOfRatings": "128"
   },
@@ -85,7 +85,7 @@
     "lastName": "Sarhan",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1798572",
     "overallRating": "3.6",
-    "takeAgainRating": "65.0602%",
+    "takeAgainRating": "65.8824%",
     "difficultyLevel": "2.7",
     "numberOfRatings": "112"
   },
@@ -94,7 +94,7 @@
     "lastName": "Kember",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/87859",
     "overallRating": "3.2",
-    "takeAgainRating": "58.3333%",
+    "takeAgainRating": "60%",
     "difficultyLevel": "4.1",
     "numberOfRatings": "108"
   },
@@ -103,7 +103,7 @@
     "lastName": "MacIntosh",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/16731",
     "overallRating": "4.7",
-    "takeAgainRating": "97.4359%",
+    "takeAgainRating": "97.619%",
     "difficultyLevel": "2.5",
     "numberOfRatings": "108"
   },
@@ -157,7 +157,7 @@
     "lastName": "Yao",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/523787",
     "overallRating": "3.6",
-    "takeAgainRating": "67.6923%",
+    "takeAgainRating": "66.6667%",
     "difficultyLevel": "2.7",
     "numberOfRatings": "86"
   },
@@ -175,7 +175,7 @@
     "lastName": "Eisan",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/459178",
     "overallRating": "4.3",
-    "takeAgainRating": "70%",
+    "takeAgainRating": "68.2927%",
     "difficultyLevel": "2.7",
     "numberOfRatings": "83"
   },
@@ -247,7 +247,7 @@
     "lastName": "Helland",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/702395",
     "overallRating": "4.3",
-    "takeAgainRating": "91.6667%",
+    "takeAgainRating": "92.1053%",
     "difficultyLevel": "2.8",
     "numberOfRatings": "71"
   },
@@ -265,7 +265,7 @@
     "lastName": "Hanlon",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/76876",
     "overallRating": "3.7",
-    "takeAgainRating": "47.8261%",
+    "takeAgainRating": "48%",
     "difficultyLevel": "4",
     "numberOfRatings": "70"
   },
@@ -296,6 +296,15 @@
     "difficultyLevel": "3.4",
     "numberOfRatings": "69"
   },
+  "Nason R.": {
+    "firstName": "Rick",
+    "lastName": "Nason",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/78693",
+    "overallRating": "3.3",
+    "takeAgainRating": "43.2432%",
+    "difficultyLevel": "3.7",
+    "numberOfRatings": "68"
+  },
   "Kesselring K.": {
     "firstName": "Krista",
     "lastName": "Kesselring",
@@ -304,15 +313,6 @@
     "takeAgainRating": "90.9091%",
     "difficultyLevel": "2.7",
     "numberOfRatings": "66"
-  },
-  "Nason R.": {
-    "firstName": "Rick",
-    "lastName": "Nason",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/78693",
-    "overallRating": "3.3",
-    "takeAgainRating": "45.7143%",
-    "difficultyLevel": "3.7",
-    "numberOfRatings": "65"
   },
   "Andreas H.": {
     "firstName": "Heather",
@@ -458,6 +458,15 @@
     "difficultyLevel": "3",
     "numberOfRatings": "57"
   },
+  "Gu H.": {
+    "firstName": "Hong",
+    "lastName": "Gu",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/119168",
+    "overallRating": "2",
+    "takeAgainRating": "6.25%",
+    "difficultyLevel": "3.6",
+    "numberOfRatings": "57"
+  },
   "Gambold L.": {
     "firstName": "Liesl L.",
     "lastName": "Gambold",
@@ -476,21 +485,12 @@
     "difficultyLevel": "4.1",
     "numberOfRatings": "56"
   },
-  "Gu H.": {
-    "firstName": "Hong",
-    "lastName": "Gu",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/119168",
-    "overallRating": "2",
-    "takeAgainRating": "6.25%",
-    "difficultyLevel": "3.6",
-    "numberOfRatings": "56"
-  },
   "Saagh M.": {
     "firstName": "Milica",
     "lastName": "Saagh",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1700583",
     "overallRating": "1.4",
-    "takeAgainRating": "4.3478%",
+    "takeAgainRating": "4.2553%",
     "difficultyLevel": "4.5",
     "numberOfRatings": "55"
   },
@@ -598,7 +598,7 @@
     "lastName": "Gonzalez-Morales",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2776603",
     "overallRating": "3.4",
-    "takeAgainRating": "62.069%",
+    "takeAgainRating": "62.7119%",
     "difficultyLevel": "2.6",
     "numberOfRatings": "51"
   },
@@ -625,7 +625,7 @@
     "lastName": "Maitzen",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/319275",
     "overallRating": "4.4",
-    "takeAgainRating": "82.3529%",
+    "takeAgainRating": "83.3333%",
     "difficultyLevel": "3",
     "numberOfRatings": "50"
   },
@@ -652,7 +652,7 @@
     "lastName": "Schmidt",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1548273",
     "overallRating": "2.2",
-    "takeAgainRating": "13.1579%",
+    "takeAgainRating": "12.8205%",
     "difficultyLevel": "4.4",
     "numberOfRatings": "48"
   },
@@ -679,7 +679,7 @@
     "lastName": "Doucette",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/377923",
     "overallRating": "2.6",
-    "takeAgainRating": "25%",
+    "takeAgainRating": "27.2727%",
     "difficultyLevel": "4.2",
     "numberOfRatings": "48"
   },
@@ -697,7 +697,7 @@
     "lastName": "Duck",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/833015",
     "overallRating": "2.6",
-    "takeAgainRating": "38.4615%",
+    "takeAgainRating": "37.5%",
     "difficultyLevel": "4.1",
     "numberOfRatings": "48"
   },
@@ -742,7 +742,7 @@
     "lastName": "O'Brien",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/60338",
     "overallRating": "4.2",
-    "takeAgainRating": "77.7778%",
+    "takeAgainRating": "80%",
     "difficultyLevel": "2.9",
     "numberOfRatings": "47"
   },
@@ -790,6 +790,15 @@
     "takeAgainRating": "100%",
     "difficultyLevel": "2.9",
     "numberOfRatings": "46"
+  },
+  "Iakovlev S.": {
+    "firstName": "Serguei",
+    "lastName": "Iakovlev",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/599522",
+    "overallRating": "4.4",
+    "takeAgainRating": "93.3333%",
+    "difficultyLevel": "2.5",
+    "numberOfRatings": "45"
   },
   "Parsons M.": {
     "firstName": "Marianne",
@@ -899,6 +908,15 @@
     "difficultyLevel": "3.8",
     "numberOfRatings": "43"
   },
+  "Cozens F.": {
+    "firstName": "Fran",
+    "lastName": "Cozens",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/10257",
+    "overallRating": "2.9",
+    "takeAgainRating": "45.1613%",
+    "difficultyLevel": "3.6",
+    "numberOfRatings": "43"
+  },
   "Trappenberg T.": {
     "firstName": "Thomas",
     "lastName": "Trappenberg",
@@ -906,15 +924,6 @@
     "overallRating": "2.9",
     "takeAgainRating": "47.3684%",
     "difficultyLevel": "3.7",
-    "numberOfRatings": "43"
-  },
-  "Iakovlev S.": {
-    "firstName": "Serguei",
-    "lastName": "Iakovlev",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/599522",
-    "overallRating": "4.4",
-    "takeAgainRating": "93.3333%",
-    "difficultyLevel": "2.5",
     "numberOfRatings": "43"
   },
   "Power J.": {
@@ -958,7 +967,7 @@
     "lastName": "MacKinnon",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1912720",
     "overallRating": "4.5",
-    "takeAgainRating": "86.4865%",
+    "takeAgainRating": "86.8421%",
     "difficultyLevel": "3",
     "numberOfRatings": "42"
   },
@@ -1039,7 +1048,7 @@
     "lastName": "Mitchell",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1529982",
     "overallRating": "4.8",
-    "takeAgainRating": "95.8333%",
+    "takeAgainRating": "96%",
     "difficultyLevel": "2.1",
     "numberOfRatings": "40"
   },
@@ -1219,7 +1228,7 @@
     "lastName": "Naggar",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2040133",
     "overallRating": "4.7",
-    "takeAgainRating": "92.8571%",
+    "takeAgainRating": "93.1034%",
     "difficultyLevel": "2.9",
     "numberOfRatings": "37"
   },
@@ -1239,15 +1248,6 @@
     "overallRating": "3.2",
     "takeAgainRating": "33.3333%",
     "difficultyLevel": "3.5",
-    "numberOfRatings": "37"
-  },
-  "Cozens F.": {
-    "firstName": "Fran",
-    "lastName": "Cozens",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/10257",
-    "overallRating": "2.9",
-    "takeAgainRating": "44.4444%",
-    "difficultyLevel": "3.7",
     "numberOfRatings": "37"
   },
   "Abramson D.": {
@@ -1777,7 +1777,7 @@
     "lastName": "Marchand",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1822231",
     "overallRating": "3.4",
-    "takeAgainRating": "59.375%",
+    "takeAgainRating": "60.6061%",
     "difficultyLevel": "2",
     "numberOfRatings": "31"
   },
@@ -1804,7 +1804,7 @@
     "lastName": "Fullsack",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2569786",
     "overallRating": "3.3",
-    "takeAgainRating": "54.8387%",
+    "takeAgainRating": "56.25%",
     "difficultyLevel": "3.3",
     "numberOfRatings": "30"
   },
@@ -1876,7 +1876,7 @@
     "lastName": "Fitting",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/445323",
     "overallRating": "3.9",
-    "takeAgainRating": "50%",
+    "takeAgainRating": "42.8571%",
     "difficultyLevel": "3.2",
     "numberOfRatings": "30"
   },
@@ -2119,7 +2119,7 @@
     "lastName": "King",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2580684",
     "overallRating": "2.8",
-    "takeAgainRating": "44.8276%",
+    "takeAgainRating": "43.3333%",
     "difficultyLevel": "2.4",
     "numberOfRatings": "28"
   },
@@ -2137,7 +2137,7 @@
     "lastName": "Hayward",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2475101",
     "overallRating": "1.7",
-    "takeAgainRating": "10.7143%",
+    "takeAgainRating": "10.3448%",
     "difficultyLevel": "4.2",
     "numberOfRatings": "27"
   },
@@ -2209,7 +2209,7 @@
     "lastName": "Huish",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1458957",
     "overallRating": "3.8",
-    "takeAgainRating": "52.6316%",
+    "takeAgainRating": "50%",
     "difficultyLevel": "2.9",
     "numberOfRatings": "27"
   },
@@ -2560,7 +2560,7 @@
     "lastName": "Wehbe",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2850440",
     "overallRating": "1.5",
-    "takeAgainRating": "16%",
+    "takeAgainRating": "15.3846%",
     "difficultyLevel": "4",
     "numberOfRatings": "24"
   },
@@ -2607,6 +2607,15 @@
     "overallRating": "3.8",
     "takeAgainRating": "69.2308%",
     "difficultyLevel": "2.5",
+    "numberOfRatings": "24"
+  },
+  "Black I.": {
+    "firstName": "Iris",
+    "lastName": "Black",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/635454",
+    "overallRating": "4.6",
+    "takeAgainRating": "87.5%",
+    "difficultyLevel": "3.2",
     "numberOfRatings": "24"
   },
   "Phillmore L.": {
@@ -2798,6 +2807,15 @@
     "difficultyLevel": "3",
     "numberOfRatings": "23"
   },
+  "LeBlanc K.": {
+    "firstName": "Kevin",
+    "lastName": "LeBlanc",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2445510",
+    "overallRating": "3.4",
+    "takeAgainRating": "60.8696%",
+    "difficultyLevel": "3.5",
+    "numberOfRatings": "23"
+  },
   "Andrea F.": {
     "firstName": "Fraser",
     "lastName": "Andrea",
@@ -2922,15 +2940,6 @@
     "overallRating": "1.8",
     "takeAgainRating": "13.6364%",
     "difficultyLevel": "4.5",
-    "numberOfRatings": "22"
-  },
-  "Black I.": {
-    "firstName": "Iris",
-    "lastName": "Black",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/635454",
-    "overallRating": "4.8",
-    "takeAgainRating": "87.5%",
-    "difficultyLevel": "3.1",
     "numberOfRatings": "22"
   },
   "Sikka S.": {
@@ -3073,7 +3082,7 @@
     "lastName": "Payne",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1911724",
     "overallRating": "2.2",
-    "takeAgainRating": "46.6667%",
+    "takeAgainRating": "43.75%",
     "difficultyLevel": "4.2",
     "numberOfRatings": "21"
   },
@@ -3091,7 +3100,7 @@
     "lastName": "Rajaselvam",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1921789",
     "overallRating": "4.7",
-    "takeAgainRating": "88.8889%",
+    "takeAgainRating": "85%",
     "difficultyLevel": "2.4",
     "numberOfRatings": "21"
   },
@@ -3104,13 +3113,13 @@
     "difficultyLevel": "4.1",
     "numberOfRatings": "21"
   },
-  "LeBlanc K.": {
-    "firstName": "Kevin",
-    "lastName": "LeBlanc",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2445510",
-    "overallRating": "3.2",
-    "takeAgainRating": "60.8696%",
-    "difficultyLevel": "3.5",
+  "Heggie C.": {
+    "firstName": "Carla",
+    "lastName": "Heggie",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2620559",
+    "overallRating": "2",
+    "takeAgainRating": "27.2727%",
+    "difficultyLevel": "4.4",
     "numberOfRatings": "21"
   },
   "Lake C.": {
@@ -3129,15 +3138,6 @@
     "overallRating": "4.9",
     "takeAgainRating": "100%",
     "difficultyLevel": "2.2",
-    "numberOfRatings": "21"
-  },
-  "Heggie C.": {
-    "firstName": "Carla",
-    "lastName": "Heggie",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2620559",
-    "overallRating": "2",
-    "takeAgainRating": "27.2727%",
-    "difficultyLevel": "4.4",
     "numberOfRatings": "21"
   },
   "Pincock J.": {
@@ -3730,7 +3730,7 @@
     "lastName": "Mannell",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2963568",
     "overallRating": "4",
-    "takeAgainRating": "66.6667%",
+    "takeAgainRating": "50%",
     "difficultyLevel": "2.5",
     "numberOfRatings": "2"
   },
@@ -4099,7 +4099,7 @@
     "lastName": "Mosquera",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1822225",
     "overallRating": "3.8",
-    "takeAgainRating": "58.3333%",
+    "takeAgainRating": "61.5385%",
     "difficultyLevel": "1.9",
     "numberOfRatings": "16"
   },
@@ -4171,7 +4171,7 @@
     "lastName": "Shankaranarayanan",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3029745",
     "overallRating": "1.5",
-    "takeAgainRating": "13.3333%",
+    "takeAgainRating": "18.75%",
     "difficultyLevel": "3.7",
     "numberOfRatings": "15"
   },
@@ -4261,7 +4261,7 @@
     "lastName": "Kabalen",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2942123",
     "overallRating": "4.2",
-    "takeAgainRating": "80%",
+    "takeAgainRating": "81.25%",
     "difficultyLevel": "2.3",
     "numberOfRatings": "15"
   },
@@ -4963,7 +4963,7 @@
     "lastName": "Latka",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2463539",
     "overallRating": "3.6",
-    "takeAgainRating": "75%",
+    "takeAgainRating": "69.2308%",
     "difficultyLevel": "3.2",
     "numberOfRatings": "12"
   },
@@ -5017,7 +5017,7 @@
     "lastName": "Hayden",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1554515",
     "overallRating": "4.2",
-    "takeAgainRating": "83.3333%",
+    "takeAgainRating": "85.7143%",
     "difficultyLevel": "2.9",
     "numberOfRatings": "12"
   },
@@ -5332,7 +5332,7 @@
     "lastName": "Chen",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3033286",
     "overallRating": "5",
-    "takeAgainRating": "93.3333%",
+    "takeAgainRating": "93.75%",
     "difficultyLevel": "2.5",
     "numberOfRatings": "6"
   },
@@ -5426,15 +5426,6 @@
     "difficultyLevel": "3.4",
     "numberOfRatings": "11"
   },
-  "Giacomantonio C.": {
-    "firstName": "Chris",
-    "lastName": "Giacomantonio",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2463601",
-    "overallRating": "3.3",
-    "takeAgainRating": "63.6364%",
-    "difficultyLevel": "2.8",
-    "numberOfRatings": "11"
-  },
   "Toulin A.": {
     "firstName": "Alana",
     "lastName": "Toulin",
@@ -5487,6 +5478,15 @@
     "overallRating": "1.7",
     "takeAgainRating": "35.7143%",
     "difficultyLevel": "4.2",
+    "numberOfRatings": "11"
+  },
+  "Giacomantonio C.": {
+    "firstName": "Chris",
+    "lastName": "Giacomantonio",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2463601",
+    "overallRating": "3.3",
+    "takeAgainRating": "63.6364%",
+    "difficultyLevel": "2.8",
     "numberOfRatings": "11"
   },
   "Wallace P.": {
@@ -6106,7 +6106,7 @@
     "lastName": "Susko",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/176577",
     "overallRating": "4",
-    "takeAgainRating": "50%",
+    "takeAgainRating": "75%",
     "difficultyLevel": "3.9",
     "numberOfRatings": "9"
   },
@@ -6178,7 +6178,7 @@
     "lastName": "Medeiros",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2574142",
     "overallRating": "1.7",
-    "takeAgainRating": "22.2222%",
+    "takeAgainRating": "30%",
     "difficultyLevel": "4.1",
     "numberOfRatings": "9"
   },
@@ -6331,7 +6331,7 @@
     "lastName": "Koleilat",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2480523",
     "overallRating": "3.4",
-    "takeAgainRating": "62.5%",
+    "takeAgainRating": "66.6667%",
     "difficultyLevel": "3",
     "numberOfRatings": "8"
   },
@@ -6340,7 +6340,7 @@
     "lastName": "Gagne",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2953089",
     "overallRating": "4.1",
-    "takeAgainRating": "75%",
+    "takeAgainRating": "66.6667%",
     "difficultyLevel": "3.1",
     "numberOfRatings": "8"
   },
@@ -6360,6 +6360,15 @@
     "overallRating": "5",
     "takeAgainRating": "100%",
     "difficultyLevel": "2.4",
+    "numberOfRatings": "8"
+  },
+  "Spencer R.": {
+    "firstName": "Rebecca Becky",
+    "lastName": "Spencer",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2226753",
+    "overallRating": "2.8",
+    "takeAgainRating": "37.5%",
+    "difficultyLevel": "2.3",
     "numberOfRatings": "8"
   },
   "Hoskin D.": {
@@ -6646,7 +6655,7 @@
     "lastName": "Kephart",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1748178",
     "overallRating": "1.3",
-    "takeAgainRating": "0%",
+    "takeAgainRating": "12.5%",
     "difficultyLevel": "4.1",
     "numberOfRatings": "8"
   },
@@ -6821,15 +6830,6 @@
     "difficultyLevel": "3.9",
     "numberOfRatings": "7"
   },
-  "Spencer R.": {
-    "firstName": "Rebecca Becky",
-    "lastName": "Spencer",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2226753",
-    "overallRating": "3",
-    "takeAgainRating": "42.8571%",
-    "difficultyLevel": "2.4",
-    "numberOfRatings": "7"
-  },
   "Sevgur S.": {
     "firstName": "Serperi",
     "lastName": "Sevgur",
@@ -6875,15 +6875,6 @@
     "difficultyLevel": "3.1",
     "numberOfRatings": "7"
   },
-  "Gilhespy M.": {
-    "firstName": "Meghan",
-    "lastName": "Gilhespy",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2956205",
-    "overallRating": "2.7",
-    "takeAgainRating": "14.2857%",
-    "difficultyLevel": "3.6",
-    "numberOfRatings": "7"
-  },
   "Swan L.": {
     "firstName": "Lukas",
     "lastName": "Swan",
@@ -6918,6 +6909,15 @@
     "overallRating": "1.7",
     "takeAgainRating": "0%",
     "difficultyLevel": "4",
+    "numberOfRatings": "7"
+  },
+  "Gilhespy M.": {
+    "firstName": "Meghan",
+    "lastName": "Gilhespy",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2956205",
+    "overallRating": "2.7",
+    "takeAgainRating": "14.2857%",
+    "difficultyLevel": "3.6",
     "numberOfRatings": "7"
   },
   "Mercer M.": {
@@ -7411,9 +7411,18 @@
     "lastName": "Langford",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2963566",
     "overallRating": "3",
-    "takeAgainRating": "66.6667%",
+    "takeAgainRating": "50%",
     "difficultyLevel": "3.3",
     "numberOfRatings": "3"
+  },
+  "Hartery S.": {
+    "firstName": "Sean",
+    "lastName": "Hartery",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2967600",
+    "overallRating": "4.3",
+    "takeAgainRating": "71.4286%",
+    "difficultyLevel": "3.7",
+    "numberOfRatings": "6"
   },
   "Chircop A.": {
     "firstName": "Andrea",
@@ -7521,15 +7530,6 @@
     "overallRating": "1.8",
     "takeAgainRating": "16.6667%",
     "difficultyLevel": "4.3",
-    "numberOfRatings": "6"
-  },
-  "Hartery S.": {
-    "firstName": "Sean",
-    "lastName": "Hartery",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2967600",
-    "overallRating": "4.3",
-    "takeAgainRating": "83.3333%",
-    "difficultyLevel": "3.7",
     "numberOfRatings": "6"
   },
   "Wach G.": {
@@ -7882,6 +7882,15 @@
     "takeAgainRating": "100%",
     "difficultyLevel": "3",
     "numberOfRatings": "1"
+  },
+  "tatar l.": {
+    "firstName": "laura",
+    "lastName": "tatar",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3020735",
+    "overallRating": "3",
+    "takeAgainRating": "33.3333%",
+    "difficultyLevel": "3.2",
+    "numberOfRatings": "6"
   },
   "James A.": {
     "firstName": "Albert",
@@ -8284,7 +8293,7 @@
     "lastName": "Boudreau",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2434620",
     "overallRating": "4",
-    "takeAgainRating": "80%",
+    "takeAgainRating": "83.3333%",
     "difficultyLevel": "3.6",
     "numberOfRatings": "5"
   },
@@ -8745,15 +8754,6 @@
     "overallRating": "5",
     "takeAgainRating": "100%",
     "difficultyLevel": "3",
-    "numberOfRatings": "5"
-  },
-  "tatar l.": {
-    "firstName": "laura",
-    "lastName": "tatar",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3020735",
-    "overallRating": "3",
-    "takeAgainRating": "33.3333%",
-    "difficultyLevel": "3.2",
     "numberOfRatings": "5"
   },
   "Deval H.": {
@@ -9409,7 +9409,7 @@
     "lastName": "Abul-Fottouh ",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2977977",
     "overallRating": "3",
-    "takeAgainRating": "50%",
+    "takeAgainRating": "40%",
     "difficultyLevel": "2.3",
     "numberOfRatings": "4"
   },
@@ -10210,7 +10210,7 @@
     "lastName": "Klein",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2933133",
     "overallRating": "3.7",
-    "takeAgainRating": "66.6667%",
+    "takeAgainRating": "75%",
     "difficultyLevel": "2.7",
     "numberOfRatings": "3"
   },
@@ -11411,6 +11411,15 @@
     "difficultyLevel": "4",
     "numberOfRatings": "2"
   },
+  "El Khatib S.": {
+    "firstName": "Sami",
+    "lastName": "El Khatib",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3069711",
+    "overallRating": "2",
+    "takeAgainRating": "0%",
+    "difficultyLevel": "1",
+    "numberOfRatings": "1"
+  },
   "Mapoho R.": {
     "firstName": "Raymond",
     "lastName": "Mapoho",
@@ -11623,7 +11632,7 @@
     "lastName": "Curry",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2933991",
     "overallRating": "5",
-    "takeAgainRating": "100%",
+    "takeAgainRating": "50%",
     "difficultyLevel": "3",
     "numberOfRatings": "1"
   },
@@ -11929,7 +11938,7 @@
     "lastName": "Heisler",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2860826",
     "overallRating": "5",
-    "takeAgainRating": "50%",
+    "takeAgainRating": "75%",
     "difficultyLevel": "3",
     "numberOfRatings": "1"
   },
@@ -12075,6 +12084,15 @@
     "overallRating": "1",
     "takeAgainRating": "0%",
     "difficultyLevel": "5",
+    "numberOfRatings": "1"
+  },
+  "Birnie-Porter C.": {
+    "firstName": "Caroline",
+    "lastName": "Birnie-Porter",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3070350",
+    "overallRating": "2",
+    "takeAgainRating": "0%",
+    "difficultyLevel": "4",
     "numberOfRatings": "1"
   },
   "Penney J.": {
@@ -13580,6 +13598,15 @@
     "difficultyLevel": "0",
     "numberOfRatings": "0"
   },
+  "Fortney M.": {
+    "firstName": "Mark",
+    "lastName": "Fortney",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3072354",
+    "overallRating": "0",
+    "takeAgainRating": "-1%",
+    "difficultyLevel": "0",
+    "numberOfRatings": "0"
+  },
   "Dias P.": {
     "firstName": "Patricia",
     "lastName": "Dias",
@@ -13810,7 +13837,7 @@
     "lastName": "Foley",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2998350",
     "overallRating": "0",
-    "takeAgainRating": "-1%",
+    "takeAgainRating": "100%",
     "difficultyLevel": "0",
     "numberOfRatings": "0"
   },
@@ -13819,7 +13846,7 @@
     "lastName": "Millman",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3005533",
     "overallRating": "0",
-    "takeAgainRating": "-1%",
+    "takeAgainRating": "100%",
     "difficultyLevel": "0",
     "numberOfRatings": "0"
   },
@@ -13850,6 +13877,33 @@
     "difficultyLevel": "0",
     "numberOfRatings": "0"
   },
+  "Kucheran T.": {
+    "firstName": "Tamara",
+    "lastName": "Kucheran",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3069033",
+    "overallRating": "0",
+    "takeAgainRating": "-1%",
+    "difficultyLevel": "0",
+    "numberOfRatings": "0"
+  },
+  "Shafaii Y.": {
+    "firstName": "Yaqub",
+    "lastName": "Shafaii",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1995032",
+    "overallRating": "0",
+    "takeAgainRating": "-1%",
+    "difficultyLevel": "0",
+    "numberOfRatings": "0"
+  },
+  "Ozbilge A.": {
+    "firstName": "Armagan",
+    "lastName": "Ozbilge",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3063981",
+    "overallRating": "0",
+    "takeAgainRating": "-1%",
+    "difficultyLevel": "0",
+    "numberOfRatings": "0"
+  },
   "Parra A.": {
     "firstName": "Alvaro",
     "lastName": "Parra",
@@ -13868,19 +13922,10 @@
     "difficultyLevel": "0",
     "numberOfRatings": "0"
   },
-  "Ozbilge A.": {
-    "firstName": "Armagan",
-    "lastName": "Ozbilge",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3063981",
-    "overallRating": "0",
-    "takeAgainRating": "-1%",
-    "difficultyLevel": "0",
-    "numberOfRatings": "0"
-  },
-  "Shafaii Y.": {
-    "firstName": "Yaqub",
-    "lastName": "Shafaii",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/1995032",
+  "Kienesberger P.": {
+    "firstName": "Petra ",
+    "lastName": "Kienesberger",
+    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3066789",
     "overallRating": "0",
     "takeAgainRating": "-1%",
     "difficultyLevel": "0",
@@ -14124,15 +14169,6 @@
     "firstName": "Cher",
     "lastName": "Hann",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3034291",
-    "overallRating": "0",
-    "takeAgainRating": "-1%",
-    "difficultyLevel": "0",
-    "numberOfRatings": "0"
-  },
-  "Kienesberger P.": {
-    "firstName": "Petra ",
-    "lastName": "Kienesberger",
-    "rateMyProfLink": "https://www.ratemyprofessors.com/professor/3066789",
     "overallRating": "0",
     "takeAgainRating": "-1%",
     "difficultyLevel": "0",
@@ -14404,7 +14440,7 @@
     "lastName": "Webber",
     "rateMyProfLink": "https://www.ratemyprofessors.com/professor/2894844",
     "overallRating": "0",
-    "takeAgainRating": "-1%",
+    "takeAgainRating": "0%",
     "difficultyLevel": "0",
     "numberOfRatings": "0"
   },

@@ -1,6 +1,6 @@
-import searchData from "./search.json";
-import instructorsData from "./ratemyprofessor.json";
-import subjectsData from "./subjects.json";
+import searchData from "../../database/search.json"
+import instructorsData from "../../database/ratemyprofessor.json";
+import subjectsData from "../../database/subjects.json";
 
 type CapitalLetter = `${Uppercase<string>}`;
 export type SubjectCode =
@@ -95,7 +95,6 @@ export const courses = searchData as CourseByCode;
 export const instructors = instructorsData as InstructorsByName;
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 export const terms = {
-  "202510": "2024/2025 Fall",
   "202520": "2024/2025 Winter",
 } as const;
 

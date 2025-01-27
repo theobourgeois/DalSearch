@@ -6,6 +6,16 @@
 import fs from "fs";
 import * as cheerio from "cheerio";
 
+let logResult = "";
+
+function log(...args) {
+    const logString = args.map((a) => JSON.stringify(a)).join(" ");
+    console.log(logString);
+    logResult += logString + "\n";
+}
+
+const TERMS = ["202520"];
+
 const headers = {
     accept: "application/json, text/plain, */*",
     "accept-language": "en-US,en;q=0.9",
@@ -33,7 +43,7 @@ export async function getAcademicCalendar(subjectCodes) {
             crse_numb: null,
             page_num: "1",
             offset: "0",
-            terms: "202510;202520",
+            terms: TERMS.join(";"),
             page_size: "9999",
             max: "1000",
             subj_code: code.code,
@@ -50,7 +60,7 @@ export async function getAcademicCalendar(subjectCodes) {
             });
 
             const json = await response.json();
-            console.log(
+            log(
                 `------ [${i}/${subjectCodes.length}: FETCHING COURSES WITH SUBJECT: ${code.description}, Courses: ${json.length}] ------`
             );
             data[code.code] = json;
@@ -123,7 +133,7 @@ function writeToFile(data, filename = "data.json", append = false) {
             console.error(err);
             return;
         }
-        console.log(
+        log(
             `------ [FILE CREATED ${filename} at ${new Date().toISOString()}] ------`
         );
     });
@@ -156,7 +166,7 @@ async function fillInMissingData(courses) {
     // filter course that already have descriptions
     codes = codes.filter((code) => !courses[code].description);
 
-    console.log(`------ [FETCHING ${codes.length} DESCRIPTIONS] ------`);
+    log(`------ [FETCHING ${codes.length} DESCRIPTIONS] ------`);
 
     const promises = [];
     const newCourses = { ...courses };
@@ -191,7 +201,7 @@ async function fillInMissingData(courses) {
 
                 newCourses[code].description = desc;
                 newCourses[code].prerequisites = prerequisites;
-                console.log(
+                log(
                     `------ [${i + 1}/${
                         codes.length
                     }: COURSE: ${code} - DESCRIPTION: ${desc
@@ -214,7 +224,7 @@ async function fillInMissingData(courses) {
     }
 
     const waitTimeSeconds = codes.length * (0.5 + 0.5);
-    console.log(
+    log(
         "Estimated wait time: ",
         Math.floor(waitTimeSeconds / 60),
         "minutes ",
@@ -347,33 +357,6 @@ function transformAcademicCalendar(timetableBySubjectCode) {
     return courses;
 }
 
-function logDifferences(prevCourses, newCourses) {
-    const data = {};
-    const prevCodes = Object.keys(prevCourses);
-    const newCodes = Object.keys(newCourses);
-    data.DATE_ADDED = new Date().toISOString();
-    data.COURSES = {};
-
-    for (const code of prevCodes) {
-        if (!newCourses[code]) {
-            data.COURSES[code] = "REMOVED";
-        } else {
-            if (
-                prevCourses[code].description !== newCourses[code].description
-            ) {
-                data.COURSES[code] = "DESCRIPTION CHANGED";
-            }
-        }
-    }
-
-    for (const code of newCodes) {
-        if (!prevCourses[code]) {
-            data.COURSES[code] = "ADDED";
-        }
-    }
-
-    writeToFile(data, "differences.json", true);
-}
 async function getSubjectCodes() {
     try {
         const res = await fetch(
@@ -403,7 +386,7 @@ async function getSubjectCodes() {
             description: DESCR,
         }));
 
-        console.log(`------ [TOTAL SUBJECTS: ${transformed.length}] ------`);
+        log(`------ [TOTAL SUBJECTS: ${transformed.length}] ------`);
         return transformed;
     } catch (error) {
         console.error(error);
@@ -413,17 +396,17 @@ async function getSubjectCodes() {
 async function main() {
     const subjectCodes = await getSubjectCodes();
     const args = process.argv.slice(2);
-    const getDescriptions = args[1] === "-d";
-    const outputFileDir = args[0] || "../utils/";
+    const argsAfterFirst = args.slice(1);
+    const outputFileDir = args[0] || "../../database/";
+    const getDescriptions = argsAfterFirst.includes("-d");
+    const shouldLog = argsAfterFirst.includes("-l");
 
     writeToFile(subjectCodes, outputFileDir + "subjects.json");
 
     const academicCalendar = await getAcademicCalendar(subjectCodes);
     const courses = transformAcademicCalendar(academicCalendar);
 
-    console.log(
-        `------ [TOTAL COURSES: ${Object.keys(courses).length}] ------`
-    );
+    log(`------ [TOTAL COURSES: ${Object.keys(courses).length}] ------`);
 
     const outputFile = outputFileDir + "search.json";
     let previousCourses = fs.readFileSync(outputFile, "utf8");
@@ -437,7 +420,11 @@ async function main() {
     }
 
     writeToFile(newCourses, outputFile);
-    logDifferences(previousCourses, newCourses);
+
+    if (shouldLog) {
+        const date = new Date().toISOString();
+        writeToFile(logResult, `${outputFileDir}logs/${date}.log`);
+    }
 }
 
 main();
