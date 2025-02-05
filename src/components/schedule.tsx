@@ -463,8 +463,10 @@ export function ScheduleTimeslot({
                 <div>
                     <p className="text-md mb-2">Final Exam Date:</p>
                     <p className="text-sm mb-2">
-                        {new Date(examData.date).toLocaleDateString()} -{" "}
-                        {examData.time}
+                        {new Date(
+                            examData.date + "T00:00:00"
+                        ).toLocaleDateString()}{" "}
+                        - {examData.time}
                     </p>
                 </div>
             )}
