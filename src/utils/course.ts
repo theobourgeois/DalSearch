@@ -1,6 +1,7 @@
 import searchData from "../../database/search.json"
 import instructorsData from "../../database/ratemyprofessor.json";
 import subjectsData from "../../database/subjects.json";
+import examDateData from "../../database/exam_schedule.json";
 
 type CapitalLetter = `${Uppercase<string>}`;
 export type SubjectCode =
@@ -99,6 +100,13 @@ export const terms = {
   "202530": "2024/2025 Summer",
 } as const;
 
+type ExamData = {
+  section: string;
+  date: string;
+  time: string;
+}
+
+export const examDates = examDateData as Record<string, ExamData[]>;
 
 export const subjects = subjectsData as Subject[];
 
