@@ -1,6 +1,14 @@
 "use client";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { ClassSession, Course, Day, days, Term, terms } from "@/utils/course";
+import {
+    ClassSession,
+    Course,
+    Day,
+    days,
+    examDates,
+    Term,
+    terms,
+} from "@/utils/course";
 import { copyToClipboard } from "@/utils/utils";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import {
@@ -283,12 +291,6 @@ export function Schedule({ course }: { course: Course }) {
                                         <span className="font-medium">
                                             {termClass.type} {termClass.section}
                                         </span>
-                                        {/* <Badge
-                                            variant="secondary"
-                                            className="ml-2 hover:bg-blue-100"
-                                        >
-                                            {termClass.crn}
-                                        </Badge> */}
                                         {isOnline && (
                                             <Badge
                                                 variant="secondary"
@@ -435,6 +437,10 @@ export function ScheduleTimeslot({
     const translateX = isRight ? "100%" : "0";
     const width = isConflict ? "50%" : "100%";
 
+    const examData = examDates[termClass.course]?.find(
+        (data) => data.section === termClass.section.slice(1, 2)
+    );
+
     const CourseContent = () => (
         <div className="p-2">
             <h3 className="font-bold mb-2">{termClass.course}</h3>
@@ -453,6 +459,15 @@ export function ScheduleTimeslot({
                     <Copy className="mr-2 h-4 w-4 hover:text-yellow-400" />
                 </div>
             </div>
+            {examData && (
+                <div>
+                    <p className="text-md mb-2">Final Exam Date:</p>
+                    <p className="text-sm mb-2">
+                        {new Date(examData.date).toLocaleDateString()} -{" "}
+                        {examData.time}
+                    </p>
+                </div>
+            )}
         </div>
     );
 
