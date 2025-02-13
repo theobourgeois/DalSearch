@@ -300,7 +300,7 @@ export function CourseFilterDrawer({
                                 </div>
                             )}
                         />
-                        <div className="flex flex-wrap gap-2 mt-2 min-h-60 items-start">
+                        <div className="flex flex-wrap gap-2 mt-2 h-60 items-start overflow-y-auto">
                             {filter.subjectCodes.map((subjectCode) => (
                                 <TooltipProvider key={subjectCode}>
                                     <Tooltip>
