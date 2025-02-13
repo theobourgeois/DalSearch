@@ -121,8 +121,8 @@ export function RecommendationInput<T extends unknown[]>({
         }
     };
 
-    const handleClickCourse = (recommendation: T) => () => {
-        console.log("clicked");
+    const handleClickCourse = (recommendation: T) => (e: React.MouseEvent) => {
+        e.stopPropagation();
         onSelect(recommendation);
         if (closeOnSelect) {
             setRecommendations([]);
@@ -164,7 +164,11 @@ export function RecommendationInput<T extends unknown[]>({
                         placeholder={placeholder}
                     />
                 </div>
-                <ClickAwayListener onClickAway={() => setRecommendations([])}>
+                <ClickAwayListener
+                    onClickAway={() => {
+                        setRecommendations([]);
+                    }}
+                >
                     <div
                         className={cn("overflow-y-auto w-full flex flex-col", {
                             "rounded-b-2xl z-[9999] border-b-2 border-l-2 border-r-2 border-slate-200 bg-white absolute left-0 top-[33px] px-2":
@@ -176,19 +180,18 @@ export function RecommendationInput<T extends unknown[]>({
                             transition: "max-height height 0.2s",
                         }}
                     >
-                        {recommendations.map((rec, index) => {
-                            return (
-                                <div
-                                    key={JSON.stringify(rec)}
-                                    onClick={handleClickCourse(rec)}
-                                >
-                                    {renderRecommendation(
-                                        rec,
-                                        index === tabbedIndex
-                                    )}
-                                </div>
-                            );
-                        })}
+                        {recommendations.map((rec, index) => (
+                            <div
+                                key={JSON.stringify(rec)}
+                                onClick={handleClickCourse(rec)}
+                                className="recommendation-item"
+                            >
+                                {renderRecommendation(
+                                    rec,
+                                    index === tabbedIndex
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </ClickAwayListener>
             </div>
