@@ -1,12 +1,22 @@
 import { ClassSession, currentTerm, Time } from '@/utils/course';
 import { JSDOM } from 'jsdom';
 
-export async function GET(request: Request) {
+function formatDate(date: Date) {
+  const year: string | number = date.getFullYear();
+  let month: string | number = date.getMonth() + 1;
+  let day: string | number = date.getDate();
+  // prepend 0 to month and day if they are less than 10
+  month = month < 10 ? `0${month}` : month;
+  day = day < 10 ? `0${day}` : day;
+
+  return `${month}/${day}/${year}`;
+}
+
+export async function POST(request: Request) {
   const headers = new Headers(request.headers);
   const token = headers.get('Authorization')?.split('Bearer ')[1];
   const payload = await request.json();
-  let date = payload.date;
-  date = date ? new Date(date) : new Date();
+  const date = payload.date ?? formatDate(new Date());
 
   if (!token) {
     return new Response("Invalid token", { status: 401 });
@@ -27,7 +37,7 @@ export async function GET(request: Request) {
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Authorization, Accept',
     },
   });
@@ -38,28 +48,19 @@ export async function OPTIONS() {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
 }
 
-function formatDate(date: Date) {
-  const year: string | number = date.getFullYear();
-  let month: string | number = date.getMonth() + 1;
-  let day: string | number = date.getDate();
-  // prepend 0 to month and day if they are less than 10
-  month = month < 10 ? `0${month}` : month;
-  day = day < 10 ? `0${day}` : day;
-
-  return `${month}/${day}/${year}`;
-}
-
-async function getSchedulePage(token: string, date: Date = new Date()) {
-  const response = await fetch("https://dalonline.dal.ca/PROD/bwskfshd.P_CrseSchd", {
+async function getSchedulePage(token: string, date: string) {
+  const response = await fetch("https://dalonline.dal.ca/PROD/bwskfshd.p_proc_crse_schd", {
     "headers": {
       "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
       "accept-language": "en-US,en;q=0.9",
+      "cache-control": "max-age=0",
+      "content-type": "application/x-www-form-urlencoded",
       "sec-ch-ua": "\"Chromium\";v=\"133\", \"Not(A:Brand\";v=\"99\"",
       "sec-ch-ua-mobile": "?0",
       "sec-ch-ua-platform": "\"macOS\"",
@@ -69,15 +70,13 @@ async function getSchedulePage(token: string, date: Date = new Date()) {
       "sec-fetch-user": "?1",
       "upgrade-insecure-requests": "1",
       "cookie": `TESTID=set; SESSID=${token};`,
-      "Referer": "https://dalonline.dal.ca/PROD/twbkwbis.P_GenMenu?name=bmenu.P_RegMnu",
+      "Referer": "https://dalonline.dal.ca/PROD/bwskfshd.P_CrseSchd",
       "Referrer-Policy": "strict-origin-when-cross-origin"
     },
-    "body": new URLSearchParams({
-      "goto_date_in": encodeURIComponent(formatDate(date)),
-      "start_date_in": encodeURIComponent(formatDate(new Date())),
-    }),
+    "body": `goto_date_in=${encodeURIComponent(date)}&start_date_in=${encodeURIComponent(formatDate(new Date()))}`,
     "method": "POST"
   });
+
   return response.text();
 }
 
