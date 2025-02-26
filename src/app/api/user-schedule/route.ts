@@ -73,7 +73,7 @@ function to24Hour(timeWithPeriod: string) {
     minuteInt = `0${minuteInt}`;
   }
 
-  if (period === 'PM' && hourInt < 12) {
+  if (period === 'pm' && hourInt < 12) {
     return `${hourInt + 12}${minuteInt}`;
   }
 
