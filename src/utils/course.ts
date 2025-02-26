@@ -8,7 +8,7 @@ export type SubjectCode =
   `${CapitalLetter}${CapitalLetter}${CapitalLetter}${CapitalLetter}`;
 export type CourseCode = `${number}${number}${number}${number}`;
 export type CourseAndSubjectCode = `${SubjectCode}${CourseCode}`;
-type Time = `${number}${number}${number}${number}` | "C/D";
+export type Time = `${number}${number}${number}${number}` | "C/D";
 export type Day = (typeof days)[number];
 
 export type TimeSlot = {
@@ -106,6 +106,8 @@ type ExamData = {
   time: string;
 }
 
+export const currentTerm: Term = "202520"
+
 export const examDates = examDateData as Record<string, ExamData[]>;
 
 export const subjects = subjectsData as Subject[];
@@ -166,8 +168,6 @@ export function getFilteredCourses(
       hasSelectedSubjectCode
     );
   });
-
-  // order by
 
   switch (orderBy.key) {
     case "courseCode":

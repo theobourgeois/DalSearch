@@ -1,3 +1,4 @@
+import { ClassSession, currentTerm, Time } from '@/utils/course';
 import { JSDOM } from 'jsdom';
 
 export async function POST(request: Request) {
@@ -8,7 +9,7 @@ export async function POST(request: Request) {
     return new Response("Invalid token", { status: 401 });
   }
 
-  const schedule = await getSchedule(token);
+  const schedule = await getSchedulePage(token);
   const dom = new JSDOM(schedule);
   const document = dom.window.document;
   const table = document.querySelector('table.datadisplaytable');
@@ -40,7 +41,7 @@ export async function OPTIONS() {
   });
 }
 
-async function getSchedule(token: string) {
+async function getSchedulePage(token: string) {
   const response = await fetch("https://dalonline.dal.ca/PROD/bwskfshd.P_CrseSchd", {
     "headers": {
       "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -76,10 +77,10 @@ function to24Hour(time: string) {
   return `${hourInt}${minuteInt}`;
 }
 
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const DAYS = ['M', 'T', 'W', 'R', 'F'] as const;
 
 function extractCoursesFromTable(tableElement: Element) {
-  const courses = [];
+  const courses: Array<ClassSession> = [];
 
   const rows = tableElement.querySelectorAll('tr');
   for (const row of rows) {
@@ -89,31 +90,51 @@ function extractCoursesFromTable(tableElement: Element) {
       if (!a) {
         continue;
       }
-      const day = DAYS[i];
+      const day = DAYS[i]
       const text = a.innerHTML;
       const line = text.split('<br>');
       const [course, section] = line[0].split('-');
       const [subject, courseNumber] = course.split(' ');
       const [crn] = line[1].split(' ');
       const [uStartTime, uEndTime] = line[2].split('-');
-      const startTime = to24Hour(uStartTime.split(" ")[0])
-      const endTime = to24Hour(uEndTime.split(" ")[0])
+      const startTime = to24Hour(uStartTime.split(" ")[0]) as Time;
+      const endTime = to24Hour(uEndTime.split(" ")[0]) as Time;
       const location = line[3];
+      let type: ClassSession["type"] = "Lec"
+      if (section[0] === 'T') {
+        type = 'Tut';
+      }
+      if (section[0] === 'B') {
+        type = 'Lab';
+      }
+      const courseCode = subject + courseNumber as ClassSession["course"];
 
       courses.push({
-        day,
-        subject,
-        courseNumber,
-        section,
+        term: currentTerm,
+        days: [day],
         crn,
-        startTime,
-        endTime,
+        type,
+        course: courseCode,
+        time: {
+          start: startTime,
+          end: endTime
+        },
+        section,
         location
       });
 
     }
   }
 
+  const reducedCourses = courses.reduce((acc, course) => {
+    const [day] = course.days;
+    const existingCourse = acc.find((c) => c.crn === course.crn);
+    if (!existingCourse) {
+      return [...acc, course];
+    }
+    existingCourse.days.push(day);
+    return existingCourse ? acc : [...acc, course];
+  }, [] as typeof courses);
 
-  return courses;
+  return reducedCourses;
 }
