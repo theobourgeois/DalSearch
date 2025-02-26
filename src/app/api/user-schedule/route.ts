@@ -4,12 +4,15 @@ import { JSDOM } from 'jsdom';
 export async function GET(request: Request) {
   const headers = new Headers(request.headers);
   const token = headers.get('Authorization')?.split('Bearer ')[1];
+  const payload = await request.json();
+  let date = payload.date;
+  date = date ? new Date(date) : new Date();
 
   if (!token) {
     return new Response("Invalid token", { status: 401 });
   }
 
-  const schedule = await getSchedulePage(token);
+  const schedule = await getSchedulePage(token, date);
   const dom = new JSDOM(schedule);
   const document = dom.window.document;
   const table = document.querySelector('table.datadisplaytable');
@@ -41,7 +44,18 @@ export async function OPTIONS() {
   });
 }
 
-async function getSchedulePage(token: string) {
+function formatDate(date: Date) {
+  const year: string | number = date.getFullYear();
+  let month: string | number = date.getMonth() + 1;
+  let day: string | number = date.getDate();
+  // prepend 0 to month and day if they are less than 10
+  month = month < 10 ? `0${month}` : month;
+  day = day < 10 ? `0${day}` : day;
+
+  return `${month}/${day}/${year}`;
+}
+
+async function getSchedulePage(token: string, date: Date = new Date()) {
   const response = await fetch("https://dalonline.dal.ca/PROD/bwskfshd.P_CrseSchd", {
     "headers": {
       "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
@@ -58,8 +72,11 @@ async function getSchedulePage(token: string) {
       "Referer": "https://dalonline.dal.ca/PROD/twbkwbis.P_GenMenu?name=bmenu.P_RegMnu",
       "Referrer-Policy": "strict-origin-when-cross-origin"
     },
-    "body": null,
-    "method": "GET"
+    "body": new URLSearchParams({
+      "goto_date_in": encodeURIComponent(formatDate(date)),
+      "start_date_in": encodeURIComponent(formatDate(new Date())),
+    }),
+    "method": "POST"
   });
   return response.text();
 }
