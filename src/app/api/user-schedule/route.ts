@@ -1,7 +1,7 @@
 import { ClassSession, currentTerm, Time } from '@/utils/course';
 import { JSDOM } from 'jsdom';
 
-export async function POST(request: Request) {
+export async function GET(request: Request) {
   const headers = new Headers(request.headers);
   const token = headers.get('Authorization')?.split('Bearer ')[1];
 
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Headers': 'Authorization, Accept',
     },
   });
 }
