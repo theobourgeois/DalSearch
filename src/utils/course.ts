@@ -214,4 +214,3 @@ export function getFilteredCourses(
 
   return filteredCourses.slice(0, maxNumCourses);
 }
-
