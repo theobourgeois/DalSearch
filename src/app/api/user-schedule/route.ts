@@ -2,8 +2,8 @@ import { ClassSession, currentTerm, Time } from '@/utils/course';
 import { JSDOM } from 'jsdom';
 
 export async function POST(request: Request) {
-  const payload = await request.json();
-  const token = payload.token;
+  const headers = new Headers(request.headers);
+  const token = headers.get('Authorization')?.split('Bearer ')[1];
 
   if (!token) {
     return new Response("Invalid token", { status: 401 });
