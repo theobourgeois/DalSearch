@@ -64,16 +64,19 @@ async function getSchedulePage(token: string) {
   return response.text();
 }
 
-function to24Hour(time: string) {
+function to24Hour(timeWithPeriod: string) {
+  const [time, period] = timeWithPeriod.split(' ');
   const [hour, minute] = time.split(':');
   const hourInt = parseInt(hour);
   let minuteInt: number | string = parseInt(minute);
   if (minuteInt < 10) {
     minuteInt = `0${minuteInt}`;
   }
-  if (hourInt < 12) {
+
+  if (period === 'PM' && hourInt < 12) {
     return `${hourInt + 12}${minuteInt}`;
   }
+
   return `${hourInt}${minuteInt}`;
 }
 
@@ -97,8 +100,8 @@ function extractCoursesFromTable(tableElement: Element) {
       const [subject, courseNumber] = course.split(' ');
       const [crn] = line[1].split(' ');
       const [uStartTime, uEndTime] = line[2].split('-');
-      const startTime = to24Hour(uStartTime.split(" ")[0]) as Time;
-      const endTime = to24Hour(uEndTime.split(" ")[0]) as Time;
+      const startTime = to24Hour(uStartTime) as Time;
+      const endTime = to24Hour(uEndTime) as Time;
       const location = line[3];
       let type: ClassSession["type"] = "Lec"
       if (section[0] === 'T') {
