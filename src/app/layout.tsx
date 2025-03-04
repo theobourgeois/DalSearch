@@ -255,8 +255,8 @@ export default function RootLayout({
 
                     <div className="mt-8 text-center text-sm">
                         <p>
-                            &copy; {new Date().getFullYear()}. DalSearch All
-                            rights reserved.
+                            DalSearch is not Affiliate with Dalhousie
+                            University.
                         </p>
                     </div>
                 </footer>{" "}

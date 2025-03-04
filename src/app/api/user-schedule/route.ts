@@ -32,6 +32,7 @@ export async function POST(request: Request) {
   }
 
   const courses = extractCoursesFromTable(table);
+  console.log(courses.find((c) => c.course === 'ECON1102'));
 
   return new Response(JSON.stringify(courses), {
     headers: {
@@ -109,6 +110,7 @@ function extractCoursesFromTable(tableElement: Element) {
       if (!a) {
         continue;
       }
+
       const day = DAYS[i]
       const text = a.innerHTML;
       const line = text.split('<br>');
