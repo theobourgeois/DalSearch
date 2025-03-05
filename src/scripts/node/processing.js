@@ -14,7 +14,7 @@ function log(...args) {
     logResult += logString + "\n";
 }
 
-const TERMS = ["202520", "202530"];
+const TERMS = ["202520", "202530", "202610", "202620"];
 
 const headers = {
     accept: "application/json, text/plain, */*",
@@ -161,7 +161,7 @@ function getPreReqs(innerHtml, courses) {
 
 async function fillInMissingData(courses) {
     const dalCourseDetailsUrl =
-        "https://academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&topicgroupid=37708&entitytype=CID&entitycode=";
+        "https://academiccalendar.dal.ca/Catalog/ViewCatalog.aspx?pageid=viewcatalog&entitytype=CID&entitycode=";
     let codes = Object.keys(courses);
     // filter course that already have descriptions
     codes = codes.filter((code) => !courses[code].description);
@@ -400,6 +400,7 @@ async function main() {
     const outputFileDir = args[0] || "../../database/";
     const getDescriptions = argsAfterFirst.includes("-d");
     const shouldLog = argsAfterFirst.includes("-l");
+    const noCache = argsAfterFirst.includes("-no-cache");
 
     writeToFile(subjectCodes, outputFileDir + "subjects.json");
 
@@ -413,7 +414,10 @@ async function main() {
     previousCourses = JSON.parse(previousCourses);
 
     // use old course descriptions in case you dont want to fetch them again
-    let newCourses = replaceClassesAndInstructors(previousCourses, courses);
+    let newCourses = courses;
+    if (!noCache) {
+        newCourses = replaceClassesAndInstructors(previousCourses, courses);
+    }
 
     if (getDescriptions) {
         newCourses = await fillInMissingData(newCourses);
