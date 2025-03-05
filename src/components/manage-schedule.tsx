@@ -49,8 +49,8 @@ export function ManageSchedule({ courses }: { courses: Course[] }) {
             .reduce((acc, course) => {
                 const termClasses = course.termClasses.filter(
                     (termClass) =>
-                        termClass.term === term &&
-                        termClass.time.start !== "C/D"
+                        termClass?.term === term &&
+                        termClass?.time?.start !== "C/D"
                 );
                 if (termClasses.length > 0) {
                     acc.push({ ...course, termClasses });
