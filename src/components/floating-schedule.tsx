@@ -3,14 +3,12 @@
 import React, { useEffect, useState } from "react";
 import { Maximize2, Minimize2, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
 
 export const FloatingSchedule = ({
     children,
 }: {
     children: React.ReactNode;
 }) => {
-    const { toasts } = useToast();
     const [isFullScreen, setIsFullScreen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isVisible, setIsVisible] = useState(true);
@@ -27,14 +25,6 @@ export const FloatingSchedule = ({
         document.addEventListener("keydown", handleKeyDown);
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, []);
-
-    useEffect(() => {
-        const toast = toasts.find((t) => t.title === "Class Added");
-        if (toast) {
-            setIsHovered(true);
-            setTimeout(() => setIsHovered(false), 3000);
-        }
-    }, [toasts]);
 
     const toggleFullScreen = () => {
         setIsHovered(false);
@@ -64,7 +54,7 @@ export const FloatingSchedule = ({
                 >
                     <div
                         className={cn(
-                            "relative bg-white rounded-lg shadow-xl overflow-hidden transition-all duration-300",
+                            "relative bg-white dark:bg-gray-900 rounded-lg shadow-xl overflow-hidden transition-all duration-300",
                             isVisible
                                 ? "scale-100 opacity-100"
                                 : "scale-95 opacity-0"
@@ -76,7 +66,7 @@ export const FloatingSchedule = ({
                     >
                         <button
                             onClick={toggleFullScreen}
-                            className="fixed top-4 right-4 z-50 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full p-2 transition-colors hover:scale-110 active:scale-90"
+                            className="fixed top-4 right-4 z-50 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full p-2 transition-colors hover:scale-110 active:scale-90 dark:bg-gray-800 dark:text-gray-200"
                             style={{
                                 position: "fixed",
                                 top: "calc(1rem)", // 2.5rem for the top margin of the container, 16px for the button's top position
@@ -95,7 +85,7 @@ export const FloatingSchedule = ({
             ) : (
                 <div
                     className={cn(
-                        "fixed bottom-4 right-4 bg-white/30 backdrop-blur-md border border-white/50 shadow-lg rounded-lg overflow-hidden transition-all duration-300 ease-in-out",
+                        "fixed bottom-4 right-4 backdrop-blur-md border shadow-lg rounded-lg overflow-hidden transition-all duration-300 ease-in-out",
                         isHovered ? "w-48 h-48" : "w-12 h-12",
                         isVisible
                             ? "opacity-100 scale-100"
@@ -128,12 +118,15 @@ export const FloatingSchedule = ({
                         </div>
                     ) : (
                         <div
-                            className="flex items-center justify-center w-full h-full transition-opacity duration-300"
+                            className="flex items-center justify-center w-full h-full transition-opacity duration-300 dark:bg-gray-900"
                             style={{
                                 opacity: isHovered ? 0 : 1,
                             }}
                         >
-                            <Calendar size={24} className="text-gray-600" />
+                            <Calendar
+                                size={24}
+                                className="text-gray-600 dark:text-white"
+                            />
                         </div>
                     )}
 

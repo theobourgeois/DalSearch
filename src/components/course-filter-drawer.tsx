@@ -101,7 +101,11 @@ export function CourseFilterDrawer({
     return (
         <Sheet open={isOpen} onOpenChange={onOpenChange}>
             <SheetTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-full">
+                <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-full dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                >
                     <Filter className="w-5 h-5" />
                 </Button>
             </SheetTrigger>
@@ -279,9 +283,9 @@ export function CourseFilterDrawer({
                             ) => (
                                 <div
                                     className={cn(
-                                        `flex cursor-pointer hover:bg-slate-100 items-center text-sm gap-2 w-full focus:outline-none py-2 px-2 rounded-lg`,
+                                        "flex cursor-pointer hover:bg-gray-100 items-center text-sm gap-2 w-full focus:outline-none py-2 px-2 rounded-lg dark:hover:bg-gray-700 dark:bg-gray-800 dark:text-white",
                                         {
-                                            "bg-slate-100": isCurrentSelected,
+                                            "bg-gray-100": isCurrentSelected,
                                         }
                                     )}
                                     onClick={() =>
