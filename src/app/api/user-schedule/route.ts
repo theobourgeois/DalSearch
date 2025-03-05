@@ -15,8 +15,8 @@ function formatDate(date: Date) {
 export async function POST(request: Request) {
   const headers = new Headers(request.headers);
   const token = headers.get('Authorization')?.split('Bearer ')[1];
-  const payload = await request.json();
-  const date = payload.date ?? formatDate(new Date());
+  const payload = (await request.json()) ?? null;
+  const date = payload?.date ?? formatDate(new Date());
 
   if (!token) {
     return new Response("Invalid token", { status: 401 });
@@ -32,7 +32,6 @@ export async function POST(request: Request) {
   }
 
   const courses = extractCoursesFromTable(table);
-  console.log(courses.find((c) => c.course === 'ECON1102'));
 
   return new Response(JSON.stringify(courses), {
     headers: {
