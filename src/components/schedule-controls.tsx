@@ -38,12 +38,12 @@ export function ScheduleControls() {
     };
 
     return (
-        <div className="flex items-center gap-2 flex-wrap justify-end">
+        <div className="flex gap-2 flex-wrap justify-end flex-col md:flex-row items-stretch w-full">
             <Select
                 value={term}
                 onValueChange={(value: Term) => setTerm(value)}
             >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="md:w-[180px]">
                     <SelectValue placeholder="Select term" />
                 </SelectTrigger>
                 <SelectContent>
