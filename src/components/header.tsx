@@ -1,5 +1,5 @@
 import { CourseByCode } from "@/utils/course";
-import { CompassIcon, Github } from "lucide-react";
+import { Calendar, CompassIcon, Github } from "lucide-react";
 import Link from "next/link";
 import { Search } from "./search";
 import { DarkModeToggle } from "./darkmode-toggle";
@@ -13,7 +13,7 @@ export default function Header({ courses }: Props) {
     return (
         <header className="flex flex-col px-6 py-4 shadow-md w-full bg-white sticky top-0 z-10 dark:bg-gray-800 dark:text-white">
             <div className="flex justify-between tems-center flex-row">
-                <div className="flex items-center gap-2 w-full">
+                <div className="flex items-center gap-1 w-full">
                     <DalLogo />
                     <Link
                         href="/"
@@ -42,6 +42,13 @@ export default function Header({ courses }: Props) {
                         className="flex items-center text-gray-800 hover:text-yellow-400 dark:text-white"
                     >
                         <CompassIcon className="w-6 h-6 hover:text-yellow-400" />
+                    </Link>
+                    <Link
+                        title="Schedule"
+                        href="/schedule"
+                        className="flex items-center text-gray-800 hover:text-yellow-400 dark:text-white"
+                    >
+                        <Calendar className="w-6 h-6 hover:text-yellow-400" />
                     </Link>
                     <div className="w-[2px] h-6 dark:bg-gray-400/30 bg-gray-100 rounded-lg" />
                     <Link
