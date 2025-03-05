@@ -1,5 +1,5 @@
 "use client";
-import { Download } from "lucide-react";
+import { Download, Edit, Import } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Select,
@@ -14,14 +14,24 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Term, terms } from "@/utils/course";
+import { Course, Term, terms } from "@/utils/course";
 import {
     DOWNLOAD_FORMATS,
     DownloadFormat,
     useSchedule,
 } from "@/store/schedule";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogTitle,
+    DialogTrigger,
+} from "./ui/dialog";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
+import { ManageSchedule } from "./manage-schedule";
+import { ImportSchedule } from "./import-schedule";
 
-export function ScheduleControls() {
+export function ScheduleControls({ courses }: { courses: Course[] }) {
     const { downloadSchedule, term, setTerm } = useSchedule();
 
     const handleDownload = (format: DownloadFormat) => () => {
@@ -30,45 +40,56 @@ export function ScheduleControls() {
     };
 
     return (
-        <div className="flex flex-col space-y-4 p-4 bg-background border-b">
-            <div className="flex items-center justify-between">
-                <Select
-                    value={term}
-                    onValueChange={(value: Term) => setTerm(value)}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select term" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        {Object.keys(terms).map((term) => (
-                            <SelectItem key={term} value={term}>
-                                {terms[term as Term]}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+        <div className="flex items-center gap-2 flex-wrap justify-end">
+            <Select
+                value={term}
+                onValueChange={(value: Term) => setTerm(value)}
+            >
+                <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select term" />
+                </SelectTrigger>
+                <SelectContent>
+                    {Object.keys(terms).map((term) => (
+                        <SelectItem key={term} value={term}>
+                            {terms[term as Term]}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
 
-                <div className="flex items-center space-x-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">
-                                <Download className="mr-2 h-4 w-4" />
-                                Download
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            {DOWNLOAD_FORMATS.map((format) => (
-                                <DropdownMenuItem
-                                    key={format}
-                                    onClick={handleDownload(format)}
-                                >
-                                    {format.toUpperCase()}
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="outline">
+                        <Download className="mr-2 h-4 w-4" />
+                        Download
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    {DOWNLOAD_FORMATS.map((format) => (
+                        <DropdownMenuItem
+                            key={format}
+                            onClick={handleDownload(format)}
+                        >
+                            {format.toUpperCase()}
+                        </DropdownMenuItem>
+                    ))}
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="default" className="gap-2">
+                        <Import className="h-4 w-4" />
+                        <span>Import Schedule</span>
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogTitle>Import Schedule</DialogTitle>
+                    <DialogDescription>
+                        Import your schedule from dalonline
+                    </DialogDescription>
+                    <ImportSchedule />
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

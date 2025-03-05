@@ -37,6 +37,73 @@ function KeywordHighlightedText({
 
 const DEFAULT_VISIBLE_CLASSES = 4;
 
+export const TermClassCard = ({
+    termClass,
+    isAdded,
+    onToggleTimeSlot,
+}: {
+    termClass: ClassSession;
+    isAdded: boolean;
+    onToggleTimeSlot?: (termClass: ClassSession) => void;
+}) => (
+    <div
+        key={termClass.crn}
+        className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden dark:bg-gray-900 dark:border-gray-700"
+    >
+        <div className="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center dark:bg-gray-800 dark:border-gray-700">
+            <div className="flex items-center space-x-3">
+                <div className="bg-primary/10 px-2 py-1 rounded-full">
+                    <span className="text-sm font-medium text-primary">
+                        {termClass.section}
+                    </span>
+                </div>
+                <Badge variant="outline" className="uppercase dark:bg-gray-700">
+                    {termClass.type}
+                </Badge>
+                <Badge variant="outline" className="uppercase dark:bg-gray-700">
+                    CRN: {termClass.crn}
+                </Badge>
+            </div>
+            <Badge variant="secondary" className="dark:bg-gray-700">
+                {terms[termClass.term]}
+            </Badge>
+        </div>
+
+        <div className="p-4">
+            {termClass.time?.start && termClass.time?.start !== "C/D" ? (
+                <div className="space-y-3">
+                    <div className="flex items-center space-x-2 text-muted-foreground">
+                        <Clock className="w-4 h-4" />
+                        <span className="text-sm">
+                            {termClass.days.join(", ")} •{" "}
+                            {termClass.time?.start} - {termClass.time?.end}
+                        </span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-muted-foreground">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm">{termClass.location}</span>
+                    </div>
+                    <Button
+                        variant={isAdded ? "destructive" : "default"}
+                        size="sm"
+                        onClick={() => onToggleTimeSlot?.(termClass)}
+                        className="w-full mt-2"
+                    >
+                        {isAdded ? "Remove from Schedule" : "Add to Schedule"}
+                    </Button>
+                </div>
+            ) : (
+                <div className="flex items-center space-x-2 text-muted-foreground">
+                    <MapPin className="w-4 h-4" />
+                    <Badge variant="outline" className="dark:bg-gray-700">
+                        Online
+                    </Badge>
+                </div>
+            )}
+        </div>
+    </div>
+);
+
 export function CourseCard({
     keyword,
     course,
@@ -51,7 +118,7 @@ export function CourseCard({
         DEFAULT_VISIBLE_CLASSES
     );
 
-    const handleToggleTimeSlot = (termClass: ClassSession) => () => {
+    const handleToggleTimeSlot = (termClass: ClassSession) => {
         const isAdded = timeSlots.some((ts) => ts.class.crn === termClass.crn);
         if (isAdded) {
             removeTimeSlot(termClass.crn);
@@ -71,81 +138,6 @@ export function CourseCard({
     );
     const unaddedTermClasses = course.termClasses.filter(
         (termClass) => !timeSlots.some((ts) => ts.class.crn === termClass.crn)
-    );
-
-    const TermClassCard = ({
-        termClass,
-        isAdded,
-    }: {
-        termClass: ClassSession;
-        isAdded: boolean;
-    }) => (
-        <div
-            key={termClass.crn}
-            className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden dark:bg-gray-900 dark:border-gray-700"
-        >
-            <div className="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center dark:bg-gray-800 dark:border-gray-700">
-                <div className="flex items-center space-x-3">
-                    <div className="bg-primary/10 px-2 py-1 rounded-full">
-                        <span className="text-sm font-medium text-primary">
-                            {termClass.section}
-                        </span>
-                    </div>
-                    <Badge
-                        variant="outline"
-                        className="uppercase dark:bg-gray-700"
-                    >
-                        {termClass.type}
-                    </Badge>
-                    <Badge
-                        variant="outline"
-                        className="uppercase dark:bg-gray-700"
-                    >
-                        CRN: {termClass.crn}
-                    </Badge>
-                </div>
-                <Badge variant="secondary" className="dark:bg-gray-700">
-                    {terms[termClass.term]}
-                </Badge>
-            </div>
-
-            <div className="p-4">
-                {termClass.time?.start && termClass.time?.start !== "C/D" ? (
-                    <div className="space-y-3">
-                        <div className="flex items-center space-x-2 text-muted-foreground">
-                            <Clock className="w-4 h-4" />
-                            <span className="text-sm">
-                                {termClass.days.join(", ")} •{" "}
-                                {termClass.time?.start} - {termClass.time?.end}
-                            </span>
-                        </div>
-                        <div className="flex items-center space-x-2 text-muted-foreground">
-                            <MapPin className="w-4 h-4" />
-                            <span className="text-sm">
-                                {termClass.location}
-                            </span>
-                        </div>
-                        <Button
-                            variant={isAdded ? "destructive" : "default"}
-                            size="sm"
-                            onClick={handleToggleTimeSlot(termClass)}
-                            className="w-full mt-2"
-                        >
-                            {isAdded
-                                ? "Remove from Schedule"
-                                : "Add to Schedule"}
-                        </Button>
-                    </div>
-                ) : (
-                    <div className="flex items-center space-x-2 text-muted-foreground">
-                        <MapPin className="w-4 h-4" />
-                        <Badge variant="outline" className="dark:bg-gray-700">
-                            Online
-                        </Badge>
-                    </div>
-                )}
-            </div>
-        </div>
     );
 
     const handleShowAllClasses = () => {
@@ -211,6 +203,7 @@ export function CourseCard({
                         <div className="grid md:grid-cols-2 gap-2 grid-cols-1">
                             {addedTermClasses.map((termClass) => (
                                 <TermClassCard
+                                    onToggleTimeSlot={handleToggleTimeSlot}
                                     key={termClass.crn}
                                     termClass={termClass}
                                     isAdded={true}
@@ -225,6 +218,7 @@ export function CourseCard({
                         .slice(0, visibleClasses)
                         .map((termClass) => (
                             <TermClassCard
+                                onToggleTimeSlot={handleToggleTimeSlot}
                                 key={`${termClass.crn}-${termClass.section}-${termClass.term}-${course.courseCode}-${course.subjectCode}`}
                                 termClass={termClass}
                                 isAdded={false}

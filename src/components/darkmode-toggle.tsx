@@ -3,10 +3,13 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
+function getDarkMode() {
+    if (typeof window === "undefined") return false;
+    return localStorage?.getItem("darkMode") === "true";
+}
+
 export function DarkModeToggle() {
-    const [darkMode, setDarkMode] = useState(
-        localStorage.getItem("darkMode") === "true"
-    );
+    const [darkMode, setDarkMode] = useState(getDarkMode());
 
     useEffect(() => {
         const root = window.document.documentElement;

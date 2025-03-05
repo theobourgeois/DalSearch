@@ -22,6 +22,7 @@ type ScheduleStore = {
     downloadSchedule: (format: DownloadFormat) => void;
     container: HTMLElement | null;
     setContainer: (container: HTMLElement) => void;
+    setTimeSlots: (timeSlots: ClassSession[]) => void;
 };
 
 function getDefaultScheduleTimeSlots(): ScheduleTimeSlot[] {
@@ -95,6 +96,14 @@ const useScheduleStore = create<ScheduleStore>((set) => ({
             updateLocalStorage(newTimeSlots);
             return { timeSlots: newTimeSlots };
         }),
+    setTimeSlots: (timeSlots) => {
+        const newTimeSlots = timeSlots.map((termClass, i) => ({
+            class: termClass,
+            color: colors[i % colors.length],
+        }));
+        updateLocalStorage(newTimeSlots);
+        return set({ timeSlots: newTimeSlots });
+    },
     removeTimeSlot: (crn: string) =>
         set((state) => {
             const newTimeSlots = state.timeSlots.filter(
