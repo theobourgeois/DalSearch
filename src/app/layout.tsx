@@ -4,7 +4,7 @@ import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { courses } from "@/utils/course";
 import Header from "../components/header";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import FloatingSchedule from "@/components/floating-schedule";
 import UserSchedule from "@/components/user-schedule";
 import { ScheduleControls } from "@/components/schedule-controls";
@@ -130,7 +130,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${poppins.variable} antialiased bg-gradient-to-t from-slate-200 to-slate-50/50`}
+                className={`${poppins.variable} antialiased bg-gradient-to-t from-gray-200 to-gray-50/50 dark:from-gray-900 dark:to-gray-900 dark:text-white`}
             >
                 <Header courses={courses} />
                 {children}
@@ -260,9 +260,8 @@ export default function RootLayout({
                         </p>
                     </div>
                 </footer>{" "}
-                <Toaster />
+                <Toaster closeButton richColors />
                 <FloatingSchedule>
-                    <ScheduleControls />
                     <UserSchedule />
                 </FloatingSchedule>
             </body>

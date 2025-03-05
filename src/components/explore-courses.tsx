@@ -73,7 +73,7 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
                 <div className="relative flex-grow">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input
-                        className="pl-10 w-full rounded-full bg-white"
+                        className="pl-10 w-full rounded-full bg-white dark:bg-gray-800"
                         value={filter.searchTerm}
                         onChange={(e) => handleSearchTermChange(e.target.value)}
                         placeholder="Search for course name, code, or subject code"

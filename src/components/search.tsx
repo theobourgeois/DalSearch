@@ -38,9 +38,8 @@ export function Search({
                 renderRecommendation={(course, isCurrentSelected) => (
                     <Link
                         className={cn(
-                            "flex items-center text-sm gap-1 w-full focus:outline-none hover:bg-slate-200/40 py-1",
-
-                            isCurrentSelected && "bg-slate-200/40"
+                            "flex items-center text-sm gap-1 w-full focus:outline-none hover:bg-gray-200/40 py-1 dark:hover:bg-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded-md",
+                            isCurrentSelected && "bg-gray-200/40"
                         )}
                         href={`/${course.subjectCode}${course.courseCode}`}
                     >

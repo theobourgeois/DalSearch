@@ -132,15 +132,15 @@ export function ScheduleBackground({
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex bg-white rounded-md overflow-hidden border border-gray-200 min-w-[600px]">
-            <div className="bg-gray-50 border-r border-gray-200">
+        <div className="flex bg-white dark:bg-gray-900 rounded-md overflow-hidden border border-gray-200 dark:border-gray-700 min-w-[600px]">
+            <div className="bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
                 {scheduleTimes.map((time) => (
                     <div
                         key={time}
                         style={{
                             height: CELL_HEIGHT,
                         }}
-                        className="px-2 flex items-center justify-end text-sm text-gray-500 font-medium"
+                        className="px-2 flex items-center justify-end text-sm text-gray-500 dark:text-gray-400 font-medium"
                     >
                         {formatTime(time)}
                     </div>
@@ -148,13 +148,16 @@ export function ScheduleBackground({
             </div>
 
             <div className="flex-1">
-                <div className="grid grid-cols-6 border-b border-gray-200">
+                <div className="grid grid-cols-6 border-b border-gray-200 dark:border-gray-700">
                     {days.map((day) => (
-                        <div key={day} className="py-2 text-center bg-gray-50">
-                            <p className="hidden lg:block text-sm font-semibold text-gray-700">
+                        <div
+                            key={day}
+                            className="py-2 text-center bg-gray-50 dark:bg-gray-800"
+                        >
+                            <p className="hidden lg:block text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 {getDay(day)}
                             </p>
-                            <p className="block lg:hidden text-xs font-medium text-gray-600">
+                            <p className="block lg:hidden text-xs font-medium text-gray-600 dark:text-gray-400">
                                 {day}
                             </p>
                         </div>
@@ -166,7 +169,7 @@ export function ScheduleBackground({
                             {Array.from({ length: 6 }).map((_, index) => (
                                 <div
                                     key={index}
-                                    className="border-r border-gray-200 last:border-r-0"
+                                    className="border-r border-gray-200 dark:border-gray-700 last:border-r-0"
                                 />
                             ))}
                         </div>
@@ -175,7 +178,7 @@ export function ScheduleBackground({
                                 <div
                                     key={time}
                                     style={{ height: CELL_HEIGHT }}
-                                    className="border-b border-gray-200 last:border-b-0"
+                                    className="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
                                 />
                             ))}
                         </div>

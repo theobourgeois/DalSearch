@@ -70,15 +70,15 @@ export function RecentSearches() {
     }
 
     return (
-        <div className="md:w-3/4 w-11/12 mx-auto max-w-2xl mt-4 border-slate-200 bg-white drop-shadow-md border p-4 rounded-lg">
-            <h2 className="text-lg font-medium mb-2 text-gray-700">
+        <div className="md:w-3/4 w-11/12 mx-auto max-w-2xl mt-4 border-gray-200 bg-white drop-shadow-md border p-4 rounded-lg dark:bg-gray-800 dark:border-gray-700 dark:text-white">
+            <h2 className="text-lg font-medium mb-2 text-gray-700 dark:text-gray-200">
                 Recent Searches
             </h2>
             <ul className="space-y-1">
                 {displayedSearches.map((course, index) => (
                     <li
                         key={index}
-                        className="flex items-center justify-between text-sm text-gray-600 hover:bg-gray-100 rounded px-2 py-1 transition-colors"
+                        className="flex items-center justify-between text-sm text-gray-600 hover:bg-gray-100 rounded px-2 py-1 transition-colors dark:hover:bg-gray-700 dark:text-white"
                     >
                         <Link
                             href={`/${course.subjectCode}${course.courseCode}`}
