@@ -54,7 +54,7 @@ export function InstructorList({
         instructor: string;
         instructorData: Instructor | undefined;
     }) => (
-        <div className="space-y-2">
+        <div className="space-y-2 ">
             <h4 className="text-sm font-semibold">
                 {instructorData ? (
                     <Link
@@ -105,7 +105,7 @@ export function InstructorList({
                         <Link key={course} href={`/${course}`}>
                             <Badge
                                 variant="secondary"
-                                className="cursor-pointer hover:bg-secondary-hover"
+                                className="text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900/30 transition-colors p-2 dark:border-gray-700"
                             >
                                 {course}
                             </Badge>
@@ -139,7 +139,7 @@ export function InstructorList({
                                             <HoverCardTrigger asChild>
                                                 <Badge
                                                     variant="outline"
-                                                    className="p-2 text-blue-600 hover:bg-blue-100 transition-colors cursor-pointer"
+                                                    className="text-blue-600 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900/30 transition-colors p-2 dark:border-gray-700"
                                                 >
                                                     {instructorData
                                                         ? `${instructorData.firstName} ${instructorData.lastName}`
@@ -159,13 +159,13 @@ export function InstructorList({
                                                 </Badge>
                                             </HoverCardTrigger>
                                         </PopoverTrigger>
-                                        <HoverCardContent className="w-80">
+                                        <HoverCardContent className="w-80 bg-white">
                                             <InstructorContent
                                                 instructor={instructor}
                                                 instructorData={instructorData}
                                             />
                                         </HoverCardContent>
-                                        <PopoverContent className="w-80">
+                                        <PopoverContent className="w-80 bg-white">
                                             <InstructorContent
                                                 instructor={instructor}
                                                 instructorData={instructorData}

@@ -34,7 +34,7 @@ export function OrderByCourses({
     return (
         <div>
             <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center justify-center rounded-full p-[7px] bg-white hover:bg-gray-100 transition-colors border border-slate-200">
+                <DropdownMenuTrigger className="flex items-center justify-center rounded-full p-[7px] bg-white hover:bg-gray-100 transition-colors border border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                     <ListOrderedIcon className="w-5 h-5" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
