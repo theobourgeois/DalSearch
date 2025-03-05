@@ -12,7 +12,7 @@ interface Props {
 export default function Header({ courses }: Props) {
     return (
         <header className="flex flex-col px-6 py-4 shadow-md w-full bg-white sticky top-0 z-10 dark:bg-gray-800 dark:text-white">
-            <div className="flex justify-between tems-center flex-row">
+            <div className="flex justify-between gap-4 items-start sm:items-center flex-col sm:flex-row">
                 <div className="flex items-center gap-1 w-full">
                     <DalLogo />
                     <Link
@@ -27,7 +27,7 @@ export default function Header({ courses }: Props) {
                         </h1>
                     </Link>
 
-                    <div className="hidden md:block w-96">
+                    <div className="hidden md:block w-96 ml-2">
                         <Search
                             numberOfRecommendations={5}
                             isOnHeader
