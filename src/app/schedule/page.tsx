@@ -29,9 +29,7 @@ export default function Schedule() {
                             </p>
                         </div>
                         <div className="flex gap-3 items-center">
-                            <ScheduleControls
-                                courses={Object.values(courses)}
-                            />
+                            <ScheduleControls />
                         </div>
                     </div>
                 </CardHeader>

@@ -1,5 +1,5 @@
 "use client";
-import { Download, Edit, Import } from "lucide-react";
+import { Download, Import } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Select,
@@ -14,7 +14,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Course, Term, terms } from "@/utils/course";
+import { Term, terms } from "@/utils/course";
 import {
     DOWNLOAD_FORMATS,
     DownloadFormat,
@@ -27,11 +27,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "./ui/dialog";
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "./ui/sheet";
-import { ManageSchedule } from "./manage-schedule";
 import { ImportSchedule } from "./import-schedule";
 
-export function ScheduleControls({ courses }: { courses: Course[] }) {
+export function ScheduleControls() {
     const { downloadSchedule, term, setTerm } = useSchedule();
 
     const handleDownload = (format: DownloadFormat) => () => {
