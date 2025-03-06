@@ -154,7 +154,7 @@ export function ScheduleBackground({
     children: React.ReactNode;
     selectedDay?: string;
 }) {
-    const [viewMode, setViewMode] = useState<ViewMode>("day");
+    const [viewMode, setViewMode] = useState<ViewMode>("week");
     const [currentDay, setCurrentDay] = useState<Day>(selectedDay as Day);
 
     const handleViewChange = (value: string) => {
