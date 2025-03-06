@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
-import Link from "next/link";
 import { courses } from "@/utils/course";
 import Header from "../components/header";
 import { Toaster } from "@/components/ui/sonner";
 import FloatingSchedule from "@/components/floating-schedule";
 import UserSchedule from "@/components/user-schedule";
+import Footer from "@/components/footer";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -133,71 +133,8 @@ export default function RootLayout({
             >
                 <Header courses={courses} />
                 {children}
-                <footer className="bg-gradient-to-r from-gray-800 to-black text-white py-8 px-4">
-                    <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div>
-                            <h3 className="text-xl font-semibold mb-4">
-                                Quick Links
-                            </h3>
-                            <ul className="space-y-2">
-                                <li>
-                                    <Link
-                                        href="https://www.dal.ca/"
-                                        className="hover:text-yellow-400 transition-colors"
-                                    >
-                                        About Dalhousie
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        href="https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable"
-                                        className="hover:text-yellow-400 transition-colors"
-                                    >
-                                        Dal Academic Timetable
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        href="https://github.com/theobourgeois/DalSearch"
-                                        className="hover:text-yellow-400 transition-colors"
-                                    >
-                                        Source Code
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-semibold mb-4">
-                                Created By
-                            </h3>
-                            <ul className="space-y-2">
-                                <li>
-                                    <Link
-                                        href="https://theobourgeois.com"
-                                        className="hover:text-yellow-400 transition-colors"
-                                    >
-                                        Théo Bourgeois
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        href="https://chrislangille.github.io/portfolio"
-                                        className="hover:text-yellow-400 transition-colors"
-                                    >
-                                        Chris Langille
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <Footer />
 
-                    <div className="mt-8 text-center text-sm">
-                        <p>
-                            DalSearch is not Affiliate with Dalhousie
-                            University.
-                        </p>
-                    </div>
-                </footer>{" "}
                 <Toaster closeButton richColors />
                 <FloatingSchedule>
                     <UserSchedule />

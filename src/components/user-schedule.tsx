@@ -19,30 +19,27 @@ export default function UserSchedule() {
 
     return (
         <div ref={scheduleRef}>
-            <div className="overflow-x-auto">
-                <ScheduleBackground>
-                    {filteredTimeSlots.map((timeSlot, index) => (
-                        <Fragment key={index}>
-                            {timeSlot.class.days.map((day) => (
-                                <ScheduleTimeslot
-                                    key={timeSlot.class.crn + day}
-                                    course={timeSlot.class.course}
-                                    day={day}
-                                    termClass={timeSlot.class}
-                                    termClasses={timeSlots
-                                        .map((c) => c.class)
-                                        .filter(
-                                            (c) =>
-                                                c.term === timeSlot.class.term
-                                        )}
-                                    color={timeSlot.color}
-                                    index={index}
-                                />
-                            ))}
-                        </Fragment>
-                    ))}
-                </ScheduleBackground>
-            </div>
+            <ScheduleBackground>
+                {filteredTimeSlots.map((timeSlot, index) => (
+                    <Fragment key={index}>
+                        {timeSlot.class.days.map((day) => (
+                            <ScheduleTimeslot
+                                key={timeSlot.class.crn + day}
+                                course={timeSlot.class.course}
+                                day={day}
+                                termClass={timeSlot.class}
+                                termClasses={timeSlots
+                                    .map((c) => c.class)
+                                    .filter(
+                                        (c) => c.term === timeSlot.class.term
+                                    )}
+                                color={timeSlot.color}
+                                index={index}
+                            />
+                        ))}
+                    </Fragment>
+                ))}
+            </ScheduleBackground>
         </div>
     );
 }

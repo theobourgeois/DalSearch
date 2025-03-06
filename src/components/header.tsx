@@ -1,5 +1,5 @@
 import { CourseByCode } from "@/utils/course";
-import { Calendar, CompassIcon, Github } from "lucide-react";
+import { Calendar, CompassIcon } from "lucide-react";
 import Link from "next/link";
 import { Search } from "./search";
 import { DarkModeToggle } from "./darkmode-toggle";
@@ -51,12 +51,6 @@ export default function Header({ courses }: Props) {
                         <Calendar className="w-6 h-6 hover:text-yellow-400" />
                     </Link>
                     <div className="w-[2px] h-6 dark:bg-gray-400/30 bg-gray-100 rounded-lg" />
-                    <Link
-                        title="View source code"
-                        href="https://github.com/theobourgeois/DalSearch"
-                    >
-                        <Github className="w-6 h-6 text-gray-800 dark:text-white hover:text-yellow-400 dark:hover:text-yellow-400" />
-                    </Link>
                     <DarkModeToggle />
                 </div>
             </div>
