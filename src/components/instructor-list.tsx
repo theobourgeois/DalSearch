@@ -7,7 +7,7 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Book, ThumbsUp, BarChart } from "lucide-react";
-import { CourseAndSubjectCode, courses, Instructor } from "@/utils/course";
+import { CourseAndSubjectCode, courses, Instructor } from "@/lib/course-utils";
 import { StarRating } from "@/components/star-rating";
 import {
     Popover,

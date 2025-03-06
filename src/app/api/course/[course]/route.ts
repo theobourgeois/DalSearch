@@ -1,4 +1,4 @@
-import { CourseAndSubjectCode, courses } from "@/utils/course";
+import { CourseAndSubjectCode, courses } from "@/lib/course-utils";
 
 export async function GET(request: Request) {
   const code = request.url.split('/').pop()?.toUpperCase();

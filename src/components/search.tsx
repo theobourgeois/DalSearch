@@ -3,7 +3,7 @@ import * as React from "react";
 import Link from "next/link";
 import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { Course, CourseByCode } from "@/utils/course";
+import { Course, CourseByCode } from "@/lib/course-utils";
 import { RecommendationInput } from "./recommendations-input";
 import { cn } from "@/lib/utils";
 

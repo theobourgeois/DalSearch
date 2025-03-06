@@ -1,8 +1,9 @@
 "use client";
 
-import { useSchedule } from "@/store/schedule";
+import { useSchedule } from "@/store/schedule-store";
 import { Fragment, useEffect, useRef } from "react";
-import { ScheduleBackground, ScheduleTimeslot } from "./schedule";
+import { ScheduleBackground } from "./schedule-background";
+import { ScheduleTimeslot } from "./schedule-timeslot";
 
 export default function UserSchedule() {
     const scheduleRef = useRef<HTMLDivElement>(null);

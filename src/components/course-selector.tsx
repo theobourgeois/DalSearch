@@ -15,7 +15,7 @@ import {
     CourseByCode,
     CourseAndSubjectCode,
     ClassSession,
-} from "@/utils/course";
+} from "@/lib/course-utils";
 
 type SelectedCourse = {
     code: CourseAndSubjectCode;

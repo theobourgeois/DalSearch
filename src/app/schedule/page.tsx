@@ -2,7 +2,7 @@ import { Calendar } from "lucide-react";
 import UserSchedule from "@/components/user-schedule";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ScheduleControls } from "@/components/schedule-controls";
-import { courses } from "@/utils/course";
+import { courses } from "@/lib/course-utils";
 import {
     ResizableHandle,
     ResizablePanel,

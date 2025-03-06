@@ -1,6 +1,6 @@
 "use client"
-import { colors } from "@/components/schedule";
-import { ClassSession, Term } from "@/utils/course";
+import { colors } from "@/lib/schedule-utils";
+import { ClassSession, Term } from "@/lib/types";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { create } from "zustand";

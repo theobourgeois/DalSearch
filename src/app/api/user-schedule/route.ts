@@ -1,4 +1,4 @@
-import { ClassSession, currentTerm, Time } from '@/utils/course';
+import { ClassSession, currentTerm, Time } from '@/lib/course-utils';
 import { JSDOM } from 'jsdom';
 
 function formatDate(date: Date) {

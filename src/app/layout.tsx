@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
-import { courses } from "@/utils/course";
+import { courses } from "@/lib/course-utils";
 import Header from "../components/header";
 import { Toaster } from "@/components/ui/sonner";
 import FloatingSchedule from "@/components/floating-schedule";

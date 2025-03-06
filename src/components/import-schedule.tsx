@@ -1,9 +1,9 @@
 "use client";
-import { ClassSession } from "@/utils/course";
+import { ClassSession } from "@/lib/course-utils";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useState } from "react";
-import { useSchedule } from "@/store/schedule";
+import { useSchedule } from "@/store/schedule-store";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 

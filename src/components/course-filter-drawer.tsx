@@ -12,7 +12,7 @@ import {
     subjects,
     Term,
     terms,
-} from "@/utils/course";
+} from "@/lib/course-utils";
 import { RecommendationInput } from "./recommendations-input";
 import { Badge } from "@/components/ui/badge";
 import {

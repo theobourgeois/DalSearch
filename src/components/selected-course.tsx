@@ -1,4 +1,4 @@
-import { CourseByCode, CourseAndSubjectCode } from "@/utils/course";
+import { CourseByCode, CourseAndSubjectCode } from "@/lib/course-utils";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
