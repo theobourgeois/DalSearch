@@ -154,10 +154,12 @@ const isMobileView = (() => {
 
 export function ScheduleBackground({
     children,
+    ref,
     selectedDay = days[new Date().getDay() - 1], // today
 }: {
     children: React.ReactNode;
     selectedDay?: string;
+    ref?: React.RefObject<HTMLDivElement>;
 }) {
     const [viewMode, setViewMode] = useState<ViewMode>(
         isMobileView ? "day" : "week"
@@ -235,7 +237,7 @@ export function ScheduleBackground({
                     ))}
                 </div>
 
-                <div className="flex-1">
+                <div className="flex-1" ref={ref}>
                     <div
                         className={`grid ${
                             viewMode === "day" ? "grid-cols-1" : "grid-cols-6"
