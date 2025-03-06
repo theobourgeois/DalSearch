@@ -18,8 +18,8 @@ export default function UserSchedule() {
     }, [scheduleRef, setContainer]);
 
     return (
-        <div ref={scheduleRef}>
-            <ScheduleBackground>
+        <div>
+            <ScheduleBackground ref={scheduleRef}>
                 {filteredTimeSlots.map((timeSlot, index) => (
                     <Fragment key={index}>
                         {timeSlot.class.days.map((day) => (
