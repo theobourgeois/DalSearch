@@ -1,9 +1,9 @@
-import { CourseByCode } from "@/lib/course-utils";
 import { Calendar, CompassIcon } from "lucide-react";
 import Link from "next/link";
 import { Search } from "./search";
 import { DarkModeToggle } from "./darkmode-toggle";
 import { DalLogo } from "./dal-logo";
+import { CourseByCode } from "@/lib/types";
 
 interface Props {
     courses: CourseByCode;

@@ -3,7 +3,8 @@ import {
   defaultOrderBy,
   getFilteredCourses,
 } from "@/lib/course-utils";
-import { CourseFilter, CourseOrderBy, courses } from "@/lib/course-utils";
+import { courses } from "@/lib/course-utils";
+import { CourseFilter, CourseOrderBy } from "@/lib/types";
 
 type Payload = {
   filter: CourseFilter;

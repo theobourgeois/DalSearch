@@ -5,13 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Search, PlusCircle } from "lucide-react";
 import { Input } from "./ui/input";
 import { useMemo, useState } from "react";
-import {
-    currentTerm,
-    Term,
-    terms,
-    type ClassSession,
-    type Course,
-} from "@/lib/course-utils";
+import { currentTerm, terms } from "@/lib/course-utils";
 import { useDebounce } from "@uidotdev/usehooks";
 import {
     Select,
@@ -21,6 +15,7 @@ import {
     SelectValue,
 } from "./ui/select";
 import { Label } from "./ui/label";
+import { Course, ClassSession, Term } from "@/lib/types";
 
 const MAX_NUM_COURSES = 10;
 

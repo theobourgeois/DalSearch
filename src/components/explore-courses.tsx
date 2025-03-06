@@ -4,17 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, ChevronDown } from "lucide-react";
 import { useDebounce } from "@uidotdev/usehooks";
-import {
-    Course,
-    CourseFilter,
-    CourseOrderBy,
-    defaultFilter,
-    getFilteredCourses,
-} from "@/lib/course-utils";
+import { defaultFilter, getFilteredCourses } from "@/lib/course-utils";
 import { CourseCard } from "./course-card";
 import { CourseFilterDrawer } from "./course-filter-drawer";
 import { useStoredState } from "@/hooks/use-stored-state";
 import { OrderByCourses } from "./order-courses";
+import { Course, CourseFilter, CourseOrderBy } from "@/lib/types";
 
 const MAX_NUM_COURSES = 10;
 
