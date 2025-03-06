@@ -1,11 +1,5 @@
-import {
-    CourseAndSubjectCode,
-    courses,
-    instructors,
-    terms,
-} from "@/utils/course";
+import { courses, instructors, terms } from "@/lib/course-utils";
 import Link from "next/link";
-import { Schedule } from "../../components/schedule";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
@@ -14,6 +8,8 @@ import Script from "next/script";
 import { BackButton } from "@/components/back-button";
 import { InstructorList } from "@/components/instructor-list";
 import { RecentSearchHandler } from "@/components/recent-searches";
+import { CourseSchedule } from "@/components/course-schedule";
+import { CourseAndSubjectCode } from "@/lib/types";
 
 type Props = {
     params: Promise<{ course: CourseAndSubjectCode }>;
@@ -210,7 +206,7 @@ export default async function CoursePage({
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Schedule course={course} />
+                    <CourseSchedule course={course} />
                 </CardContent>
             </Card>
         </main>

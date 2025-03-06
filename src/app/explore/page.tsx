@@ -1,4 +1,4 @@
-import { courses } from "@/utils/course";
+import { courses } from "@/lib/course-utils";
 import { ExploreCourses } from "../../components/explore-courses";
 
 export default function Home() {

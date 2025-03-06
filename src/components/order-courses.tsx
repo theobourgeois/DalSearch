@@ -1,4 +1,4 @@
-import { CourseOrderBy, CourseOrderByKey } from "@/utils/course";
+import { CourseOrderBy, CourseOrderByKey } from "@/lib/course-utils";
 import {
     DropdownMenu,
     DropdownMenuContent,

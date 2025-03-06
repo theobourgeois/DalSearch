@@ -1,4 +1,4 @@
-import { courses } from "@/utils/course";
+import { courses } from "@/lib/course-utils";
 import { Search } from "../components/search";
 import { RecentSearches } from "@/components/recent-searches";
 

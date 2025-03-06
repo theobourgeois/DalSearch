@@ -1,5 +1,5 @@
 "use client";
-import { useSchedule } from "@/store/schedule";
+import { useSchedule } from "@/store/schedule-store";
 import { TermClassCard } from "./course-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Search, PlusCircle } from "lucide-react";
@@ -11,7 +11,7 @@ import {
     terms,
     type ClassSession,
     type Course,
-} from "@/utils/course";
+} from "@/lib/course-utils";
 import { useDebounce } from "@uidotdev/usehooks";
 import {
     Select,

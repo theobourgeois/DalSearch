@@ -1,4 +1,4 @@
-import { CourseByCode } from "@/utils/course";
+import { CourseByCode } from "@/lib/course-utils";
 import { Calendar, CompassIcon } from "lucide-react";
 import Link from "next/link";
 import { Search } from "./search";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { useSchedule } from "@/store/schedule";
-import { Course, ClassSession, terms } from "@/utils/course";
+import { useSchedule } from "@/store/schedule-store";
+import { Course, ClassSession, terms } from "@/lib/course-utils";
 import { Badge } from "./ui/badge";
 import Link from "next/link";
 import { Clock, MapPin, ChevronDown } from "lucide-react";

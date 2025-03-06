@@ -14,12 +14,12 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Term, terms } from "@/utils/course";
+import { terms } from "@/lib/course-utils";
 import {
     DOWNLOAD_FORMATS,
     DownloadFormat,
     useSchedule,
-} from "@/store/schedule";
+} from "@/store/schedule-store";
 import {
     Dialog,
     DialogContent,
@@ -28,6 +28,7 @@ import {
     DialogTrigger,
 } from "./ui/dialog";
 import { ImportSchedule } from "./import-schedule";
+import { Term } from "@/lib/types";
 
 export function ScheduleControls() {
     const { downloadSchedule, term, setTerm } = useSchedule();

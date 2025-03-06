@@ -2,8 +2,8 @@ import {
   defaultFilter,
   defaultOrderBy,
   getFilteredCourses,
-} from "@/utils/course";
-import { CourseFilter, CourseOrderBy, courses } from "@/utils/course";
+} from "@/lib/course-utils";
+import { CourseFilter, CourseOrderBy, courses } from "@/lib/course-utils";
 
 type Payload = {
   filter: CourseFilter;

@@ -10,7 +10,7 @@ import {
     CourseOrderBy,
     defaultFilter,
     getFilteredCourses,
-} from "@/utils/course";
+} from "@/lib/course-utils";
 import { CourseCard } from "./course-card";
 import { CourseFilterDrawer } from "./course-filter-drawer";
 import { useStoredState } from "@/hooks/use-stored-state";

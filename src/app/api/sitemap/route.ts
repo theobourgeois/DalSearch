@@ -1,4 +1,4 @@
-import { courses } from "@/utils/course";
+import { courses } from "@/lib/course-utils";
 
 export async function GET() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
