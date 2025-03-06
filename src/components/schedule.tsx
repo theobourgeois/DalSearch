@@ -85,7 +85,7 @@ export const NUM_HOURS = 13;
 export const NUM_TIME_SLOTS = NUM_HOURS * (60 / TIME_QUANTUM_MIN);
 export const START_HOUR = 8;
 
-const getDay = (day: string) => {
+const getDay = (day: Day) => {
     switch (day) {
         case "M":
             return "Monday";
@@ -147,14 +147,21 @@ const ScheduleContext = React.createContext<{
     currentDay: "M",
 });
 
+const isMobileView = (() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < 640;
+})();
+
 export function ScheduleBackground({
     children,
-    selectedDay = "M",
+    selectedDay = days[new Date().getDay() - 1], // today
 }: {
     children: React.ReactNode;
     selectedDay?: string;
 }) {
-    const [viewMode, setViewMode] = useState<ViewMode>("week");
+    const [viewMode, setViewMode] = useState<ViewMode>(
+        isMobileView ? "day" : "week"
+    );
     const [currentDay, setCurrentDay] = useState<Day>(selectedDay as Day);
 
     const handleViewChange = (value: string) => {
