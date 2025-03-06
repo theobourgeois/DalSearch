@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { useSchedule } from "@/store/schedule-store";
-import { Course, ClassSession, terms } from "@/lib/course-utils";
+import { terms } from "@/lib/course-utils";
 import { Badge } from "./ui/badge";
 import Link from "next/link";
 import { Clock, MapPin, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { cn } from "@/lib/utils";
+import { ClassSession, Course } from "@/lib/types";
 
 function KeywordHighlightedText({
     text,

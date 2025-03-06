@@ -1,4 +1,3 @@
-import { CourseOrderBy, CourseOrderByKey } from "@/lib/course-utils";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,6 +8,7 @@ import {
 } from "./ui/dropdown-menu";
 import { ArrowDown, ListOrderedIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CourseOrderBy, CourseOrderByKey } from "@/lib/types";
 
 type OrderByCoursesProps = {
     orderBy: CourseOrderBy;

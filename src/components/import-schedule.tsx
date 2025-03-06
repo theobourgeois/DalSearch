@@ -1,11 +1,11 @@
 "use client";
-import { ClassSession } from "@/lib/course-utils";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useState } from "react";
 import { useSchedule } from "@/store/schedule-store";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
+import { ClassSession } from "@/lib/types";
 
 export async function getUserSchedule(
     netid: string,

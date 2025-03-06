@@ -5,14 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Filter, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-    CourseFilter,
-    creditHours,
-    Subject,
-    subjects,
-    Term,
-    terms,
-} from "@/lib/course-utils";
+import { creditHours, subjects, terms } from "@/lib/course-utils";
 import { RecommendationInput } from "./recommendations-input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -30,6 +23,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "./ui/sheet";
+import { CourseFilter, Subject, Term } from "@/lib/types";
 
 const ALL_COURSE_LEVELS = Array.from({ length: 9 }, (_, i) =>
     ((i + 1) * 1000).toString()

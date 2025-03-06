@@ -7,13 +7,14 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Book, ThumbsUp, BarChart } from "lucide-react";
-import { CourseAndSubjectCode, courses, Instructor } from "@/lib/course-utils";
+import { courses } from "@/lib/course-utils";
 import { StarRating } from "@/components/star-rating";
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { CourseAndSubjectCode, Instructor } from "@/lib/types";
 
 interface InstructorListProps {
     instructorsByTerm: Record<string, string[]>;
