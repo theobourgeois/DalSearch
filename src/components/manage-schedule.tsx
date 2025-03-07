@@ -82,6 +82,7 @@ export function ManageSchedule({ courses }: { courses: Course[] }) {
                         <div className="space-y-3 max-h-[700px] overflow-y-auto pr-1">
                             {timeSlots.map((timeSlot) => (
                                 <TermClassCard
+                                    showCourse
                                     key={timeSlot.class.crn}
                                     termClass={timeSlot.class}
                                     isAdded
@@ -165,6 +166,7 @@ export function ManageSchedule({ courses }: { courses: Course[] }) {
                                                 {course.termClasses.map(
                                                     (termClass) => (
                                                         <TermClassCard
+                                                            showCourse
                                                             key={termClass.crn}
                                                             termClass={
                                                                 termClass

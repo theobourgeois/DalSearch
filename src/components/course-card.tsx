@@ -40,11 +40,13 @@ const DEFAULT_VISIBLE_CLASSES = 4;
 
 export const TermClassCard = ({
     termClass,
+    showCourse = false,
     isAdded,
     onToggleTimeSlot,
 }: {
     termClass: ClassSession;
     isAdded: boolean;
+    showCourse?: boolean;
     onToggleTimeSlot?: (termClass: ClassSession) => void;
 }) => (
     <div
@@ -52,8 +54,13 @@ export const TermClassCard = ({
         className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden dark:bg-gray-900 dark:border-gray-700"
     >
         <div className="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center dark:bg-gray-800 dark:border-gray-700">
+            {showCourse && (
+                <span className="text-sm font-bold text-primary">
+                    {termClass.course}
+                </span>
+            )}
             <div className="flex items-center space-x-3">
-                <div className="bg-primary/10 px-2 py-1 rounded-full">
+                <div className="bg-primary/10 px-2 py-1 rounded-full flex items-center space-x-2">
                     <span className="text-sm font-medium text-primary">
                         {termClass.section}
                     </span>
