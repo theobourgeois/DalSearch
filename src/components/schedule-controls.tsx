@@ -31,10 +31,10 @@ import { ImportSchedule } from "./import-schedule";
 import { Term } from "@/lib/types";
 
 export function ScheduleControls() {
-    const { downloadSchedule, term, setTerm } = useSchedule();
+    const { downloadSchedule, term, setTerm, timeSlots } = useSchedule();
 
     const handleDownload = (format: DownloadFormat) => () => {
-        downloadSchedule(format);
+        downloadSchedule(format, timeSlots);
         return undefined;
     };
 

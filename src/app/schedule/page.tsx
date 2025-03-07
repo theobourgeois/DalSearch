@@ -59,7 +59,7 @@ export default function Schedule() {
                         <ResizablePanel defaultSize={50} minSize={30}>
                             <UserSchedule />
                         </ResizablePanel>
-                        <ResizableHandle withHandle />
+                        <ResizableHandle withHandle className="mx-2" />
                         <ResizablePanel defaultSize={35} minSize={32}>
                             <div className="mt-2 mx-4">
                                 <ManageSchedule
