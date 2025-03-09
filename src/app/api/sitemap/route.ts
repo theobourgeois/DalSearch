@@ -7,7 +7,7 @@ export async function GET() {
     ...STATIC_PAGES.map(
       (page) => `
         <url>
-          <loc>https://dalsearch.com${page}</loc>
+          <loc>https://www.dalsearch.com${page}</loc>
           <changefreq>weekly</changefreq>
           <priority>0.8</priority>
         </url>
@@ -16,7 +16,7 @@ export async function GET() {
     ...Object.values(courses).map(
       (course) => `
         <url>
-          <loc>https://dalsearch.com/${course.subjectCode + course.courseCode}</loc>
+          <loc>https://www.dalsearch.com/${course.subjectCode + course.courseCode}</loc>
           <changefreq>monthly</changefreq>
           <priority>0.6</priority>
         </url>
