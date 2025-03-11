@@ -54,17 +54,26 @@ export type Course = {
 
 export type CourseByCode = Record<CourseAndSubjectCode, Course>;
 export type Term = keyof typeof terms;
-export type Instructor = {
+export type RateMyProfInstructorData = {
   firstName: string;
   lastName: string;
   rateMyProfLink: string;
   overallRating: `${number}` | null;
-  takeAgainRating: number;
+  takeAgainRating: string;
   difficultyLevel: number;
   numberOfRatings: number;
 };
 
-export type InstructorsByName = Record<string, Instructor>;
+export type RateMyProfInstructorsByName = Record<string, RateMyProfInstructorData>;
+
+export type InstructorData = {
+  name: string;
+  rateMyProfData: RateMyProfInstructorData | null;
+  courseAndTerms: {
+    term: Term,
+    course: CourseAndSubjectCode
+  }[]
+}
 
 export type CourseFilter = {
   terms: Term[];
