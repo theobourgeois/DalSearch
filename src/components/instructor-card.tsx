@@ -25,12 +25,7 @@ export function InstructorCard({ instructor }: InstructorCardProps) {
                         <User className="h-5 w-5" />
                     </div>
                     <div>
-                        <Link
-                            href={`/instructors/${instructor.name}`}
-                            className="hover:underline"
-                        >
-                            {displayName}
-                        </Link>
+                        <p>{displayName}</p>
                         <p className="text-sm font-normal text-muted-foreground mt-1">
                             {instructor.courseAndTerms.length}{" "}
                             {instructor.courseAndTerms.length === 1
