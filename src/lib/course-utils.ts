@@ -2,14 +2,14 @@ import searchData from "../../database/search.json"
 import instructorsData from "../../database/ratemyprofessor.json";
 import subjectsData from "../../database/subjects.json";
 import examDateData from "../../database/exam_schedule.json";
-import { Term, ExamData, Subject, CourseFilter, CourseOrderBy, Course, CourseByCode } from "./types";
+import { Term, ExamData, Subject, CourseFilter, CourseOrderBy, Course, CourseByCode, RateMyProfInstructorsByName, CourseAndSubjectCode, InstructorData } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - This is a JSON file
 export const courses = searchData as CourseByCode;
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - This is a JSON file
-export const instructors = instructorsData as InstructorsByName;
+export const instructors = instructorsData as RateMyProfInstructorsByName;
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 export const terms = {
   "202520": "2024/2025 Winter",
@@ -43,6 +43,38 @@ export const defaultOrderBy: CourseOrderBy = {
   key: "title",
   direction: "asc",
 };
+
+
+
+export function getAllInstructors(): InstructorData[] {
+  const instructorsMap: Record<string, InstructorData> = {}
+
+  for (const course of Object.values(courses)) {
+    for (const [term, instructorsList] of Object.entries(course.instructorsByTerm)) {
+      for (const instructor of instructorsList) {
+        if (instructor === "Staff") {
+          continue
+        }
+        if (!instructorsMap[instructor]) {
+          instructorsMap[instructor] = {
+            name: instructor,
+            rateMyProfData: instructors[instructor.trim()] ?? null,
+            courseAndTerms: []
+          }
+        }
+        const courseDoesNotExistsYet = !instructorsMap[instructor].courseAndTerms.some((courseAndTerm) => courseAndTerm.term === term as Term && courseAndTerm.course === course.subjectCode + course.courseCode as CourseAndSubjectCode)
+        if (courseDoesNotExistsYet)
+          instructorsMap[instructor].courseAndTerms.push({
+            term: term as Term,
+            course: course.subjectCode + course.courseCode as CourseAndSubjectCode
+          })
+      }
+
+    }
+  }
+
+  return Object.values(instructorsMap)
+}
 
 export function getFilteredCourses(
   courses: Course[],

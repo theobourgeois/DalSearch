@@ -14,12 +14,12 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { CourseAndSubjectCode, Instructor } from "@/lib/types";
+import { CourseAndSubjectCode, RateMyProfInstructorData } from "@/lib/types";
 
 interface InstructorListProps {
     instructorsByTerm: Record<string, string[]>;
     terms: Record<string, string>;
-    instructors: Record<string, Instructor>;
+    instructors: Record<string, RateMyProfInstructorData>;
 }
 
 export function InstructorList({
@@ -53,7 +53,7 @@ export function InstructorList({
         instructorData,
     }: {
         instructor: string;
-        instructorData: Instructor | undefined;
+        instructorData: RateMyProfInstructorData | undefined;
     }) => (
         <div className="space-y-2 ">
             <h4 className="text-sm font-semibold">

@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import React from "react";
 import Script from "next/script";
 import { BackButton } from "@/components/back-button";
-import { InstructorList } from "@/components/instructor-list";
+import { InstructorList } from "@/components/ratemyprof-instructor-list";
 import { RecentSearchHandler } from "@/components/recent-searches";
 import { CourseSchedule } from "@/components/course-schedule";
 import { CourseAndSubjectCode } from "@/lib/types";
