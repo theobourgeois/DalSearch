@@ -139,7 +139,7 @@ export function RoomSchedules({
                     className="w-auto"
                 >
                     <div className="space-y-4">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                             <div>
                                 <h2 className="text-2xl font-bold text-slate-800 dark:text-gray-100">
                                     {selectedRoom}
