@@ -23,7 +23,6 @@ export const currentTerm: Term = "202520"
 export const examDates = examDateData as Record<string, ExamData[]>;
 
 export const subjects = subjectsData as Subject[];
-
 export const creditHours = Array.from(new Set(Object.values(courses).map((course) => Number(course.creditHours)))).sort((a, b) => a - b);
 
 const NUM_COURSE_LEVELS = 9;
