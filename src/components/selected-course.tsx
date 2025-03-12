@@ -1,7 +1,7 @@
-import { CourseByCode, CourseAndSubjectCode } from "@/utils/course";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { CourseByCode, CourseAndSubjectCode } from "@/lib/types";
 
 export function SelectedCourses({
     courses,

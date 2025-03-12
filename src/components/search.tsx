@@ -3,14 +3,14 @@ import * as React from "react";
 import Link from "next/link";
 import { SearchIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { Course, CourseByCode } from "@/utils/course";
 import { RecommendationInput } from "./recommendations-input";
 import { cn } from "@/lib/utils";
+import { CourseByCode, Course } from "@/lib/types";
 
 export function Search({
     courses,
     isOnHeader = false,
-    numberOfRecommendations = 50,
+    numberOfRecommendations = 5,
 }: {
     courses: CourseByCode;
     isOnHeader?: boolean;
@@ -39,9 +39,8 @@ export function Search({
                 renderRecommendation={(course, isCurrentSelected) => (
                     <Link
                         className={cn(
-                            "flex items-center text-sm gap-1 w-full focus:outline-none hover:bg-slate-200/40 py-1",
-
-                            isCurrentSelected && "bg-slate-200/40"
+                            "flex items-center text-sm gap-1 w-full focus:outline-none hover:bg-gray-200/40 py-1 dark:hover:bg-gray-700 dark:bg-gray-800 dark:text-white p-2 rounded-md",
+                            isCurrentSelected && "bg-gray-200/40"
                         )}
                         href={`/${course.subjectCode}${course.courseCode}`}
                     >
