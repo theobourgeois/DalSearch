@@ -1,4 +1,4 @@
-import { Calendar, CompassIcon, Users } from "lucide-react";
+import { Building2, Calendar, CompassIcon, Users } from "lucide-react";
 import Link from "next/link";
 import { Search } from "./search";
 import { DarkModeToggle } from "./darkmode-toggle";
@@ -42,6 +42,13 @@ export default function Header({ courses }: Props) {
                         className="flex items-center text-gray-800 hover:text-yellow-400 dark:text-white"
                     >
                         <CompassIcon className="w-6 h-6 hover:text-yellow-400" />
+                    </Link>
+                    <Link
+                        title="Search Rooms"
+                        href="/rooms"
+                        className="flex items-center text-gray-800 hover:text-yellow-400 dark:text-white"
+                    >
+                        <Building2 className="w-6 h-6 hover:text-yellow-400" />
                     </Link>
                     <Link
                         title="Schedule"

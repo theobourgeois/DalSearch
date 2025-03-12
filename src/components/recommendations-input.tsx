@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useStoredState } from "@/hooks/use-stored-state";
 import { cn } from "@/lib/utils";
 import Fuse from "fuse.js";
 import { SearchIcon } from "lucide-react";
@@ -7,6 +8,7 @@ import { useState, useMemo, useRef } from "react";
 import ClickAwayListener from "react-click-away-listener";
 
 type RecommendationInputProps<T extends unknown[]> = {
+    storageKey?: string | null;
     showAllItemsByDefault?: boolean;
     placeholder?: string;
     allItems: T;
@@ -21,6 +23,7 @@ type RecommendationInputProps<T extends unknown[]> = {
     ) => React.ReactNode;
     hasSubmitButton?: boolean;
     closeOnSelect?: boolean;
+    autoFocus?: boolean;
 };
 
 function DefaultRenderRecommendation<T extends unknown[]>(
@@ -40,6 +43,7 @@ function DefaultRenderRecommendation<T extends unknown[]>(
 }
 
 export function RecommendationInput<T extends unknown[]>({
+    storageKey = null,
     showAllItemsByDefault = false,
     allItems,
     onSelect,
@@ -50,9 +54,10 @@ export function RecommendationInput<T extends unknown[]>({
     hasSubmitButton = false,
     closeOnSelect = true,
     placeholder = "Search for course...",
+    autoFocus = false,
 }: RecommendationInputProps<T>) {
     const [tabbedIndex, setTabbedIndex] = useState(0);
-    const [value, setValue] = useState("");
+    const [value, setValue] = useStoredState("", storageKey);
     const [recommendations, setRecommendations] = useState<T[]>([]);
     const open = recommendations.length > 0;
     const fuse = useMemo(() => {
@@ -158,6 +163,7 @@ export function RecommendationInput<T extends unknown[]>({
                         size={18}
                     />
                     <Input
+                        autoFocus={autoFocus}
                         className="file:text-base dark:text-white focus-visible:ring-0 translate-x-6 p-0 rounded-none shadow-none outline-none border-none"
                         value={value}
                         onChange={handleChange}

@@ -35,6 +35,7 @@ export function Search({
                 numOfRecommendations={numberOfRecommendations}
                 fuzzyKeys={["subjectCode", "courseCode", "title"]}
                 onSelect={handleSelect}
+                autoFocus={!isOnHeader}
                 renderRecommendation={(course, isCurrentSelected) => (
                     <Link
                         className={cn(
