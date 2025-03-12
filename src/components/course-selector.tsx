@@ -11,11 +11,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-    CourseByCode,
-    CourseAndSubjectCode,
-    ClassSession,
-} from "@/utils/course";
+import { ClassSession, CourseAndSubjectCode, CourseByCode } from "@/lib/types";
 
 type SelectedCourse = {
     code: CourseAndSubjectCode;

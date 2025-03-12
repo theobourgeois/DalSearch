@@ -33,7 +33,7 @@ function DefaultRenderRecommendation<T extends unknown[]>(
     return (
         <div
             className={cn(
-                "p-2 hover:bg-gray-100 cursor-pointer outline-none",
+                "p-2 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-900 dark:bg-gray-800 cursor-pointer outline-none",
                 isCurrentSelected && "bg-gray-200"
             )}
         >
@@ -126,7 +126,8 @@ export function RecommendationInput<T extends unknown[]>({
         }
     };
 
-    const handleClickCourse = (recommendation: T) => () => {
+    const handleClickCourse = (recommendation: T) => (e: React.MouseEvent) => {
+        e.stopPropagation();
         onSelect(recommendation);
         if (closeOnSelect) {
             setRecommendations([]);
@@ -153,26 +154,30 @@ export function RecommendationInput<T extends unknown[]>({
         <>
             <div
                 onClick={handleFocus}
-                className="relative px-2 shadow-black rounded-xl w-full border-2 border-slate-200 bg-white"
+                className="relative px-2 shadow-black rounded-xl w-full border-2 border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
                 onKeyDown={handleKeyDown}
             >
                 <div className="relative">
                     <SearchIcon
-                        className="absolute top-1/2 left-0 transform -translate-y-1/2"
+                        className="absolute top-1/2 left-0 transform -translate-y-1/2 dark:text-white"
                         size={18}
                     />
                     <Input
                         autoFocus={autoFocus}
-                        className="file:text-base focus-visible:ring-0 translate-x-6 p-0 rounded-none shadow-none outline-none border-none"
+                        className="file:text-base dark:text-white focus-visible:ring-0 translate-x-6 p-0 rounded-none shadow-none outline-none border-none"
                         value={value}
                         onChange={handleChange}
                         placeholder={placeholder}
                     />
                 </div>
-                <ClickAwayListener onClickAway={() => setRecommendations([])}>
+                <ClickAwayListener
+                    onClickAway={() => {
+                        setRecommendations([]);
+                    }}
+                >
                     <div
                         className={cn("overflow-y-auto w-full flex flex-col", {
-                            "rounded-b-2xl z-[9999] border-b-2 border-l-2 border-r-2 border-slate-200 bg-white absolute left-0 top-[33px] px-2":
+                            "rounded-b-2xl z-[9999] border-b-2 border-l-2 border-r-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 absolute left-0 top-[33px] px-2":
                                 isHoveredList,
                         })}
                         style={{
@@ -181,19 +186,18 @@ export function RecommendationInput<T extends unknown[]>({
                             transition: "max-height height 0.2s",
                         }}
                     >
-                        {recommendations.map((rec, index) => {
-                            return (
-                                <div
-                                    key={JSON.stringify(rec)}
-                                    onClick={handleClickCourse(rec)}
-                                >
-                                    {renderRecommendation(
-                                        rec,
-                                        index === tabbedIndex
-                                    )}
-                                </div>
-                            );
-                        })}
+                        {recommendations.map((rec, index) => (
+                            <div
+                                key={JSON.stringify(rec)}
+                                onClick={handleClickCourse(rec)}
+                                className="recommendation-item"
+                            >
+                                {renderRecommendation(
+                                    rec,
+                                    index === tabbedIndex
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </ClickAwayListener>
             </div>

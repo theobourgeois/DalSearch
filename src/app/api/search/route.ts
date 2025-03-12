@@ -1,4 +1,4 @@
-import { courses } from "@/utils/course";
+import { courses } from "@/lib/course-utils";
 import Fuse from "fuse.js";
 
 const fuse = new Fuse(Object.values(courses), {
@@ -26,6 +26,20 @@ export async function GET(request: Request) {
   return new Response(JSON.stringify(results), {
     headers: {
       'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*', // Allow requests from any origin
+      'Access-Control-Allow-Methods': 'GET, OPTIONS', // Allow GET and OPTIONS methods
+      'Access-Control-Allow-Headers': 'Content-Type', // Allow specific headers
+    },
+  });
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
 }

@@ -1,8 +1,9 @@
 "use client";
 
-import { useSchedule } from "@/store/schedule";
+import { useSchedule } from "@/store/schedule-store";
 import { Fragment, useEffect, useRef } from "react";
-import { ScheduleBackground, ScheduleTimeslot } from "./schedule";
+import { ScheduleBackground } from "./schedule-background";
+import { ScheduleTimeslot } from "./schedule-timeslot";
 
 export default function UserSchedule() {
     const scheduleRef = useRef<HTMLDivElement>(null);
@@ -18,31 +19,28 @@ export default function UserSchedule() {
     }, [scheduleRef, setContainer]);
 
     return (
-        <div ref={scheduleRef}>
-            <div className="overflow-x-auto">
-                <ScheduleBackground>
-                    {filteredTimeSlots.map((timeSlot, index) => (
-                        <Fragment key={index}>
-                            {timeSlot.class.days.map((day) => (
-                                <ScheduleTimeslot
-                                    key={timeSlot.class.crn + day}
-                                    course={timeSlot.class.course}
-                                    day={day}
-                                    termClass={timeSlot.class}
-                                    termClasses={timeSlots
-                                        .map((c) => c.class)
-                                        .filter(
-                                            (c) =>
-                                                c.term === timeSlot.class.term
-                                        )}
-                                    color={timeSlot.color}
-                                    index={index}
-                                />
-                            ))}
-                        </Fragment>
-                    ))}
-                </ScheduleBackground>
-            </div>
+        <div>
+            <ScheduleBackground ref={scheduleRef}>
+                {filteredTimeSlots.map((timeSlot, index) => (
+                    <Fragment key={index}>
+                        {timeSlot.class.days.map((day) => (
+                            <ScheduleTimeslot
+                                key={timeSlot.class.crn + day}
+                                course={timeSlot.class.course}
+                                day={day}
+                                termClass={timeSlot.class}
+                                termClasses={timeSlots
+                                    .map((c) => c.class)
+                                    .filter(
+                                        (c) => c.term === timeSlot.class.term
+                                    )}
+                                color={timeSlot.color}
+                                index={index}
+                            />
+                        ))}
+                    </Fragment>
+                ))}
+            </ScheduleBackground>
         </div>
     );
 }
