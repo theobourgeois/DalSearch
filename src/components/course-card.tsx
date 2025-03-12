@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useSchedule } from "@/store/schedule-store";
 import { terms } from "@/lib/course-utils";
@@ -8,7 +8,7 @@ import { Clock, MapPin, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { cn } from "@/lib/utils";
-import { ClassSession, Course } from "@/lib/types";
+import { ClassSession, Course, Term } from "@/lib/types";
 
 function KeywordHighlightedText({
     text,
@@ -116,8 +116,10 @@ export function CourseCard({
     keyword,
     course,
     showDescription = true,
+    terms,
 }: {
     keyword: string;
+    terms: Term[];
     course: Course;
     showDescription?: boolean;
 }) {
@@ -141,11 +143,29 @@ export function CourseCard({
         }
     };
 
-    const addedTermClasses = course.termClasses.filter((termClass) =>
-        timeSlots.some((ts) => ts.class.crn === termClass.crn)
+    const filteredTermClasses = useMemo(
+        () =>
+            course.termClasses.filter((termClass) =>
+                terms.includes(termClass.term)
+            ),
+        [course, terms]
     );
-    const unaddedTermClasses = course.termClasses.filter(
-        (termClass) => !timeSlots.some((ts) => ts.class.crn === termClass.crn)
+
+    const addedTermClasses = useMemo(
+        () =>
+            filteredTermClasses.filter((termClass) =>
+                timeSlots.some((ts) => ts.class.crn === termClass.crn)
+            ),
+        [filteredTermClasses, timeSlots]
+    );
+
+    const unaddedTermClasses = useMemo(
+        () =>
+            filteredTermClasses.filter(
+                (termClass) =>
+                    !timeSlots.some((ts) => ts.class.crn === termClass.crn)
+            ),
+        [filteredTermClasses, timeSlots]
     );
 
     const handleShowAllClasses = () => {
@@ -208,7 +228,7 @@ export function CourseCard({
                 {addedTermClasses.length > 0 && (
                     <div className="space-y-2 mb-4">
                         <h3 className="font-semibold mb-2">Added Classes</h3>
-                        <div className="grid md:grid-cols-2 gap-2 grid-cols-1">
+                        <div className="grid lg:grid-cols-2 gap-2 grid-cols-1">
                             {addedTermClasses.map((termClass) => (
                                 <TermClassCard
                                     onToggleTimeSlot={handleToggleTimeSlot}
@@ -221,7 +241,7 @@ export function CourseCard({
                     </div>
                 )}
                 <h3 className="font-semibold mb-2">Available Classes</h3>
-                <div className="grid md:grid-cols-2 gap-2 grid-cols-1">
+                <div className="grid lg:grid-cols-2 gap-2 grid-cols-1">
                     {unaddedTermClasses
                         .slice(0, visibleClasses)
                         .map((termClass) => (
