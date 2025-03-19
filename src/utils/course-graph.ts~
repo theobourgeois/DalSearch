@@ -1,0 +1,53 @@
+import { Course, CourseAndSubjectCode, courses, SubjectCode } from "./course";
+
+type Graph = {
+  [code: CourseAndSubjectCode]: {
+    prereqs: CourseAndSubjectCode[];
+    postreqs: CourseAndSubjectCode[];
+  }
+}
+
+export function createCourseGraph(subjectCode: SubjectCode) {
+  const coursesBySubject = Object.values(courses).filter(
+    (filter) => filter.subjectCode === subjectCode,
+  );
+  const courseKeys = coursesBySubject.map((course) => `${course.subjectCode}${course.courseCode}` as CourseAndSubjectCode);
+
+  const graph = {}
+  const i = coursesBySubject.length - 1;
+  const course = coursesBySubject[i]!;
+  const courseCode = `${course.subjectCode}${course.courseCode}` as CourseAndSubjectCode;
+  courseGraphRecursive(courseCode, graph, courseKeys);
+  console.log(graph);
+}
+
+function courseGraphRecursive(courseCode: CourseAndSubjectCode, graph: Graph, courseKeys: CourseAndSubjectCode[]) {
+  if (courses[courseCode].prerequisites.length === 0) {
+    const nextCourseIndex = courseKeys.indexOf(courseCode) - 1;
+    const nextCourse = courseKeys[nextCourseIndex];
+
+    if (nextCourse) {
+      courseGraphRecursive(nextCourse, graph, courseKeys);
+    }
+    return;
+  }
+
+  const prereqs = courses[courseCode].prerequisites;
+  for (const prereq of prereqs) {
+    if (graph[prereq]) {
+      if (!graph[prereq].postreqs.includes(courseCode)) {
+        graph[prereq].postreqs.push(courseCode);
+      }
+
+      if (!graph[courseCode].prereqs.includes(prereq)) {
+        graph[courseCode].prereqs.push(prereq);
+      }
+    } else {
+      graph[prereq] = {
+        prereqs: [],
+        postreqs: [courseCode],
+      }
+    }
+    courseGraphRecursive(prereq, graph, courseKeys);
+  }
+}
