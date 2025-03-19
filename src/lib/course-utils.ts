@@ -3,6 +3,7 @@ import instructorsData from "../../database/ratemyprofessor.json";
 import subjectsData from "../../database/subjects.json";
 import examDateData from "../../database/exam_schedule.json";
 import { Term, ExamData, Subject, CourseFilter, CourseOrderBy, Course, CourseByCode, RateMyProfInstructorsByName, CourseAndSubjectCode, InstructorData } from "./types";
+import { GraphNode } from "@/components/graph/graph";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - This is a JSON file
@@ -155,4 +156,51 @@ export function getFilteredCourses(
   }
 
   return filteredCourses.slice(0, maxNumCourses);
+}
+
+
+export function getPrerequisitesGraph() {
+  const nodes: Record<string, GraphNode> = {}
+
+  for (const course of Object.values(courses)) {
+    nodes[course.subjectCode + course.courseCode] = {
+      label: course.subjectCode + course.courseCode,
+      children: course.prerequisites.map((prerequisite) => prerequisite)
+    }
+  }
+
+  return nodes
+}
+
+function recur(
+  root: string,
+  nodes: Record<string, GraphNode>,
+  allNodes: string[]
+) {
+  const node = nodes[root];
+  if (!node) {
+    return;
+  }
+
+  allNodes.push(root);
+
+  for (const child of node.children) {
+    recur(child, nodes, allNodes);
+  }
+}
+
+export function getCourseGraphData(courseCode: string) {
+  const nodes = getPrerequisitesGraph();
+  const allNodes: string[] = [];
+  recur(courseCode, nodes, allNodes);
+
+  const newNodes: Record<string, GraphNode> = {};
+  for (const node of allNodes) {
+    newNodes[node] = nodes[node];
+  }
+
+  return {
+    root: nodes[courseCode],
+    nodes: newNodes,
+  };
 }

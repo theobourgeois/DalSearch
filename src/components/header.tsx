@@ -1,4 +1,10 @@
-import { Building2, Calendar, CompassIcon, Users } from "lucide-react";
+import {
+    Building2,
+    Calendar,
+    CompassIcon,
+    GitGraphIcon,
+    Users,
+} from "lucide-react";
 import Link from "next/link";
 import { Search } from "./search";
 import { DarkModeToggle } from "./darkmode-toggle";
@@ -36,6 +42,13 @@ export default function Header({ courses }: Props) {
                     </div>
                 </div>
                 <div className="flex items-center gap-4">
+                    <Link
+                        title="Graph"
+                        href="/graph"
+                        className="flex items-center text-gray-800 hover:text-yellow-400 dark:text-white"
+                    >
+                        <GitGraphIcon className="w-6 h-6 hover:text-yellow-400" />
+                    </Link>
                     <Link
                         title="Explore Courses"
                         href="/explore"

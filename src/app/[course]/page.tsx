@@ -1,4 +1,9 @@
-import { courses, instructors, terms } from "@/lib/course-utils";
+import {
+    courses,
+    getCourseGraphData,
+    instructors,
+    terms,
+} from "@/lib/course-utils";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +15,7 @@ import { InstructorList } from "@/components/ratemyprof-instructor-list";
 import { RecentSearchHandler } from "@/components/recent-searches";
 import { CourseSchedule } from "@/components/course-schedule";
 import { CourseAndSubjectCode } from "@/lib/types";
+import { GraphPlane } from "@/components/graph/graph-plane";
 
 type Props = {
     params: Promise<{ course: CourseAndSubjectCode }>;
@@ -116,6 +122,9 @@ export default async function CoursePage({
         },
     };
 
+    const courseData = getCourseGraphData(
+        course.subjectCode + course.courseCode
+    );
     return (
         <main className="container mx-auto px-4 pb-8 pt-4 bg-white dark:bg-gray-900">
             <Script
@@ -133,6 +142,7 @@ export default async function CoursePage({
                 }}
             />
             <BackButton />
+
             <Card className="mb-8 mt-2 dark:bg-gray-800 dark:border-gray-700">
                 <CardHeader>
                     <CardTitle className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">
@@ -199,6 +209,21 @@ export default async function CoursePage({
                 </CardContent>
             </Card>
 
+            {course.prerequisites.length > 0 && (
+                <Card className="mb-8">
+                    <CardHeader>
+                        <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                            Course Graph
+                        </CardTitle>
+                    </CardHeader>
+
+                    <CardContent>
+                        <div className="h-96 w-full overflow-hidden">
+                            <GraphPlane {...courseData} />
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
             <Card className="pb-8 dark:bg-gray-800 dark:border-gray-700">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
