@@ -3,7 +3,7 @@ import { Day } from "./types";
 
 export const CELL_HEIGHT = 60;
 export const TIME_QUANTUM_MIN = 30;
-export const NUM_HOURS = 13;
+export const NUM_HOURS = 14;
 export const NUM_TIME_SLOTS = NUM_HOURS * (60 / TIME_QUANTUM_MIN);
 export const START_HOUR = 8;
 
