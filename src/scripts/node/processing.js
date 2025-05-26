@@ -14,22 +14,30 @@ function log(...args) {
     logResult += logString + "\n";
 }
 
-const TERMS = ["202520", "202530", "202610", "202620"];
+const TERMS = ["202530", "202610", "202620"];
 
 const headers = {
     accept: "application/json, text/plain, */*",
     "accept-language": "en-US,en;q=0.9",
-    "sec-ch-ua": '"Chromium";v="131", "Not_A Brand";v="24"',
+    connection: "keep-alive",
+    dnt: "1",
+    "sec-ch-ua": '"Not.A/Brand";v="99", "Chromium";v="136"',
     "sec-ch-ua-mobile": "?0",
     "sec-ch-ua-platform": '"macOS"',
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
     "sec-fetch-site": "same-origin",
-    cookie: "JSESSIONID=393EAF377B6BC59D4E08D33A5A7076F7; IDMSESSID=039DFBC70A6BA68EFD9E3256A61DB4CF1C46C64E023E0C880B8C830D911CCFF494EAA73BD3CCE51ED0EA0C9B8E0A682B",
+    cookie: "JSESSIONID=E1566922AA653813CE71EB4679D241C2; _gcl_au=1.1.580803882.1744254955; _fbp=fb.1.1744254955265.730511166965673439; _tt_enable_cookie=1; _ttp=01JREV4VRYK92Y33KTTWM123DK_.tt.1; _ga_BLWEGK0R1R=GS1.1.1744657797.1.0.1744657797.0.0.0; _ga=GA1.1.119927498.1744052787; _ga_7D4LH7N6V9=GS1.1.1744745259.1.0.1744745263.0.0.0; _clck=b2mztl%7C2%7Cfv8%7C0%7C1926; ttcsid=1745164968296.4.1745164968296; ttcsid_C7PAQE240CK6SQS6AP0G=1745164968296.4.1745164968504; _ga_10ZKDM5ZR2=GS1.1.1745164968.6.0.1745164986.0.0.0; _ga_03M7E9DG13=GS1.1.1745164968.6.0.1745164986.0.0.0; _ga_ZNSTZ2YGVJ=GS1.1.1745164983.4.1.1745164986.0.0.0; AMCVS_4D6368F454EC41940A4C98A6%40AdobeOrg=1; AMCV_4D6368F454EC41940A4C98A6%40AdobeOrg=179643557%7CMCIDTS%7C20216%7CMCMID%7C39502886977980966309139359136784396509%7CMCAID%7CNONE%7CMCOPTOUT-1746640284s%7CNONE%7CvVersion%7C5.5.0; IDMSESSID=69261E553839145758BA144DF8000823776862F86EA4C100433F7BEB17286C02AD10BF155BAEC19E5249AC665C600D8C",
+    "user-agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
     Referer:
         "https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable",
     "Referrer-Policy": "strict-origin-when-cross-origin",
 };
+
+// const url = new URL(
+//     "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains.dal_stuweb_academicTimetable"
+// );
 
 const url = new URL(
     "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains.dal_stuweb_academicTimetable"
@@ -76,14 +84,14 @@ export async function getAcademicCalendar(subjectCodes) {
 export function encodeText(obj) {
     // Fixed lengths for each key and value
     const lengths = {
-        crse_numb: { keyLength: "14", valueLength: "69" },
-        page_num: { keyLength: "18", valueLength: "16" },
-        offset: { keyLength: "31", valueLength: "13" },
-        terms: { keyLength: "35", valueLength: "94" },
-        page_size: { keyLength: "38", valueLength: "53" },
-        max: { keyLength: "58", valueLength: "81" },
-        subj_code: { keyLength: "60", valueLength: "6" },
-        districts: { keyLength: "74", valueLength: "69" },
+        crse_numb: { keyLength: "64", valueLength: "68" }, // From website: Key: 64, Value for null: 68
+        page_num: { keyLength: "45", valueLength: "14" }, // From website: Key: 45, Value for "1": 14
+        offset: { keyLength: "11", valueLength: "14" }, // From website: Key: 11, Value for "0": 14
+        terms: { keyLength: "19", valueLength: "51" }, // From website: Key: 19, Value for "202530;" (single term): 51
+        page_size: { keyLength: "77", valueLength: "12" }, // From website: Key: 77, Value for "9999": 12
+        max: { keyLength: "60", valueLength: "96" }, // From website: Key: 60, Value for "1000": 96
+        subj_code: { keyLength: "55", valueLength: "33" }, // From website: Key: 55, Value for "AGRI" (base64): 33
+        districts: { keyLength: "36", valueLength: "30" }, // From website: Key: 36, Value for "100;200;300;400;": 30
     };
 
     const encodedResults = {};
@@ -371,7 +379,6 @@ async function getSubjectCodes() {
                     "sec-fetch-dest": "empty",
                     "sec-fetch-mode": "cors",
                     "sec-fetch-site": "same-origin",
-                    cookie: "JSESSIONID=7AAB3A11B5B1C0825AF4EFED532B9672; IDMSESSID=1A874AB26C4FC35A8F8817B7BE83ED7671DFA2B9DA5CBE2DF861F92920747D45ED13918376FF64BCDFDB89D3C1A5FB8D",
                     Referer:
                         "https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable",
                     "Referrer-Policy": "strict-origin-when-cross-origin",
