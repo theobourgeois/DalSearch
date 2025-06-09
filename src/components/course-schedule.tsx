@@ -171,7 +171,6 @@ export function CourseSchedule({ course }: { course: Course }) {
                                             </p>
                                             <CopyToClipboard
                                                 text={termClass.crn}
-                                                successMessage={`CRN ${termClass.crn} copied to clipboard!`}
                                             />
                                         </div>
                                         {!isOnline && (

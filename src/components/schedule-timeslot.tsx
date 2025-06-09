@@ -101,10 +101,7 @@ export function ScheduleTimeslot({
             <p className="text-sm mb-2">{termClass.location}</p>
             <div className="flex flex-wrap gap-2">
                 <p className="text-sm mb-2">CRN: {termClass.crn}</p>
-                <CopyToClipboard
-                    text={termClass.crn}
-                    successMessage={`CRN ${termClass.crn} copied to clipboard!`}
-                />
+                <CopyToClipboard text={termClass.crn} />
             </div>
             {examData && (
                 <div>
