@@ -12,13 +12,12 @@ export const courses = searchData as CourseByCode;
 export const instructors = instructorsData as RateMyProfInstructorsByName;
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 export const terms = {
-  "202520": "2024/2025 Winter",
   "202530": "2024/2025 Summer",
   "202610": "2025/2026 Fall",
   "202620": "2025/2026 Winter",
 } as const;
 
-export const currentTerm: Term = "202520"
+export const currentTerm: Term = "202530"
 
 export const examDates = examDateData as Record<string, ExamData[]>;
 

@@ -105,7 +105,7 @@ const downloadICS = (timeSlots: ClassSession[]) => {
 
         switch (termCode) {
             case "10": // Fall term
-                startDate = new Date(year, 8, 1);
+                startDate = new Date(year - 1, 8, 1);
                 break;
             case "20": // Winter term
                 startDate = new Date(year, 0, 6);
@@ -244,7 +244,7 @@ const useScheduleStore = create<ScheduleStore>((set) => ({
         }),
     container: null,
     setContainer: (container) => set({ container }),
-    term: "202520",
+    term: "202530",
     setTerm: (term) => set({ term }),
 }));
 
