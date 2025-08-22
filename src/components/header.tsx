@@ -67,7 +67,7 @@ export default function Header({ courses }: Props) {
                     </Link>
                     <Link
                         title="My Account"
-                        href="/account"
+                        href="/protected"
                         className="flex items-center text-gray-800 hover:text-yellow-400 dark:text-white"
                         >
                     <GraduationCap className="w-6 h-6 hover:text-yellow-400" />
