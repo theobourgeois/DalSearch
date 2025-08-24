@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client"
 import { StarRating } from "@/components/star-rating"
 import { StarInput } from "@/components/star-input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 interface Review {
   id: string;
   course_code: string;
   user_id: string;
+  instructor: string;
   review_text: string;
   rating: number;       
   difficulty: number;   
@@ -22,7 +24,7 @@ function getOrdinal(n: number) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-export default function ReviewList({ courseId }: { courseId: string }) {
+export default function ReviewList({ courseId, instructors }: { courseId: string, instructors: string[] }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -33,6 +35,9 @@ export default function ReviewList({ courseId }: { courseId: string }) {
   const [workload, setWorkload] = useState(0);
   const [limit, setLimit] = useState(2);
   const [hasMore, setHasMore] = useState(false);
+  const [selectedInstructor, setSelectedInstructor] = useState<string>("");
+  const [newInstructor, setNewInstructor] = useState("");
+
   
   const supabase = createClient();
 
@@ -62,12 +67,16 @@ export default function ReviewList({ courseId }: { courseId: string }) {
   };
 
   const handleUpdate = async (id: string) => {
+
+    const instructorToSave = selectedInstructor === "Other" ? newInstructor.trim() : selectedInstructor;
+    
     const { error } = await supabase
       .from("reviews")
       .update({ review_text: editText,
       rating,
       difficulty,
-      workload, })
+      workload,
+      instructor: instructorToSave, })
       .eq("id", id)
       .eq("user_id", userId);
 
@@ -115,6 +124,41 @@ export default function ReviewList({ courseId }: { courseId: string }) {
                   <StarInput value={workload} onChange={setWorkload} />
                 </div>
             </div>
+
+            {instructors.length > 0 && (
+            <div className="flex items-center space-x-2 mb-4">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Instructor
+            </label>
+          
+            <Select value={selectedInstructor} onValueChange={(val) => setSelectedInstructor(val)}>
+              <SelectTrigger className="w-1/3 dark:text-white">
+                <SelectValue placeholder="Select an instructor" />
+             </SelectTrigger>
+              <SelectContent>
+                {instructors.map((inst) => (
+                  <SelectItem key={inst} value={inst}>
+                    {inst}
+                  </SelectItem>
+                ))}
+                <SelectItem value="Other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center space-x-2">
+              {selectedInstructor === "Other" && (
+                <input
+                  type="text"
+                  placeholder="Enter professor name"
+                  value={newInstructor}
+                  onChange={(e) => setNewInstructor(e.target.value)}
+                  className="w-full p-2 border rounded-xl dark:bg-gray-800 dark:text-gray-300"
+                />
+              )}
+            </div>
+          </div>
+        )}
+          
               <button
                 onClick={() => handleUpdate(r.id)}
                 className="px-2 py-1 bg-yellow-400 text-black rounded-xl mr-2"
@@ -147,7 +191,7 @@ export default function ReviewList({ courseId }: { courseId: string }) {
               </div>
 
               <div className="flex flex-col space-y-2">
-              <p className="dark:text-white"><b>{r.course_code}</b></p>
+              <p className="dark:text-white"><b>{r.course_code}</b> taught by <b>{r.instructor}</b></p>
               <p className="dark:text-white">{r.review_text}</p>
               </div>
             </div>
@@ -163,6 +207,13 @@ export default function ReviewList({ courseId }: { courseId: string }) {
                     setRating(r.rating);
                     setDifficulty(r.difficulty);
                     setWorkload(r.workload);
+                    if (instructors.includes(r.instructor)) {
+                      setSelectedInstructor(r.instructor);
+                      setNewInstructor("");
+                    } else {
+                      setSelectedInstructor("Other");
+                      setNewInstructor(r.instructor);
+                    }
                   }}
                   className="dark:text-yellow-400 text-black text-sm mt-1"
                 >

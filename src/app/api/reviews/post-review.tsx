@@ -3,12 +3,21 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client"
 import { StarInput } from "@/components/star-input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components//ui/select";
 
-export default function ReviewForm({ courseId }: { courseId: string }) {
+export default function ReviewForm({ courseId, instructors }: { courseId: string, instructors: string[] }) {
   const [text, setText] = useState("");
   const [rating, setRating] = useState(0);
   const [difficulty, setDifficulty] = useState(0);
   const [workload, setWorkload] = useState(0);
+  const [selectedInstructor, setSelectedInstructor] = useState(instructors[0] || "");
+  const [newInstructor, setNewInstructor] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -47,8 +56,17 @@ export default function ReviewForm({ courseId }: { courseId: string }) {
       return;
     }
 
+    const instructorToSave = selectedInstructor === "Other" ? newInstructor.trim() : selectedInstructor;
+
+    if (!instructorToSave) {
+      setMessage("Please enter a professor name.");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.from("reviews").insert({
       course_code: courseId,
+      instructor: instructorToSave,
       review_text: text,
       user_id: user.id,
       rating,
@@ -64,6 +82,8 @@ export default function ReviewForm({ courseId }: { courseId: string }) {
       setRating(0);
       setDifficulty(0);
       setWorkload(0);
+      setSelectedInstructor(instructors[0] || "");
+      setNewInstructor("");
     }
 
     setLoading(false);
@@ -97,6 +117,40 @@ export default function ReviewForm({ courseId }: { courseId: string }) {
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Workload</label>
         <StarInput value={workload} onChange={setWorkload} />
         </div>
+
+        {instructors.length > 0 && (
+        <div className="flex items-center space-x-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Instructor
+          </label>
+          
+            <Select value={selectedInstructor} onValueChange={(val) => setSelectedInstructor(val)}>
+              <SelectTrigger className="w-3/4">
+                <SelectValue placeholder="Select an instructor" />
+             </SelectTrigger>
+              <SelectContent>
+                {instructors.map((inst) => (
+                  <SelectItem key={inst} value={inst}>
+                    {inst}
+                  </SelectItem>
+                ))}
+                <SelectItem value="Other">Other</SelectItem>
+              </SelectContent>
+          </Select>
+
+          <div className="flex items-center space-x-2">
+            {selectedInstructor === "Other" && (
+              <input
+                type="text"
+                placeholder="Enter professor name"
+                value={newInstructor}
+                onChange={(e) => setNewInstructor(e.target.value)}
+                className="w-full p-2 border rounded-xl dark:bg-gray-800 dark:text-gray-300"
+              />
+            )}
+          </div>
+        </div>
+      )}
       </div>
 
       <div className="flex justify-center">

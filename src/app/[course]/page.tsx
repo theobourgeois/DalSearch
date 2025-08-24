@@ -209,11 +209,11 @@ export default async function CoursePage({
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    {/* Review form */}
-                    <ReviewForm courseId={course.subjectCode + course.courseCode} />
+                    <ReviewForm courseId={course.subjectCode + course.courseCode} 
+                                instructors={uniqueInstructors} />
 
-                    {/* List of reviews */}
-                    <ReviewList courseId={course.subjectCode + course.courseCode} />
+                    <ReviewList courseId={course.subjectCode + course.courseCode}
+                                instructors={uniqueInstructors}  />
                 </CardContent>
             </Card>
 
