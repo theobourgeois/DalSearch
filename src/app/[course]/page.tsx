@@ -10,8 +10,8 @@ import { InstructorList } from "@/components/ratemyprof-instructor-list";
 import { RecentSearchHandler } from "@/components/recent-searches";
 import { CourseSchedule } from "@/components/course-schedule";
 import { CourseAndSubjectCode } from "@/lib/types";
-import ReviewForm from "@/components/review-form";
-import ReviewList from "@/components/review-list";
+import ReviewForm from "@/app/api/reviews/post-review";
+import ReviewList from "@/app/api/reviews/get-all-reviews";
 
 
 type Props = {

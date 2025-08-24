@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client"
 
 interface Review {
   id: string;
@@ -17,6 +17,7 @@ export default function ReviewList({ courseId }: { courseId: string }) {
 
   const fetchReviews = async () => {
     setLoading(true);
+    const supabase = createClient();
     const { data, error } = await supabase
       .from("reviews")
       .select("*")

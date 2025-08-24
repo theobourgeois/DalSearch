@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client"
 
 export default function ReviewForm({ courseId }: { courseId: string }) {
   const [text, setText] = useState("");
@@ -12,6 +12,8 @@ export default function ReviewForm({ courseId }: { courseId: string }) {
     e.preventDefault();
     setMessage("");
     setLoading(true);
+
+    const supabase = createClient();
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
