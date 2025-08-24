@@ -18,7 +18,7 @@ export default async function ProtectedPage() {
                 My Account
             </h2>
             <p>
-              Hello <span>{data.claims.email}</span>
+              Email: <span>{data.claims.email}</span>
             </p>
             <LogoutButton />
         </section>
