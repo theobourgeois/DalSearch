@@ -61,7 +61,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
           <CardHeader>
             <CardTitle className="text-2xl">Reset Your Password</CardTitle>
             <CardDescription>
-              Type in your email and we&apos;ll send you a link to reset your password
+              Type in your Dalhousie email and we&apos;ll send you a link to reset your password
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -72,19 +72,19 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                   <Input
                     id="email"
                     type="email"
-                    placeholder="m@example.com"
+                    placeholder="NetID@dal.ca"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" disabled={isLoading}>
                   {isLoading ? "Sending..." : "Send reset email"}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
-                Already have an account?{""}
+                Already have an account?{" "}
                 <Link href="/auth/login" className="underline underline-offset-4">
                   Login
                 </Link>
