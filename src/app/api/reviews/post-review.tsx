@@ -118,7 +118,6 @@ export default function ReviewForm({ courseId, instructors }: { courseId: string
         <StarInput value={workload} onChange={setWorkload} />
         </div>
 
-        {instructors.length > 0 && (
         <div className="flex items-center space-x-2">
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Instructor
@@ -150,7 +149,6 @@ export default function ReviewForm({ courseId, instructors }: { courseId: string
             )}
           </div>
         </div>
-      )}
       </div>
 
       <div className="flex justify-center">
