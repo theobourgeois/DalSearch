@@ -38,7 +38,7 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims()
   const user = data?.claims
 
-  const privatePaths = ["/protected"]
+  const privatePaths = ["/protected", "/reviews"]
   if (
     !user &&
     (privatePaths.includes(request.nextUrl.pathname))

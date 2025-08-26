@@ -24,7 +24,7 @@ function getOrdinal(n: number) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-export default function ReviewList({ courseId, instructors }: { courseId: string, instructors: string[] }) {
+export default function ReviewList({ courseId, instructors, userOnly = false}: { courseId: string, instructors: string[], userOnly?: boolean }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
