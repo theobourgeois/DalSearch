@@ -1,7 +1,6 @@
 "use client";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { terms } from "@/lib/course-utils";
-import { copyToClipboard } from "@/lib/utils";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import {
     Select,
@@ -18,11 +17,12 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, Clock, MapPin, Copy } from "lucide-react";
+import { CalendarDays, Clock, MapPin } from "lucide-react";
 import { ScheduleTimeslot } from "./schedule-timeslot";
 import { colors, getDay } from "@/lib/schedule-utils";
 import { ScheduleBackground } from "./schedule-background";
 import { Course, Term } from "@/lib/types";
+import { CopyToClipboard } from "./ui/copy-to-clipboard";
 
 export function CourseSchedule({ course }: { course: Course }) {
     const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
@@ -169,16 +169,9 @@ export function CourseSchedule({ course }: { course: Course }) {
                                             <p className="text-sm text-muted-foreground">
                                                 CRN: {termClass.crn}
                                             </p>
-                                            <div
-                                                onClick={() =>
-                                                    copyToClipboard(
-                                                        termClass.crn
-                                                    )
-                                                }
-                                                className="hover:cursor-pointer"
-                                            >
-                                                <Copy className="mr-2 h-4 w-4 hover:text-yellow-400" />
-                                            </div>
+                                            <CopyToClipboard
+                                                text={termClass.crn}
+                                            />
                                         </div>
                                         {!isOnline && (
                                             <div className="flex flex-wrap gap-1 mt-2">

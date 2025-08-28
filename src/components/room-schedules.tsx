@@ -36,7 +36,7 @@ export function RoomSchedules({
         null,
         "selected-room"
     );
-    const [term, setTerm] = useStoredState<Term>("202520", "term");
+    const [term, setTerm] = useStoredState<Term>("202530", "term");
     const [view, setView] = useState<"schedule" | "list">("schedule");
 
     const roomNames = useMemo(() => Object.keys(rooms), [rooms]);

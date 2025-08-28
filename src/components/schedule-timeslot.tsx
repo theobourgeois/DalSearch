@@ -7,8 +7,7 @@ import {
     scheduleTimes,
     TIME_QUANTUM_MIN,
 } from "@/lib/schedule-utils";
-import { copyToClipboard } from "@/lib/utils";
-import { Copy } from "lucide-react";
+import { CopyToClipboard } from "./ui/copy-to-clipboard";
 import {
     Tooltip,
     TooltipContent,
@@ -102,12 +101,7 @@ export function ScheduleTimeslot({
             <p className="text-sm mb-2">{termClass.location}</p>
             <div className="flex flex-wrap gap-2">
                 <p className="text-sm mb-2">CRN: {termClass.crn}</p>
-                <div
-                    onClick={() => copyToClipboard(termClass.crn)}
-                    className="hover:cursor-pointer"
-                >
-                    <Copy className="mr-2 h-4 w-4 hover:text-yellow-400" />
-                </div>
+                <CopyToClipboard text={termClass.crn} />
             </div>
             {examData && (
                 <div>

@@ -5,24 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Search, PlusCircle } from "lucide-react";
 import { Input } from "./ui/input";
 import { useMemo, useState } from "react";
-import { currentTerm, terms } from "@/lib/course-utils";
 import { useDebounce } from "@uidotdev/usehooks";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "./ui/select";
-import { Label } from "./ui/label";
-import { Course, ClassSession, Term } from "@/lib/types";
+import { Course, ClassSession } from "@/lib/types";
 
 const MAX_NUM_COURSES = 10;
 
 export function ManageSchedule({ courses }: { courses: Course[] }) {
-    const { timeSlots, removeTimeSlot, addTimeSlot } = useSchedule();
+    const { timeSlots, term, removeTimeSlot, addTimeSlot } = useSchedule();
     const [input, setInput] = useState("");
-    const [term, setTerm] = useState(currentTerm);
     const debouncedInput = useDebounce(input, 300);
     const [activeTab, setActiveTab] = useState("schedule");
 
@@ -112,27 +102,6 @@ export function ManageSchedule({ courses }: { courses: Course[] }) {
 
                 <TabsContent value="add" className="pt-2 px-2">
                     <div className="space-y-5">
-                        <div>
-                            <Label>Term</Label>
-                            <Select
-                                value={term}
-                                onValueChange={(term) => setTerm(term as Term)}
-                            >
-                                <SelectTrigger>
-                                    <SelectValue>{terms[term]}</SelectValue>
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {Object.entries(terms).map(
-                                        ([key, value]) => (
-                                            <SelectItem value={key} key={key}>
-                                                {value}
-                                            </SelectItem>
-                                        )
-                                    )}
-                                </SelectContent>
-                            </Select>
-                        </div>
-
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                             <Input
