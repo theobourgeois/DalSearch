@@ -1,9 +1,10 @@
-// components/AdminPanel.tsx
+import FlaggedReviews from "@/components/flagged-review";
+
 export default function AdminPanel() {
   return (
     <section className="mt-8">
-      <h2 className="text-2xl font-semibold">Admin Panel</h2>
-      <p>This content is only visible to admins.</p>
+      <h3 className="text-xl font-semibold mt-6">Flagged Reviews</h3>
+      <FlaggedReviews />
     </section>
   );
 }

@@ -200,6 +200,7 @@ export default function ReviewList({ courseId, instructors, userOnly = false}: {
                 {`${new Date(r.created_at).toLocaleString("en-US", { month: "short" })} ${getOrdinal(new Date(r.created_at).getDate())}, ${new Date(r.created_at).getFullYear()}`}
               </p>
               {r.user_id === userId && (
+                <div className="flex space-x-2 mt-1">
                 <button
                   onClick={() => {
                     setEditingId(r.id);
@@ -219,7 +220,30 @@ export default function ReviewList({ courseId, instructors, userOnly = false}: {
                 >
                   Edit
                 </button>
-              )}
+              </div>)}
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch("/api/flags/add", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ review_id: r.id }),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                      alert("Failed to flag review: " + data.error);
+                      return;
+                    }
+                    alert("Review flagged successfully!");
+                  } catch (err) {
+                    console.error(err);
+                    alert("Something went wrong.");
+                  }
+                }}
+                className="dark:text-red-400 text-red-600 text-sm flex items-center gap-1"
+              >
+                🚩 Flag
+              </button>
               </div>
             </>
           )}
