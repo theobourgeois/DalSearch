@@ -161,7 +161,7 @@ export default function ReviewForm({ courseId, instructors }: { courseId: string
         </button>
       </div>
       
-      {message && <p className="text-sm text-center text-red-500">{message}</p>}
+      {message && <p className="text-sm text-center text-white-700">{message}</p>}
     </form>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import FlaggedReviews from "@/components/flagged-review";
 
 interface Admin {
   email: string;
@@ -111,6 +112,8 @@ export default function OwnerPanel({ admins }: { admins: Admin[] }) {
         </form>
         </div>
       </div>
+      <h3 className="text-xl font-semibold mt-6">Flagged Reviews</h3>
+            <FlaggedReviews />
     </section>
   );
 }

@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/client"
 import { StarRating } from "@/components/star-rating"
 import { StarInput } from "@/components/star-input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Flag } from "lucide-react";
+import { SquarePen } from 'lucide-react';
 
 interface Review {
   id: string;
@@ -196,9 +198,7 @@ export default function ReviewList({ courseId, instructors, userOnly = false}: {
               </div>
             </div>
             <div className="flex flex-col items-end">
-              <p className="text-s dark:text-white text-black font-bold">
-                {`${new Date(r.created_at).toLocaleString("en-US", { month: "short" })} ${getOrdinal(new Date(r.created_at).getDate())}, ${new Date(r.created_at).getFullYear()}`}
-              </p>
+              <div className="flex flex-row items-end gap-1">
               {r.user_id === userId && (
                 <div className="flex space-x-2 mt-1">
                 <button
@@ -216,9 +216,9 @@ export default function ReviewList({ courseId, instructors, userOnly = false}: {
                       setNewInstructor(r.instructor);
                     }
                   }}
-                  className="dark:text-yellow-400 text-black text-sm mt-1"
+                  className="text-gray-800 dark:text-white"
                 >
-                  Edit
+                  <SquarePen className="w-6 h-6 hover:text-yellow-400" />
                 </button>
               </div>)}
               <button
@@ -240,10 +240,14 @@ export default function ReviewList({ courseId, instructors, userOnly = false}: {
                     alert("Something went wrong.");
                   }
                 }}
-                className="dark:text-red-400 text-red-600 text-sm flex items-center gap-1"
+                className="dark:text-gray-100 text-gray-900 text-sm flex items-center gap-1"
               >
-                🚩 Flag
+                <Flag className="w-6 h-6 hover:text-red-600" />
               </button>
+              </div>
+              <p className="text-s dark:text-white text-black font-bold">
+                {`${new Date(r.created_at).toLocaleString("en-US", { month: "short" })} ${getOrdinal(new Date(r.created_at).getDate())}, ${new Date(r.created_at).getFullYear()}`}
+              </p>
               </div>
             </>
           )}

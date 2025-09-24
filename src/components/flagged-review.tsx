@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { StarRating } from "@/components/star-rating";
+import { Trash2 } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 interface FlaggedReview {
   flag_id: string;
@@ -82,23 +84,27 @@ export default function FlaggedReviewsPage() {
                       taught by <b>{r.instructor}</b>
                     </p>
                     <p>{r.review_text}</p>
-
-                    {/* Flag reason */}
-                    <p className="text-red-500 font-semibold">
-                      🚩 Flagged Reason: {r.id}
-                    </p>
                   </div>
                 </div>
 
-                {/* Date & delete action */}
+                
                 <div className="flex flex-col items-end mt-2">
-                  <p className="text-sm dark:text-white text-black font-bold">
-                    {`${new Date(r.created_at).toLocaleString("en-US", {
-                      month: "short",
-                    })} ${getOrdinal(
-                      new Date(r.created_at).getDate()
-                    )}, ${new Date(r.created_at).getFullYear()}`}
-                  </p>
+                  <div className="flex flex-row items-end mt-2 gap-1">
+                  <button
+                  onClick={async () => {
+                    if (!confirm("Ignore all flags for this review?")) return;
+                    const res = await fetch("/api/flags/ignore", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ review_id: r.id }),
+                    });
+                    if (res.ok) {
+                      setReviews((prev) => prev.filter((rev) => rev.id !== r.id));
+                    }
+                  }}
+                  >
+                    <ShieldCheck className="w-6 h-6 hover:text-green-600"/>
+                  </button>
                   <button
                     onClick={async () => {
                       if (!confirm("Are you sure you want to delete this review?")) return;
@@ -113,29 +119,19 @@ export default function FlaggedReviewsPage() {
                         );
                       }
                     }}
-                    className="mt-2 px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
                   >
-                    Delete Review
+                    <Trash2 className="w-6 h-6 hover:text-red-600"/>
                   </button>
-
-                  <button
-                  onClick={async () => {
-                    if (!confirm("Ignore all flags for this review?")) return;
-                    const res = await fetch("/api/flags/ignore", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ review_id: r.id }),
-                    });
-                    if (res.ok) {
-                      setReviews((prev) => prev.filter((rev) => rev.id !== r.id));
-                    }
-                  }}
-                  className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600"
-                >
-                  Ignore Flags
-                </button>
                 </div>
+                <p className="text-sm dark:text-white text-black font-bold">
+                    {`${new Date(r.created_at).toLocaleString("en-US", {
+                      month: "short",
+                    })} ${getOrdinal(
+                      new Date(r.created_at).getDate()
+                    )}, ${new Date(r.created_at).getFullYear()}`}
+                </p>
               </div>
+                </div>
             ))}
           </div>
         )}
