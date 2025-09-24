@@ -117,6 +117,23 @@ export default function FlaggedReviewsPage() {
                   >
                     Delete Review
                   </button>
+
+                  <button
+                  onClick={async () => {
+                    if (!confirm("Ignore all flags for this review?")) return;
+                    const res = await fetch("/api/flags/ignore", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ review_id: r.id }),
+                    });
+                    if (res.ok) {
+                      setReviews((prev) => prev.filter((rev) => rev.id !== r.id));
+                    }
+                  }}
+                  className="px-4 py-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600"
+                >
+                  Ignore Flags
+                </button>
                 </div>
               </div>
             ))}

@@ -9,14 +9,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "review_id is required" }, { status: 400 });
   }
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("flags")
     .delete()
-    .eq("review_id", review_id);
+    .eq("review_id", review_id)
+    .select();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ message: "Flags cleared for review" }, { status: 200 });
+  return NextResponse.json(
+    { message: "Flags ignored for review", cleared: data },
+    { status: 200 }
+  );
 }
