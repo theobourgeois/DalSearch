@@ -12,11 +12,10 @@ export async function POST(req: Request) {
   const { data, error } = await supabase
     .from("flags")
     .insert({ review_id })
-    .select();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ message: "Review flagged", flag: data[0] }, { status: 200 });
+  return NextResponse.json({ message: "Review flagged" }, { status: 200 });
 }
