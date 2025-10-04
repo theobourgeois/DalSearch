@@ -20,7 +20,8 @@ export default function Page() {
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 You&apos;ve successfully signed up. Please check your email to confirm your account
                 before signing in.
-              </p>
+              </p><br/>
+              <p className="text-sm text-gray-500 dark:text-gray-400">It might be in your Junk/Spam folder!</p>
             </CardContent>
           </Card>
         </div>

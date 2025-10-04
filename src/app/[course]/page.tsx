@@ -202,7 +202,18 @@ export default async function CoursePage({
                 </CardContent>
             </Card>
 
-            <Card className="pb-8 dark:bg-gray-800 dark:border-gray-700 mb-8">
+            <Card className="pb-8 dark:bg-gray-800 dark:border-gray-700">
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        Course Schedule
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <CourseSchedule course={course} />
+                </CardContent>
+            </Card>
+
+            <Card className="pb-8 dark:bg-gray-800 dark:border-gray-700 mt-8">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     Course Ratings & Reviews
@@ -214,18 +225,6 @@ export default async function CoursePage({
 
                     <ReviewList courseId={course.subjectCode + course.courseCode}
                                 instructors={uniqueInstructors}  />
-                </CardContent>
-            </Card>
-
-
-            <Card className="pb-8 dark:bg-gray-800 dark:border-gray-700">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                        Course Schedule
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <CourseSchedule course={course} />
                 </CardContent>
             </Card>
         </main>
