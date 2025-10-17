@@ -4,6 +4,7 @@ import { Search } from "./search";
 import { DarkModeToggle } from "./darkmode-toggle";
 import { DalLogo } from "./dal-logo";
 import { CourseByCode } from "@/lib/types";
+import { GraduationCap } from "lucide-react";
 
 interface Props {
     courses: CourseByCode;
@@ -63,6 +64,13 @@ export default function Header({ courses }: Props) {
                         className="flex items-center text-gray-800 hover:text-yellow-400 dark:text-white"
                     >
                         <Users className="w-6 h-6 hover:text-yellow-400" />
+                    </Link>
+                    <Link
+                        title="My Account"
+                        href="/protected"
+                        className="flex items-center text-gray-800 hover:text-yellow-400 dark:text-white"
+                        >
+                    <GraduationCap className="w-6 h-6 hover:text-yellow-400" />
                     </Link>
                     <div className="w-[2px] h-6 dark:bg-gray-400/30 bg-gray-100 rounded-lg" />
                     <DarkModeToggle />

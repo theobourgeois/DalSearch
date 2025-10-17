@@ -10,6 +10,9 @@ import { InstructorList } from "@/components/ratemyprof-instructor-list";
 import { RecentSearchHandler } from "@/components/recent-searches";
 import { CourseSchedule } from "@/components/course-schedule";
 import { CourseAndSubjectCode } from "@/lib/types";
+import ReviewForm from "@/app/api/reviews/post-review";
+import ReviewList from "@/app/api/reviews/get-all-reviews";
+
 
 type Props = {
     params: Promise<{ course: CourseAndSubjectCode }>;
@@ -207,6 +210,21 @@ export default async function CoursePage({
                 </CardHeader>
                 <CardContent>
                     <CourseSchedule course={course} />
+                </CardContent>
+            </Card>
+
+            <Card className="pb-8 dark:bg-gray-800 dark:border-gray-700 mt-8">
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                    Course Ratings & Reviews
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <ReviewForm courseId={course.subjectCode + course.courseCode} 
+                                instructors={uniqueInstructors} />
+
+                    <ReviewList courseId={course.subjectCode + course.courseCode}
+                                instructors={uniqueInstructors}  />
                 </CardContent>
             </Card>
         </main>
