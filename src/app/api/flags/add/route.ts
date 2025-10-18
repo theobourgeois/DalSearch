@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "review_id is required" }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("flags")
     .insert({ review_id })
 

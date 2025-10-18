@@ -71,8 +71,8 @@ export default function OwnerPanel({ admins }: { admins: Admin[] }) {
     <h2 className="text-2xl font-semibold">Admin List</h2>
     <div className="flex flex-col sm:flex-row gap-12 mt-4">
         <div className="flex-1 mr-4 bg-gray-100 dark:bg-gray-800 p-4 rounded-xl shadow max-h-96 overflow-y-auto">
-        {admins.length > 0 ? (
-            admins.map((a) => (
+        {adminList.length > 0 ? (
+            adminList.map((a) => (
             <div key={a.email} className="flex justify-between items-center mt-2">
                 <span>{a.email}</span>
                 <button
