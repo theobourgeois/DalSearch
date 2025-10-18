@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 import { useState } from "react";
 
 export default function SignOutButton() {
@@ -10,6 +10,8 @@ export default function SignOutButton() {
   const handleSignOut = async () => {
     setLoading(true);
     setMessage("");
+
+    const supabase = createClient();
 
     const { error } = await supabase.auth.signOut();
 

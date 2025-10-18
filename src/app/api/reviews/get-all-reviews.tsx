@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client"
 import { StarRating } from "@/components/star-rating"
 import { StarInput } from "@/components/star-input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Flag } from "lucide-react";
 import { SquarePen } from 'lucide-react';
+
+const supabase = createClient();
 
 interface Review {
   id: string;
@@ -26,7 +28,7 @@ function getOrdinal(n: number) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-export default function ReviewList({ courseId, instructors, userOnly = false}: { courseId: string, instructors: string[], userOnly?: boolean }) {
+export default function ReviewList({ courseId, instructors }: { courseId: string, instructors: string[] }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -40,10 +42,7 @@ export default function ReviewList({ courseId, instructors, userOnly = false}: {
   const [selectedInstructor, setSelectedInstructor] = useState<string>("");
   const [newInstructor, setNewInstructor] = useState("");
 
-  
-  const supabase = createClient();
-
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     setLoading(true);
     const { data, error, count } = await supabase
       .from("reviews")
@@ -59,14 +58,14 @@ export default function ReviewList({ courseId, instructors, userOnly = false}: {
   }
 
     setLoading(false);
-  };
+  }, [courseId, limit]);
 
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
     setUserId(user?.id || null);
-  };
+  }, []);
 
   const handleUpdate = async (id: string) => {
 
@@ -93,7 +92,7 @@ export default function ReviewList({ courseId, instructors, userOnly = false}: {
   useEffect(() => {
     fetchReviews();
     getUser();
-  }, [courseId, limit]);
+  }, [fetchReviews, getUser]);
 
   if (loading) return <p>Loading reviews...</p>;
   if (reviews.length === 0) return <p>No reviews yet. Be the first!</p>;

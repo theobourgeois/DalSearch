@@ -2,18 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { StarRating } from "@/components/star-rating";
 import Link from "next/link";
 
-
-interface Review {
-  id: string;
-  course_code: string;
-  instructor: string;
-  review_text: string;
-  rating: number;
-  difficulty: number;
-  workload: number;
-  created_at: string;
-}
-
 function getOrdinal(n: number) {
   const s = ["th", "st", "nd", "rd"];
   const v = n % 100;
@@ -38,7 +26,7 @@ export default async function MyReviews() {
         {error && <p className="text-red-500">Error loading reviews: {error.message}</p>}
 
         {!reviews || reviews.length === 0 ? (
-          <p className="text-gray-600 dark:text-gray-300">You haven't posted any reviews yet.</p>
+          <p className="text-gray-600 dark:text-gray-300">You haven&apos;t posted any reviews yet.</p>
         ) : (
           <div className="flex flex-col space-y-4">
             {reviews.map((r) => (
