@@ -13,13 +13,40 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export function UpdatePasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [ready, setReady] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+
+  useEffect(() => {
+    const run = async () => {
+      const supabase = createClient()
+      const url = new URL(window.location.href)
+      const code = url.searchParams.get("code")
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+        if (error) {
+          setError(error.message)
+          return
+        }
+      }
+
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        setError(
+          "This reset link is invalid or has expired. Please request a new link and open it in the same browser."
+        )
+        return
+      }
+      setReady(true)
+    }
+    run()
+  }, [])
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault()

@@ -12,6 +12,11 @@ export default async function ProtectedPage() {
   }
 
   const {data: { user },} = await supabase.auth.getUser();
+  
+  // Check if email is confirmed
+  if (user && !user.email_confirmed_at) {
+    redirect("/auth/login?error=Please confirm your email address before accessing this page.")
+  }
 
   const { data: profile } = await supabase
     .from("profiles")

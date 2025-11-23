@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { StarRating } from "@/components/star-rating";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 function getOrdinal(n: number) {
   const s = ["th", "st", "nd", "rd"];
@@ -12,6 +13,11 @@ export default async function MyReviews() {
   const supabase = await createClient();
 
   const {data: { user },} = await supabase.auth.getUser();
+  
+  // Check if email is confirmed
+  if (user && !user.email_confirmed_at) {
+    redirect("/auth/login?error=Please confirm your email address before accessing this page.")
+  }
 
   // Fetch reviews posted by this user
   const { data: reviews, error } = await supabase
