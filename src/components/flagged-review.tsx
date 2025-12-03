@@ -76,7 +76,7 @@ export default function FlaggedReviewsPage() {
                   <div className="flex flex-col space-y-2 flex-1">
                     <p>
                       <Link
-                        href={`/courses/${r.course_code}`}
+                        href={`/${r.course_code}#reviews`}
                         className="font-bold text-blue-600 dark:text-blue-400 hover:underline"
                       >
                         {r.course_code}

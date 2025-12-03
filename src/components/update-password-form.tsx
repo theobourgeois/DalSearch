@@ -1,7 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { createClient } from "@/lib/supabase/client"
+import { useSignIn } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -13,53 +13,48 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export function UpdatePasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const [password, setPassword] = useState("")
+  const [code, setCode] = useState("")
   const [error, setError] = useState<string | null>(null)
-  const [ready, setReady] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { isLoaded, signIn, setActive } = useSignIn()
 
-  useEffect(() => {
-    const run = async () => {
-      const supabase = createClient()
-      const url = new URL(window.location.href)
-      const code = url.searchParams.get("code")
-
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (error) {
-          setError(error.message)
-          return
-        }
-      }
-
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        setError(
-          "This reset link is invalid or has expired. Please request a new link and open it in the same browser."
-        )
-        return
-      }
-      setReady(true)
-    }
-    run()
-  }, [])
-
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
+    
+    if (!isLoaded) return
+    
+    if (!code || !password) {
+      setError("Please enter both the verification code and new password")
+      return
+    }
+    
     setIsLoading(true)
     setError(null)
 
     try {
-      const { error } = await supabase.auth.updateUser({ password })
-      if (error) throw error
-      router.push("/protected")
+      const result = await signIn.attemptFirstFactor({
+        strategy: "reset_password_email_code",
+        code,
+        password,
+      })
+
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId })
+        router.push("/protected")
+      } else {
+        setError("Failed to reset password. Please try again.")
+      }
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError("An error occurred")
+      }
     } finally {
       setIsLoading(false)
     }
@@ -70,11 +65,23 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-          <CardDescription>Please enter your new password below.</CardDescription>
+          <CardDescription>Enter the verification code from your email and your new password.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleForgotPassword}>
+          <form onSubmit={handleUpdatePassword}>
             <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="code">Verification Code</Label>
+                <Input
+                  id="code"
+                  type="text"
+                  placeholder="Enter code from email"
+                  required
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  disabled={isLoading}
+                />
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="password">New password</Label>
                 <Input
@@ -84,6 +91,7 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}

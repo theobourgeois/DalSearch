@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs"
 import { createClient } from "@/lib/supabase/client"
 import { StarInput } from "@/components/star-input";
 import {
@@ -20,6 +21,7 @@ export default function ReviewForm({ courseId, instructors }: { courseId: string
   const [newInstructor, setNewInstructor] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { user } = useUser();
 
   const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
   const wordLimit = 250;
@@ -29,14 +31,13 @@ export default function ReviewForm({ courseId, instructors }: { courseId: string
     setMessage("");
     setLoading(true);
 
-    const supabase = createClient();
-
-    const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       setMessage("You must be signed in to post a review.");
       setLoading(false);
       return;
     }
+
+    const supabase = createClient();
 
     if (!text.trim()) {
       setMessage("Review cannot be empty.");
@@ -75,15 +76,23 @@ export default function ReviewForm({ courseId, instructors }: { courseId: string
     });
 
     if (error) {
-      setMessage(error.message);
+      // Check if it's a duplicate key error (user already reviewed this course)
+      if (error.code === "23505" || error.message.includes("duplicate") || error.message.includes("unique")) {
+        setMessage("You have already posted a review for this course. You can only post one review per course.");
+      } else {
+        setMessage(error.message);
+      }
     } else {
-      setMessage("Review posted!");
+      setMessage("Review posted successfully!");
       setText("");
       setRating(0);
       setDifficulty(0);
       setWorkload(0);
       setSelectedInstructor(instructors[0] || "");
       setNewInstructor("");
+      
+      // Trigger refresh of review list
+      window.dispatchEvent(new CustomEvent("reviewPosted", { detail: { courseId } }));
     }
 
     setLoading(false);
@@ -161,7 +170,17 @@ export default function ReviewForm({ courseId, instructors }: { courseId: string
         </button>
       </div>
       
-      {message && <p className="text-sm text-center text-white-700">{message}</p>}
+      {message && (
+        <p className={`text-sm text-center ${
+          message.includes("already posted") || message.includes("error") || message.includes("Error")
+            ? "text-red-500"
+            : message.includes("successfully")
+            ? "text-green-500"
+            : "text-gray-700 dark:text-gray-300"
+        }`}>
+          {message}
+        </p>
+      )}
     </form>
   );
 }
