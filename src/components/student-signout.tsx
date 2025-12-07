@@ -1,24 +1,22 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
+import { useClerk } from "@clerk/nextjs";
 import { useState } from "react";
 
 export default function SignOutButton() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { signOut } = useClerk();
 
   const handleSignOut = async () => {
     setLoading(true);
     setMessage("");
 
-    const supabase = createClient();
-
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      setMessage("Error signing out: " + error.message);
-    } else {
+    try {
+      await signOut();
       setMessage("Signed out successfully!");
+    } catch (error) {
+      setMessage("Error signing out: " + (error instanceof Error ? error.message : "Unknown error"));
     }
 
     setLoading(false);

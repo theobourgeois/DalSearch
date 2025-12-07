@@ -1,24 +1,24 @@
 import { redirect } from "next/navigation"
 import Link from "next/link";
 import { LogoutButton } from "@/components/logout-button"
-import { createClient } from "@/lib/supabase/server"
+import { auth, currentUser } from "@clerk/nextjs/server"
+import { getCurrentUserProfile } from "@/lib/user-sync"
 
 export default async function ProtectedPage() {
-  const supabase = await createClient()
-
-  const { data, error } = await supabase.auth.getClaims()
-  if (error || !data?.claims) {
+  const { userId } = await auth()
+  
+  if (!userId) {
     redirect("/auth/login")
   }
 
-  const {data: { user },} = await supabase.auth.getUser();
+  const user = await currentUser()
+  
+  // Check if email is verified (Clerk handles this)
+  if (user && user.emailAddresses[0]?.verification?.status !== "verified") {
+    redirect("/auth/login?error=Please verify your email address before accessing this page.")
+  }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user?.id)
-    .single();
-
+  const profile = await getCurrentUserProfile()
   const role = profile?.role ?? "user";
 
   return (
@@ -28,7 +28,7 @@ export default async function ProtectedPage() {
                 My Account
             </h2>
             <p>
-              Email: <span>{data.claims.email}</span>
+              Email: <span>{user?.emailAddresses[0]?.emailAddress}</span>
             </p>
             <div className="flex space-x-4 mt-4">
           <LogoutButton />

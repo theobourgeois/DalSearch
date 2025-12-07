@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs"
 import { createClient } from "@/lib/supabase/client"
 import { StarRating } from "@/components/star-rating"
 import { StarInput } from "@/components/star-input";
@@ -31,6 +32,7 @@ function getOrdinal(n: number) {
 export default function ReviewList({ courseId, instructors }: { courseId: string, instructors: string[] }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
@@ -39,33 +41,56 @@ export default function ReviewList({ courseId, instructors }: { courseId: string
   const [workload, setWorkload] = useState(0);
   const [limit, setLimit] = useState(2);
   const [hasMore, setHasMore] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
   const [selectedInstructor, setSelectedInstructor] = useState<string>("");
   const [newInstructor, setNewInstructor] = useState("");
 
-  const fetchReviews = useCallback(async () => {
-    setLoading(true);
+  const fetchReviews = useCallback(async (fetchLimit: number, isLoadMore = false) => {
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
+
     const { data, error, count } = await supabase
       .from("reviews")
       .select("*", { count: "exact" })
       .eq("course_code", courseId)
       .order("created_at", { ascending: false })
-      .limit(limit);
+      .limit(fetchLimit);
 
-    if (error) console.error(error);
-    else {
-    setReviews(data || []);
-    setHasMore((count || 0) > (data?.length || 0));
-  }
+    if (error) {
+      console.error(error);
+    } else {
+      if (isLoadMore) {
+        // When loading more, we fetch all reviews up to the new limit
+        // But we only want to append the new ones
+        setReviews(prev => {
+          const existingIds = new Set(prev.map(r => r.id));
+          const allNewReviews = data || [];
+          const newReviews = allNewReviews.filter(r => !existingIds.has(r.id));
+          return [...prev, ...newReviews];
+        });
+      } else {
+        // Replace all reviews on initial load or refresh
+        setReviews(data || []);
+      }
+      setTotalCount(count || 0);
+      setHasMore((count || 0) > fetchLimit);
+    }
 
-    setLoading(false);
-  }, [courseId, limit]);
+    if (isLoadMore) {
+      setLoadingMore(false);
+    } else {
+      setLoading(false);
+    }
+  }, [courseId]);
 
-  const getUser = useCallback(async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  const { user } = useUser();
+  
+  useEffect(() => {
     setUserId(user?.id || null);
-  }, []);
+  }, [user]);
 
   const handleUpdate = async (id: string) => {
 
@@ -85,14 +110,42 @@ export default function ReviewList({ courseId, instructors }: { courseId: string
       console.error(error);
     } else {
       setEditingId(null);
-      fetchReviews();
+      fetchReviews(limit, false);
     }
   };
 
+  // Initial fetch when courseId changes
   useEffect(() => {
-    fetchReviews();
-    getUser();
-  }, [fetchReviews, getUser]);
+    setLimit(2); // Reset limit when course changes
+    setReviews([]); // Clear existing reviews
+    fetchReviews(2, false);
+  }, [courseId, fetchReviews]);
+
+  // Fetch more when limit increases (but not on initial mount)
+  useEffect(() => {
+    if (limit > 2 && reviews.length > 0) {
+      fetchReviews(limit, true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [limit]);
+
+  // Listen for review posted event to refresh the list
+  useEffect(() => {
+    const handleReviewPosted = (event: CustomEvent) => {
+      // Only refresh if it's for this course
+      if (event.detail?.courseId === courseId) {
+        // Reset limit and fetch all reviews to show the new one
+        setLimit(2);
+        fetchReviews(2, false);
+      }
+    };
+
+    window.addEventListener("reviewPosted", handleReviewPosted as EventListener);
+    
+    return () => {
+      window.removeEventListener("reviewPosted", handleReviewPosted as EventListener);
+    };
+  }, [courseId, fetchReviews]);
 
   if (loading) return <p>Loading reviews...</p>;
   if (reviews.length === 0) return <p>No reviews yet. Be the first!</p>;
@@ -255,9 +308,10 @@ export default function ReviewList({ courseId, instructors }: { courseId: string
         {hasMore && (
           <button
             onClick={() => setLimit(limit + 3)}
-            className="px-4 py-2 mt-4 dark:hover:bg-yellow-300 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl"
+            disabled={loadingMore}
+            className="px-4 py-2 mt-4 dark:hover:bg-yellow-300 bg-yellow-400 hover:bg-yellow-500 text-black rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Load more
+            {loadingMore ? "Loading..." : `Load more (${reviews.length} of ${totalCount})`}
           </button>
         )}
     </div>

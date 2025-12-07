@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils"
-import { createClient } from "@/lib/supabase/client"
+import { useSignUp } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -23,10 +23,13 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { isLoaded, signUp, setActive } = useSignUp()
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
+    
+    if (!isLoaded) return
+    
     setIsLoading(true)
     setError(null)
 
@@ -37,23 +40,38 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     }
 
     if (!email.endsWith("@dal.ca")) {
-    setError("You must use a valid @dal.ca email address")
-    setIsLoading(false)
-    return
+      setError("You must use a valid @dal.ca email address")
+      setIsLoading(false)
+      return
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
+      const result = await signUp.create({
+        emailAddress: email,
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
-        },
       })
-      if (error) throw error
-      router.push("/auth/sign-up-success")
+
+      // Send verification email
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId })
+        
+        // Sync user with Supabase profile
+        await fetch("/api/auth/sync-user", {
+          method: "POST",
+        })
+        
+        router.push("/protected")
+      } else {
+        // Email verification required
+        await signUp.prepareEmailAddressVerification({ strategy: "email_code" })
+        router.push("/auth/sign-up-success")
+      }
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError("An error occurred during sign up")
+      }
     } finally {
       setIsLoading(false)
     }

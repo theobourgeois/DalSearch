@@ -213,7 +213,7 @@ export default async function CoursePage({
                 </CardContent>
             </Card>
 
-            <Card className="pb-8 dark:bg-gray-800 dark:border-gray-700 mt-8">
+            <Card id="reviews" className="pb-8 dark:bg-gray-800 dark:border-gray-700 mt-8">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     Course Ratings & Reviews

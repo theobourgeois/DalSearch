@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils"
-import { createClient } from "@/lib/supabase/client"
+import { useSignIn } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -13,8 +13,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useEffect, useRef } from "react"
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("")
@@ -22,25 +22,70 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const isProcessingRef = useRef(false)
+  const { isLoaded, signIn, setActive } = useSignIn()
+
+  // Check for error in URL params
+  useEffect(() => {
+    const errorParam = searchParams.get("error")
+    if (errorParam) {
+      setError(errorParam)
+    }
+  }, [searchParams])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
+    
+    if (!isLoaded) return
+    
+    // Prevent multiple concurrent requests
+    if (isProcessingRef.current || isLoading) {
+      return
+    }
+    
+    isProcessingRef.current = true
     setIsLoading(true)
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
+      const result = await signIn.create({
+        identifier: email,
         password,
       })
-      if (error) throw error
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected")
+
+      if (result.status === "complete") {
+        // Set the active session
+        await setActive({ session: result.createdSessionId })
+        
+        // Sync user with Supabase profile
+        const response = await fetch("/api/auth/sync-user", {
+          method: "POST",
+        })
+        
+        if (!response.ok) {
+          console.error("Failed to sync user with Supabase")
+        }
+        
+        // Redirect to protected page
+        router.replace("/protected")
+      } else {
+        // Handle other statuses (like needs verification)
+        setError("Please verify your email address before signing in.")
+      }
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      if (error instanceof Error) {
+        // Clerk provides user-friendly error messages
+        setError(error.message)
+      } else {
+        setError("An error occurred during sign in")
+      }
     } finally {
       setIsLoading(false)
+      // Reset the ref after a small delay to prevent rapid clicking
+      setTimeout(() => {
+        isProcessingRef.current = false
+      }, 500)
     }
   }
 
@@ -61,6 +106,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                   type="email"
                   placeholder="NetID@dal.ca"
                   required
+                  disabled={isLoading}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -79,6 +125,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                   id="password"
                   type="password"
                   required
+                  disabled={isLoading}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

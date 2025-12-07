@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { StarRating } from "@/components/star-rating";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 function getOrdinal(n: number) {
   const s = ["th", "st", "nd", "rd"];
@@ -9,15 +11,26 @@ function getOrdinal(n: number) {
 }
 
 export default async function MyReviews() {
-  const supabase = await createClient();
+  const { userId } = await auth()
+  
+  if (!userId) {
+    redirect("/auth/login")
+  }
 
-  const {data: { user },} = await supabase.auth.getUser();
+  const user = await currentUser()
+  
+  // Check if email is verified (Clerk handles this)
+  if (user && user.emailAddresses[0]?.verification?.status !== "verified") {
+    redirect("/auth/login?error=Please verify your email address before accessing this page.")
+  }
+
+  const supabase = await createClient();
 
   // Fetch reviews posted by this user
   const { data: reviews, error } = await supabase
     .from("reviews")
     .select("*")
-    .eq("user_id", user?.id)
+    .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
   return (
@@ -50,7 +63,7 @@ export default async function MyReviews() {
                   <div className="flex flex-col space-y-2">
                     <p>
                       <Link
-                        href={`/courses/${r.course_code}`}
+                        href={`/${r.course_code}#reviews`}
                         className="font-bold text-blue-600 dark:text-blue-400 hover:underline"
                       >
                         {r.course_code}

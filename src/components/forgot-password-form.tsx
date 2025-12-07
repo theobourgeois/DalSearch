@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils"
-import { createClient } from "@/lib/supabase/client"
+import { useSignIn } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -13,29 +13,99 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
   const [email, setEmail] = useState("")
+  const [code, setCode] = useState("")
+  const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+  const [codeSent, setCodeSent] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const { isLoaded, signIn, setActive } = useSignIn()
+  const router = useRouter()
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
+    
+    if (!isLoaded) return
+    
     setIsLoading(true)
     setError(null)
 
     try {
-      // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/update-password`,
+      await signIn.create({
+        strategy: "reset_password_email_code",
+        identifier: email,
       })
-      if (error) throw error
-      setSuccess(true)
+      setCodeSent(true)
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred")
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError("An error occurred")
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!isLoaded) return
+    
+    if (!code || !password) {
+      setError("Please enter both the verification code and new password")
+      return
+    }
+    
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const result = await signIn.attemptFirstFactor({
+        strategy: "reset_password_email_code",
+        code,
+        password,
+      })
+
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId })
+        router.push("/protected")
+      } else {
+        setError("Failed to reset password. Please try again.")
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError("An error occurred")
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleResendCode = async () => {
+    if (!isLoaded) return
+    
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      await signIn.create({
+        strategy: "reset_password_email_code",
+        identifier: email,
+      })
+      setCode("") // Clear the code field
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError("Failed to resend code")
+      }
     } finally {
       setIsLoading(false)
     }
@@ -43,28 +113,83 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      {success ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Check Your Email</CardTitle>
-            <CardDescription>Password reset instructions sent</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              If you registered using your email and password, you will receive a password reset
-              email.
-            </p>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-            <CardDescription>
-              Type in your Dalhousie email and we&apos;ll send you a link to reset your password
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Reset Your Password</CardTitle>
+          <CardDescription>
+            {codeSent 
+              ? "Enter the verification code from your email and your new password"
+              : "Type in your Dalhousie email and we'll send you a verification code"
+            }
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {codeSent ? (
+            <form onSubmit={handleResetPassword}>
+              <div className="flex flex-col gap-6">
+                <div className="grid gap-2">
+                  <Label htmlFor="code">Verification Code</Label>
+                  <Input
+                    id="code"
+                    type="text"
+                    placeholder="Enter code from email"
+                    required
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    disabled={isLoading}
+                    className="text-center text-2xl tracking-widest"
+                    maxLength={6}
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Check your email (including spam folder) for the verification code
+                  </p>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="password">New Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter new password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={isLoading}
+                  />
+                </div>
+                {error && <p className="text-sm text-red-500">{error}</p>}
+                <Button 
+                  type="submit" 
+                  className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" 
+                  disabled={isLoading || !code || !password}
+                >
+                  {isLoading ? "Resetting..." : "Reset Password"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleResendCode}
+                  disabled={isLoading}
+                  className="w-full"
+                >
+                  Resend Code
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => {
+                    setCodeSent(false)
+                    setCode("")
+                    setPassword("")
+                    setError(null)
+                  }}
+                  disabled={isLoading}
+                  className="w-full"
+                >
+                  Use Different Email
+                </Button>
+              </div>
+            </form>
+          ) : (
             <form onSubmit={handleForgotPassword}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
@@ -76,11 +201,16 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={isLoading}
                   />
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" disabled={isLoading}>
-                  {isLoading ? "Sending..." : "Send reset email"}
+                <Button 
+                  type="submit" 
+                  className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" 
+                  disabled={isLoading || !email}
+                >
+                  {isLoading ? "Sending..." : "Send Verification Code"}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
@@ -90,9 +220,9 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                 </Link>
               </div>
             </form>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

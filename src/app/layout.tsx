@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import { courses } from "@/lib/course-utils";
 import Header from "../components/header";
 import { Toaster } from "@/components/ui/sonner";
@@ -127,19 +128,21 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body
-                className={`${poppins.variable} antialiased bg-gradient-to-t from-gray-200 to-gray-50/50 dark:from-gray-900 dark:to-gray-900 dark:text-white`}
-            >
-                <Header courses={courses} />
-                {children}
-                <Footer />
+        <ClerkProvider>
+            <html lang="en">
+                <body
+                    className={`${poppins.variable} antialiased bg-gradient-to-t from-gray-200 to-gray-50/50 dark:from-gray-900 dark:to-gray-900 dark:text-white`}
+                >
+                    <Header courses={courses} />
+                    {children}
+                    <Footer />
 
-                <Toaster closeButton richColors />
-                <FloatingSchedule>
-                    <UserSchedule />
-                </FloatingSchedule>
-            </body>
-        </html>
+                    <Toaster closeButton richColors />
+                    <FloatingSchedule>
+                        <UserSchedule />
+                    </FloatingSchedule>
+                </body>
+            </html>
+        </ClerkProvider>
     );
 }
