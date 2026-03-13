@@ -14,7 +14,7 @@ function log(...args) {
     logResult += logString + "\n";
 }
 
-const TERMS = ["202530", "202610", "202620"];
+const TERMS = ["202620", "202630", "202710", "202720"];
 
 const headers = {
     accept: "application/json, text/plain, */*",
@@ -40,7 +40,7 @@ const headers = {
 // );
 
 const url = new URL(
-    "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains.dal_stuweb_academicTimetable"
+    "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains.dal_stuweb_academicTimetable",
 );
 
 export async function getAcademicCalendar(subjectCodes) {
@@ -69,7 +69,7 @@ export async function getAcademicCalendar(subjectCodes) {
 
             const json = await response.json();
             log(
-                `------ [${i}/${subjectCodes.length}: FETCHING COURSES WITH SUBJECT: ${code.description}, Courses: ${json.length}] ------`
+                `------ [${i}/${subjectCodes.length}: FETCHING COURSES WITH SUBJECT: ${code.description}, Courses: ${json.length}] ------`,
             );
             data[code.code] = json;
         } catch (error) {
@@ -142,7 +142,7 @@ function writeToFile(data, filename = "data.json", append = false) {
             return;
         }
         log(
-            `------ [FILE CREATED ${filename} at ${new Date().toISOString()}] ------`
+            `------ [FILE CREATED ${filename} at ${new Date().toISOString()}] ------`,
         );
     });
 }
@@ -157,7 +157,7 @@ function getPreReqs(innerHtml, courses) {
     for (const course of courseNames) {
         if (
             prereqText.includes(
-                courses[course].subjectCode + " " + courses[course].courseCode
+                courses[course].subjectCode + " " + courses[course].courseCode,
             )
         ) {
             prereqs.push(course);
@@ -191,7 +191,7 @@ async function fillInMissingData(courses) {
                 if (!response.ok) {
                     console.error(
                         `Failed to fetch data for course ${code}:`,
-                        response.statusText
+                        response.statusText,
                     );
                     return;
                 }
@@ -216,14 +216,14 @@ async function fillInMissingData(courses) {
                         .split("")
                         .slice(0, 15)
                         .join("")}... - PREREQS: ${prerequisites.join(
-                        ","
-                    )}] ------`
+                        ",",
+                    )}] ------`,
                 );
                 i++;
             } catch (error) {
                 console.error(
                     `Failed to fetch data for course ${code}:`,
-                    error
+                    error,
                 );
             }
         };
@@ -237,7 +237,7 @@ async function fillInMissingData(courses) {
         Math.floor(waitTimeSeconds / 60),
         "minutes ",
         Math.floor(waitTimeSeconds % 60),
-        "seconds"
+        "seconds",
     );
     // do the promises one after another as to not overload the server
     for (const promise of promises) {
@@ -355,7 +355,7 @@ function transformAcademicCalendar(timetableBySubjectCode) {
                         courses[code].instructorsByTerm[term] = [];
                     }
                     courses[code].instructorsByTerm[term].push(
-                        ...instructorsByTerm[term]
+                        ...instructorsByTerm[term],
                     );
                 });
             }
@@ -385,7 +385,7 @@ async function getSubjectCodes() {
                 },
                 body: null,
                 method: "GET",
-            }
+            },
         );
         const data = await res.json();
         const transformed = data.map(({ CODE, DESCR }) => ({
