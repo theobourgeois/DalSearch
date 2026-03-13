@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { colors } from "@/lib/schedule-utils";
 import { ClassSession, Day, Term } from "@/lib/types";
 import html2canvas from "html2canvas";
@@ -19,34 +19,36 @@ type ScheduleStore = {
     setTerm: (term: Term) => void;
     addTimeSlot: (termClass: ClassSession) => void;
     removeTimeSlot: (crn: string) => void;
-    downloadSchedule: (format: DownloadFormat, timeSlots: ScheduleTimeSlot[]) => void;
+    downloadSchedule: (
+        format: DownloadFormat,
+        timeSlots: ScheduleTimeSlot[],
+    ) => void;
     container: HTMLElement | null;
     setContainer: (container: HTMLElement) => void;
     setTimeSlots: (timeSlots: ClassSession[]) => void;
 };
 
 function getDefaultScheduleTimeSlots(): ScheduleTimeSlot[] {
-    if (typeof window === 'undefined') return [];
+    if (typeof window === "undefined") return [];
 
     try {
         const timeSlots = localStorage.getItem("timeSlots");
         return timeSlots ? JSON.parse(timeSlots) : [];
     } catch (error) {
-        console.error('Error reading from localStorage:', error);
+        console.error("Error reading from localStorage:", error);
         return [];
     }
 }
 
 function updateLocalStorage(timeSlots: ScheduleTimeSlot[]): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     try {
         localStorage.setItem("timeSlots", JSON.stringify(timeSlots));
     } catch (error) {
-        console.error('Error writing to localStorage:', error);
+        console.error("Error writing to localStorage:", error);
     }
 }
-
 
 const downloadPNG = (container: HTMLElement) => {
     html2canvas(container).then((canvas) => {
@@ -73,12 +75,12 @@ const downloadICS = (timeSlots: ClassSession[]) => {
     // Helper function to convert day abbreviations to RRULE day formats
     const convertDayToRRule = (day: Day): string => {
         const mapping: Record<Day, string> = {
-            'M': 'MO',
-            'T': 'TU',
-            'W': 'WE',
-            'R': 'TH',
-            'F': 'FR',
-            'S': 'SA'
+            M: "MO",
+            T: "TU",
+            W: "WE",
+            R: "TH",
+            F: "FR",
+            S: "SA",
         };
         return mapping[day];
     };
@@ -86,12 +88,12 @@ const downloadICS = (timeSlots: ClassSession[]) => {
     // Helper function to get day number (0 = Sunday, 1 = Monday, etc.)
     const getDayNumber = (day: Day): number => {
         const mapping: Record<Day, number> = {
-            'M': 1,
-            'T': 2,
-            'W': 3,
-            'R': 4,
-            'F': 5,
-            'S': 6
+            M: 1,
+            T: 2,
+            W: 3,
+            R: 4,
+            F: 5,
+            S: 6,
         };
         return mapping[day];
     };
@@ -121,13 +123,16 @@ const downloadICS = (timeSlots: ClassSession[]) => {
     // Function to format date for ICS
     const formatDateForICS = (date: Date): string => {
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
         return `${year}${month}${day}`;
     };
 
     // Function to find the next occurrence of a specific day of week
-    const findNextDayOccurrence = (startDate: Date, dayOfWeek: number): Date => {
+    const findNextDayOccurrence = (
+        startDate: Date,
+        dayOfWeek: number,
+    ): Date => {
         const result = new Date(startDate);
         const currentDay = result.getDay();
 
@@ -144,23 +149,30 @@ const downloadICS = (timeSlots: ClassSession[]) => {
     const icsData = timeSlots
         .map((slot) => {
             // Get the RRULE day formats
-            const rRuleDays = slot.days.map(day => convertDayToRRule(day)).join(",");
+            const rRuleDays = slot.days
+                .map((day) => convertDayToRRule(day))
+                .join(",");
 
             const firstDay = slot.days[0];
             const dayNumber = getDayNumber(firstDay);
 
             const termStartDate = getTermStartDate(slot.term);
 
-            const firstClassDate = findNextDayOccurrence(termStartDate, dayNumber);
+            const firstClassDate = findNextDayOccurrence(
+                termStartDate,
+                dayNumber,
+            );
 
             const formattedDate = formatDateForICS(firstClassDate);
 
-            const startTime = typeof slot.time.start === 'string' && slot.time.start !== 'C/D'
-                ? slot.time.start
-                : '0900';
-            const endTime = typeof slot.time.end === 'string' && slot.time.end !== 'C/D'
-                ? slot.time.end
-                : '1000';
+            const startTime =
+                typeof slot.time.start === "string" && slot.time.start !== "C/D"
+                    ? slot.time.start
+                    : "0900";
+            const endTime =
+                typeof slot.time.end === "string" && slot.time.end !== "C/D"
+                    ? slot.time.end
+                    : "1000";
 
             const startDateTime = `${formattedDate}T${startTime}00`;
             const endDateTime = `${formattedDate}T${endTime}00`;
@@ -193,7 +205,7 @@ END:VCALENDAR`)}`;
 function downloadSchedule(
     container: HTMLElement,
     format: DownloadFormat,
-    timeSlots: ClassSession[]
+    timeSlots: ClassSession[],
 ) {
     switch (format) {
         case "pdf":
@@ -231,7 +243,7 @@ const useScheduleStore = create<ScheduleStore>((set) => ({
     removeTimeSlot: (crn: string) =>
         set((state) => {
             const newTimeSlots = state.timeSlots.filter(
-                (slot) => slot.class.crn !== crn
+                (slot) => slot.class.crn !== crn,
             );
             updateLocalStorage(newTimeSlots);
             return { timeSlots: newTimeSlots };
@@ -239,12 +251,16 @@ const useScheduleStore = create<ScheduleStore>((set) => ({
     downloadSchedule: (format, timeSlots) =>
         set((state) => {
             if (!state.container) return state;
-            downloadSchedule(state.container, format, timeSlots.map((slot) => slot.class));
+            downloadSchedule(
+                state.container,
+                format,
+                timeSlots.map((slot) => slot.class),
+            );
             return state;
         }),
     container: null,
     setContainer: (container) => set({ container }),
-    term: "202530",
+    term: "202620",
     setTerm: (term) => set({ term }),
 }));
 

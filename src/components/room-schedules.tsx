@@ -34,16 +34,16 @@ export function RoomSchedules({
 }) {
     const [selectedRoom, setSelectedRoom] = useStoredState<string | null>(
         null,
-        "selected-room"
+        "selected-room",
     );
-    const [term, setTerm] = useStoredState<Term>("202530", "term");
+    const [term, setTerm] = useStoredState<Term>("202620", "term");
     const [view, setView] = useState<"schedule" | "list">("schedule");
 
     const roomNames = useMemo(() => Object.keys(rooms), [rooms]);
     const roomClasses = useMemo(() => {
         if (!selectedRoom) return null;
         return rooms[selectedRoom].filter(
-            (termClass) => termClass.term === term
+            (termClass) => termClass.term === term,
         );
     }, [rooms, selectedRoom, term]);
 
@@ -85,7 +85,7 @@ export function RoomSchedules({
                                 className={cn(
                                     "flex items-center text-sm gap-2 w-full focus:outline-none hover:bg-slate-100 py-2 px-3 rounded-md cursor-pointer dark:hover:bg-gray-700",
                                     isCurrentSelected &&
-                                        "bg-slate-100 dark:bg-gray-700"
+                                        "bg-slate-100 dark:bg-gray-700",
                                 )}
                             >
                                 <Building2
@@ -187,17 +187,17 @@ export function RoomSchedules({
                                                                 termClasses={roomClasses.filter(
                                                                     (c) =>
                                                                         c.term ===
-                                                                        term
+                                                                        term,
                                                                 )}
                                                                 index={index}
                                                                 course={
                                                                     termClass.course
                                                                 }
                                                             />
-                                                        )
+                                                        ),
                                                     )}
                                                 </Fragment>
-                                            )
+                                            ),
                                         )}
                                     </ScheduleBackground>
                                 </div>
@@ -259,7 +259,7 @@ export function RoomSchedules({
                                                                         </Badge>
                                                                     </div>
                                                                 </div>
-                                                            )
+                                                            ),
                                                         )}
                                                     </div>
                                                 ) : (
@@ -268,7 +268,7 @@ export function RoomSchedules({
                                                     </div>
                                                 )}
                                             </div>
-                                        )
+                                        ),
                                     )}
                             </TabsContent>
                         </div>
