@@ -115,13 +115,13 @@ export function getFilteredCourses(
         const hasSelectedTerm = course.termClasses.some((termClass) => {
             return filter.terms.includes(termClass.term);
         });
-        const hasSelectedCourseLevel = filter.courseLevels.includes(
+        const hasSelectedCourseLevel = filter.courseLevels?.includes(
             course.courseCode[0] + "000",
         );
-        const hasSelectedSubjectCode = filter.subjectCodes.includes(
+        const hasSelectedSubjectCode = filter.subjectCodes?.includes(
             course.subjectCode,
         );
-        const hasSelectedCreditHours = filter.creditHours.includes(
+        const hasSelectedCreditHours = filter.creditHours?.includes(
             course.creditHours,
         );
         return (

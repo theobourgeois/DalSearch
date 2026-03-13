@@ -11,31 +11,47 @@ export function Search({
     courses,
     isOnHeader = false,
     numberOfRecommendations = 5,
+    hideWhenOnHomePage = isOnHeader,
+    autoFocus = !isOnHeader,
+    showSubmitButton = !isOnHeader,
+    hoveredList = isOnHeader,
+    placeholder = "Search for course...",
+    storageKey = null,
+    onSelectCourse,
 }: {
     courses: CourseByCode;
     isOnHeader?: boolean;
     numberOfRecommendations?: number;
+    hideWhenOnHomePage?: boolean;
+    autoFocus?: boolean;
+    showSubmitButton?: boolean;
+    hoveredList?: boolean;
+    placeholder?: string;
+    storageKey?: string | null;
+    onSelectCourse?: (course: Course) => void;
 }) {
     const router = useRouter();
     const pathname = usePathname();
 
     const handleSelect = (course: Course) => {
         router.push(`/${course.subjectCode}${course.courseCode}`);
+        onSelectCourse?.(course);
     };
 
     // dont show header search bar on home page
-    if (pathname === "/" && isOnHeader) {
+    if (pathname === "/" && hideWhenOnHomePage) {
         return <></>;
     }
 
     return (
         <div className="flex flex-col gap-2 items-center w-full">
             <RecommendationInput
+                storageKey={storageKey}
                 allItems={Object.values(courses)}
                 numOfRecommendations={numberOfRecommendations}
                 fuzzyKeys={["subjectCode", "courseCode", "title"]}
                 onSelect={handleSelect}
-                autoFocus={!isOnHeader}
+                autoFocus={autoFocus}
                 renderRecommendation={(course, isCurrentSelected) => (
                     <Link
                         className={cn(
@@ -49,8 +65,9 @@ export function Search({
                         {course.title}
                     </Link>
                 )}
-                hasSubmitButton={!isOnHeader}
-                isHoveredList={isOnHeader}
+                hasSubmitButton={showSubmitButton}
+                isHoveredList={hoveredList}
+                placeholder={placeholder}
             />
         </div>
     );

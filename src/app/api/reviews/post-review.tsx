@@ -10,7 +10,11 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components//ui/select";
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function ReviewForm({ courseId, instructors }: { courseId: string, instructors: string[] }) {
   const [text, setText] = useState("");
@@ -99,88 +103,88 @@ export default function ReviewForm({ courseId, instructors }: { courseId: string
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2">
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Write your review..."
-        className="w-full p-2 border rounded-xl text-gray-700 dark:bg-gray-800 dark:text-gray-300 h-48 resize-none"
-      />
+    <form onSubmit={handleSubmit} className="space-y-6 bg-gray-50/50 dark:bg-gray-700/20 p-6 rounded-xl border dark:border-gray-700 shadow-sm">
+      <div className="space-y-2">
+        <Textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="What did you think of the course? Consider the teaching style, assignments, and exams..."
+          className="min-h-[120px] resize-y bg-white dark:bg-gray-900 dark:border-gray-600 focus-visible:ring-yellow-400"
+        />
+        <div className="flex justify-between items-center text-xs">
+          <p className={`${wordCount > wordLimit ? "text-red-500 font-medium" : "text-gray-500 dark:text-gray-400"}`}>
+            {wordCount}/{wordLimit} words
+          </p>
+          {!user && (
+            <p className="text-amber-600 dark:text-amber-500 font-medium">
+              Sign in to post a review
+            </p>
+          )}
+        </div>
+      </div>
 
-      <p className={`text-xs text-right ${wordCount > wordLimit ? "text-red-500" : "text-gray-500"}`}>
-        {wordCount}/{wordLimit} words
-      </p>
-
-      <div className="flex flex-col sm:flex-row sm:space-x-4 sm:space-y-0 space-y-4">
-        <div className="flex items-center space-x-2">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Overall Rating</label>
-        <StarInput value={rating} onChange={setRating} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Overall Rating</Label>
+          <StarInput value={rating} onChange={setRating} />
         </div>
 
-        <div className="flex items-center space-x-2">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Difficulty</label>
-        <StarInput value={difficulty} onChange={setDifficulty} />
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Difficulty</Label>
+          <StarInput value={difficulty} onChange={setDifficulty} />
         </div>
 
-        <div className="flex items-center space-x-2">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Workload</label>
-        <StarInput value={workload} onChange={setWorkload} />
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Workload</Label>
+          <StarInput value={workload} onChange={setWorkload} />
         </div>
 
-        <div className="flex items-center space-x-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Instructor
-          </label>
-          
-            <Select value={selectedInstructor} onValueChange={(val) => setSelectedInstructor(val)}>
-              <SelectTrigger className="w-3/4">
-                <SelectValue placeholder="Select an instructor" />
-             </SelectTrigger>
-              <SelectContent>
-                {instructors.map((inst) => (
-                  <SelectItem key={inst} value={inst}>
-                    {inst}
-                  </SelectItem>
-                ))}
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">Instructor</Label>
+          <Select value={selectedInstructor} onValueChange={(val) => setSelectedInstructor(val)}>
+            <SelectTrigger className="w-full bg-white dark:bg-gray-900 dark:border-gray-600">
+              <SelectValue placeholder="Select instructor" />
+            </SelectTrigger>
+            <SelectContent>
+              {instructors.map((inst) => (
+                <SelectItem key={inst} value={inst}>
+                  {inst}
+                </SelectItem>
+              ))}
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
           </Select>
 
-          <div className="flex items-center space-x-2">
-            {selectedInstructor === "Other" && (
-              <input
-                type="text"
-                placeholder="Enter professor name"
-                value={newInstructor}
-                onChange={(e) => setNewInstructor(e.target.value)}
-                className="w-full p-2 border rounded-xl dark:bg-gray-800 dark:text-gray-300"
-              />
-            )}
-          </div>
+          {selectedInstructor === "Other" && (
+            <Input
+              type="text"
+              placeholder="Enter professor name"
+              value={newInstructor}
+              onChange={(e) => setNewInstructor(e.target.value)}
+              className="mt-2 bg-white dark:bg-gray-900 dark:border-gray-600 focus-visible:ring-yellow-400"
+            />
+          )}
         </div>
       </div>
 
-      <div className="flex justify-center">
-        <button
-                type="submit"
-                disabled={loading}
-                className="bg-yellow-400 hover:bg-yellow-500 dark:hover:bg-yellow-300 dark:bg-yellow-400 text-black px-4 py-2 rounded-xl w-1/2 mt-4"
-              >
-                {loading ? "Posting..." : "Submit Review"}
-        </button>
-      </div>
-      
-      {message && (
-        <p className={`text-sm text-center ${
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t dark:border-gray-700">
+        <p className={`text-sm ${
           message.includes("already posted") || message.includes("error") || message.includes("Error")
-            ? "text-red-500"
+            ? "text-red-500 font-medium"
             : message.includes("successfully")
-            ? "text-green-500"
-            : "text-gray-700 dark:text-gray-300"
+            ? "text-green-600 dark:text-green-500 font-medium"
+            : "text-gray-600 dark:text-gray-400"
         }`}>
           {message}
         </p>
-      )}
+        <Button
+          type="submit"
+          disabled={loading || !user}
+          className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-500 text-black dark:bg-yellow-500 dark:hover:bg-yellow-400 font-semibold"
+        >
+          {loading ? "Posting..." : "Submit Review"}
+        </Button>
+      </div>
     </form>
   );
 }

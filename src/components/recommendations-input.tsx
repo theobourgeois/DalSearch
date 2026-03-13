@@ -94,7 +94,9 @@ export function RecommendationInput<T extends unknown[]>({
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {
+            if (recommendations.length === 0) return;
             const recommendation = recommendations[tabbedIndex];
+            if (!recommendation) return;
             onSelect(recommendation);
             if (closeOnSelect) {
                 setTabbedIndex(0);
@@ -106,19 +108,23 @@ export function RecommendationInput<T extends unknown[]>({
             setTabbedIndex(0);
         }
         if (e.key === "ArrowDown") {
+            if (recommendations.length === 0) return;
             setTabbedIndex((prev) => (prev + 1) % recommendations.length);
         }
         if (e.key === "ArrowUp") {
+            if (recommendations.length === 0) return;
             setTabbedIndex(
                 (prev) => (prev === 0 ? recommendations.length : prev) - 1
             );
         }
         if (e.key === "Tab" && !e.shiftKey) {
+            if (recommendations.length === 0) return;
             e.preventDefault();
             setTabbedIndex((prev) => (prev + 1) % recommendations.length);
         }
         // shift + tab goes backwards
         if (e.shiftKey && e.key === "Tab") {
+            if (recommendations.length === 0) return;
             e.preventDefault();
             setTabbedIndex((prev) =>
                 prev === 0 ? recommendations.length - 1 : prev - 1
@@ -136,7 +142,9 @@ export function RecommendationInput<T extends unknown[]>({
     };
 
     const handleSubmit = () => {
-        onSelect(recommendations[tabbedIndex - 1]);
+        const recommendation = recommendations[tabbedIndex] ?? recommendations[0];
+        if (!recommendation) return;
+        onSelect(recommendation);
         setTabbedIndex(0);
     };
 
@@ -154,17 +162,17 @@ export function RecommendationInput<T extends unknown[]>({
         <>
             <div
                 onClick={handleFocus}
-                className="relative px-2 shadow-black rounded-xl w-full border-2 border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
+                className="relative px-3 shadow-sm rounded-lg w-full border border-slate-200 bg-white dark:border-gray-700 dark:bg-gray-900 focus-within:border-slate-300 dark:focus-within:border-gray-600 transition-colors"
                 onKeyDown={handleKeyDown}
             >
-                <div className="relative">
+                <div className="relative flex items-center h-10">
                     <SearchIcon
-                        className="absolute top-1/2 left-0 transform -translate-y-1/2 dark:text-white"
-                        size={18}
+                        className="absolute left-0 text-slate-400 dark:text-gray-400"
+                        size={16}
                     />
                     <Input
                         autoFocus={autoFocus}
-                        className="file:text-base dark:text-white focus-visible:ring-0 translate-x-6 p-0 rounded-none shadow-none outline-none border-none"
+                        className="h-full w-full pl-7 bg-transparent border-0 focus-visible:ring-0 shadow-none text-sm outline-none placeholder:text-slate-500 dark:text-white"
                         value={value}
                         onChange={handleChange}
                         placeholder={placeholder}

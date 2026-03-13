@@ -22,7 +22,7 @@ export function StarInput({ value, onChange, className }: StarInput) {
           ? "text-yellow-400 opacity-50 fill-current"
           : value >= star
           ? "text-yellow-400 fill-current"
-          : "text-gray-300"
+          : "text-gray-300 dark:text-gray-600"
           )}
           onClick={() => onChange(star)}
           onMouseEnter={() => setHover(star)}

@@ -20,7 +20,7 @@ export function StarRating({ rating, className }: StarRatingProps) {
         } else if (index === fullStars && hasHalfStar) {
           return <StarHalf key={index} className="w-4 h-4 text-yellow-400 fill-current" />;
         } else {
-          return <Star key={index} className="w-4 h-4 text-gray-300" />;
+          return <Star key={index} className="w-4 h-4 text-gray-300 dark:text-gray-600" />;
         }
       })}
     </div>
