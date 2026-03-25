@@ -2,13 +2,19 @@ import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useSchedule } from "@/store/schedule-store";
 import { terms } from "@/lib/course-utils";
+import { classSessionFitsSchedule } from "@/lib/class-session-utils";
 import { Badge } from "./ui/badge";
 import Link from "next/link";
 import { Clock, MapPin, ChevronDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
 import { cn } from "@/lib/utils";
-import { ClassSession, Course, Term } from "@/lib/types";
+import {
+    ClassSession,
+    Course,
+    ScheduleBufferMinutes,
+    Term,
+} from "@/lib/types";
 
 function KeywordHighlightedText({
     text,
@@ -42,11 +48,15 @@ export const TermClassCard = ({
     termClass,
     showCourse = false,
     isAdded,
+    isConflicting = false,
+    disableConflictingAction = false,
     onToggleTimeSlot,
 }: {
     termClass: ClassSession;
     isAdded: boolean;
     showCourse?: boolean;
+    isConflicting?: boolean;
+    disableConflictingAction?: boolean;
     onToggleTimeSlot?: (termClass: ClassSession) => void;
 }) => (
     <div
@@ -71,6 +81,11 @@ export const TermClassCard = ({
                 <Badge variant="outline" className="uppercase dark:bg-gray-700">
                     CRN: {termClass.crn}
                 </Badge>
+                {isConflicting && !isAdded && (
+                    <Badge variant="destructive" className="uppercase">
+                        CONFLICTING
+                    </Badge>
+                )}
             </div>
             <Badge variant="secondary" className="dark:bg-gray-700">
                 {terms[termClass.term]}
@@ -94,10 +109,17 @@ export const TermClassCard = ({
                     <Button
                         variant={isAdded ? "destructive" : "default"}
                         size="sm"
+                        disabled={
+                            disableConflictingAction && isConflicting && !isAdded
+                        }
                         onClick={() => onToggleTimeSlot?.(termClass)}
                         className="w-full mt-2"
                     >
-                        {isAdded ? "Remove from Schedule" : "Add to Schedule"}
+                        {isAdded
+                            ? "Remove from Schedule"
+                            : disableConflictingAction && isConflicting
+                              ? "Conflicts With Schedule"
+                              : "Add to Schedule"}
                     </Button>
                 </div>
             ) : (
@@ -117,11 +139,17 @@ export function CourseCard({
     course,
     showDescription = true,
     terms,
+    fitToScheduleOnly = false,
+    scheduleBufferMinutes = 0,
+    scheduledClasses = [],
 }: {
     keyword: string;
     terms: Term[];
     course: Course;
     showDescription?: boolean;
+    fitToScheduleOnly?: boolean;
+    scheduleBufferMinutes?: ScheduleBufferMinutes;
+    scheduledClasses?: ClassSession[];
 }) {
     const { addTimeSlot, removeTimeSlot, timeSlots } = useSchedule();
     const [visibleClasses, setVisibleClasses] = useState(
@@ -145,10 +173,24 @@ export function CourseCard({
 
     const filteredTermClasses = useMemo(
         () =>
-            course.termClasses.filter((termClass) =>
-                terms.includes(termClass.term)
-            ),
+            course.termClasses.filter((termClass) => terms.includes(termClass.term)),
         [course, terms]
+    );
+
+    const conflictingByCrn = useMemo(
+        () =>
+            new Set(
+                filteredTermClasses
+                    .filter((termClass) =>
+                        !classSessionFitsSchedule(
+                            termClass,
+                            scheduledClasses,
+                            scheduleBufferMinutes
+                        )
+                    )
+                    .map((termClass) => termClass.crn)
+            ),
+        [filteredTermClasses, scheduledClasses, scheduleBufferMinutes]
     );
 
     const addedTermClasses = useMemo(
@@ -160,12 +202,23 @@ export function CourseCard({
     );
 
     const unaddedTermClasses = useMemo(
-        () =>
-            filteredTermClasses.filter(
+        () => {
+            const classes = filteredTermClasses.filter(
                 (termClass) =>
                     !timeSlots.some((ts) => ts.class.crn === termClass.crn)
-            ),
-        [filteredTermClasses, timeSlots]
+            );
+
+            if (!fitToScheduleOnly) {
+                return classes;
+            }
+
+            return classes.sort((a, b) => {
+                const aConflicting = conflictingByCrn.has(a.crn) ? 1 : 0;
+                const bConflicting = conflictingByCrn.has(b.crn) ? 1 : 0;
+                return aConflicting - bConflicting;
+            });
+        },
+        [filteredTermClasses, timeSlots, fitToScheduleOnly, conflictingByCrn]
     );
 
     const handleShowAllClasses = () => {
@@ -235,6 +288,10 @@ export function CourseCard({
                                     key={termClass.crn}
                                     termClass={termClass}
                                     isAdded={true}
+                                    isConflicting={conflictingByCrn.has(
+                                        termClass.crn
+                                    )}
+                                    disableConflictingAction={fitToScheduleOnly}
                                 />
                             ))}
                         </div>
@@ -250,6 +307,10 @@ export function CourseCard({
                                 key={`${termClass.crn}-${termClass.section}-${termClass.term}-${course.courseCode}-${course.subjectCode}`}
                                 termClass={termClass}
                                 isAdded={false}
+                                isConflicting={conflictingByCrn.has(
+                                    termClass.crn
+                                )}
+                                disableConflictingAction={fitToScheduleOnly}
                             />
                         ))}
                 </div>

@@ -9,14 +9,16 @@ import { CourseCard } from "./course-card";
 import { CourseFilterPanel } from "./course-filter-panel";
 import { useStoredState } from "@/hooks/use-stored-state";
 import { OrderByCourses } from "./order-courses";
+import { useSchedule } from "@/store/schedule-store";
 import type { Course, CourseFilter, CourseOrderBy } from "@/lib/types";
 
 const MAX_NUM_COURSES = 10;
 
 export function ExploreCourses({ courses }: { courses: Course[] }) {
     const [maxNumCourses, setMaxNumCourses] = useState(MAX_NUM_COURSES);
+    const { timeSlots } = useSchedule();
 
-    const [filter, setFilter] = useStoredState<CourseFilter>(
+    const [storedFilter, setFilter] = useStoredState<CourseFilter>(
         defaultFilter,
         "filter"
     );
@@ -28,7 +30,26 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
         "orderBy"
     );
 
+    const filter = useMemo(
+        () => ({ ...defaultFilter, ...storedFilter }),
+        [storedFilter]
+    );
     const debouncedFilter = useDebounce(filter, 300);
+    const scheduledClasses = useMemo(
+        () =>
+            timeSlots
+                .map((timeSlot) =>
+                    timeSlot &&
+                    typeof timeSlot === "object" &&
+                    "class" in timeSlot
+                        ? timeSlot.class
+                        : null
+                )
+                .filter((termClass): termClass is NonNullable<typeof termClass> =>
+                    Boolean(termClass)
+                ),
+        [timeSlots]
+    );
 
     const filteredCourses = useMemo(
         () =>
@@ -36,13 +57,15 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
                 courses,
                 debouncedFilter,
                 orderBy,
-                maxNumCourses
+                maxNumCourses,
+                scheduledClasses
             ),
-        [courses, debouncedFilter, maxNumCourses, orderBy]
+        [courses, debouncedFilter, maxNumCourses, orderBy, scheduledClasses]
     );
 
     const handleSearchTermChange = (searchTerm: string) => {
         setFilter((prev) => ({
+            ...defaultFilter,
             ...prev,
             searchTerm,
         }));
@@ -113,6 +136,11 @@ export function ExploreCourses({ courses }: { courses: Course[] }) {
                                 key={course.subjectCode + course.courseCode}
                                 course={course}
                                 terms={filter.terms}
+                                fitToScheduleOnly={filter.scheduleFitOnly}
+                                scheduleBufferMinutes={
+                                    filter.scheduleBufferMinutes
+                                }
+                                scheduledClasses={scheduledClasses}
                             />
                         ))}
                     </div>
