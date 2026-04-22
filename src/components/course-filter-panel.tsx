@@ -3,8 +3,16 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { creditHours, subjects, terms } from "@/lib/course-utils";
+import { SCHEDULE_BUFFER_MINUTES } from "@/lib/class-session-utils";
 import { RecommendationInput } from "./recommendations-input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -77,6 +85,19 @@ export function CourseFilterPanel({
 
     const handleDeselectAllCreditHours = () => {
         onFilterUpdate({ creditHours: [] });
+    };
+
+    const handleToggleScheduleFitOnly = (
+        checked: boolean | "indeterminate"
+    ) => {
+        onFilterUpdate({ scheduleFitOnly: checked === true });
+    };
+
+    const handleScheduleBufferMinutesChange = (value: string) => {
+        onFilterUpdate({
+            scheduleBufferMinutes:
+                Number(value) as CourseFilter["scheduleBufferMinutes"],
+        });
     };
 
     return (
@@ -196,6 +217,50 @@ export function CourseFilterPanel({
                                 <Label>{creditHour}</Label>
                             </div>
                         ))}
+                    </div>
+                </div>
+
+                <Separator className="hidden md:block" />
+
+                <div className="w-full">
+                    <Label className="text-lg font-semibold mb-2 block">
+                        Schedule Fit
+                    </Label>
+                    <div className="flex items-center space-x-2 mb-3">
+                        <Checkbox
+                            id="schedule-fit-only"
+                            checked={filter.scheduleFitOnly}
+                            onCheckedChange={handleToggleScheduleFitOnly}
+                        />
+                        <Label htmlFor="schedule-fit-only">
+                            Only show classes that fit my schedule
+                        </Label>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="schedule-buffer">
+                            Buffer Between Classes
+                        </Label>
+                        <Select
+                            value={String(filter.scheduleBufferMinutes)}
+                            onValueChange={handleScheduleBufferMinutesChange}
+                            disabled={!filter.scheduleFitOnly}
+                        >
+                            <SelectTrigger id="schedule-buffer">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {SCHEDULE_BUFFER_MINUTES.map((minutes) => (
+                                    <SelectItem
+                                        key={minutes}
+                                        value={String(minutes)}
+                                    >
+                                        {minutes === 0
+                                            ? "No buffer"
+                                            : `${minutes} minutes`}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
 

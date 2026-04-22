@@ -13,7 +13,9 @@ import {
     RateMyProfInstructorsByName,
     CourseAndSubjectCode,
     InstructorData,
+    ClassSession,
 } from "./types";
+import { classSessionFitsSchedule } from "./class-session-utils";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore - This is a JSON file
@@ -49,6 +51,8 @@ export const defaultFilter: CourseFilter = {
     subjectCodes: subjects.map((subject) => subject.code),
     searchTerm: "",
     creditHours,
+    scheduleFitOnly: false,
+    scheduleBufferMinutes: 0,
 };
 
 export const defaultOrderBy: CourseOrderBy = {
@@ -101,6 +105,7 @@ export function getFilteredCourses(
     filter: CourseFilter,
     orderBy: CourseOrderBy,
     maxNumCourses: number,
+    scheduledClasses: ClassSession[] = [],
 ) {
     const keywordFilteredCourses = courses.filter((course) => {
         const keyword = filter.searchTerm.toLowerCase();
@@ -112,9 +117,10 @@ export function getFilteredCourses(
     });
 
     const filteredCourses = keywordFilteredCourses.filter((course) => {
-        const hasSelectedTerm = course.termClasses.some((termClass) => {
-            return filter.terms.includes(termClass.term);
-        });
+        const classesInSelectedTerms = course.termClasses.filter((termClass) =>
+            filter.terms.includes(termClass.term),
+        );
+        const hasSelectedTerm = classesInSelectedTerms.length > 0;
         const hasSelectedCourseLevel = filter.courseLevels?.includes(
             course.courseCode[0] + "000",
         );
@@ -124,11 +130,39 @@ export function getFilteredCourses(
         const hasSelectedCreditHours = filter.creditHours?.includes(
             course.creditHours,
         );
+        const fitsExistingSchedule = !filter.scheduleFitOnly
+            ? true
+            : (() => {
+                  const lectureClasses = classesInSelectedTerms.filter(
+                      (termClass) => termClass.type === "Lec",
+                  );
+
+                  if (lectureClasses.length > 0) {
+                      // Hide the course if any lecture conflicts.
+                      return lectureClasses.every((termClass) =>
+                          classSessionFitsSchedule(
+                              termClass,
+                              scheduledClasses,
+                              filter.scheduleBufferMinutes,
+                          ),
+                      );
+                  }
+
+                  // For courses without lectures, keep prior behavior.
+                  return classesInSelectedTerms.some((termClass) =>
+                      classSessionFitsSchedule(
+                          termClass,
+                          scheduledClasses,
+                          filter.scheduleBufferMinutes,
+                      ),
+                  );
+              })();
         return (
             hasSelectedTerm &&
             hasSelectedCourseLevel &&
             hasSelectedCreditHours &&
-            hasSelectedSubjectCode
+            hasSelectedSubjectCode &&
+            fitsExistingSchedule
         );
     });
 

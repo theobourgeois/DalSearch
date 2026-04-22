@@ -81,7 +81,11 @@ export type CourseFilter = {
   subjectCodes: string[]; // CSCI, MATH, etc.
   searchTerm: string;
   creditHours: number[];
+  scheduleFitOnly: boolean;
+  scheduleBufferMinutes: ScheduleBufferMinutes;
 };
+
+export type ScheduleBufferMinutes = 0 | 5 | 10 | 15 | 30;
 
 export type CourseOrderByKey =
   | "title"
