@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import FloatingSchedule from "@/components/floating-schedule";
 import UserSchedule from "@/components/user-schedule";
 import Footer from "@/components/footer";
+import { ChatWidget } from "@/components/chat-widget";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -138,6 +139,7 @@ export default function RootLayout({
                     <Footer />
 
                     <Toaster closeButton richColors />
+                    <ChatWidget />
                     <FloatingSchedule>
                         <UserSchedule />
                     </FloatingSchedule>
