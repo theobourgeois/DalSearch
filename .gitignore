@@ -45,3 +45,6 @@ src/scripts/__pycache__
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# generated embeddings (large, regeneratable)
+/database/course-embeddings.json
