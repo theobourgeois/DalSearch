@@ -26,7 +26,7 @@ export const instructors = instructorsData as RateMyProfInstructorsByName;
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 export const terms = {
     "202620": "2025/2026 Winter",
-    "202630": "2026/2027 Summer",
+    "202630": "2025/2026 Summer",
     "202710": "2026/2027 Fall",
     "202720": "2026/2027 Winter",
 } as const;
