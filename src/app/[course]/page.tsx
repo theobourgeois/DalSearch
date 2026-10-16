@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CourseActions } from "@/components/course/course-actions";
 import { CourseProvider } from "@/components/course/course-context";
 import { CourseDetails } from "@/components/course/course-details";
+import { CourseSyllabus } from "@/components/course/course-syllabus";
 import { CourseTabs } from "@/components/course/course-tabs";
 import { CourseWeek } from "@/components/course/course-week";
 import { RecordRecentCourse } from "@/components/course/record-recent-course";
@@ -11,6 +12,8 @@ import { SectionsTable } from "@/components/course/sections-table";
 import { Page, PageHeader } from "@/components/layout/page";
 import { CourseReviews } from "@/components/reviews/course-reviews";
 import { ReviewsProvider } from "@/components/reviews/reviews-context";
+import { RmpReviews } from "@/components/reviews/rmp-reviews";
+import { getRmpReviews, getSyllabi } from "@/lib/course-content";
 import { defaultCourseTerm, offeredTerms, plainText, subjectName } from "@/lib/course";
 import {
     getCourse,
@@ -49,6 +52,7 @@ export default async function CoursePage({ params }: Props) {
     if (!course) notFound();
 
     const code = courseKey(course);
+    const [rmpReviews, syllabi] = await Promise.all([getRmpReviews(code), getSyllabi(code)]);
     const offered = offeredTerms(course);
     const instructors = getCourseInstructors(course);
     const subject = subjects.find((s) => s.code === course.subjectCode);
@@ -78,7 +82,7 @@ export default async function CoursePage({ params }: Props) {
                 offered={offered}
                 initialTerm={defaultCourseTerm(offered, getCurrentTerm())}
             >
-                <ReviewsProvider courseId={code} instructors={instructors}>
+                <ReviewsProvider courseId={code} instructors={instructors} rmpReviews={rmpReviews}>
                     <PageHeader title={formatCourseCode(code)} subtitle={course.title} />
                     <CourseActions title={`${formatCourseCode(code)} ${course.title}`} />
                     <CourseTabs
@@ -90,11 +94,17 @@ export default async function CoursePage({ params }: Props) {
                                     </p>
                                 )}
                                 <SectionsTable />
+                                <CourseSyllabus syllabi={syllabi} />
                                 <ReviewsSummary />
                             </>
                         }
                         schedule={<CourseWeek />}
-                        reviews={<CourseReviews />}
+                        reviews={
+                            <>
+                                <CourseReviews />
+                                <RmpReviews />
+                            </>
+                        }
                         aside={
                             <CourseDetails
                                 prerequisites={course.prerequisites}

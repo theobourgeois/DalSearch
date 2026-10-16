@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession, isModerator } from "@/lib/auth";
 
+/** Dismisses the flags on a DalSearch review ({ review_id }) or a RateMyProfessors one ({ external_review_id }). */
 export async function POST(req: Request) {
   const session = await getSession();
 
@@ -8,17 +9,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { review_id } = await req.json();
+  const { review_id, external_review_id } = await req.json();
 
-  if (!review_id) {
-    return NextResponse.json({ error: "review_id is required" }, { status: 400 });
+  if (!review_id === !external_review_id) {
+    return NextResponse.json({ error: "Send review_id or external_review_id" }, { status: 400 });
   }
 
-  const { data, error } = await session.supabase
-    .from("flags")
-    .delete()
-    .eq("review_id", review_id)
-    .select();
+  const { data, error } = review_id
+    ? await session.supabase.from("flags").delete().eq("review_id", review_id).select()
+    : await session.supabase
+        .from("external_review_flags")
+        .delete()
+        .eq("external_review_id", external_review_id)
+        .select();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

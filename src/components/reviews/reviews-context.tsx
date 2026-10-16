@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { Review } from "@/lib/reviews";
+import type { RmpReview } from "@/lib/rmp-reviews";
 import { createClient, hasSupabase } from "@/lib/supabase/client";
 
 type ReviewsState = {
@@ -9,6 +10,8 @@ type ReviewsState = {
     instructors: string[];
     reviews: Review[];
     status: "loading" | "ready" | "unavailable";
+    /** RateMyProfessors reviews of this course, loaded with the page. */
+    rmpReviews: RmpReview[];
     refresh: () => Promise<void>;
 };
 
@@ -18,10 +21,12 @@ const ReviewsContext = createContext<ReviewsState | null>(null);
 export function ReviewsProvider({
     courseId,
     instructors,
+    rmpReviews,
     children,
 }: {
     courseId: string;
     instructors: string[];
+    rmpReviews: RmpReview[];
     children: React.ReactNode;
 }) {
     const [reviews, setReviews] = useState<Review[]>([]);
@@ -43,8 +48,8 @@ export function ReviewsProvider({
     }, [refresh]);
 
     const value = useMemo(
-        () => ({ courseId, instructors, reviews, status, refresh }),
-        [courseId, instructors, reviews, status, refresh],
+        () => ({ courseId, instructors, reviews, status, rmpReviews, refresh }),
+        [courseId, instructors, reviews, status, rmpReviews, refresh],
     );
     return <ReviewsContext.Provider value={value}>{children}</ReviewsContext.Provider>;
 }
