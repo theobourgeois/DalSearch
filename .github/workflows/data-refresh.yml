@@ -32,5 +32,5 @@ jobs:
           fi
           git commit -m "Data refresh update"
           # The scrape takes about an hour, so pick up anything pushed in the meantime
-          git pull --rebase origin ${{ github.ref_name }}
+          git pull --rebase --autostash origin ${{ github.ref_name }}
           git push origin HEAD:${{ github.ref_name }}
