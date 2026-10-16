@@ -20,7 +20,9 @@ the environment or the repo's .env.local.
 from __future__ import annotations
 
 import argparse
+import html
 import io
+from email.utils import parsedate_to_datetime
 import json
 import logging
 import re
@@ -85,7 +87,10 @@ SCHEMA = {
             "description": "Codes this syllabus is for, written like CSCI2110. Include cross-listings, not prerequisites or exclusions.",
         },
         "term_season": {"type": ["string", "null"], "enum": ["Fall", "Winter", "Summer", "Full year", None]},
-        "term_year": {"type": ["integer", "null"], "description": "Calendar year the term starts in."},
+        "term_year": {
+            "type": ["integer", "null"],
+            "description": "Calendar year the term starts in. Winter terms start in January, so 'Winter 2025-2026' is 2026.",
+        },
         "instructors": {"type": "array", "items": {"type": "string"}, "description": "Full names, no titles."},
         "grading_schemes": {
             "type": "array",
@@ -258,12 +263,134 @@ def from_live_site(max_pages: int) -> set[str]:
     return pdfs
 
 
+# Syllabi outside dal.ca that a crawl wouldn't find: instructors' course repos and GitHub Pages
+# sites, and official syllabi that students committed to their repos. Re-checked every run.
+LISTED_SYLLABI = {
+    "https://raw.githubusercontent.com/MAPS-Lab/CSCI-3141/HEAD/assets/syllabus.pdf": {"CSCI3141"},
+    "https://maguire-lab.github.io/bioinformatics_algorithms_2026/static_files/Bioinformatics_Algorithms_Syllabus_Winter_2025_2026.pdf": {"CSCI4181", "CSCI6802"},
+    "https://maguire-lab.github.io/bioinformatics_algorithms/static_files/Bioinformatics_Algorithms_Syllabus_Winter_2022_2023.pdf": {"CSCI4181", "CSCI6802"},
+    "https://raw.githubusercontent.com/maguire-lab/scientific_computing/HEAD/static_files/csci2202_2024_2025_syllabus_update.pdf": {"CSCI2202"},
+    **{
+        f"https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/{year}_syllabus.pdf": {"CSCI4148", "CSCI6410"}
+        for year in (2023, 2024, 2025, 2026)
+    },
+    "https://travislacroix.github.io/files/LaCroix-Dalhousie-PHIL-2490-CSCI-3101-Winter-2024-Syllabus.pdf": {"CSCI3101", "PHIL2490"},
+    "https://raw.githubusercontent.com/Faizaumatiya/DalhousieUniversity_CSCI-5409_CloudComputing/HEAD/Syllabus.pdf": {"CSCI4145", "CSCI5409"},
+    "https://raw.githubusercontent.com/Faizaumatiya/DalhousieUniversity_CSCI5709_WEB/HEAD/Syllabus.pdf": {"CSCI4177", "CSCI5709"},
+}
+
+CS_HOME = re.compile(r"https?://(?:web|www)?\.?cs\.dal\.ca(?::80)?/~([^/?#]+)")
+CS_COURSE = re.compile(r"(?i)(?<![a-z])(?:csci|cs)[\s_\-]*([1-9]\d{3})(?!\d)")
+BARE_NUMBER = re.compile(r"(?<!\d)([1-9]\d{3})(?!\d)")
+SYLLABUS_WORDS = re.compile(r"(?i)(syllab|outline|course[-_ ]?info)")
+TEACHING_WORDS = re.compile(r"(?i)(teach|courses?\b|classes)")
+
+
+def from_cs_home_pages(known: set[str]) -> dict[str, set[str]]:
+    """Syllabus PDFs and syllabus-like course pages in instructors' folders on web.cs.dal.ca,
+    with the courses they're for.
+
+    Computer Science barely posts syllabi on dal.ca; instructors keep them in their own folders,
+    named things like syllabus.pdf or syllabus_2122.pdf. The folders come from the Wayback index
+    (the server doesn't list them), and each live one is crawled a few links deep, including
+    directory listings and the JSON files that some JavaScript course sites load their links from.
+    """
+    response = requests.get(
+        CDX_URL,
+        params={"url": "web.cs.dal.ca/~", "matchType": "prefix", "collapse": "urlkey", "fl": "original", "limit": 500_000},
+        timeout=300,
+    )
+    response.raise_for_status()
+    # Course pages the archive knows about are crawled too: home pages often don't link to them.
+    known_pages: dict[str, list[str]] = {}
+    for line in response.text.splitlines():
+        match = CS_HOME.match(line)
+        if not match:
+            continue
+        pages = known_pages.setdefault(match.group(1), [])
+        page = normalize(line)
+        if re.search(r"(/|\.html?)$", page) and CS_COURSE.search(page) and len(pages) < 15:
+            pages.append(page.replace("://www.cs.", "://web.cs.").replace("://cs.", "://web.cs."))
+
+    def courses(*texts: str) -> set[str]:
+        found = set()
+        for text in texts:
+            text = urllib.parse.unquote(text)
+            found |= {f"CSCI{number}" for number in CS_COURSE.findall(text)}
+            found |= {f"CSCI{number}" for number in BARE_NUMBER.findall(text.rsplit("/", 1)[-1])}
+        return found & known
+
+    session = requests.Session()
+    session.headers["User-Agent"] = USER_AGENT
+    pdfs: dict[str, set[str]] = {}
+
+    def crawl(user: str) -> None:
+        home = f"https://web.cs.dal.ca/~{user}/"
+        # (page, depth, courses named in the link that led here)
+        queue: list[tuple[str, int, set[str]]] = [(page, 0, set()) for page in [home, *known_pages[user]]]
+        seen = {page for page, _, _ in queue}
+        while queue and len(seen) < 60:
+            page, depth, linked_codes = queue.pop(0)
+            try:
+                response = session.get(page, timeout=15)
+            except requests.RequestException:
+                continue
+            if response.status_code != 200 or "html" not in response.headers.get("content-type", ""):
+                continue
+            # Some course pages are the syllabus: they give the grading right on the page.
+            title = re.search(r"(?is)<(title|h1)[^>]*>(.*?)</\1>", response.text)
+            page_codes = (
+                courses(page)
+                or {f"CSCI{number}" for number in CS_COURSE.findall(title.group(2) if title else "")} & known
+                or linked_codes
+            )
+            if page_codes and len(re.findall(r"\d\s?%", response.text)) >= 2 and LOOKS_LIKE_SYLLABUS.search(response.text):
+                pdfs.setdefault(page, set()).update(page_codes)
+            links = [
+                (urllib.parse.urljoin(page, href.strip()), re.sub(r"<[^>]+>", " ", label))
+                for href, label in re.findall(r'(?is)<a[^>]+href=["\']([^"\'#?]+)["\'][^>]*>(.*?)</a>', response.text)
+            ]
+            for data in re.findall(r'["\'](?:\./)?((?:data/)?[\w-]+\.json)["\']', response.text)[:5]:
+                try:
+                    listed = session.get(urllib.parse.urljoin(page, data), timeout=15).json()
+                except (requests.RequestException, ValueError):
+                    continue
+                for item in listed.get("quickLinks", []) if isinstance(listed, dict) else []:
+                    if item.get("url", "").lower().endswith(".pdf"):
+                        links.append((urllib.parse.urljoin(page, item["url"]), item.get("label", "")))
+            for link, label in links:
+                if not link.startswith(home):
+                    continue
+                if link.lower().endswith(".pdf"):
+                    if SYLLABUS_WORDS.search(link + " " + label):
+                        codes = courses(link, label) or courses(page)
+                        if codes:
+                            pdfs.setdefault(link, set()).update(codes)
+                elif depth < 3 and link not in seen and (
+                    courses(link, label) or SYLLABUS_WORDS.search(link + label) or TEACHING_WORDS.search(link + label)
+                ):
+                    seen.add(link)
+                    label_codes = {f"CSCI{number}" for number in CS_COURSE.findall(label)} & known
+                    queue.append((link, depth + 1, label_codes))
+
+    with ThreadPoolExecutor(6) as pool:
+        list(pool.map(crawl, sorted(known_pages)))
+    print(f"  {len(known_pages)} instructor folders on web.cs.dal.ca, {len(pdfs)} syllabus PDFs", file=sys.stderr)
+    return pdfs
+
+
 def candidates(known: set[str], since: int, max_pages: int) -> dict[str, dict]:
     """Normalized URL -> {url, courses, year}, keeping the live URL when both sources have it."""
     live = from_live_site(max_pages)
     archived = from_wayback()
     print(f"  {len(live)} PDFs linked on dal.ca, {len(archived)} files in the Wayback index", file=sys.stderr)
     found = {}
+    # Instructor folders often leave the year out of file names; the model reads it from the PDF.
+    listed = {url: codes & known for url, codes in LISTED_SYLLABI.items()}
+    for url, codes in {**from_cs_home_pages(known), **listed}.items():
+        year = year_in(url)
+        if not year or year >= since:
+            found[normalize(url)] = {"url": url, "live": True, "courses": sorted(codes), "year": year}
     for url in list(archived) + list(live):  # live last so it wins
         key = normalize(url)
         if NOISE.search(key) or not re.search(r"\.pdf$", key, re.I):
@@ -283,6 +410,24 @@ def download(session: requests.Session, url: str) -> tuple[bytes | None, str | N
         if response.ok and response.content[:5] == b"%PDF-":
             return response.content, source
     return None, None
+
+
+def page_text(session: requests.Session, url: str) -> tuple[str | None, int | None]:
+    """The readable text of an HTML course page, or None if it can't be fetched, and the year it
+    was last changed. Course pages often say "Term: TBA", so that year stands in for the term's."""
+    try:
+        response = session.get(url, timeout=60)
+    except requests.RequestException:
+        return None, None
+    if not response.ok or "html" not in response.headers.get("content-type", ""):
+        return None, None
+    try:
+        modified = parsedate_to_datetime(response.headers["last-modified"]).year
+    except (KeyError, TypeError, ValueError):
+        modified = None
+    text = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", response.text)
+    text = re.sub(r"(?i)<(br|p|div|li|tr|h\d)[^>]*>", "\n", text)
+    return html.unescape(re.sub(r"<[^>]+>", " ", text)), modified
 
 
 def pdf_text(data: bytes) -> str:
@@ -367,7 +512,7 @@ def main() -> None:
         known = set(json.loads((ROOT / "database" / "search.json").read_text()))
         rows = [
             to_row(url, row, known) for url, row in results.items()
-            if row["status"] == "syllabus" and row["year"] >= args.since
+            if row["status"] == "syllabus" and (row["year"] or 0) >= args.since
         ]
         Table(load_env(), "syllabi").upsert(rows, on_conflict="source_url")
         print(f"Saved {len(rows)} syllabi to Supabase", file=sys.stderr)
@@ -396,14 +541,17 @@ def main() -> None:
     def process(item: tuple[str, dict]) -> None:
         url, info = item
         row, details = {**info, "status": None}, None
-        data, row["fetched_from"] = download(session, info["url"])
-        if not data:
-            row["status"] = "unavailable"
-        else:
+        if info["url"].lower().endswith(".pdf"):
+            data, row["fetched_from"] = download(session, info["url"])
             try:
-                text = pdf_text(data)
+                text = pdf_text(data) if data else None
             except Exception:  # pypdf raises many kinds of errors on broken files
                 text = ""
+        else:
+            (text, row["modified_year"]), row["fetched_from"] = page_text(session, info["url"]), "web page"
+        if text is None:
+            row["status"] = "unavailable"
+        else:
             if len(text) < 1500 or not LOOKS_LIKE_SYLLABUS.search(text):
                 row["status"] = "not a syllabus (no text or no grading words)"
             else:
@@ -415,7 +563,7 @@ def main() -> None:
                 row["truncated"] = len(text) > MAX_TEXT
                 row["status"] = "syllabus" if details["is_syllabus"] else "not a syllabus (model)"
                 row["courses"] = syllabus_courses(url, details["course_codes"], known) or info["courses"]
-                row["year"] = details["term_year"] or info["year"]
+                row["year"] = details["term_year"] or info["year"] or row.get("modified_year")
                 row["weights_add_up"] = weights_add_up(details)
                 row["details"] = details
                 with lock:
@@ -432,7 +580,7 @@ def main() -> None:
     out.write_text(json.dumps(results, indent=1, ensure_ascii=False))
 
     statuses = Counter(row["status"] for row in results.values())
-    syllabi = [row for row in results.values() if row["status"] == "syllabus" and row["year"] >= args.since]
+    syllabi = [row for row in results.values() if row["status"] == "syllabus" and (row["year"] or 0) >= args.since]
     courses = {code for row in syllabi for code in row["courses"]}
     cost = usage["input"] / 1e6 * 0.10 + usage["output"] / 1e6 * 0.50
     print(f"{dict(statuses)}", file=sys.stderr)

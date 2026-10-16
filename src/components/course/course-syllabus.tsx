@@ -174,7 +174,7 @@ export function CourseSyllabus({ syllabi }: { syllabi: Syllabus[] }) {
                     rel="noreferrer"
                     className="inline-flex items-center gap-0.5 font-bold text-fg-muted hover:text-fg"
                 >
-                    Open the PDF
+                    {/\.pdf$/i.test(syllabus.source_url) ? "Open the PDF" : "Open the course page"}
                     <ArrowUpRightIcon className="size-3.5" />
                 </a>
             </p>
