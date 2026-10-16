@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { ClerkProvider } from "@clerk/nextjs";
 import { AppShell } from "@/components/layout/app-shell";
 import { Providers } from "@/components/providers";
 import { getCourseIndex, getCurrentTerm } from "@/lib/data";
@@ -85,14 +84,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <ClerkProvider>
-            <html lang="en" className={satoshi.variable} suppressHydrationWarning>
-                <body>
-                    <Providers courseIndex={getCourseIndex()} currentTerm={getCurrentTerm()}>
-                        <AppShell>{children}</AppShell>
-                    </Providers>
-                </body>
-            </html>
-        </ClerkProvider>
+        <html lang="en" className={satoshi.variable} suppressHydrationWarning>
+            <body>
+                <Providers courseIndex={getCourseIndex()} currentTerm={getCurrentTerm()}>
+                    <AppShell>{children}</AppShell>
+                </Providers>
+            </body>
+        </html>
     );
 }

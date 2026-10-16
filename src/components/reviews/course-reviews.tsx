@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
 import { FlagIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { Avatar } from "@/components/ui/avatar";
@@ -12,6 +11,7 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { ShowMore } from "@/components/ui/show-more";
 import { SimpleTooltip } from "@/components/ui/tooltip";
 import { usePaged } from "@/hooks/use-paged";
+import { displayName, useUser } from "@/hooks/use-user";
 import { formatCourseCode } from "@/lib/schedule";
 import { createClient } from "@/lib/supabase/client";
 import type { Review } from "@/lib/reviews";
@@ -25,7 +25,8 @@ const ALL = "__all";
 
 function Composer() {
     const { courseId, instructors, reviews, refresh } = useReviews();
-    const { isSignedIn, user } = useUser();
+    const user = useUser();
+    const isSignedIn = Boolean(user);
     const [open, setOpen] = useState(false);
     const alreadyReviewed = reviews.some((review) => review.user_id === user?.id);
 
@@ -34,7 +35,7 @@ function Composer() {
     const post = async (draft: ReviewDraft) => {
         const { error } = await createClient()
             .from("reviews")
-            .insert({ ...draft, course_code: courseId, user_id: user!.id });
+            .insert({ ...draft, course_code: courseId });
         if (error) return error.code === "23505" ? "You've already reviewed this course." : error.message;
         setOpen(false);
         toast("Thanks, your review is posted");
@@ -57,11 +58,7 @@ function Composer() {
 
     return (
         <div className="flex items-center gap-3 rounded-full border border-line-strong py-2 pl-2.5 pr-2">
-            <Avatar
-                name={user?.fullName ?? "You"}
-                imageUrl={user?.hasImage ? user.imageUrl : undefined}
-                className="size-8"
-            />
+            <Avatar name={user ? displayName(user) : "You"} className="size-8" />
             <span className="min-w-0 flex-1 truncate text-[15px] font-medium text-fg-subtle">
                 Took {formatCourseCode(courseId)}? Share what it was like. Reviews are anonymous.
             </span>
@@ -90,7 +87,7 @@ async function flagReview(review: Review) {
 
 function EditableReview({ review }: { review: Review }) {
     const { instructors, refresh } = useReviews();
-    const { user } = useUser();
+    const user = useUser();
     const [editing, setEditing] = useState(false);
     const isOwn = review.user_id === user?.id;
 

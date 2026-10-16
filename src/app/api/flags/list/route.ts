@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getSession, isModerator } from "@/lib/auth";
 
 export async function GET() {
-  const supabase = await createClient();
+  const session = await getSession();
+
+  if (!session || !isModerator(session.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const { supabase } = session;
 
   const { data: flagged, error: flagError } = await supabase
     .from("flags")
@@ -16,7 +22,7 @@ export async function GET() {
     return NextResponse.json({ reviews: [] }, { status: 200 });
   }
 
-  const reviewIds = flagged.map((f) => f.review_id);
+  const reviewIds = [...new Set(flagged.map((f) => f.review_id))];
 
   const { data: reviews, error: reviewError } = await supabase
     .from("reviews")

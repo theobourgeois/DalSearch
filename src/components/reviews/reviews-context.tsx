@@ -2,9 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { Review } from "@/lib/reviews";
-import { createClient } from "@/lib/supabase/client";
-
-const hasSupabase = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+import { createClient, hasSupabase } from "@/lib/supabase/client";
 
 type ReviewsState = {
     courseId: string;
