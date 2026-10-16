@@ -26,14 +26,14 @@ export function Switch({ checked, onCheckedChange, label, className }: SwitchPro
         >
             <span
                 className={cn(
-                    "relative h-[22px] w-[38px] shrink-0 rounded-full transition-colors",
+                    "flex h-[22px] w-[38px] shrink-0 items-center rounded-full p-[3px] transition-colors",
                     checked ? "bg-fg" : "bg-line-strong",
                 )}
             >
                 <span
                     className={cn(
-                        "absolute top-[3px] size-4 rounded-full bg-panel shadow transition-transform",
-                        checked ? "translate-x-[19px]" : "translate-x-[3px]",
+                        "size-4 rounded-full shadow-sm transition-transform",
+                        checked ? "translate-x-4 bg-panel" : "bg-white dark:bg-fg-muted",
                     )}
                 />
             </span>

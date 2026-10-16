@@ -42,7 +42,7 @@ export function SearchDialogProvider({ children }: { children: React.ReactNode }
                     className="top-[18vh] max-w-xl translate-y-0 gap-0 p-3"
                 >
                     <DialogTitle className="sr-only">Search courses</DialogTitle>
-                    <CourseSearch inline autoFocus size="lg" onSelect={() => setOpen(false)} />
+                    <CourseSearch inline showRecent autoFocus size="lg" onSelect={() => setOpen(false)} />
                 </DialogContent>
             </Dialog>
         </SearchDialogContext.Provider>

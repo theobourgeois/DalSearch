@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useId, useState } from "react";
+import { Fragment, forwardRef, useId, useState } from "react";
 import { cn } from "@/lib/utils";
 import { SearchField } from "./search-field";
 
@@ -11,6 +11,8 @@ type ComboboxProps<T> = {
     items: T[];
     getKey: (item: T) => string;
     renderItem: (item: T) => React.ReactNode;
+    /** Optional heading for each item; a heading is shown wherever it changes. */
+    getGroup?: (item: T) => string | undefined;
     onSelect: (item: T) => void;
     label: string;
     placeholder?: string;
@@ -28,6 +30,7 @@ function ComboboxInner<T>(
         items,
         getKey,
         renderItem,
+        getGroup,
         onSelect,
         label,
         placeholder,
@@ -40,8 +43,15 @@ function ComboboxInner<T>(
 ) {
     const listId = useId();
     const [activeIndex, setActiveIndex] = useState(0);
+    const [indexedQuery, setIndexedQuery] = useState(query);
     const [focused, setFocused] = useState(false);
     const open = items.length > 0 && (inline || focused);
+
+    // Start from the first item whenever the query changes, however it changed.
+    if (query !== indexedQuery) {
+        setIndexedQuery(query);
+        setActiveIndex(0);
+    }
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (!open) return;
@@ -62,10 +72,7 @@ function ComboboxInner<T>(
             <SearchField
                 ref={ref}
                 value={query}
-                onValueChange={(value) => {
-                    onQueryChange(value);
-                    setActiveIndex(0);
-                }}
+                onValueChange={onQueryChange}
                 size={size}
                 placeholder={placeholder}
                 autoFocus={autoFocus}
@@ -89,23 +96,37 @@ function ComboboxInner<T>(
                             : "absolute inset-x-0 top-full z-40 mt-2 rounded-card border border-line bg-panel shadow-[0_24px_60px_-18px_rgb(0_0_0/0.35)]",
                     )}
                 >
-                    {items.map((item, index) => (
-                        <li
-                            key={getKey(item)}
-                            id={`${listId}-${index}`}
-                            role="option"
-                            aria-selected={index === activeIndex}
-                            onMouseDown={(event) => event.preventDefault()}
-                            onMouseEnter={() => setActiveIndex(index)}
-                            onClick={() => onSelect(item)}
-                            className={cn(
-                                "flex cursor-pointer items-center gap-4 rounded-row px-4 py-3 text-sm",
-                                index === activeIndex && "bg-raised",
-                            )}
-                        >
-                            {renderItem(item)}
-                        </li>
-                    ))}
+                    {items.map((item, index) => {
+                        const group = getGroup?.(item);
+                        const previousGroup = index > 0 ? getGroup?.(items[index - 1]) : undefined;
+                        const startsGroup = group && group !== previousGroup;
+                        return (
+                            <Fragment key={getKey(item)}>
+                                {startsGroup && (
+                                    <li
+                                        role="presentation"
+                                        className="px-4 pb-1 pt-3 text-[13px] font-bold text-fg-subtle first:pt-1"
+                                    >
+                                        {group}
+                                    </li>
+                                )}
+                                <li
+                                    id={`${listId}-${index}`}
+                                    role="option"
+                                    aria-selected={index === activeIndex}
+                                    onMouseDown={(event) => event.preventDefault()}
+                                    onMouseEnter={() => setActiveIndex(index)}
+                                    onClick={() => onSelect(item)}
+                                    className={cn(
+                                        "flex cursor-pointer items-center gap-4 rounded-row px-4 py-3 text-sm",
+                                        index === activeIndex && "bg-raised",
+                                    )}
+                                >
+                                    {renderItem(item)}
+                                </li>
+                            </Fragment>
+                        );
+                    })}
                 </ul>
             )}
         </div>
