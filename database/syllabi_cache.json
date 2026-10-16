@@ -146306,5 +146306,4276 @@
    ],
    "class_meetings": "2 lectures, 1 tutorial, and 2 lab sessions a week"
   }
+ },
+ "https://raw.githubusercontent.com/Faizaumatiya/DalhousieUniversity_CSCI-5409_CloudComputing/HEAD/Syllabus.pdf": {
+  "url": "https://raw.githubusercontent.com/Faizaumatiya/DalhousieUniversity_CSCI-5409_CloudComputing/HEAD/Syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4145",
+   "CSCI5409"
+  ],
+  "year": 2023,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI4145",
+    "CSCI5409"
+   ],
+   "term_season": "Winter",
+   "term_year": 2023,
+   "instructors": [
+    "Robert Hawkey"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Individual assignments",
+       "weight": 20,
+       "count": 4,
+       "note": "Equal weighting; individual work"
+      },
+      {
+       "name": "Midterm exam",
+       "weight": 15,
+       "count": 1,
+       "note": "Lower-scoring exam weight"
+      },
+      {
+       "name": "Final exam",
+       "weight": 25,
+       "count": 1,
+       "note": "Higher-scoring exam weight"
+      },
+      {
+       "name": "Term assignment",
+       "weight": 40,
+       "count": null,
+       "note": "Individual project"
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [
+    {
+     "topic": "Tutorials",
+     "summary": "Attendance is optional, but students are responsible for learning the material assessed in individual assignments."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Collaboration is not permitted on individual assignments or the term assignment."
+    },
+    {
+     "topic": "Absences",
+     "summary": "Student declarations of absence are not authorized in this course."
+    },
+    {
+     "topic": "Exams",
+     "summary": "Exams are closed book; photo ID is required, and electronic and physical reference materials are prohibited."
+    },
+    {
+     "topic": "Masks",
+     "summary": "Masks are required in labs, tutorials, exams, and instructor office hours."
+    },
+    {
+     "topic": "Grades",
+     "summary": "Grades are not rounded; graduate students need at least B− to pass."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Week 1",
+     "topic": "Syllabus, course overview, cloud-computing history, and term assignment"
+    },
+    {
+     "when": "Week 2",
+     "topic": "Introduction to cloud computing"
+    },
+    {
+     "when": "Week 3",
+     "topic": "Cloud-enabling technologies"
+    },
+    {
+     "when": "Week 4",
+     "topic": "Cloud deployment and delivery models"
+    },
+    {
+     "when": "Week 5",
+     "topic": "DevOps and managing releases"
+    },
+    {
+     "when": "Week 6",
+     "topic": "Infrastructure as code and midterm"
+    },
+    {
+     "when": "Week 7",
+     "topic": "Fundamental cloud architectures"
+    },
+    {
+     "when": "Week 8",
+     "topic": "Advanced cloud architectures"
+    },
+    {
+     "when": "Week 9",
+     "topic": "Security"
+    },
+    {
+     "when": "Week 10",
+     "topic": "Business considerations"
+    },
+    {
+     "when": "Week 11",
+     "topic": "Microservice architectures or service-oriented architectures"
+    },
+    {
+     "when": "Week 12",
+     "topic": "Guest lecture and current cloud-computing news"
+    }
+   ],
+   "class_meetings": "2 lectures and 1 lab a week"
+  }
+ },
+ "https://maguire-lab.github.io/bioinformatics_algorithms/static_files/Bioinformatics_Algorithms_Syllabus_Winter_2022_2023.pdf": {
+  "url": "https://maguire-lab.github.io/bioinformatics_algorithms/static_files/Bioinformatics_Algorithms_Syllabus_Winter_2022_2023.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4181",
+   "CSCI6802"
+  ],
+  "year": 2023,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI4181",
+    "CSCI6802"
+   ],
+   "term_season": "Winter",
+   "term_year": null,
+   "instructors": [
+    "Finlay Maguire"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Tutorial assignments",
+       "weight": 80,
+       "count": 4,
+       "note": "20% each"
+      },
+      {
+       "name": "Written paper review",
+       "weight": 10,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Oral paper presentation",
+       "weight": 10,
+       "count": 1,
+       "note": "15 minutes"
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Assignments lose 20% per day; after five days, they may be evaluated for feedback but receive zero."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Collaboration is not permitted on assignments."
+    },
+    {
+     "topic": "Missed deadlines",
+     "summary": "Penalty-free late submissions require approved channels, such as a doctor’s note or Student Declaration of Absence."
+    },
+    {
+     "topic": "Graduate grading",
+     "summary": "Graduate students earning below 70% receive an F because the minimum passing grade is B-."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Weeks 1–2",
+     "topic": "Course overview, biology foundations, molecular evolution, and sequence encoding"
+    },
+    {
+     "when": "Weeks 3–5",
+     "topic": "Homology: sequence alignment, BLAST, Burrows-Wheeler Transform, multiple alignment, HMMs, and gene prediction"
+    },
+    {
+     "when": "Weeks 5–7",
+     "topic": "Assembly: genome assembly, pangenomics, k-mers, and graph-based read-set searching"
+    },
+    {
+     "when": "Weeks 7–9",
+     "topic": "Phylogenetics: parsimony, distance, maximum likelihood, Bayesian methods, statistical support, and phylogenetic networks"
+    },
+    {
+     "when": "Weeks 9–11",
+     "topic": "Machine learning: feature selection, classifiers, Naive Bayes, support vector machines, random forests, and deep learning"
+    },
+    {
+     "when": "Weeks 12–13",
+     "topic": "Paper review presentations"
+    }
+   ],
+   "class_meetings": "In-person lectures Tuesday and Thursday, 8:35–9:55 a.m."
+  }
+ },
+ "https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/2023_syllabus.pdf": {
+  "url": "https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/2023_syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4148",
+   "CSCI6410",
+   "EPAH6410"
+  ],
+  "year": 2023,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI6410",
+    "CSCI4148",
+    "EPAH6410"
+   ],
+   "term_season": "Summer",
+   "term_year": 2023,
+   "instructors": [
+    "Finlay Maguire"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Practical assignments",
+       "weight": 40,
+       "count": 4,
+       "note": "10% each; undergraduate worst score dropped"
+      },
+      {
+       "name": "Proposal presentation",
+       "weight": 20,
+       "count": null,
+       "note": "June 14–19"
+      },
+      {
+       "name": "Proposal write-up",
+       "weight": 20,
+       "count": null,
+       "note": "Due June 19"
+      },
+      {
+       "name": "Tutorial paper presentation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      },
+      {
+       "name": "Participation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "R for Data Science",
+     "authors": "Wickham and Grolemund",
+     "required": true,
+     "free": true
+    },
+    {
+     "title": "Hands-On Machine Learning for R",
+     "authors": "Boehmke and Greenwell",
+     "required": true,
+     "free": true
+    },
+    {
+     "title": "Text Mining with R",
+     "authors": "Julia Silge and David Robinson",
+     "required": true,
+     "free": true
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late assignments lose 20% per day; work over five days late receives zero, though it may be evaluated for feedback."
+    },
+    {
+     "topic": "Submission",
+     "summary": "Submit assignments through Brightspace and include a link to a Git repository."
+    },
+    {
+     "topic": "Practical collaboration",
+     "summary": "Collaboration is not permitted on practical assignments."
+    },
+    {
+     "topic": "Undergraduate grading",
+     "summary": "Undergraduates have their lowest practical score dropped and may pass with C-; graduate students need B-."
+    },
+    {
+     "topic": "Attendance",
+     "summary": "Attendance is required for the formative, ungraded introductory practical."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "May 8–12",
+     "topic": "Reproducible research; RStudio, R Markdown, Git, and exploratory data analysis"
+    },
+    {
+     "when": "May 15–19",
+     "topic": "Medical databases, ontologies, survey weights, manifold learning, and boosted decision trees"
+    },
+    {
+     "when": "May 24–28",
+     "topic": "Electronic medical records, NLP, language models, and ethical research"
+    },
+    {
+     "when": "May 31–June 5",
+     "topic": "Radiological imaging, computer vision, deep learning, and image classification"
+    },
+    {
+     "when": "June 7–12",
+     "topic": "Physiological signals and time series, Fourier transforms, detrending, and LSTMs"
+    },
+    {
+     "when": "June 14–19",
+     "topic": "Research proposal presentations"
+    }
+   ],
+   "class_meetings": "Monday, Wednesday, and Friday, 1:05–2:55 p.m."
+  }
+ },
+ "https://maguire-lab.github.io/bioinformatics_algorithms_2026/static_files/Bioinformatics_Algorithms_Syllabus_Winter_2025_2026.pdf": {
+  "url": "https://maguire-lab.github.io/bioinformatics_algorithms_2026/static_files/Bioinformatics_Algorithms_Syllabus_Winter_2025_2026.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4181",
+   "CSCI6802"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI4181",
+    "CSCI6802"
+   ],
+   "term_season": "Winter",
+   "term_year": 2026,
+   "instructors": [
+    "Finlay Maguire"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Practical assignments",
+       "weight": 60,
+       "count": 4,
+       "note": "15% each"
+      },
+      {
+       "name": "Written paper review",
+       "weight": 25,
+       "count": 1,
+       "note": "Due April 8"
+      },
+      {
+       "name": "Oral presentation",
+       "weight": 15,
+       "count": 1,
+       "note": "During final lecture slots"
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Assignments lose 20% per day; work over five days late receives zero, though feedback may be requested."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Collaboration is not permitted on assignments or the final project report."
+    },
+    {
+     "topic": "Submission",
+     "summary": "Submit assignments to Brightspace as PDFs; incorrect formats receive zero after the first assignment."
+    },
+    {
+     "topic": "Generative AI",
+     "summary": "AI may be used to explore concepts, but submitted work must be written by the student and not generated by AI."
+    },
+    {
+     "topic": "Absences",
+     "summary": "Student declarations of absence are not accepted."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Weeks 1–2",
+     "topic": "Introduction, life at resolution, pathways, central dogma, and molecular evolution"
+    },
+    {
+     "when": "Weeks 3–6",
+     "topic": "Sequence representation, alignment, homology search, multiple sequence alignment, and hidden Markov models"
+    },
+    {
+     "when": "Week 7",
+     "topic": "No lectures; winter study break"
+    },
+    {
+     "when": "Week 8",
+     "topic": "Sequence assembly: overlap-layout-consensus and de Bruijn graphs"
+    },
+    {
+     "when": "Weeks 9–12",
+     "topic": "Phylogenetics, inference, statistical support, pangenomics, outbreaks, and phylodynamics"
+    },
+    {
+     "when": "Weeks 12–13",
+     "topic": "Machine learning for biological data, feature representations, and classifier applications"
+    },
+    {
+     "when": "Week 14",
+     "topic": "Oral presentations"
+    }
+   ],
+   "class_meetings": "Two in-person lectures per week; lectures are recorded."
+  }
+ },
+ "https://raw.githubusercontent.com/Faizaumatiya/DalhousieUniversity_CSCI5709_WEB/HEAD/Syllabus.pdf": {
+  "url": "https://raw.githubusercontent.com/Faizaumatiya/DalhousieUniversity_CSCI5709_WEB/HEAD/Syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4177",
+   "CSCI5709"
+  ],
+  "year": 2023,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI4177",
+    "CSCI5709"
+   ],
+   "term_season": "Winter",
+   "term_year": 2023,
+   "instructors": [
+    "Gabriella Mosquera"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Group project proposal (D1)",
+       "weight": 8,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Group project demo (D2)",
+       "weight": 12,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Group project report and web app (D3)",
+       "weight": 15,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Assignment 1",
+       "weight": 10,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Assignment 2",
+       "weight": 8,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Assignment 3",
+       "weight": 12,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Quizzes",
+       "weight": 20,
+       "count": 5,
+       "note": "best 4 of 5; 5% each"
+      },
+      {
+       "name": "Tutorials",
+       "weight": 10,
+       "count": 7,
+       "note": "best 5 of 7; 2% each"
+      },
+      {
+       "name": "Online discussions",
+       "weight": 5,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late assignments are not accepted unless lateness is due to a documented situation or an instructor-approved circumstance."
+    },
+    {
+     "topic": "Extensions",
+     "summary": "Extensions are not given for assignments or project work except for force majeure or other instructor-identified circumstances."
+    },
+    {
+     "topic": "Missed deadlines",
+     "summary": "For a Student Declaration of Absence, notify the instructor before the deadline and submit the declaration within three days after it."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Collaboration is not permitted on assignments, labs, quizzes, or activities unless the instructor specifies otherwise."
+    },
+    {
+     "topic": "Exams",
+     "summary": "There are no midterm or final exams; students are evaluated through hands-on work and non-cumulative quizzes."
+    },
+    {
+     "topic": "Test threshold",
+     "summary": "Students must average at least 50% on each examination or test for its grade to count toward the final grade."
+    },
+    {
+     "topic": "Recording",
+     "summary": "Students must ask the instructor for permission before recording lectures."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Tentative topics",
+     "topic": "Web usability: interface and user experience design, user-centred design, and prototyping"
+    },
+    {
+     "when": "Tentative topics",
+     "topic": "Advanced web security: authentication and authorization"
+    },
+    {
+     "when": "Tentative topics",
+     "topic": "Advanced web programming: front-end APIs, object-oriented programming, JSON, and REST"
+    },
+    {
+     "when": "Tentative topics",
+     "topic": "Performance and testing: automated testing, quality assurance, documentation, scalability, monitoring, and optimization"
+    }
+   ],
+   "class_meetings": "Lectures Tuesday and Thursday; CSCI5709 tutorial Thursday and CSCI4177 tutorial Friday."
+  }
+ },
+ "https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/2024_syllabus.pdf": {
+  "url": "https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/2024_syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4148",
+   "CSCI6410",
+   "EPAH6410"
+  ],
+  "year": 2024,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI6410",
+    "CSCI4148",
+    "EPAH6410"
+   ],
+   "term_season": "Summer",
+   "term_year": 2024,
+   "instructors": [
+    "Finlay Maguire"
+   ],
+   "grading_schemes": [
+    {
+     "label": "Graduate students",
+     "components": [
+      {
+       "name": "Practical assignments",
+       "weight": 40,
+       "count": 4,
+       "note": "10% each"
+      },
+      {
+       "name": "Proposal presentation",
+       "weight": 25,
+       "count": null,
+       "note": "June 12–17"
+      },
+      {
+       "name": "Proposal write-up",
+       "weight": 15,
+       "count": null,
+       "note": "Due June 21"
+      },
+      {
+       "name": "Tutorial paper presentation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      },
+      {
+       "name": "Participation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      }
+     ]
+    },
+    {
+     "label": "Undergraduate students",
+     "components": [
+      {
+       "name": "Practical assignments",
+       "weight": 40,
+       "count": 3,
+       "note": "Worst score dropped; 13.33% each"
+      },
+      {
+       "name": "Proposal presentation",
+       "weight": 25,
+       "count": null,
+       "note": "June 12–17"
+      },
+      {
+       "name": "Proposal write-up",
+       "weight": 15,
+       "count": null,
+       "note": "Due June 21"
+      },
+      {
+       "name": "Tutorial paper presentation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      },
+      {
+       "name": "Participation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "R for Data Science",
+     "authors": "Wickham & Grolemund",
+     "required": true,
+     "free": true
+    },
+    {
+     "title": "Hands-on Machine Learning for R",
+     "authors": "Boehmke & Greenwell",
+     "required": true,
+     "free": true
+    },
+    {
+     "title": "Text Mining with R",
+     "authors": "Julia Silge & David Robinson",
+     "required": true,
+     "free": true
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Assignments lose 20% per day; work over five days late receives zero, though it may be evaluated for feedback."
+    },
+    {
+     "topic": "Late exceptions",
+     "summary": "Penalty-free late submission is considered only through appropriate channels, such as a student declaration of absence or doctor's note."
+    },
+    {
+     "topic": "Submission",
+     "summary": "Submit assignments through Brightspace and include a link to the analyses in a git repository."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Collaboration is not permitted on practical assignments."
+    },
+    {
+     "topic": "AI tools",
+     "summary": "AI tools may support learning, but specific assessments prohibit their use; acknowledge tools where allowed."
+    },
+    {
+     "topic": "Passing grade",
+     "summary": "Graduate students need at least B−; undergraduates can pass with C−."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "May 6–10",
+     "topic": "Reproducible research; health data science introduction; RStudio, R Markdown, git, and exploratory data analysis"
+    },
+    {
+     "when": "May 13–17",
+     "topic": "Medical databases; manifold learning and boosted decision trees"
+    },
+    {
+     "when": "May 22–27",
+     "topic": "Electronic medical records; natural language processing, ontologies, and language models"
+    },
+    {
+     "when": "May 29–June 3",
+     "topic": "Radiological imaging; image data formats, computer vision, deep learning, and video"
+    },
+    {
+     "when": "June 5–10",
+     "topic": "Physiological signal data and time series; Fourier transforms, detrending, and LSTMs"
+    },
+    {
+     "when": "June 12–17",
+     "topic": "Research proposal presentations"
+    }
+   ],
+   "class_meetings": "Monday, Wednesday, and Friday, 1:05–2:55 p.m."
+  }
+ },
+ "https://raw.githubusercontent.com/MAPS-Lab/CSCI-3141/HEAD/assets/syllabus.pdf": {
+  "url": "https://raw.githubusercontent.com/MAPS-Lab/CSCI-3141/HEAD/assets/syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI3141"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI 3141"
+   ],
+   "term_season": "Fall",
+   "term_year": 2026,
+   "instructors": [
+    "Gabriel Spadon"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Integrated labs",
+       "weight": 15,
+       "count": 12,
+       "note": "Best 10 of 12 individual lab results"
+      },
+      {
+       "name": "Assignments",
+       "weight": 45,
+       "count": 4,
+       "note": "Individual analyses; assignment weights are 7.5%, 7.5%, 15%, 15%"
+      },
+      {
+       "name": "Midterm examination",
+       "weight": 15,
+       "count": 1,
+       "note": "In class"
+      },
+      {
+       "name": "Final examination",
+       "weight": 25,
+       "count": 1,
+       "note": "Cumulative; scheduled by Registrar"
+      },
+      {
+       "name": "In-class quizzes",
+       "weight": null,
+       "count": 4,
+       "note": "Ungraded; complete at least 2 to pass"
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Assignments 1–3 lose 5 percentage points per calendar day for up to seven days; Assignment 4 has no routine late window."
+    },
+    {
+     "topic": "Lab deadlines",
+     "summary": "Labs are due seven calendar days after release, before 16:05 Halifax time."
+    },
+    {
+     "topic": "Absences",
+     "summary": "For an eligible absence of up to three days, contact the instructor before the missed requirement and file a declaration within three days."
+    },
+    {
+     "topic": "Missed midterm",
+     "summary": "Contact the instructor about a missed midterm; final examinations follow the Registrar’s separate process."
+    },
+    {
+     "topic": "Passing",
+     "summary": "Pass requires at least 50% overall, 50% on assignments, 50% on the final, and completion of at least two quizzes."
+    },
+    {
+     "topic": "Exam aids",
+     "summary": "Course and personal notes are allowed unless an examination specifies narrower aids; internet, communication, and generative AI are prohibited."
+    },
+    {
+     "topic": "Generative AI",
+     "summary": "AI-generated work is prohibited in labs and assignments unless assignment instructions expressly authorize it."
+    },
+    {
+     "topic": "Attendance",
+     "summary": "Attendance is not graded, but students are responsible for missed material and announcements."
+    },
+    {
+     "topic": "Laptop",
+     "summary": "Bring a laptop to practical meetings; contact the instructor early if computer access is a barrier."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Sep 8",
+     "topic": "Course orientation and the data science process"
+    },
+    {
+     "when": "Sep 10",
+     "topic": "Summarizing data"
+    },
+    {
+     "when": "Sep 15",
+     "topic": "Data preprocessing foundations"
+    },
+    {
+     "when": "Sep 17",
+     "topic": "Cleaning, transformation, and feature engineering"
+    },
+    {
+     "when": "Sep 22",
+     "topic": "Preprocessing and visualizing data"
+    },
+    {
+     "when": "Sep 24",
+     "topic": "Visualizing data"
+    },
+    {
+     "when": "Sep 29",
+     "topic": "Manipulation and visualization in R and Python"
+    },
+    {
+     "when": "Oct 1",
+     "topic": "Reporting in R Markdown and Python notebooks"
+    },
+    {
+     "when": "Oct 6",
+     "topic": "Predictive analytics and classification metrics"
+    },
+    {
+     "when": "Oct 8",
+     "topic": "Predictive analytics and regression metrics"
+    },
+    {
+     "when": "Oct 15",
+     "topic": "KNN, linear regression, and LDA"
+    },
+    {
+     "when": "Oct 20",
+     "topic": "Midterm examination"
+    },
+    {
+     "when": "Oct 22",
+     "topic": "Support vector machines"
+    },
+    {
+     "when": "Oct 27",
+     "topic": "Decision trees introduction"
+    },
+    {
+     "when": "Oct 29",
+     "topic": "Tree-based models and pruning"
+    },
+    {
+     "when": "Nov 3",
+     "topic": "Performance estimation methods"
+    },
+    {
+     "when": "Nov 5",
+     "topic": "Performance estimation continued"
+    },
+    {
+     "when": "Nov 17",
+     "topic": "Bias, variance, overfitting, and regularization"
+    },
+    {
+     "when": "Nov 19",
+     "topic": "Descriptive analytics, similarity, and distance"
+    },
+    {
+     "when": "Nov 24",
+     "topic": "Distance and clustering preparation"
+    },
+    {
+     "when": "Nov 26",
+     "topic": "Clustering algorithms and evaluation"
+    },
+    {
+     "when": "Dec 1",
+     "topic": "Outlier detection"
+    },
+    {
+     "when": "Dec 3",
+     "topic": "Cumulative review and workflow synthesis"
+    }
+   ],
+   "class_meetings": "In person Tuesdays and Thursdays; practical work during confirmed Thursday meetings"
+  }
+ },
+ "https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/2025_syllabus.pdf": {
+  "url": "https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/2025_syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4148",
+   "CSCI6410",
+   "EPAH6410"
+  ],
+  "year": 2025,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI6410",
+    "CSCI4148",
+    "EPAH6410"
+   ],
+   "term_season": "Summer",
+   "term_year": 2025,
+   "instructors": [
+    "Finlay Maguire"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Practical 1: Medical Databases",
+       "weight": 10,
+       "count": 1,
+       "note": "Due May 25"
+      },
+      {
+       "name": "Practical 2: Electronic Medical Records",
+       "weight": 10,
+       "count": 1,
+       "note": "Due June 1"
+      },
+      {
+       "name": "Practical 3: Radiological Imaging",
+       "weight": 10,
+       "count": 1,
+       "note": "Due June 8"
+      },
+      {
+       "name": "Practical 4: Physiological Time-Series",
+       "weight": 10,
+       "count": 1,
+       "note": "Due June 15"
+      },
+      {
+       "name": "Proposal presentation",
+       "weight": 20,
+       "count": 1,
+       "note": "June 11–16"
+      },
+      {
+       "name": "Proposal write-up",
+       "weight": 15,
+       "count": 1,
+       "note": "Due June 20"
+      },
+      {
+       "name": "Tutorial paper presentation",
+       "weight": 15,
+       "count": null,
+       "note": "Throughout"
+      },
+      {
+       "name": "Participation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "R for Data Science",
+     "authors": "Hadley Wickham and Garrett Grolemund",
+     "required": true,
+     "free": true
+    },
+    {
+     "title": "Hands-On Machine Learning for R",
+     "authors": "Bradley Boehmke and Brandon Greenwell",
+     "required": true,
+     "free": true
+    },
+    {
+     "title": "Text Mining with R",
+     "authors": "Julia Silge and David Robinson",
+     "required": true,
+     "free": true
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late assignments lose 20% per day; work over five days late receives a zero."
+    },
+    {
+     "topic": "Submission",
+     "summary": "Submit assignments through Brightspace with a link to the analysis Git repository; incorrect submissions lose 40%."
+    },
+    {
+     "topic": "Extensions",
+     "summary": "Late work without penalty is considered only through approved absence procedures or a doctor's note."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Collaboration is not permitted on practical assignments."
+    },
+    {
+     "topic": "Practical 0",
+     "summary": "Attendance at the formative, ungraded first practical is required."
+    },
+    {
+     "topic": "Undergraduates",
+     "summary": "Undergraduates drop their lowest practical score, with the other three practicals weighted 13.33% each."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "May 5–9",
+     "topic": "Reproducible research; course introduction; research review tutorials; RStudio, R Markdown, Git, and exploratory data analysis"
+    },
+    {
+     "when": "May 12–16",
+     "topic": "Medical databases; ontologies, codes, survey weights, manifold learning, and boosted decision trees"
+    },
+    {
+     "when": "May 19–26",
+     "topic": "Electronic medical records; structured and unstructured text, NLP, language models, and ethical research"
+    },
+    {
+     "when": "May 28–June 2",
+     "topic": "Radiological imaging; data formats, computer vision, deep learning, and image analysis"
+    },
+    {
+     "when": "June 4–9",
+     "topic": "Physiological signals and time series; Fourier transforms, detrending, LSTMs, and EEG analysis"
+    },
+    {
+     "when": "June 11–16",
+     "topic": "Research proposal presentations"
+    }
+   ],
+   "class_meetings": "Monday, Wednesday, and Friday, 13:05–14:55; lectures, practicals, and tutorials"
+  }
+ },
+ "https://web.cs.dal.ca/~arc/teaching/CS2110/Outline.html": {
+  "url": "https://web.cs.dal.ca/~arc/teaching/CS2110/Outline.html",
+  "live": true,
+  "courses": [
+   "CSCI2110"
+  ],
+  "year": 2016,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI2110"
+   ],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [
+    "Andrew Rau-Chaplin"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 40,
+       "count": 5,
+       "note": "Best 4 of 5"
+      },
+      {
+       "name": "Midterm",
+       "weight": 15,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Practicum",
+       "weight": 10,
+       "count": 2,
+       "note": "Best 1 of 2"
+      },
+      {
+       "name": "Final exam",
+       "weight": 35,
+       "count": 1,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Data Structures and Algorithms in Java (6th Edition)",
+     "authors": "Michael T. Goodrich, Roberto Tamassia, Michael H. Goldwasser",
+     "required": null,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Passing",
+     "summary": "You must pass at least three assignments and the final exam to pass the course."
+    },
+    {
+     "topic": "Final exam eligibility",
+     "summary": "Submit at least three assignments and write the midterm to earn the right to write the final exam."
+    },
+    {
+     "topic": "Exam aids",
+     "summary": "A calculator and one handwritten, double-sided 8.5-by-11-inch sheet are permitted on the midterm and final."
+    },
+    {
+     "topic": "Attendance",
+     "summary": "Lecture attendance is not required, but attendance and participation may be considered in grade-cusp decisions."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Study groups are encouraged, but students must code their own programs and acknowledge collaborators and sources."
+    }
+   ],
+   "weekly_topics": [],
+   "class_meetings": null
+  },
+  "modified_year": 2016
+ },
+ "https://web.cs.dal.ca/~gaw/teaching/information-retrieval/": {
+  "url": "https://web.cs.dal.ca/~gaw/teaching/information-retrieval/",
+  "live": true,
+  "courses": [
+   "CSCI4141"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI4141"
+   ],
+   "term_season": "Summer",
+   "term_year": 2026,
+   "instructors": [
+    "Ga Wu"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 60,
+       "count": 4,
+       "note": "Individual implementation assignments"
+      },
+      {
+       "name": "Exams",
+       "weight": 35,
+       "count": 2,
+       "note": "Midterm and final"
+      },
+      {
+       "name": "Participation",
+       "weight": 5,
+       "count": null,
+       "note": "Active participation"
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [],
+   "weekly_topics": [
+    {
+     "when": "Week 1",
+     "topic": "Introduction to information retrieval; Boolean search"
+    },
+    {
+     "when": "Week 2",
+     "topic": "Text representation and ranking; development environment tutorial"
+    },
+    {
+     "when": "Week 3",
+     "topic": "Indexing, web ranking, and evaluation metrics"
+    },
+    {
+     "when": "Week 4",
+     "topic": "Machine-learning foundations; probabilistic retrieval; PyTorch and image-processing tutorial"
+    },
+    {
+     "when": "Week 5",
+     "topic": "Image retrieval and approximate nearest-neighbor search"
+    },
+    {
+     "when": "Week 6",
+     "topic": "Word embeddings, query expansion, query-performance prediction, and vector databases"
+    },
+    {
+     "when": "Week 7",
+     "topic": "Search personalization and midterm synthesis"
+    },
+    {
+     "when": "Week 8",
+     "topic": "Collaborative filtering and matrix factorization"
+    },
+    {
+     "when": "Week 9",
+     "topic": "Linear and neural recommender systems"
+    },
+    {
+     "when": "Week 10",
+     "topic": "Generative recommendation, prompt engineering, and pretrained language models"
+    },
+    {
+     "when": "Week 11",
+     "topic": "Retrieval-augmented generation; agentic AI and memory systems"
+    },
+    {
+     "when": "Week 12",
+     "topic": "Model Context Protocol; integration and review"
+    }
+   ],
+   "class_meetings": null
+  }
+ },
+ "https://raw.githubusercontent.com/maguire-lab/scientific_computing/HEAD/static_files/csci2202_2024_2025_syllabus_update.pdf": {
+  "url": "https://raw.githubusercontent.com/maguire-lab/scientific_computing/HEAD/static_files/csci2202_2024_2025_syllabus_update.pdf",
+  "live": true,
+  "courses": [
+   "CSCI2202"
+  ],
+  "year": 2025,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI2202"
+   ],
+   "term_season": "Winter",
+   "term_year": 2025,
+   "instructors": [
+    "Finlay Maguire"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Lab practicals",
+       "weight": 50,
+       "count": 10,
+       "note": "Lowest 2 scores dropped"
+      },
+      {
+       "name": "Midterm",
+       "weight": 20,
+       "count": 1,
+       "note": "In-person, handwritten, closed-book"
+      },
+      {
+       "name": "Final exam",
+       "weight": 30,
+       "count": 1,
+       "note": "Date TBD; handwritten, closed-book"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Python crash course: A hands-on, project-based introduction to programming",
+     "authors": "Eric Matthes",
+     "required": false,
+     "free": null
+    },
+    {
+     "title": "Learn Python the Hard Way",
+     "authors": "Zed A. Shaw",
+     "required": false,
+     "free": null
+    },
+    {
+     "title": "An introduction to Python programming for scientists and engineers",
+     "authors": "Johnny Wei-Bing Lin, Hannah Aizenman, Erin Manette Cartas Espinel, Kim Gunnerson, and Joanne Liu",
+     "required": false,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Assignments lose 20% per day; submissions more than five days late receive zero, though feedback may be provided."
+    },
+    {
+     "topic": "Absences",
+     "summary": "Student declarations of absence are not accepted; the two lowest practical scores are dropped."
+    },
+    {
+     "topic": "Code sources",
+     "summary": "Cite web-derived or generated code in inline comments, including the prompt, model, and version for LLMs."
+    },
+    {
+     "topic": "TA office hours",
+     "summary": "Regular TA office-hour access requires attendance at practical sessions."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Week 1",
+     "topic": "Introduction, variables, and data types"
+    },
+    {
+     "when": "Week 2",
+     "topic": "Conditionals, functions, strings, lists, and loops"
+    },
+    {
+     "when": "Week 3",
+     "topic": "Modules, notebooks, and reproducible research"
+    },
+    {
+     "when": "Week 4",
+     "topic": "Functional programming"
+    },
+    {
+     "when": "Week 5",
+     "topic": "Classes and object-oriented programming"
+    },
+    {
+     "when": "Week 6",
+     "topic": "Files and I/O"
+    },
+    {
+     "when": "Week 7",
+     "topic": "Heritage Day and study break; no class or labs"
+    },
+    {
+     "when": "Week 8",
+     "topic": "Midterm review and exam"
+    },
+    {
+     "when": "Week 9",
+     "topic": "Dataframes and visualisation"
+    },
+    {
+     "when": "Week 10",
+     "topic": "Probability"
+    },
+    {
+     "when": "Week 11",
+     "topic": "Regression"
+    },
+    {
+     "when": "Week 12",
+     "topic": "Machine learning"
+    },
+    {
+     "when": "Week 13",
+     "topic": "Future topics and final review"
+    }
+   ],
+   "class_meetings": "1 lecture and 2 labs a week"
+  }
+ },
+ "https://web.cs.dal.ca/~gaw/teaching/process-of-data-science/": {
+  "url": "https://web.cs.dal.ca/~gaw/teaching/process-of-data-science/",
+  "live": true,
+  "courses": [
+   "CSCI4146",
+   "CSCI6409"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI4146",
+    "CSCI6409"
+   ],
+   "term_season": "Summer",
+   "term_year": 2026,
+   "instructors": [
+    "Ga Wu"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Projects",
+       "weight": 80,
+       "count": 5,
+       "note": "Completed in teams of one to three"
+      },
+      {
+       "name": "Participation",
+       "weight": 20,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [],
+   "weekly_topics": [
+    {
+     "when": "Week 1",
+     "topic": "Data science as decision making"
+    },
+    {
+     "when": "Week 2",
+     "topic": "Metrics that reflect the goal"
+    },
+    {
+     "when": "Week 3",
+     "topic": "Evidence and predictive baselines"
+    },
+    {
+     "when": "Week 4",
+     "topic": "Evaluation and audit targets"
+    },
+    {
+     "when": "Week 5",
+     "topic": "Explain model behavior"
+    },
+    {
+     "when": "Week 6",
+     "topic": "Find hidden failures"
+    },
+    {
+     "when": "Week 7",
+     "topic": "Debug AI systems"
+    },
+    {
+     "when": "Week 8",
+     "topic": "Map the failure surface"
+    },
+    {
+     "when": "Week 9",
+     "topic": "Reason causally"
+    },
+    {
+     "when": "Week 10",
+     "topic": "Estimate decision impact"
+    },
+    {
+     "when": "Week 11",
+     "topic": "Monitor production reality"
+    },
+    {
+     "when": "Week 12",
+     "topic": "Integrate and communicate"
+    }
+   ],
+   "class_meetings": null
+  }
+ },
+ "https://web.cs.dal.ca/~eem/3171": {
+  "url": "https://web.cs.dal.ca/~eem/3171",
+  "live": true,
+  "courses": [
+   "CSCI3171"
+  ],
+  "year": 2004,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI 3171"
+   ],
+   "term_season": "Winter",
+   "term_year": 2004,
+   "instructors": [
+    "Evangelos Milios"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 10,
+       "count": 5,
+       "note": "2% each"
+      },
+      {
+       "name": "Evening quizzes",
+       "weight": 40,
+       "count": 2,
+       "note": "20% each"
+      },
+      {
+       "name": "Final exam",
+       "weight": 50,
+       "count": null,
+       "note": "3 hours"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Computer Networking: A Top-Down Approach Featuring the Internet",
+     "authors": "James Kurose and Keith Ross",
+     "required": true,
+     "free": false
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late assignments require valid written documentation; request a deferred deadline on the first day after the reason ends."
+    },
+    {
+     "topic": "Missed quizzes",
+     "summary": "There are no alternate quiz dates; illness shifts the missed quiz weight to the other tests."
+    },
+    {
+     "topic": "Final exam",
+     "summary": "No early or makeup exams are given except for health reasons."
+    },
+    {
+     "topic": "Exam materials",
+     "summary": "Tests are closed-book; handwritten notes are allowed, limited to one page for Quiz 1, two for Quiz 2, and three for the final."
+    },
+    {
+     "topic": "Assignment cover pages",
+     "summary": "A cover page missing required information results in a letter-grade reduction on the assignment."
+    },
+    {
+     "topic": "Plagiarism",
+     "summary": "Suspected plagiarism is referred to the Senate Discipline Committee; the standard first-offence penalty is failure in the course."
+    },
+    {
+     "topic": "Supplementary exam",
+     "summary": "There is no supplementary examination."
+    }
+   ],
+   "weekly_topics": [],
+   "class_meetings": "Lectures Monday, Wednesday, and Friday, 11:35–12:25"
+  }
+ },
+ "https://web.cs.dal.ca/~gaw/teaching/recommender-systems/": {
+  "url": "https://web.cs.dal.ca/~gaw/teaching/recommender-systems/",
+  "live": true,
+  "courses": [
+   "CSCI6517"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI6517"
+   ],
+   "term_season": "Summer",
+   "term_year": 2026,
+   "instructors": [
+    "Ga Wu"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 60,
+       "count": 4,
+       "note": null
+      },
+      {
+       "name": "Group project",
+       "weight": 30,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Participation",
+       "weight": 10,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [],
+   "weekly_topics": [
+    {
+     "when": "Week 1",
+     "topic": "Recommendation foundations; problem formulation and neighborhood-based collaborative filtering"
+    },
+    {
+     "when": "Week 2",
+     "topic": "Latent factors; matrix factorization and preference embeddings"
+    },
+    {
+     "when": "Week 3",
+     "topic": "Model- and content-based methods; collaborative filtering and content representations"
+    },
+    {
+     "when": "Week 4",
+     "topic": "Neural recommendation; architectures, training objectives, and bias control"
+    },
+    {
+     "when": "Week 5",
+     "topic": "Evaluation and changing preference; offline and business metrics, dynamic preference, and representation propagation"
+    },
+    {
+     "when": "Week 6",
+     "topic": "Social and graph signals; social networks and graph convolution"
+    },
+    {
+     "when": "Week 7",
+     "topic": "Sequential recommendation; sessions, order, time, and transformer-based sequence modeling"
+    },
+    {
+     "when": "Week 8",
+     "topic": "Industrial ranking pipelines; multi-objective and multi-stage systems, mixture of experts, and heavy rankers"
+    },
+    {
+     "when": "Week 9",
+     "topic": "Retrieval and blending; personalized search and combining candidate sources"
+    },
+    {
+     "when": "Week 10",
+     "topic": "Foundation models; large language models and conversational recommendation"
+    },
+    {
+     "when": "Week 11",
+     "topic": "Learning through interaction; bandits, preference elicitation, and reinforcement-learning-based conversation"
+    },
+    {
+     "when": "Week 12",
+     "topic": "Critiquing and design; conversational systems and project development"
+    },
+    {
+     "when": "Week 13",
+     "topic": "Online systems and showcase; streaming recommendation and project presentations"
+    }
+   ],
+   "class_meetings": null
+  }
+ },
+ "https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/2026_syllabus.pdf": {
+  "url": "https://raw.githubusercontent.com/maguire-lab/health_data_science_research_2026/HEAD/static_files/2026_syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4148",
+   "CSCI6410",
+   "EPAH6410"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": false,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI6410",
+    "CSCI4148",
+    "EPAH6410"
+   ],
+   "term_season": "Summer",
+   "term_year": 2026,
+   "instructors": [
+    "Finlay Maguire"
+   ],
+   "grading_schemes": [
+    {
+     "label": "Graduate students",
+     "components": [
+      {
+       "name": "Practical 1: Medical Databases",
+       "weight": 7.5,
+       "count": 1,
+       "note": "Due June 1"
+      },
+      {
+       "name": "Practical 2: Electronic Medical Records",
+       "weight": 7.5,
+       "count": 1,
+       "note": "Due June 12"
+      },
+      {
+       "name": "Practical 3: Radiological Imaging",
+       "weight": 7.5,
+       "count": 1,
+       "note": "Due June 19"
+      },
+      {
+       "name": "Practical 4: Physiological Time-Series",
+       "weight": 7.5,
+       "count": 1,
+       "note": "Due June 26"
+      },
+      {
+       "name": "Proposal presentation",
+       "weight": 20,
+       "count": 1,
+       "note": "June 22–26"
+      },
+      {
+       "name": "Proposal write-up",
+       "weight": 20,
+       "count": 1,
+       "note": "Due June 29"
+      },
+      {
+       "name": "Tutorial paper presentation",
+       "weight": 20,
+       "count": 1,
+       "note": "Throughout"
+      },
+      {
+       "name": "Participation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      }
+     ]
+    },
+    {
+     "label": "Undergraduate students",
+     "components": [
+      {
+       "name": "Practical assignments",
+       "weight": 40,
+       "count": 3,
+       "note": "Worst score dropped; remaining practicals worth 13.33% each"
+      },
+      {
+       "name": "Proposal presentation",
+       "weight": 20,
+       "count": 1,
+       "note": "June 22–26"
+      },
+      {
+       "name": "Proposal write-up",
+       "weight": 20,
+       "count": 1,
+       "note": "Due June 29"
+      },
+      {
+       "name": "Tutorial paper presentation",
+       "weight": 20,
+       "count": 1,
+       "note": "Throughout"
+      },
+      {
+       "name": "Participation",
+       "weight": 10,
+       "count": null,
+       "note": "Throughout"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "R for Data Science",
+     "authors": "Wickham and Grolemund",
+     "required": true,
+     "free": true
+    },
+    {
+     "title": "Hands-On Machine Learning for R",
+     "authors": "Boehmke and Greenwell",
+     "required": true,
+     "free": true
+    },
+    {
+     "title": "Text Mining with R",
+     "authors": "Julia Silge and David Robinson",
+     "required": true,
+     "free": true
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Assignments lose 20% per day; work over five days late receives zero, though it may be evaluated for feedback."
+    },
+    {
+     "topic": "Submission",
+     "summary": "Submit assignments through Brightspace with a link to the matching Git repository; missing links incur a 40% penalty."
+    },
+    {
+     "topic": "Practical 0",
+     "summary": "Attendance is required, but Practical 0 is formative and ungraded."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Collaboration is not permitted on practical assignments."
+    },
+    {
+     "topic": "Absences",
+     "summary": "Student declarations of absence are not accepted."
+    },
+    {
+     "topic": "Graduate pass",
+     "summary": "Graduate students need at least B-; marks below 70% convert to an F."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "May 11–15",
+     "topic": "Health data science introduction, reproducible research, RStudio and exploratory data analysis"
+    },
+    {
+     "when": "May 20–25",
+     "topic": "Medical databases, manifold learning, boosted decision trees, and dataset access"
+    },
+    {
+     "when": "June 1–5",
+     "topic": "Electronic medical records, natural language processing, language models, and research ethics"
+    },
+    {
+     "when": "June 8–12",
+     "topic": "Radiological imaging, computer vision, deep learning, and image analysis"
+    },
+    {
+     "when": "June 15–19",
+     "topic": "Physiological signals and time-series, Fourier transforms, detrending, LSTMs, and knowledge translation"
+    },
+    {
+     "when": "June 22–26",
+     "topic": "Research proposal presentations"
+    }
+   ],
+   "class_meetings": "Monday, Wednesday, and Friday, 1:05–2:55 p.m.; format varies by day."
+  }
+ },
+ "https://web.cs.dal.ca/~jamie/CS1107/": {
+  "url": "https://web.cs.dal.ca/~jamie/CS1107/",
+  "live": true,
+  "courses": [
+   "CSCI1107"
+  ],
+  "year": null,
+  "status": "not a syllabus (model)",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": false,
+  "details": {
+   "is_syllabus": false,
+   "course_codes": [],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [],
+   "grading_schemes": [],
+   "textbooks": [],
+   "policies": [],
+   "weekly_topics": [],
+   "class_meetings": null
+  }
+ },
+ "https://web.cs.dal.ca/~rudzicz/Teaching/CSCI1109/2026/": {
+  "url": "https://web.cs.dal.ca/~rudzicz/Teaching/CSCI1109/2026/",
+  "live": true,
+  "courses": [
+   "CSCI1109"
+  ],
+  "year": 2026,
+  "status": "not a syllabus (no text or no grading words)",
+  "fetched_from": "web page"
+ },
+ "https://travislacroix.github.io/files/LaCroix-Dalhousie-PHIL-2490-CSCI-3101-Winter-2024-Syllabus.pdf": {
+  "url": "https://travislacroix.github.io/files/LaCroix-Dalhousie-PHIL-2490-CSCI-3101-Winter-2024-Syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI3101",
+   "PHIL2490"
+  ],
+  "year": 2024,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "PHIL2490",
+    "CSCI3101"
+   ],
+   "term_season": "Winter",
+   "term_year": 2024,
+   "instructors": [
+    "Travis LaCroix"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Lecture quizzes",
+       "weight": 20,
+       "count": 12,
+       "note": "Best 10 of 12"
+      },
+      {
+       "name": "Individual writing assignment",
+       "weight": 15,
+       "count": 1,
+       "note": "Due February 7"
+      },
+      {
+       "name": "Group writing assignment: groups",
+       "weight": 5,
+       "count": 1,
+       "note": "Groups formed by February 7"
+      },
+      {
+       "name": "Group writing assignment: proposal and outline",
+       "weight": 10,
+       "count": 1,
+       "note": "Due February 28"
+      },
+      {
+       "name": "Group writing assignment: draft",
+       "weight": 15,
+       "count": 1,
+       "note": "Due March 20"
+      },
+      {
+       "name": "Group writing assignment: peer review",
+       "weight": 10,
+       "count": 1,
+       "note": "Due March 27"
+      },
+      {
+       "name": "Group writing assignment: final essay",
+       "weight": 20,
+       "count": 1,
+       "note": "Due April 9"
+      },
+      {
+       "name": "Group writing assignment: reflection",
+       "weight": 5,
+       "count": 1,
+       "note": "Due April 9"
+      },
+      {
+       "name": "Course evaluation game",
+       "weight": 2,
+       "count": null,
+       "note": "Bonus; awarded if at least three-quarters complete evaluations"
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [
+    {
+     "topic": "Late quizzes",
+     "summary": "Late quiz submissions are not accepted."
+    },
+    {
+     "topic": "Written work",
+     "summary": "All students receive an automatic 48-hour extension; later work requires arrangements made in advance."
+    },
+    {
+     "topic": "AI use",
+     "summary": "Do not use AI tools to generate ideas or written material unless the instructor explicitly permits it."
+    },
+    {
+     "topic": "Attendance",
+     "summary": "Students are encouraged to attend lectures and engage in activities and discussions."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Week 1",
+     "topic": "Course introduction and ethical consequences"
+    },
+    {
+     "when": "Week 2",
+     "topic": "Duties and character"
+    },
+    {
+     "when": "Week 3",
+     "topic": "Relations and rights"
+    },
+    {
+     "when": "Week 4",
+     "topic": "Data protection, privacy, and security"
+    },
+    {
+     "when": "Week 5",
+     "topic": "Film screenings"
+    },
+    {
+     "when": "Week 6",
+     "topic": "Antitrust and intellectual property"
+    },
+    {
+     "when": "Week 7",
+     "topic": "Winter break; no class"
+    },
+    {
+     "when": "Week 8",
+     "topic": "Generative AI"
+    },
+    {
+     "when": "Week 9",
+     "topic": "Data and datasets"
+    },
+    {
+     "when": "Week 10",
+     "topic": "Machine bias"
+    },
+    {
+     "when": "Week 11",
+     "topic": "Environmental costs"
+    },
+    {
+     "when": "Week 12",
+     "topic": "Machine ethics and benchmarking"
+    },
+    {
+     "when": "Week 13",
+     "topic": "Topic to be announced; review or catch-up if needed"
+    }
+   ],
+   "class_meetings": "In person, two lectures a week"
+  }
+ },
+ "https://web.cs.dal.ca/~rudzicz/Teaching/CSCI3151/2026/": {
+  "url": "https://web.cs.dal.ca/~rudzicz/Teaching/CSCI3151/2026/",
+  "live": true,
+  "courses": [
+   "CSCI3151"
+  ],
+  "year": 2026,
+  "status": "not a syllabus (no text or no grading words)",
+  "fetched_from": "web page"
+ },
+ "https://web.cs.dal.ca/~hawkey/3130/3130_syllabus.pdf": {
+  "url": "https://web.cs.dal.ca/~hawkey/3130/3130_syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI3130"
+  ],
+  "year": 2011,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI3130"
+   ],
+   "term_season": "Summer",
+   "term_year": 2011,
+   "instructors": [
+    "Kirstie Hawkey"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Group website",
+       "weight": 2,
+       "count": 1,
+       "note": "May 12"
+      },
+      {
+       "name": "Project charter",
+       "weight": 3,
+       "count": 1,
+       "note": "May 19"
+      },
+      {
+       "name": "SRS and project plan",
+       "weight": 10,
+       "count": 1,
+       "note": "May 26"
+      },
+      {
+       "name": "SRS review",
+       "weight": 10,
+       "count": 1,
+       "note": "Individual; June 2"
+      },
+      {
+       "name": "Design documents",
+       "weight": 10,
+       "count": 1,
+       "note": "June 9"
+      },
+      {
+       "name": "Design review",
+       "weight": 10,
+       "count": 1,
+       "note": "Individual; June 16"
+      },
+      {
+       "name": "Change request management",
+       "weight": 5,
+       "count": 1,
+       "note": "June 30"
+      },
+      {
+       "name": "Software test plan",
+       "weight": 10,
+       "count": 1,
+       "note": "July 7"
+      },
+      {
+       "name": "Project presentation",
+       "weight": 10,
+       "count": 1,
+       "note": "Description and demo; July 26"
+      },
+      {
+       "name": "Final project documents and reports",
+       "weight": 20,
+       "count": 1,
+       "note": "July 28"
+      },
+      {
+       "name": "Post-mortem report and peer assessment",
+       "weight": 10,
+       "count": 1,
+       "note": "Individual; July 28"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Software Engineering - Modern Approaches",
+     "authors": "Braude and Bernstein",
+     "required": false,
+     "free": null
+    },
+    {
+     "title": "Design Patterns",
+     "authors": "Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides",
+     "required": false,
+     "free": null
+    },
+    {
+     "title": "Refactoring - Improving the Design of Existing Code",
+     "authors": "Martin Fowler",
+     "required": false,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late assignments and project submissions will not be accepted."
+    },
+    {
+     "topic": "Submission",
+     "summary": "All materials must be submitted in both paper and electronic form."
+    },
+    {
+     "topic": "Group marks",
+     "summary": "Group marks may be adjusted when documentation and peer assessments show inequities in effort and commitment."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Tentative",
+     "topic": "Overview: project charter, software lifecycle, software documentation, and project documentation"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Practical development processes: daily builds, configuration management, estimation, risk management, and change requests"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Formal software requirements specification"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Project planning"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Software design principles: data flow models, state models, and UML"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Software architecture"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Software testing: unit tests, UI monkey, and system tests"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Software engineering methodologies: Waterfall, prototyping, Spiral, RAD, Scrum, team software process, extreme programming, and Agile"
+    }
+   ],
+   "class_meetings": "Tuesdays and Thursdays, 4:05–5:25 p.m."
+  }
+ },
+ "https://web.cs.dal.ca/~jamie/CS3160/Course/HCI-3160-syllabus.pdf": {
+  "url": "https://web.cs.dal.ca/~jamie/CS3160/Course/HCI-3160-syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI3160"
+  ],
+  "year": 2014,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI3160"
+   ],
+   "term_season": "Fall",
+   "term_year": 2014,
+   "instructors": [
+    "Jamie Blustein"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Final exam",
+       "weight": 40,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Project",
+       "weight": 30,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Test",
+       "weight": 20,
+       "count": 1,
+       "note": "October 23"
+      },
+      {
+       "name": "Class participation, assignments, homework, and quizzes",
+       "weight": 10,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "User Interface Design and Evaluation",
+     "authors": "Debbie Stone et al.",
+     "required": true,
+     "free": false
+    },
+    {
+     "title": "The Non-Designer’s Design Book",
+     "authors": "Robin Williams",
+     "required": false,
+     "free": false
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late work loses one grade point for the first day and two per day afterward; work over three calendar days late receives no credit."
+    },
+    {
+     "topic": "Missed quizzes",
+     "summary": "Quizzes have no make-ups; if there are at least three, the lowest quiz score is dropped."
+    },
+    {
+     "topic": "Missed tests",
+     "summary": "Make-up tests require permission, granted with prior notice, a physician’s letter, or evidence of a serious family crisis."
+    },
+    {
+     "topic": "Submissions",
+     "summary": "Submit documents as PDF or plain text; Microsoft Word documents are not accepted."
+    },
+    {
+     "topic": "Academic integrity",
+     "summary": "Submit your own work and credit sources, including text, images, code, and algorithms."
+    },
+    {
+     "topic": "Attendance",
+     "summary": "Students are expected to attend meetings; missed material, assignments, and announcements remain their responsibility."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Week 0, September 4",
+     "topic": "Introduction; human-factor basics"
+    },
+    {
+     "when": "Week 1, September 9–11",
+     "topic": "HCI, usability, user-centred design, UI principles, usability engineering lifecycle"
+    },
+    {
+     "when": "Week 2, September 16–18",
+     "topic": "Learning, information processing, memory, expertise; needs, user, and risk analysis"
+    },
+    {
+     "when": "Week 3, September 23–25",
+     "topic": "UI styles, task analysis, design teams, participatory design"
+    },
+    {
+     "when": "Week 4, September 30–October 2",
+     "topic": "Standards, guidelines, principles, interaction styles"
+    },
+    {
+     "when": "Week 5, October 7–9",
+     "topic": "Visual design, Gestalt principles, grid method; design documents"
+    },
+    {
+     "when": "Week 6, October 14–16",
+     "topic": "Formative evaluation, prototyping, testing with and without users"
+    },
+    {
+     "when": "Week 7, October 21–23",
+     "topic": "Midterm test and review"
+    },
+    {
+     "when": "Week 8, October 28–30",
+     "topic": "Private project demonstrations"
+    },
+    {
+     "when": "Week 9, November 4–6",
+     "topic": "To be announced"
+    },
+    {
+     "when": "Week 10, November 13",
+     "topic": "To be announced"
+    },
+    {
+     "when": "Week 11, November 18–20",
+     "topic": "To be announced"
+    },
+    {
+     "when": "Week 12, November 25–27",
+     "topic": "Presentations, demonstrations, and final portfolios"
+    },
+    {
+     "when": "Week X, December 2",
+     "topic": "Review"
+    }
+   ],
+   "class_meetings": "Two lectures and one tutorial/lab a week"
+  }
+ },
+ "https://web.cs.dal.ca/~hawkey/3130/3130_schedule.htm": {
+  "url": "https://web.cs.dal.ca/~hawkey/3130/3130_schedule.htm",
+  "live": true,
+  "courses": [
+   "CSCI3130"
+  ],
+  "year": 2011,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI3130"
+   ],
+   "term_season": "Summer",
+   "term_year": 2011,
+   "instructors": [],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Group website (MS1)",
+       "weight": 2,
+       "count": null,
+       "note": "Due May 12"
+      },
+      {
+       "name": "Project charter/feasibility document (MS2)",
+       "weight": 3,
+       "count": null,
+       "note": "Due May 19"
+      },
+      {
+       "name": "SRS and project plan (MS3)",
+       "weight": 10,
+       "count": null,
+       "note": "Due May 27"
+      },
+      {
+       "name": "Individual SRS review",
+       "weight": 10,
+       "count": null,
+       "note": "Due June 3"
+      },
+      {
+       "name": "Design documents (MS4)",
+       "weight": 10,
+       "count": null,
+       "note": "Due June 10"
+      },
+      {
+       "name": "Individual design review",
+       "weight": 10,
+       "count": null,
+       "note": "Due June 17"
+      },
+      {
+       "name": "Change request management (MS5)",
+       "weight": 5,
+       "count": null,
+       "note": "Due July 4"
+      },
+      {
+       "name": "Software test plan (MS6)",
+       "weight": 10,
+       "count": null,
+       "note": "Due July 15"
+      },
+      {
+       "name": "Project presentation",
+       "weight": 10,
+       "count": null,
+       "note": "July 26 or 28"
+      },
+      {
+       "name": "Final project documents",
+       "weight": 20,
+       "count": null,
+       "note": "Due July 29"
+      },
+      {
+       "name": "Individual assignment 1",
+       "weight": 10,
+       "count": null,
+       "note": "Post-mortem report and peer assessment; due July 29"
+      }
+     ]
+    }
+   ],
+   "textbooks": [],
+   "policies": [
+    {
+     "topic": "Group marks",
+     "summary": "Group mark distributions may vary when reports, deliverables, and peer assessments document unequal effort and commitment."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "May 3",
+     "topic": "Syllabus, overview, and project description"
+    },
+    {
+     "when": "May 5",
+     "topic": "Project charter, software lifecycle, software documentation, and project documentation"
+    },
+    {
+     "when": "May 10",
+     "topic": "Software development lifecycle in the games industry"
+    },
+    {
+     "when": "May 12",
+     "topic": "Debugging, builds, code reviews and standards, configuration management, and estimation"
+    },
+    {
+     "when": "May 17",
+     "topic": "Formal software requirements specification and project plans"
+    },
+    {
+     "when": "May 19",
+     "topic": "Principles of software design"
+    },
+    {
+     "when": "May 24",
+     "topic": "Data flow models, state models, and UML"
+    },
+    {
+     "when": "May 26",
+     "topic": "Validation and verification"
+    },
+    {
+     "when": "May 31",
+     "topic": "Software design process and software architecture"
+    },
+    {
+     "when": "June 2",
+     "topic": "Object-oriented design process (class cancelled)"
+    },
+    {
+     "when": "June 7",
+     "topic": "Risk management"
+    },
+    {
+     "when": "June 9",
+     "topic": "Project work: refine design documents and begin implementation plans (class cancelled)"
+    },
+    {
+     "when": "June 14",
+     "topic": "Change request management"
+    },
+    {
+     "when": "June 16",
+     "topic": "Software quality and refactoring 1"
+    },
+    {
+     "when": "June 21",
+     "topic": "Refactoring 2"
+    },
+    {
+     "when": "June 23",
+     "topic": "Software testing 1"
+    },
+    {
+     "when": "June 28",
+     "topic": "Software testing 2"
+    },
+    {
+     "when": "June 30",
+     "topic": "Software testing 3"
+    },
+    {
+     "when": "July 5",
+     "topic": "Integration"
+    },
+    {
+     "when": "July 7",
+     "topic": "Waterfall, prototyping, and spiral methodologies"
+    },
+    {
+     "when": "July 12",
+     "topic": "Agile, RAD, and Scrum methodologies"
+    },
+    {
+     "when": "July 14",
+     "topic": "Extreme programming and team software process"
+    },
+    {
+     "when": "July 19",
+     "topic": "Group work; no class"
+    },
+    {
+     "when": "July 21",
+     "topic": "Group work; no class"
+    },
+    {
+     "when": "July 26",
+     "topic": "Project presentations"
+    },
+    {
+     "when": "July 28",
+     "topic": "Project presentations and post-mortem"
+    }
+   ],
+   "class_meetings": "Normally Tuesday and Thursday; some sessions cancelled or reserved for group work."
+  }
+ },
+ "https://web.cs.dal.ca/~nauzerk/syllabus_2122.pdf": {
+  "url": "https://web.cs.dal.ca/~nauzerk/syllabus_2122.pdf",
+  "live": true,
+  "courses": [
+   "CSCI2122"
+  ],
+  "year": 2023,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI2122"
+   ],
+   "term_season": "Winter",
+   "term_year": 2023,
+   "instructors": [
+    "Nauzer Kalyaniwalla"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 20,
+       "count": 5,
+       "note": "4% each; due dates listed include Jan 4 and Jan 18"
+      },
+      {
+       "name": "Quizzes",
+       "weight": 12,
+       "count": 4,
+       "note": "Dates listed: Jan 20, Feb 7, Mar 10, Mar 31"
+      },
+      {
+       "name": "Labs",
+       "weight": 8,
+       "count": null,
+       "note": "Must pass file structure test"
+      },
+      {
+       "name": "Practicum 1",
+       "weight": 8,
+       "count": null,
+       "note": "Week of Feb 6"
+      },
+      {
+       "name": "Practicum 2",
+       "weight": 14,
+       "count": null,
+       "note": "Week of Mar 6"
+      },
+      {
+       "name": "Practicum 3",
+       "weight": 14,
+       "count": null,
+       "note": "Week of Apr 3"
+      },
+      {
+       "name": "Final exam",
+       "weight": 24,
+       "count": 1,
+       "note": "Scheduled by the Registrar"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Computer Systems: A Programmer’s Perspective, 3rd Edition",
+     "authors": "Bryant and O’Hallaron",
+     "required": null,
+     "free": false
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late assignments",
+     "summary": "Assignments are accepted up to four days late with a 10% penalty per 24-hour period; none are accepted afterward."
+    },
+    {
+     "topic": "Missed quizzes",
+     "summary": "Notify the instructor before a quiz with the reason for absence; the quiz weight shifts to the final exam."
+    },
+    {
+     "topic": "Quiz absence",
+     "summary": "If the instructor is informed only after a missed quiz, the quiz receives a zero."
+    },
+    {
+     "topic": "Absences",
+     "summary": "Students have two Student Declaration of Absence forms for the term, but they do not apply to some assessments, including the final."
+    },
+    {
+     "topic": "Exams",
+     "summary": "Midterm and final exams are closed book; photo ID is required and calculators and other electronic aids are prohibited."
+    },
+    {
+     "topic": "Online exams",
+     "summary": "For online tests or the final, the instructor may interview selected students about their answers before issuing a grade."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Lectures 1–2",
+     "topic": "Data representation, binary and hexadecimal, endianness, bitwise operations, C basics, and pointers"
+    },
+    {
+     "when": "Lectures 3–5",
+     "topic": "Integer and floating-point representation, arithmetic, rounding, casting, and pointers in C"
+    },
+    {
+     "when": "Lectures 6–8",
+     "topic": "x86-64 assembly basics and control flow; dynamic memory management in C"
+    },
+    {
+     "when": "Lectures 9–11",
+     "topic": "Assembly procedures, program stack, buffer overflows, and function pointers"
+    },
+    {
+     "when": "Lectures 12–14",
+     "topic": "Assembly procedures, arrays, and structs"
+    },
+    {
+     "when": "Lectures 15–18",
+     "topic": "Heterogeneous data structures, pointer manipulation, locality, caching, and memory hierarchy"
+    },
+    {
+     "when": "Lectures 19–22",
+     "topic": "Static and dynamic linking, symbol resolution, interrupts, and exceptional control flow"
+    }
+   ],
+   "class_meetings": "Section 1: Monday and Wednesday; Section 2: Tuesday and Thursday, 2:35–4:00 p.m."
+  }
+ },
+ "https://web.cs.dal.ca/~masud/teaching/CSCI-3130-Syllabus-Fall2024.pdf": {
+  "url": "https://web.cs.dal.ca/~masud/teaching/CSCI-3130-Syllabus-Fall2024.pdf",
+  "live": true,
+  "courses": [
+   "CSCI3130"
+  ],
+  "year": 2024,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI3130"
+   ],
+   "term_season": "Fall",
+   "term_year": 2024,
+   "instructors": [
+    "Masud Rahman"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 32,
+       "count": 4,
+       "note": "8% each"
+      },
+      {
+       "name": "Quizzes",
+       "weight": 18,
+       "count": 3,
+       "note": "6% each"
+      },
+      {
+       "name": "Project iterations",
+       "weight": 40,
+       "count": 3,
+       "note": "8%, 12%, and 20%"
+      },
+      {
+       "name": "Final project presentation and demo",
+       "weight": 5,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Project postmortem",
+       "weight": 2,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Formative assessment",
+       "weight": 3,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Software Engineering, 9th Edition or later",
+     "authors": "Ian Sommerville",
+     "required": false,
+     "free": false
+    },
+    {
+     "title": "Essential Scrum: A Practical Guide to the Most Popular Agile Process",
+     "authors": "Kenneth S. Rubin",
+     "required": false,
+     "free": false
+    },
+    {
+     "title": "Refactoring: Improving the Design of Existing Code",
+     "authors": "Martin Fowler, Kent Beck, et al.",
+     "required": false,
+     "free": true
+    },
+    {
+     "title": "Clean Code",
+     "authors": "Robert C. Martin",
+     "required": false,
+     "free": false
+    },
+    {
+     "title": "Design Patterns",
+     "authors": "Erich Gamma, Richard Helm, et al.",
+     "required": false,
+     "free": false
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Passing grade",
+     "summary": "You must score at least 50% across assignments, quizzes, and project work to pass."
+    },
+    {
+     "topic": "Attendance",
+     "summary": "Lectures and tutorials are not mandatory; 90% attendance earns 2% bonus, while below 60% earns no bonus."
+    },
+    {
+     "topic": "Late assignments",
+     "summary": "Assignments have a 24-hour grace period, then lose 10% per day up to 72 hours; submissions over four days late are not accepted."
+    },
+    {
+     "topic": "Project deadlines",
+     "summary": "Project deliverables have no grace period and late submissions are not allowed."
+    },
+    {
+     "topic": "Missed deadlines",
+     "summary": "Notify the instructor by email by the deadline and submit an SDA by email within three days; extensions are at the instructor’s discretion."
+    },
+    {
+     "topic": "Lab attendance",
+     "summary": "Client TA lab attendance is mandatory, and absences negatively affect project grades."
+    },
+    {
+     "topic": "AI tools",
+     "summary": "AI tools are prohibited for assignments and quizzes; acknowledge tools when allowed, and do not use them where prohibited."
+    },
+    {
+     "topic": "Recording",
+     "summary": "Ask the instructor for permission before recording lectures."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Week of Sep 03",
+     "topic": "Course introduction; software engineering and software processes"
+    },
+    {
+     "when": "Week of Sep 09",
+     "topic": "Software process models, Agile, XP, user stories, and acceptance tests"
+    },
+    {
+     "when": "Week of Sep 16",
+     "topic": "Planning, risk management, estimation, iteration planning, TDD, unit testing, and pair programming"
+    },
+    {
+     "when": "Week of Sep 23",
+     "topic": "TDD, software testing, continuous integration, builds, versioning, and documentation"
+    },
+    {
+     "when": "Week of Sep 30",
+     "topic": "Code smells and refactoring"
+    },
+    {
+     "when": "Week of Oct 07",
+     "topic": "Clean code and SOLID principles"
+    },
+    {
+     "when": "Week of Oct 14",
+     "topic": "UML and design patterns"
+    },
+    {
+     "when": "Week of Oct 21",
+     "topic": "Design patterns and software architectures"
+    },
+    {
+     "when": "Week of Oct 28",
+     "topic": "Frameworks, components, coupling, and cohesion"
+    },
+    {
+     "when": "Week of Nov 04",
+     "topic": "Distributed and service-oriented software engineering; microservices"
+    },
+    {
+     "when": "Week of Nov 18",
+     "topic": "Software maintenance, evolution, and debugging"
+    },
+    {
+     "when": "Week of Nov 25",
+     "topic": "User-centered design, professionalism, and ethics"
+    },
+    {
+     "when": "Week of Dec 02",
+     "topic": "Recap, trends, and futures of software engineering"
+    }
+   ],
+   "class_meetings": "Two lectures, one tutorial, and two lab sessions a week"
+  }
+ },
+ "https://web.cs.dal.ca/~jamie/CS3160/HiddenFiles/CSCI3160 sample documentsSHRUNK.pdf": {
+  "url": "https://web.cs.dal.ca/~jamie/CS3160/HiddenFiles/CSCI3160%20sample%20documentsSHRUNK.pdf",
+  "live": true,
+  "courses": [
+   "CSCI3160"
+  ],
+  "year": 2012,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI3160"
+   ],
+   "term_season": "Fall",
+   "term_year": 2012,
+   "instructors": [
+    "Jamie Blustein"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Project",
+       "weight": 33,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Test",
+       "weight": 15,
+       "count": 1,
+       "note": "October 25"
+      },
+      {
+       "name": "Final exam",
+       "weight": 40,
+       "count": 1,
+       "note": null
+      },
+      {
+       "name": "Class participation, assignments, homework, and quizzes",
+       "weight": 12,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "The Resonant Interface: HCI Foundations for Interaction Design",
+     "authors": "Steven Heim",
+     "required": true,
+     "free": null
+    },
+    {
+     "title": "User Interface Design and Evaluation",
+     "authors": "Debbie Stone et al.",
+     "required": true,
+     "free": null
+    },
+    {
+     "title": "The Non-Designer’s Design Book",
+     "authors": "Robin Williams",
+     "required": false,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late work loses one grade level per day for the first day, then two per day; work over three calendar days late may receive no credit."
+    },
+    {
+     "topic": "Missed quizzes",
+     "summary": "There are no make-up quizzes; if there are at least three quizzes, the lowest score is dropped."
+    },
+    {
+     "topic": "Missed tests",
+     "summary": "Make-up tests require permission, which requires prior notice, a detailed physician’s letter, or evidence of a serious family crisis."
+    },
+    {
+     "topic": "Attendance",
+     "summary": "Students are expected to attend, arrive on time, prepare, and participate in class activities."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Week 0",
+     "topic": "Introduction to HCI, human factors, and usability"
+    },
+    {
+     "when": "Week 1",
+     "topic": "Usability engineering, needs analysis, user analysis"
+    },
+    {
+     "when": "Week 2",
+     "topic": "User-centred design"
+    },
+    {
+     "when": "Week 3",
+     "topic": "Usability engineering lifecycle models, task analysis, participatory design"
+    },
+    {
+     "when": "Week 4",
+     "topic": "Human cognition, learning, information processing, memory, and expertise"
+    },
+    {
+     "when": "Week 5",
+     "topic": "Standards and guidelines, interaction styles, design documents"
+    },
+    {
+     "when": "Week 6",
+     "topic": "Perception and visual design; usability testing and evaluation"
+    },
+    {
+     "when": "Week 7",
+     "topic": "Catch-up, review, and test"
+    },
+    {
+     "when": "Week 8",
+     "topic": "Prototyping and overview of user interface styles"
+    },
+    {
+     "when": "Week 9",
+     "topic": "Design guidance, interface standards, and physical principles"
+    },
+    {
+     "when": "Week 10",
+     "topic": "Continued interface principles and review"
+    },
+    {
+     "when": "Week 11",
+     "topic": "Reasoning, representation, and information processing"
+    },
+    {
+     "when": "Week 12",
+     "topic": "Topics to be announced"
+    },
+    {
+     "when": "Week X",
+     "topic": "Catch-up and pre-exam review"
+    }
+   ],
+   "class_meetings": "Tuesdays and Thursdays, 10:05–11:25 a.m."
+  }
+ },
+ "https://web.cs.dal.ca/~sbrooks/csci3161/index.html": {
+  "url": "https://web.cs.dal.ca/~sbrooks/csci3161/index.html",
+  "live": true,
+  "courses": [
+   "CSCI3161"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI3161"
+   ],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [
+    "Stephen Brooks"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Tests",
+       "weight": 40,
+       "count": 2,
+       "note": null
+      },
+      {
+       "name": "Programming assignments",
+       "weight": 20,
+       "count": 2,
+       "note": null
+      },
+      {
+       "name": "Final project",
+       "weight": 40,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "OpenGL: A Primer, 3rd Edition",
+     "authors": "Edward Angel",
+     "required": null,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Assignments lose 5% per day or part-day; work over 3 days late may receive no credit."
+    },
+    {
+     "topic": "Project deadline",
+     "summary": "The final project cannot be submitted late; there are no exceptions."
+    },
+    {
+     "topic": "Academic honesty",
+     "summary": "Submitted work and assignment code must be your own; do not share or write code for other students."
+    }
+   ],
+   "weekly_topics": [],
+   "class_meetings": null
+  },
+  "modified_year": 2026
+ },
+ "https://web.cs.dal.ca/~tt/CSCI6508/": {
+  "url": "https://web.cs.dal.ca/~tt/CSCI6508/",
+  "live": true,
+  "courses": [
+   "CSCI6508"
+  ],
+  "year": 2003,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "ECMM6508",
+    "CSCI6508"
+   ],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [
+    "Thomas Trappenberg"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 20,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Tests",
+       "weight": 20,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Project",
+       "weight": 60,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Fundamental of Computational Neuroscience",
+     "authors": "Thomas P. Trappenberg",
+     "required": null,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Academic honesty",
+     "summary": "Suspected plagiarism cases will be forwarded to the Senate Discipline Committee."
+    }
+   ],
+   "weekly_topics": [],
+   "class_meetings": null
+  },
+  "modified_year": 2003
+ },
+ "https://web.cs.dal.ca/~rudzicz/Teaching/CSCI3151/2026/CSCI3151_FoundationsOfML.pdf": {
+  "url": "https://web.cs.dal.ca/~rudzicz/Teaching/CSCI3151/2026/CSCI3151_FoundationsOfML.pdf",
+  "live": true,
+  "courses": [
+   "CSCI3151"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI3151"
+   ],
+   "term_season": "Winter",
+   "term_year": null,
+   "instructors": [
+    "Frank Rudzicz"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Participation and discussion",
+       "weight": 10,
+       "count": null,
+       "note": "Team-based; late notebooks capped at 33%"
+      },
+      {
+       "name": "Weekly quizzes",
+       "weight": 25,
+       "count": null,
+       "note": "Lowest quiz mark discarded"
+      },
+      {
+       "name": "Practical assignments",
+       "weight": 25,
+       "count": 5,
+       "note": "Weighted 3%, 4%, 5%, 6%, and 7%"
+      },
+      {
+       "name": "Midterm exam",
+       "weight": 15,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Final exam",
+       "weight": 25,
+       "count": null,
+       "note": "Cumulative; written and practical"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Deep Learning",
+     "authors": "Ian Goodfellow, Yoshua Bengio, and Aaron Courville",
+     "required": false,
+     "free": null
+    },
+    {
+     "title": "Mathematics for Machine Learning",
+     "authors": "Marc Peter Deisenroth, A. Aldo Faisal, and Cheng Soon Ong",
+     "required": false,
+     "free": null
+    },
+    {
+     "title": "Probabilistic Machine Learning",
+     "authors": "Kevin Murphy",
+     "required": false,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late notebooks",
+     "summary": "In-class module notebooks may be submitted after class, but the maximum score is 33%."
+    },
+    {
+     "topic": "Missed work",
+     "summary": "The Student Declaration of Absence policy applies."
+    },
+    {
+     "topic": "AI tools",
+     "summary": "AI tools may support learning, but some assessments prohibit them; acknowledge tools where allowed."
+    },
+    {
+     "topic": "Remote proctoring",
+     "summary": "The instructor may require remote proctoring; students unable to meet system requirements should contact the instructor."
+    },
+    {
+     "topic": "Citations",
+     "summary": "Failure to properly attribute sources may lose points or lead to an academic integrity allegation."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Lecture 1",
+     "topic": "Introduction to machine learning paradigms"
+    },
+    {
+     "when": "Lectures 2–3",
+     "topic": "Supervised and unsupervised learning"
+    },
+    {
+     "when": "Lectures 4–5",
+     "topic": "Maximum likelihood estimation and expectation maximization"
+    },
+    {
+     "when": "Lecture 6",
+     "topic": "Model evaluation and bias-variance"
+    },
+    {
+     "when": "Lecture 7",
+     "topic": "Regularization and optimization basics"
+    },
+    {
+     "when": "Lecture 8",
+     "topic": "Vanishing and exploding gradients; training stability"
+    },
+    {
+     "when": "Lecture 9",
+     "topic": "Kernel methods"
+    },
+    {
+     "when": "Lecture 10",
+     "topic": "Feature engineering and data augmentation"
+    },
+    {
+     "when": "Lecture 11",
+     "topic": "Dimensionality reduction: PCA, t-SNE, and UMAP"
+    },
+    {
+     "when": "Lecture 12",
+     "topic": "Neural networks and backpropagation"
+    },
+    {
+     "when": "Lecture 13",
+     "topic": "Dropout and generalization techniques"
+    },
+    {
+     "when": "Lecture 14",
+     "topic": "Representation learning and embeddings"
+    },
+    {
+     "when": "Lectures 15–16",
+     "topic": "Convolutional neural networks"
+    },
+    {
+     "when": "Lectures 17–18",
+     "topic": "Recurrent neural networks: LSTMs and GRUs"
+    },
+    {
+     "when": "Lectures 19–20",
+     "topic": "Introduction to transformers"
+    },
+    {
+     "when": "Lecture 21",
+     "topic": "Self-supervised and semi-supervised learning"
+    },
+    {
+     "when": "Lectures 22–23",
+     "topic": "Course review and synthesis"
+    }
+   ],
+   "class_meetings": "Two lectures a week, Tuesday and Thursday"
+  }
+ },
+ "https://web.cs.dal.ca/~rudzicz/Teaching/CSCI1109/2026/CSCI1109_PracticalDataScience.pdf": {
+  "url": "https://web.cs.dal.ca/~rudzicz/Teaching/CSCI1109/2026/CSCI1109_PracticalDataScience.pdf",
+  "live": true,
+  "courses": [
+   "CSCI1109"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI1109"
+   ],
+   "term_season": "Winter",
+   "term_year": null,
+   "instructors": [
+    "Frank Rudzicz"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Participation and discussion",
+       "weight": 10,
+       "count": null,
+       "note": "Team-based; in-class notebooks submitted after class score at most 33%"
+      },
+      {
+       "name": "Weekly quizzes",
+       "weight": 25,
+       "count": null,
+       "note": "Lowest quiz mark discarded"
+      },
+      {
+       "name": "Practical assignments",
+       "weight": 35,
+       "count": 5,
+       "note": "Weighted 5%, 6%, 7%, 8%, and 9% by performance"
+      },
+      {
+       "name": "Midterm exam",
+       "weight": 15,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Final exam",
+       "weight": 15,
+       "count": null,
+       "note": "Cumulative; written and practical"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Mathematics for Machine Learning",
+     "authors": "Marc Peter Deisenroth, A. Aldo Faisal, and Cheng Soon Ong",
+     "required": null,
+     "free": null
+    },
+    {
+     "title": "Probabilistic machine learning",
+     "authors": "Kevin Murphy",
+     "required": null,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late notebooks",
+     "summary": "In-class notebooks may be submitted after class, but the maximum score is 33%."
+    },
+    {
+     "topic": "AI tools",
+     "summary": "AI tools may support learning, but are prohibited on some assessments; acknowledge tools where allowed."
+    },
+    {
+     "topic": "Absences",
+     "summary": "The Student Declaration of Absence policy applies."
+    },
+    {
+     "topic": "Assignments",
+     "summary": "Assignments are completed individually and worked on during labs."
+    },
+    {
+     "topic": "Remote proctoring",
+     "summary": "The instructor may require remote proctoring; contact them for an alternate assessment if unable to meet requirements."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Lecture 1",
+     "topic": "Introduction to data science and Python"
+    },
+    {
+     "when": "Lecture 2",
+     "topic": "Python variables, loops, and functions"
+    },
+    {
+     "when": "Lecture 3",
+     "topic": "Working with data in pandas"
+    },
+    {
+     "when": "Lecture 4",
+     "topic": "Filtering, grouping, and aggregating data"
+    },
+    {
+     "when": "Lecture 5",
+     "topic": "Data cleaning: missing values and duplicates"
+    },
+    {
+     "when": "Lecture 6",
+     "topic": "Data transformation and feature scaling"
+    },
+    {
+     "when": "Lecture 7",
+     "topic": "Mathematical foundations: vectors and matrices"
+    },
+    {
+     "when": "Lecture 8",
+     "topic": "Descriptive statistics: mean, variance, and distributions"
+    },
+    {
+     "when": "Lecture 9",
+     "topic": "Data visualization with Matplotlib"
+    },
+    {
+     "when": "Lecture 10",
+     "topic": "Storytelling with Seaborn visualizations"
+    },
+    {
+     "when": "Lecture 11",
+     "topic": "Probability distributions and hypothesis testing"
+    },
+    {
+     "when": "Lecture 12",
+     "topic": "Correlation versus causation"
+    },
+    {
+     "when": "Lecture 13",
+     "topic": "Introduction to machine learning"
+    },
+    {
+     "when": "Lecture 14",
+     "topic": "k-nearest neighbors and classification"
+    },
+    {
+     "when": "Lecture 15",
+     "topic": "Linear regression models"
+    },
+    {
+     "when": "Lecture 16",
+     "topic": "Logistic regression and error metrics"
+    },
+    {
+     "when": "Lecture 17",
+     "topic": "Clustering with k-means"
+    },
+    {
+     "when": "Lecture 18",
+     "topic": "Graph theory: nodes, edges, and clustering coefficient"
+    },
+    {
+     "when": "Lecture 19",
+     "topic": "Network analysis with NetworkX"
+    },
+    {
+     "when": "Lecture 20",
+     "topic": "Ethics in data science: bias and fairness"
+    },
+    {
+     "when": "Lecture 21",
+     "topic": "Data privacy and responsible use"
+    },
+    {
+     "when": "Lecture 22",
+     "topic": "Course review and future directions"
+    }
+   ],
+   "class_meetings": "Tuesday and Thursday, 8:35–9:55 a.m."
+  }
+ },
+ "https://web.cs.dal.ca/~sbrooks/csci4168/index.html": {
+  "url": "https://web.cs.dal.ca/~sbrooks/csci4168/index.html",
+  "live": true,
+  "courses": [
+   "CSCI4168"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI4168"
+   ],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [
+    "Stephen Brooks"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Attendance",
+       "weight": 5,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Programming assignment",
+       "weight": 30,
+       "count": null,
+       "note": "Minimum grade of C required"
+      },
+      {
+       "name": "Project proposal",
+       "weight": 10,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Project progress report",
+       "weight": 10,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Final project report, demo, and presentation",
+       "weight": 45,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Introduction to Game Design, Prototyping, and Development: From Concept to Playable Game with Unity and C#",
+     "authors": null,
+     "required": null,
+     "free": null
+    },
+    {
+     "title": "Game Design Workshop: A Playcentric Approach to Creating Innovative Games",
+     "authors": null,
+     "required": null,
+     "free": null
+    },
+    {
+     "title": "The Art of Game Design: A Book of Lenses",
+     "authors": null,
+     "required": null,
+     "free": null
+    },
+    {
+     "title": "Level Up!: The Guide to Great Video Game Design",
+     "authors": null,
+     "required": null,
+     "free": null
+    },
+    {
+     "title": "Unity Cookbook",
+     "authors": null,
+     "required": null,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Assignments lose 5% per day or part thereof; work over three days late may receive no credit."
+    },
+    {
+     "topic": "Project deadline",
+     "summary": "The project cannot be submitted late; no exceptions."
+    },
+    {
+     "topic": "Programming work",
+     "summary": "Assignment code must be written individually; students may discuss problems but must not share or write code for others."
+    },
+    {
+     "topic": "Academic honesty",
+     "summary": "Assignments and projects are checked for plagiarism using automated software."
+    }
+   ],
+   "weekly_topics": [],
+   "class_meetings": null
+  },
+  "modified_year": 2026
+ },
+ "https://web.cs.dal.ca/~vlado/csci1110/AcademicIntegrity.html": {
+  "url": "https://web.cs.dal.ca/~vlado/csci1110/AcademicIntegrity.html",
+  "live": true,
+  "courses": [
+   "CSCI1110"
+  ],
+  "year": null,
+  "status": "not a syllabus (model)",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": false,
+  "details": {
+   "is_syllabus": false,
+   "course_codes": [],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [],
+   "grading_schemes": [],
+   "textbooks": [],
+   "policies": [],
+   "weekly_topics": [],
+   "class_meetings": null
+  }
+ },
+ "https://web.cs.dal.ca/~tt/CSCI6508/index.htm": {
+  "url": "https://web.cs.dal.ca/~tt/CSCI6508/index.htm",
+  "live": true,
+  "courses": [
+   "CSCI6508"
+  ],
+  "year": 2003,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "ECMM6508",
+    "CSCI6508"
+   ],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [
+    "Thomas Trappenberg"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 20,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Tests",
+       "weight": 20,
+       "count": null,
+       "note": null
+      },
+      {
+       "name": "Project",
+       "weight": 60,
+       "count": null,
+       "note": null
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Fundamental of Computational Neuroscience",
+     "authors": "Thomas P. Trappenberg",
+     "required": null,
+     "free": false
+    }
+   ],
+   "policies": [],
+   "weekly_topics": [],
+   "class_meetings": null
+  },
+  "modified_year": 2003
+ },
+ "https://web.cs.dal.ca/~vlado/csci6509/AcademicIntegrity.html": {
+  "url": "https://web.cs.dal.ca/~vlado/csci6509/AcademicIntegrity.html",
+  "live": true,
+  "courses": [
+   "CSCI6509"
+  ],
+  "year": null,
+  "status": "not a syllabus (model)",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": false,
+  "details": {
+   "is_syllabus": false,
+   "course_codes": [],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [],
+   "grading_schemes": [],
+   "textbooks": [],
+   "policies": [],
+   "weekly_topics": [],
+   "class_meetings": null
+  }
+ },
+ "https://web.cs.dal.ca/~vlado/csci6509/project.html": {
+  "url": "https://web.cs.dal.ca/~vlado/csci6509/project.html",
+  "live": true,
+  "courses": [
+   "CSCI6509"
+  ],
+  "year": null,
+  "status": "not a syllabus (model)",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": false,
+  "details": {
+   "is_syllabus": false,
+   "course_codes": [],
+   "term_season": null,
+   "term_year": null,
+   "instructors": [],
+   "grading_schemes": [],
+   "textbooks": [],
+   "policies": [],
+   "weekly_topics": [],
+   "class_meetings": null
+  }
+ },
+ "https://web.cs.dal.ca/~tt/CSCI6508/schedule.htm": {
+  "url": "https://web.cs.dal.ca/~tt/CSCI6508/schedule.htm",
+  "live": true,
+  "courses": [
+   "CSCI6508"
+  ],
+  "year": 2003,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": false,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [],
+   "term_season": "Fall",
+   "term_year": null,
+   "instructors": [],
+   "grading_schemes": [],
+   "textbooks": [],
+   "policies": [],
+   "weekly_topics": [
+    {
+     "when": "September 4",
+     "topic": "Introduction and history"
+    },
+    {
+     "when": "September 9",
+     "topic": "MATLAB and matrix algebra"
+    },
+    {
+     "when": "September 11",
+     "topic": "Neurons, conductance-based models, and numerical integration"
+    },
+    {
+     "when": "September 16",
+     "topic": "Continuation"
+    },
+    {
+     "when": "September 18",
+     "topic": "Spiking neurons, response variability, and probability distributions"
+    },
+    {
+     "when": "September 23",
+     "topic": "Cortical organization and population dynamics"
+    },
+    {
+     "when": "September 25",
+     "topic": "Sigma and Sigma-Pi nodes"
+    },
+    {
+     "when": "September 30",
+     "topic": "Canceled"
+    },
+    {
+     "when": "October 2",
+     "topic": "Canceled"
+    },
+    {
+     "when": "October 7",
+     "topic": "Neural codes, information theory, and population coding"
+    },
+    {
+     "when": "October 9",
+     "topic": "Feed-forward mapping networks"
+    },
+    {
+     "when": "October 14",
+     "topic": "Associators, synaptic plasticity, weight distributions, and PCA; Test 1"
+    },
+    {
+     "when": "October 16",
+     "topic": "Auto-associative memory and attractor neural networks"
+    },
+    {
+     "when": "October 21",
+     "topic": "Phase diagrams and network dynamics"
+    },
+    {
+     "when": "October 23",
+     "topic": "Competitive networks"
+    },
+    {
+     "when": "October 28",
+     "topic": "CANN 1"
+    },
+    {
+     "when": "October 30",
+     "topic": "CANN 2"
+    },
+    {
+     "when": "November 4",
+     "topic": "Self-organizing maps; supervised learning and reward systems"
+    },
+    {
+     "when": "November 6",
+     "topic": "More self-organizing maps"
+    },
+    {
+     "when": "November 11",
+     "topic": "Remembrance Day"
+    },
+    {
+     "when": "November 13",
+     "topic": "Control systems, reward learning, and system-level organization of coupled networks"
+    },
+    {
+     "when": "November 18",
+     "topic": "Presentations and special topics"
+    },
+    {
+     "when": "November 20",
+     "topic": "Presentations"
+    },
+    {
+     "when": "November 25",
+     "topic": "Presentations"
+    },
+    {
+     "when": "November 27",
+     "topic": "Presentations"
+    },
+    {
+     "when": "December 2",
+     "topic": "Presentations and coupled (modular) networks"
+    },
+    {
+     "when": "December 4",
+     "topic": "System-level models; Test 2"
+    }
+   ],
+   "class_meetings": "Tuesdays and Thursdays"
+  },
+  "modified_year": 2003
+ },
+ "https://web.cs.dal.ca/~vlado/csci6509/files/syllabus.pdf": {
+  "url": "https://web.cs.dal.ca/~vlado/csci6509/files/syllabus.pdf",
+  "live": true,
+  "courses": [
+   "CSCI4152",
+   "CSCI6509"
+  ],
+  "year": 2026,
+  "status": "syllabus",
+  "fetched_from": "dal.ca",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI4152",
+    "CSCI6509"
+   ],
+   "term_season": "Fall",
+   "term_year": 2026,
+   "instructors": [
+    "Vlado Keselj"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 32,
+       "count": null,
+       "note": "Tentatively 3–5, including A0"
+      },
+      {
+       "name": "Final exam",
+       "weight": 32,
+       "count": null,
+       "note": "3-hour, in person"
+      },
+      {
+       "name": "Class presentation and participation",
+       "weight": 10,
+       "count": null,
+       "note": "Includes attendance"
+      },
+      {
+       "name": "Project deliverables",
+       "weight": 26,
+       "count": null,
+       "note": "P0, P1, and report"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Speech and Language Processing",
+     "authors": "Daniel Jurafsky and James Martin",
+     "required": true,
+     "free": null
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late assignments are not accepted; resolve deadline difficulties with the instructor before the deadline."
+    },
+    {
+     "topic": "Assignment absence",
+     "summary": "Student Declaration of Absence forms may be used for assignment deadlines up to two times, unless a deadline was already postponed."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "No collaboration is permitted on assignments."
+    },
+    {
+     "topic": "Final exam",
+     "summary": "The exam is closed book; a simple calculator and photo ID are allowed or required, respectively."
+    },
+    {
+     "topic": "AI tools",
+     "summary": "AI tools cannot be used to demonstrate learning outcomes; project use requires instructor approval and documentation."
+    },
+    {
+     "topic": "Course materials",
+     "summary": "Do not submit instructor-provided assignments, lecture notes, or similar materials to third-party sites."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "Tentative",
+     "topic": "Introduction to NLP"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Stream-based text processing: automata, regular expressions, Perl, morphology, information retrieval, character n-grams, and text classification"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Probabilistic and machine-learning approaches: probabilistic modeling, Python, Naive Bayes, n-gram language models, HMMs, Bayesian networks, and sum-product algorithms"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Deep learning for NLP: neural networks and deep learning"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Syntactic and semantic processing: phrase structure, chart parsing, CYK, PCFGs, unification-based processing and grammars, and Prolog"
+    },
+    {
+     "when": "Tentative",
+     "topic": "Student presentations"
+    }
+   ],
+   "class_meetings": "2 lectures and 1 lab a week, in person"
+  }
+ },
+ "https://web.cs.dal.ca/~whidden/CSCI3110/index.html": {
+  "url": "https://web.cs.dal.ca/~whidden/CSCI3110/index.html",
+  "live": true,
+  "courses": [
+   "CSCI3110"
+  ],
+  "year": 2019,
+  "status": "syllabus",
+  "fetched_from": "web page",
+  "truncated": false,
+  "weights_add_up": true,
+  "details": {
+   "is_syllabus": true,
+   "course_codes": [
+    "CSCI3110"
+   ],
+   "term_season": "Summer",
+   "term_year": 2019,
+   "instructors": [
+    "Christopher Whidden"
+   ],
+   "grading_schemes": [
+    {
+     "label": null,
+     "components": [
+      {
+       "name": "Assignments",
+       "weight": 40,
+       "count": 10,
+       "note": "Best 8 count"
+      },
+      {
+       "name": "Midterm",
+       "weight": 20,
+       "count": 1,
+       "note": "Final exam replaces midterm if higher"
+      },
+      {
+       "name": "Final exam",
+       "weight": 40,
+       "count": 1,
+       "note": "3 hours"
+      }
+     ]
+    }
+   ],
+   "textbooks": [
+    {
+     "title": "Introduction to Algorithms (3rd edition)",
+     "authors": "T. Cormen, C. Leiserson, R. Rivest, and C. Stein",
+     "required": null,
+     "free": false
+    }
+   ],
+   "policies": [
+    {
+     "topic": "Late work",
+     "summary": "Late assignments are not accepted."
+    },
+    {
+     "topic": "Missed exams",
+     "summary": "A make-up exam may be offered for a good reason; it is usually oral unless many students miss the exam."
+    },
+    {
+     "topic": "Collaboration",
+     "summary": "Groups of up to three may submit joint assignments; collaboration across groups is prohibited."
+    },
+    {
+     "topic": "Missing work",
+     "summary": "For valid, documented reasons, the final exam score may cover marks for missing coursework."
+    },
+    {
+     "topic": "Assignment submission",
+     "summary": "Assignments without a cover sheet will not be marked, starting with Assignment 4."
+    },
+    {
+     "topic": "Academic integrity",
+     "summary": "Using solutions from outside your group or online is an academic integrity offense."
+    }
+   ],
+   "weekly_topics": [
+    {
+     "when": "May 7",
+     "topic": "Introduction"
+    },
+    {
+     "when": "May 7, 9",
+     "topic": "Fundamentals"
+    },
+    {
+     "when": "May 14, 16, 21, 23",
+     "topic": "Graph Algorithms"
+    },
+    {
+     "when": "May 23, 28, 30; June 4, 6",
+     "topic": "Greedy Algorithms"
+    },
+    {
+     "when": "June 11, 13, 18",
+     "topic": "Divide and Conquer"
+    },
+    {
+     "when": "June 18, 20, 25, 27",
+     "topic": "Dynamic Programming"
+    },
+    {
+     "when": "July 2",
+     "topic": "Midterm Review"
+    },
+    {
+     "when": "July 4",
+     "topic": "Midterm Exam"
+    },
+    {
+     "when": "July 9, 11, 16",
+     "topic": "Data Structures"
+    },
+    {
+     "when": "July 16, 18",
+     "topic": "Randomization"
+    },
+    {
+     "when": "July 23, 25",
+     "topic": "NP hardness"
+    },
+    {
+     "when": "July 30",
+     "topic": "Final Review"
+    },
+    {
+     "when": "August 3",
+     "topic": "Final Exam"
+    }
+   ],
+   "class_meetings": "Two lectures a week and one tutorial a week"
+  }
  }
 }
