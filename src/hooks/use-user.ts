@@ -23,3 +23,21 @@ export function useUser(): User | null | undefined {
 export function displayName(user: User): string {
     return user.email?.split("@")[0] ?? "Account";
 }
+
+/** True when the signed-in user is an admin or the owner, so moderation actions can be shown. */
+export function useIsModerator(): boolean {
+    const user = useUser();
+    const [isModerator, setIsModerator] = useState(false);
+
+    useEffect(() => {
+        if (!user) return setIsModerator(false);
+        void createClient()
+            .from("profiles")
+            .select("role")
+            .eq("id", user.id)
+            .single()
+            .then(({ data }) => setIsModerator(data?.role === "admin" || data?.role === "owner"));
+    }, [user]);
+
+    return isModerator;
+}
