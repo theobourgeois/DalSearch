@@ -1,54 +1,68 @@
-import { RoomSchedules } from "@/components/room-schedules";
-import { courses } from "@/lib/course-utils";
-import type { ClassSession } from "@/lib/types";
+import type { Metadata } from "next";
+import { Page, PageActions, PageHeader, SectionHeader } from "@/components/layout/page";
+import { FreeRoomList } from "@/components/rooms/room-links";
+import { RoomSchedule } from "@/components/rooms/room-schedule";
+import { RoomSearch } from "@/components/rooms/room-search";
+import { termCodes, type Term } from "@/lib/constants";
+import { getCurrentTerm, getRoomSessions } from "@/lib/data";
+import { parseLocation } from "@/lib/location";
+import { findFreeRooms, freeWindows, isCampusHours, roomStatus } from "@/lib/rooms";
+import { campusNow } from "@/lib/time";
 
-const EXCLUDED_ROOMS = [
-    " C/D, C/D",
-    "Online-ASYNCHRONOUS SESSION",
-    "Online-SYNCHRONOUS SESSION",
-];
+export const metadata: Metadata = {
+    title: "Rooms - DalSearch",
+    description: "See when any room at Dalhousie is booked, or find one that's free right now.",
+};
 
-function getRooms() {
-    return Object.values(courses).reduce((acc, course) => {
-        course.termClasses.forEach((termClass) => {
-            if (
-                !termClass.location ||
-                EXCLUDED_ROOMS.includes(termClass.location) ||
-                !termClass.time.start ||
-                !termClass.time.end
-            ) {
-                return;
-            }
-            if (!acc[termClass.location]) {
-                acc[termClass.location] = [];
-            }
-            acc[termClass.location].push(termClass);
-        });
-        return acc;
-    }, {} as Record<string, ClassSession[]>);
-}
+type Props = { searchParams: Promise<{ room?: string; term?: string }> };
 
-export default function Rooms() {
-    const rooms = getRooms();
+export default async function RoomsPage({ searchParams }: Props) {
+    const params = await searchParams;
+    const currentTerm = getCurrentTerm();
+    const term = termCodes.includes(params.term as Term) ? (params.term as Term) : currentTerm;
+    const rooms = getRoomSessions(term);
+    const roomNames = [...rooms.keys()].sort();
+    const room = params.room && rooms.has(params.room) ? params.room : null;
+    const now = campusNow();
+    const live = term === currentTerm && isCampusHours(now);
+
+    if (!room) {
+        return (
+            <Page breadcrumbs={[{ label: "Rooms" }]}>
+                <PageHeader
+                    title="Rooms"
+                    description="See when any room on campus is booked, or find one that's free right now."
+                />
+                <PageActions>
+                    <RoomSearch rooms={roomNames} term={term} size="lg" />
+                </PageActions>
+                {live && (
+                    <section className="mt-11">
+                        <SectionHeader title="Free right now" className="mb-4" />
+                        <FreeRoomList rooms={findFreeRooms(rooms, now, undefined, 10)} term={term} />
+                    </section>
+                )}
+            </Page>
+        );
+    }
+
+    const sessions = rooms.get(room) ?? [];
+    const location = parseLocation(room);
 
     return (
-        <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 dark:bg-gray-900">
-            <div className="container mx-auto px-4 py-8">
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-slate-800 mb-2 dark:text-white">
-                        Explore Rooms
-                    </h1>
-                    <p className="text-slate-600 max-w-2xl dark:text-gray-300">
-                        Find and view schedules for all rooms across Dalhousie
-                        University campuses. Search for a specific room to see
-                        its current and upcoming class schedule.
-                    </p>
-                </div>
-
-                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 dark:bg-gray-800 dark:border-gray-700">
-                    <RoomSchedules rooms={rooms} />
-                </div>
-            </div>
-        </main>
+        <Page breadcrumbs={[{ label: "Rooms", href: "/rooms" }, { label: location.name }]}>
+            <PageHeader title={location.name} subtitle={location.campus ? `${location.campus} campus` : undefined} />
+            <PageActions>
+                <RoomSearch rooms={roomNames} term={term} />
+            </PageActions>
+            <RoomSchedule
+                room={room}
+                sessions={sessions}
+                term={term}
+                status={live ? roomStatus(sessions, now) : null}
+                freeWindows={live && now.day ? freeWindows(sessions, now.day, now.minutes) : []}
+                freeRooms={live ? findFreeRooms(rooms, now, room, 4) : []}
+            />
+        </Page>
     );
 }

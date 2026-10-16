@@ -1,0 +1,16 @@
+/* explore: page-specific */
+  .i.star { fill: #FFC700; stroke: #FFC700; stroke-width: 1.5; }
+  .i-2xs { width: 11px; height: 11px; stroke-width: 2.6; }
+  .lbl { font-size: 11.5px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: #94A3B8; }
+  .bar { display: block; height: 6px; border-radius: 999px; background: #EEF0F3; overflow: hidden; }
+  .bar > span { display: block; height: 100%; border-radius: 999px; }
+  .chk { width: 18px; height: 18px; border-radius: 6px; display: grid; place-items: center; flex-shrink: 0; box-shadow: inset 0 0 0 1.5px #CBD5E1; background: #fff; }
+  .chk.on { background: #0F172A; box-shadow: none; color: #fff; }
+  .sel-row { background: #fff; box-shadow: 0 0 0 1px rgba(255,199,0,.55), 0 14px 30px -16px rgba(15,23,42,.30); }
+  .sel-row::before { content: ""; position: absolute; left: -10px; top: 14px; bottom: 14px; width: 4px; border-radius: 0 4px 4px 0; background: #FFC700; }
+  .mc-col { position: relative; height: 146px; border-radius: 10px; background-color: #fff;
+    background-image: linear-gradient(rgba(15,23,42,.055) 1px, transparent 1px); background-size: 100% 20%; }
+  .mc-ev { position: absolute; left: 3px; right: 3px; border-radius: 6px; font-size: 9.5px; font-weight: 800; line-height: 1; padding: 3px 4px; overflow: hidden; white-space: nowrap; }
+  .mc-focus { box-shadow: inset 0 0 0 1.5px #F5B800; }
+  .mc-x { box-shadow: 0 0 0 1.5px #F43F5E; z-index: 1; }
+  .mc-prev { border: 1.5px dashed #E6AC00; background: rgba(255,250,235,.9); color: #9A6F00; }

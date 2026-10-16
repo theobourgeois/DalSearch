@@ -1,0 +1,772 @@
+{
+ "CSCI2122": {
+  "prerequisites": [
+   "CSCI1110",
+   "CSCI1120"
+  ],
+  "equivalent": null,
+  "subjectCode": "CSCI",
+  "courseCode": "2122",
+  "title": "Systems Programming",
+  "creditHours": 3,
+  "description": "This course presents tools, techniques, and concepts for systems programming. Students will be exposed to assembly and will be introduced to the C programming language. The course also discusses memory hierarchies, performance measurement, exception control flow, and performance related issues. Students will be involved in significant amount of low-level programming.",
+  "termClasses": [
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "01",
+    "type": "Lec",
+    "days": [
+     "M",
+     "W"
+    ],
+    "time": {
+     "start": "1135",
+     "end": "1255"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 127",
+    "crn": "20756",
+    "course": "CSCI2122"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "90",
+    "type": "Lec",
+    "days": [],
+    "time": {
+     "start": "C/D"
+    },
+    "location": "Consult Department",
+    "crn": "20758",
+    "course": "CSCI2122"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "B03",
+    "type": "Lab",
+    "days": [
+     "W"
+    ],
+    "time": {
+     "start": "1005",
+     "end": "1125"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 134",
+    "crn": "20761",
+    "course": "CSCI2122"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "B04",
+    "type": "Lab",
+    "days": [
+     "M"
+    ],
+    "time": {
+     "start": "1305",
+     "end": "1425"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 134",
+    "crn": "20762",
+    "course": "CSCI2122"
+   }
+  ],
+  "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 127",
+  "enrollement": {
+   "enrolled": 101,
+   "capacity": 120
+  },
+  "instructorsByTerm": {
+   "202620": [
+    "Kalyaniwalla N. ",
+    "Wijenayake U. ",
+    "Staff",
+    "Staff"
+   ],
+   "202710": [
+    "Kalyaniwalla N. ",
+    "Staff"
+   ],
+   "202720": [
+    "Kalyaniwalla N. ",
+    "Staff"
+   ]
+  }
+ },
+ "CSCI3110": {
+  "prerequisites": [
+   "CSCI2110",
+   "CSCI2115"
+  ],
+  "equivalent": null,
+  "subjectCode": "CSCI",
+  "courseCode": "3110",
+  "title": "Algorithms I",
+  "creditHours": 3,
+  "description": "This course covers techniques for the design and analysis of efficient algorithms and data structures. Topics include asymptotic analysis, divide and conquer algorithms, greedy algorithms, dynamic programming, data structure design, optimization algorithms, and amortized analysis. The techniques are applied to problems such as sorting, searching, identifying graph structure, and manipulating sets.",
+  "termClasses": [
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "01",
+    "type": "Lec",
+    "days": [
+     "T",
+     "R"
+    ],
+    "time": {
+     "start": "1005",
+     "end": "1125"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 127",
+    "crn": "20801",
+    "course": "CSCI3110"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "T01",
+    "type": "Tut",
+    "days": [
+     "W",
+     "R",
+     "F"
+    ],
+    "time": {
+     "start": "0835",
+     "end": "0955"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 127",
+    "crn": "20802",
+    "course": "CSCI3110"
+   }
+  ],
+  "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 127",
+  "enrollement": {
+   "enrolled": 78,
+   "capacity": 120
+  },
+  "instructorsByTerm": {
+   "202620": [
+    "Wilde N. ",
+    "Staff"
+   ],
+   "202630": [
+    "Wilde N. ",
+    "Staff"
+   ],
+   "202710": [
+    "Wilde N. ",
+    "Staff"
+   ],
+   "202720": [
+    "Wilde N. ",
+    "Staff"
+   ]
+  }
+ },
+ "CSCI2110": {
+  "prerequisites": [
+   "CSCI1110"
+  ],
+  "equivalent": null,
+  "subjectCode": "CSCI",
+  "courseCode": "2110",
+  "title": "Data Structures and Algorithms",
+  "creditHours": 3,
+  "description": "This course provides a comprehensive introduction to data structures and algorithms, including their design, analysis, and implementation. In discussing design and analysis there is a strong emphasis on abstraction. In discussing implementation, general approaches that are applicable in a wide range of procedural programming language are emphasized, in addition to a focus on the details of impleme",
+  "termClasses": [
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "01",
+    "type": "Lec",
+    "days": [
+     "M",
+     "W",
+     "R",
+     "F"
+    ],
+    "time": {
+     "start": "1635",
+     "end": "1725"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 127",
+    "crn": "20748",
+    "course": "CSCI2110"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "90",
+    "type": "Lec",
+    "days": [],
+    "time": {
+     "start": "C/D"
+    },
+    "location": "Consult Department",
+    "crn": "20749",
+    "course": "CSCI2110"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "B01",
+    "type": "Lab",
+    "days": [
+     "T"
+    ],
+    "time": {
+     "start": "1005",
+     "end": "1125"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 143",
+    "crn": "20750",
+    "course": "CSCI2110"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "B02",
+    "type": "Lab",
+    "days": [
+     "W"
+    ],
+    "time": {
+     "start": "0835",
+     "end": "0955"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 143",
+    "crn": "20751",
+    "course": "CSCI2110"
+   }
+  ],
+  "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 127",
+  "enrollement": {
+   "enrolled": 109,
+   "capacity": 120
+  },
+  "instructorsByTerm": {
+   "202620": [
+    "Sampalli S. ",
+    "Staff",
+    "Staff",
+    "Staff"
+   ],
+   "202710": [
+    "Sampalli S. ",
+    "Staff",
+    "Staff",
+    "Staff"
+   ],
+   "202720": [
+    "Brodsky A. ",
+    "Staff"
+   ]
+  }
+ },
+ "CSCI3120": {
+  "prerequisites": [
+   "CSCI2110",
+   "CSCI2122",
+   "CSCI2134"
+  ],
+  "equivalent": null,
+  "subjectCode": "CSCI",
+  "courseCode": "3120",
+  "title": "Operating Systems",
+  "creditHours": 3,
+  "description": "This course includes a review of I/O and interrupt structures. Topics covered include dynamic procedure activation, system structure and evaluation, memory management, process management, process scheduling, recovery procedures, concurrency, deadlocks, resource allocation, protection, and operating systems implementation.",
+  "termClasses": [
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "01",
+    "type": "Lec",
+    "days": [
+     "T",
+     "R"
+    ],
+    "time": {
+     "start": "0835",
+     "end": "0955"
+    },
+    "location": "Carleton TUPPER BLDG THTR B",
+    "crn": "20803",
+    "course": "CSCI3120"
+   }
+  ],
+  "location": "Carleton TUPPER BLDG THTR B",
+  "enrollement": {
+   "enrolled": 117,
+   "capacity": 150
+  },
+  "instructorsByTerm": {
+   "202620": [
+    "Ye Q. "
+   ],
+   "202630": [
+    "Brodsky A. "
+   ],
+   "202710": [
+    "Brodsky A. "
+   ],
+   "202720": [
+    "Ye Q. "
+   ]
+  }
+ },
+ "CSCI3130": {
+  "prerequisites": [
+   "CSCI2110",
+   "CSCI2134"
+  ],
+  "equivalent": null,
+  "subjectCode": "CSCI",
+  "courseCode": "3130",
+  "title": "Intro to Software Engineering",
+  "creditHours": 3,
+  "description": "The course examines the process of software development, from initial planning through implementation and maintenance. A brief survey of available tools and techniques will be presented covering the topics of analysis, planning, estimating, project management, design, testing, and evaluation. Particular emphasis will be given to organizing and planning, team participation and management, top-down ",
+  "termClasses": [
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "01",
+    "type": "Lec",
+    "days": [
+     "T",
+     "R"
+    ],
+    "time": {
+     "start": "1305",
+     "end": "1425"
+    },
+    "location": "Studley KILLAM LIBRARY MACME",
+    "crn": "20804",
+    "course": "CSCI3130"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "B01",
+    "type": "Lab",
+    "days": [
+     "M",
+     "W"
+    ],
+    "time": {
+     "start": "1605",
+     "end": "1725"
+    },
+    "location": "Studley MONA CAMPBELL BUILDING 1201",
+    "crn": "20805",
+    "course": "CSCI3130"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "B02",
+    "type": "Lab",
+    "days": [
+     "M",
+     "W"
+    ],
+    "time": {
+     "start": "1605",
+     "end": "1725"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 134",
+    "crn": "20806",
+    "course": "CSCI3130"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "B03",
+    "type": "Lab",
+    "days": [
+     "M",
+     "W"
+    ],
+    "time": {
+     "start": "1605",
+     "end": "1725"
+    },
+    "location": "Studley GOLDBERG COMPUTER SCIENCE BLDG 143",
+    "crn": "20807",
+    "course": "CSCI3130"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "T01",
+    "type": "Tut",
+    "days": [
+     "M"
+    ],
+    "time": {
+     "start": "1305",
+     "end": "1425"
+    },
+    "location": "Studley CHEMISTRY 125",
+    "crn": "20808",
+    "course": "CSCI3130"
+   }
+  ],
+  "location": "Studley KILLAM LIBRARY MACME",
+  "enrollement": {
+   "enrolled": 136,
+   "capacity": 150
+  },
+  "instructorsByTerm": {
+   "202620": [
+    "Rahman M. ",
+    "Staff",
+    "Staff",
+    "Staff",
+    "Staff"
+   ],
+   "202630": [
+    "Bodorik P. ",
+    "Staff",
+    "Staff",
+    "Staff"
+   ],
+   "202710": [
+    "Sharma T. ",
+    "Staff",
+    "Staff",
+    "Staff",
+    "Staff"
+   ],
+   "202720": [
+    "Bodorik P. ",
+    "Staff",
+    "Staff",
+    "Staff"
+   ]
+  }
+ },
+ "STAT2060": {
+  "prerequisites": [
+   "CSCI1300",
+   "MATH1000",
+   "MATH1215"
+  ],
+  "equivalent": "202620-MATH-2060",
+  "subjectCode": "STAT",
+  "courseCode": "2060",
+  "title": "Intro Probability & Stats",
+  "creditHours": 3,
+  "description": "Rigorous introduction to probability and statistical theory. Topics covered include elementary probability, random variables, distributions, estimation and hypothesis testing. Estimation and testing are introduced using maximum likelihood and the generalized likelihood ratio. Natural sequels for this course are STAT 2080.03 and 3360.03",
+  "termClasses": [
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "01",
+    "type": "Lec",
+    "days": [
+     "M",
+     "W",
+     "R",
+     "F"
+    ],
+    "time": {
+     "start": "1435",
+     "end": "1525"
+    },
+    "location": "Studley SIR JAMES DUNN BUILDING 117",
+    "crn": "22965",
+    "course": "STAT2060"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "T01",
+    "type": "Tut",
+    "days": [
+     "T"
+    ],
+    "time": {
+     "start": "0835",
+     "end": "1025"
+    },
+    "location": "Studley HENRY HICKS ACADEMIC ADMIN 217",
+    "crn": "22966",
+    "course": "STAT2060"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "T02",
+    "type": "Tut",
+    "days": [
+     "T"
+    ],
+    "time": {
+     "start": "1435",
+     "end": "1625"
+    },
+    "location": "Studley CHEMISTRY 223",
+    "crn": "22967",
+    "course": "STAT2060"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "T03",
+    "type": "Tut",
+    "days": [
+     "M"
+    ],
+    "time": {
+     "start": "0935",
+     "end": "1125"
+    },
+    "location": "Studley LSC-COMMON AREA C206",
+    "crn": "22968",
+    "course": "STAT2060"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "T04",
+    "type": "Tut",
+    "days": [
+     "T"
+    ],
+    "time": {
+     "start": "1435",
+     "end": "1625"
+    },
+    "location": "Studley HENRY HICKS ACADEMIC ADMIN 217",
+    "crn": "22969",
+    "course": "STAT2060"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "T05",
+    "type": "Tut",
+    "days": [
+     "M"
+    ],
+    "time": {
+     "start": "1135",
+     "end": "1325"
+    },
+    "location": "Studley HENRY HICKS ACADEMIC ADMIN 217",
+    "crn": "22970",
+    "course": "STAT2060"
+   }
+  ],
+  "location": "Studley SIR JAMES DUNN BUILDING 117",
+  "enrollement": {
+   "enrolled": 104,
+   "capacity": 140
+  },
+  "instructorsByTerm": {
+   "202620": [
+    "Murphy O. ",
+    "Murphy O. ",
+    "Murphy O. ",
+    "Murphy O. ",
+    "Murphy O. ",
+    "Murphy O. "
+   ],
+   "202630": [
+    "Lopez Restrepo D. "
+   ],
+   "202710": [
+    "Sarhan A. ",
+    "Sarhan A. ",
+    "Sarhan A. ",
+    "Sarhan A. ",
+    "Sarhan A. "
+   ],
+   "202720": [
+    "Murphy O. ",
+    "Murphy O. ",
+    "Murphy O. ",
+    "Murphy O. ",
+    "Murphy O. "
+   ]
+  }
+ },
+ "CSCI2141": {
+  "prerequisites": [
+   "CSCI1105",
+   "CSCI1110",
+   "CSCI1503",
+   "CSCI2202"
+  ],
+  "equivalent": null,
+  "subjectCode": "CSCI",
+  "courseCode": "2141",
+  "title": "Intro to Database Systems",
+  "creditHours": 3,
+  "description": "This course introduces students to the concepts of database management systems and database design. Topics include: Database (DB) components, DB design using entity-relationship  (relational and object oriented), SQL, and transactional properties and techniques to support them. The concepts will be reinforced using one or more Database Management Systems.",
+  "termClasses": [
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "01",
+    "type": "Lec",
+    "days": [
+     "T",
+     "R"
+    ],
+    "time": {
+     "start": "1305",
+     "end": "1425"
+    },
+    "location": "Studley KENNETH C ROWE MANAGEMENT 1020",
+    "crn": "20770",
+    "course": "CSCI2141"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "02",
+    "type": "Lec",
+    "days": [
+     "T",
+     "R"
+    ],
+    "time": {
+     "start": "1605",
+     "end": "1725"
+    },
+    "location": "Studley SIR JAMES DUNN BUILDING 101",
+    "crn": "20771",
+    "course": "CSCI2141"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "90",
+    "type": "Lec",
+    "days": [],
+    "time": {
+     "start": "C/D"
+    },
+    "location": "Consult Department",
+    "crn": "20772",
+    "course": "CSCI2141"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "B02",
+    "type": "Lab",
+    "days": [
+     "W",
+     "R",
+     "F"
+    ],
+    "time": {
+     "start": "1305",
+     "end": "1425"
+    },
+    "location": "Studley MCCAIN ARTS&SS AUD-1",
+    "crn": "20774",
+    "course": "CSCI2141"
+   }
+  ],
+  "location": "Studley KENNETH C ROWE MANAGEMENT 1020",
+  "enrollement": {
+   "enrolled": 100,
+   "capacity": 120
+  },
+  "instructorsByTerm": {
+   "202620": [
+    "Aziz K. ",
+    "Aziz K. ",
+    "Staff",
+    "Staff"
+   ],
+   "202710": [
+    "McAllister M. ",
+    "Staff"
+   ],
+   "202720": [
+    "Aziz K. ",
+    "Aziz K. ",
+    "Staff"
+   ]
+  }
+ },
+ "ECON1101": {
+  "prerequisites": [],
+  "equivalent": null,
+  "subjectCode": "ECON",
+  "courseCode": "1101",
+  "title": "Principles of Microeconomics",
+  "creditHours": 3,
+  "description": "How do you decide whether or not to go to university? Why does the price of pizza change so much less than the price of oil? What will better help prevent climate change: a carbon tax, or a cap-and-trade system? Microeconomic analysis, which considers the behaviour of individuals and businesses, can answer questions like these.",
+  "termClasses": [
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "01",
+    "type": "Lec",
+    "days": [
+     "T",
+     "R"
+    ],
+    "time": {
+     "start": "1435",
+     "end": "1555"
+    },
+    "location": "Studley KENNETH C ROWE MANAGEMENT 1020",
+    "crn": "20950",
+    "course": "ECON1101"
+   },
+   {
+    "term": "202620",
+    "instructors": [],
+    "section": "T01",
+    "type": "Tut",
+    "days": [
+     "M"
+    ],
+    "time": {
+     "start": "1135",
+     "end": "1225"
+    },
+    "location": "Studley LSC-COMMON AREA C242",
+    "crn": "20951",
+    "course": "ECON1101"
+   }
+  ],
+  "location": "Studley KENNETH C ROWE MANAGEMENT 1020",
+  "enrollement": {
+   "enrolled": 90,
+   "capacity": 120
+  },
+  "instructorsByTerm": {
+   "202620": [
+    "Ntantamis C. ",
+    "Staff"
+   ],
+   "202630": [
+    "Rushe M. ",
+    "Staff"
+   ],
+   "202710": [
+    "Boulatoff C. ",
+    "Boulatoff C. ",
+    "Shamsuddin M. ",
+    "Rushe M. ",
+    "Staff"
+   ],
+   "202720": [
+    "McIver D. ",
+    "Staff"
+   ]
+  }
+ }
+}

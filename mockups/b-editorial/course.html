@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>CSCI 2122 Systems Programming · DalSearch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      colors: {
+        paper: '#FAF8F3',
+        ink: '#191917',
+        line: '#E8E4DA',
+        gold: { DEFAULT: '#FFCD00', soft: '#FFF3BF', deep: '#E8B800' },
+        sage: { 50: '#F1F4EC', 100: '#E4EBDB', 200: '#CFDCC1', 500: '#7E9A6A', 700: '#4A6339', 900: '#2E3F24' },
+        clay: { 50: '#FBF0EA', 100: '#F5E0D4', 200: '#EBC6B1', 500: '#C77A55', 700: '#8E4A2C', 900: '#5C2E1A' },
+        sky:  { 50: '#EEF3F8', 100: '#DEE8F1', 200: '#C2D5E6', 500: '#6A94BA', 700: '#365C7D', 900: '#1F3A52' },
+        plum: { 50: '#F5EFF5', 100: '#EBDFEA', 200: '#D9C3D7', 500: '#9C6B97', 700: '#6B3F67', 900: '#452842' },
+        sand: { 50: '#FAF5E8', 100: '#F3E9CF', 200: '#E7D5A6', 500: '#BC9A4C', 700: '#7D6328', 900: '#4F3E17' },
+        alert: { 50: '#FCEDE8', 100: '#F8DAD1', 500: '#D4492F', 700: '#A3321D' },
+      },
+    },
+  },
+};
+</script>
+<style>
+  body { background: #FAF8F3; color: #191917; -webkit-font-smoothing: antialiased; }
+  .i { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .hl { position: relative; display: inline-block; z-index: 0; }
+  .hl::after { content: ""; position: absolute; left: -0.04em; right: -0.08em; bottom: 0.07em; height: 0.3em;
+    background: #FFCD00; border-radius: 0.1em 0.28em 0.16em 0.3em; transform: rotate(-1.6deg) skewX(-10deg); z-index: -1; }
+  .d { width: 24px; height: 24px; border-radius: 999px; display: grid; place-items: center; font-size: 10px; font-weight: 600; background: #F3F1EC; color: #A8A29E; }
+  .d.on { background: #191917; color: #fff; }
+  .dropcap::first-letter { font-family: "Instrument Serif", serif; float: left; font-size: 76px; line-height: 0.82; padding: 6px 12px 0 0; color: #191917; }
+  .star { width: 16px; height: 16px; }
+</style>
+</head>
+<body class="font-sans">
+
+<!-- ============ HEADER ============ -->
+<header class="border-b border-line">
+  <div class="max-w-[1312px] mx-auto px-8 h-[72px] flex items-center">
+    <a href="#" class="flex items-center gap-2.5 shrink-0">
+      <img src="../../public/dalsearch.svg" alt="" class="w-[26px] h-[26px]">
+      <span class="text-[19px] tracking-[-0.01em] leading-none"><span class="font-semibold">Dal</span><span class="font-serif italic text-[23px]">Search</span></span>
+    </a>
+    <nav class="ml-12 flex items-center gap-1 text-[14px] font-medium text-stone-500">
+      <a href="#" class="px-3.5 py-2 rounded-full bg-white border border-line text-ink">Explore</a>
+      <a href="#" class="px-3.5 py-2 rounded-full border border-transparent hover:text-ink">Schedule</a>
+      <a href="#" class="px-3.5 py-2 rounded-full border border-transparent hover:text-ink">Rooms</a>
+      <a href="#" class="px-3.5 py-2 rounded-full border border-transparent hover:text-ink">Instructors</a>
+    </nav>
+    <div class="ml-auto flex items-center gap-2.5">
+      <div class="w-[280px] h-10 rounded-full bg-white border border-line flex items-center pl-4 pr-1.5 gap-2.5 text-[14px] text-stone-400">
+        <svg class="i w-4 h-4 text-stone-500" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+        <span>Search courses</span>
+        <span class="ml-auto text-[11px] font-medium text-stone-500 border border-line rounded-full px-2 py-0.5 bg-paper">⌘K</span>
+      </div>
+      <button class="w-10 h-10 rounded-full border border-line bg-white grid place-items-center text-stone-600" aria-label="Toggle dark mode">
+        <svg class="i w-[17px] h-[17px]" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+      <a href="#" class="h-10 px-5 rounded-full bg-ink text-paper text-[14px] font-medium flex items-center">Sign in</a>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-[1312px] mx-auto px-8 pb-24">
+
+  <!-- Breadcrumb -->
+  <nav class="pt-8 flex items-center gap-2 text-[13px] text-stone-500">
+    <a href="#" class="hover:text-ink">Explore</a>
+    <svg class="i w-3.5 h-3.5 text-stone-300" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+    <a href="#" class="hover:text-ink">Computer Science</a>
+    <svg class="i w-3.5 h-3.5 text-stone-300" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+    <span class="text-ink font-medium tnum">CSCI 2122</span>
+  </nav>
+
+  <div class="mt-10 grid grid-cols-[1fr_372px] gap-16 items-start">
+
+    <!-- ================= MAIN ================= -->
+    <div>
+      <!-- Title -->
+      <div class="flex items-center gap-2.5">
+        <span class="text-[12px] font-semibold tracking-wide rounded-full bg-sage-100 text-sage-700 px-2.5 py-1">CSCI</span>
+        <span class="text-[15px] font-semibold tnum">2122</span>
+        <span class="text-stone-300">/</span>
+        <span class="text-[14px] text-stone-500">Computer Science</span>
+      </div>
+      <h1 class="mt-4 font-serif text-[104px] leading-[0.9] tracking-[-0.025em]">Systems <em>Programming</em></h1>
+      <div class="mt-7 flex flex-wrap items-center gap-2 text-[13px]">
+        <span class="h-9 px-4 rounded-full bg-white border border-line flex items-center gap-2 font-medium"><svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>3 credit hours</span>
+        <span class="h-9 px-4 rounded-full bg-white border border-line flex items-center gap-2 font-medium"><svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Lecture + Lab</span>
+        <span class="h-9 px-4 rounded-full bg-white border border-line flex items-center gap-2 font-medium"><svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>Winter 2026 · Fall 2026 · Winter 2027</span>
+        <span class="h-9 px-4 rounded-full bg-white border border-line flex items-center gap-2 font-medium"><svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Studley campus</span>
+      </div>
+
+      <!-- About -->
+      <section class="mt-14">
+        <p class="dropcap text-[18px] leading-[1.72] text-stone-700 max-w-[720px]">This course presents tools, techniques, and concepts for systems programming. Students will be exposed to assembly and will be introduced to the C programming language. The course also discusses memory hierarchies, performance measurement, exception control flow, and performance related issues. Students will be involved in significant amount of low-level programming.</p>
+      </section>
+
+      <!-- Prereqs -->
+      <section class="mt-14">
+        <div class="flex items-baseline justify-between">
+          <h2 class="font-serif text-[36px] leading-none tracking-[-0.01em]">Prerequisites</h2>
+          <span class="text-[13px] text-stone-500">Both required</span>
+        </div>
+        <div class="mt-5 grid grid-cols-2 gap-4">
+          <a href="#" class="group rounded-[18px] bg-white border border-line p-5 flex items-center gap-4 hover:border-stone-300">
+            <span class="w-12 h-12 rounded-[14px] bg-sage-100 text-sage-700 grid place-items-center"><svg class="i w-5 h-5" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg></span>
+            <div class="flex-1">
+              <div class="text-[13px] font-semibold tnum">CSCI 1110</div>
+              <div class="font-serif text-[22px] leading-tight">Intro to Computer Science</div>
+            </div>
+            <svg class="i w-5 h-5 text-stone-400" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+          <a href="#" class="group rounded-[18px] bg-white border border-line p-5 flex items-center gap-4 hover:border-stone-300">
+            <span class="w-12 h-12 rounded-[14px] bg-sage-100 text-sage-700 grid place-items-center"><svg class="i w-5 h-5" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg></span>
+            <div class="flex-1">
+              <div class="text-[13px] font-semibold tnum">CSCI 1120</div>
+              <div class="font-serif text-[22px] leading-tight">Intro to Computer Systems</div>
+            </div>
+            <svg class="i w-5 h-5 text-stone-400" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </a>
+        </div>
+        
+      </section>
+
+      <!-- Sections -->
+      <section class="mt-16">
+        <div class="flex items-end justify-between">
+          <h2 class="font-serif text-[36px] leading-none tracking-[-0.01em]">Sections</h2>
+          <div class="flex items-center p-1 rounded-full bg-white border border-line text-[13px] font-medium">
+            <span class="px-4 py-1.5 rounded-full bg-ink text-paper">Winter 2026</span>
+            <span class="px-4 py-1.5 rounded-full text-stone-300 line-through decoration-stone-300">Summer 2026</span>
+            <span class="px-4 py-1.5 rounded-full text-stone-600">Fall 2026</span>
+            <span class="px-4 py-1.5 rounded-full text-stone-600">Winter 2027</span>
+          </div>
+        </div>
+
+        <div class="mt-5 rounded-[20px] bg-white border border-line overflow-hidden">
+          <!-- header -->
+          <div class="grid grid-cols-[64px_128px_1fr_112px_84px_104px] gap-[14px] items-center px-6 py-3 border-b border-line text-[11px] font-semibold uppercase tracking-[0.08em] text-stone-400 bg-paper/60">
+            <span>Section</span><span>Days</span><span>Time &amp; room</span><span>CRN</span><span>Seats</span><span></span>
+          </div>
+
+          <!-- Lec 01 (selected) -->
+          <div class="grid grid-cols-[64px_128px_1fr_112px_84px_104px] gap-[14px] items-center px-6 py-5 border-b border-line bg-gold-soft/50 relative">
+            <span class="absolute left-0 top-0 bottom-0 w-[3px] bg-gold"></span>
+            <div>
+              <div class="text-[10px] font-bold tracking-[0.1em] text-stone-500">LEC</div>
+              <div class="font-serif text-[30px] leading-none tnum">01</div>
+            </div>
+            <div class="flex gap-1"><span class="d on">M</span><span class="d">T</span><span class="d on">W</span><span class="d">R</span><span class="d">F</span></div>
+            <div>
+              <div class="text-[15px] font-semibold tnum whitespace-nowrap">11:35 AM – 12:55 PM</div>
+              <div class="text-[13px] text-stone-500">Goldberg CS Bldg 127</div>
+            </div>
+            <div class="text-[13px]">
+              <div class="font-medium tnum">20756</div>
+              <div class="text-stone-500">Kalyaniwalla N.</div>
+            </div>
+            <div class="text-[12px] tnum">
+              <div class="text-stone-600"><b class="text-ink font-semibold">101</b> / 120</div>
+              <div class="mt-1.5 h-1 rounded-full bg-stone-200/70"><div class="h-full w-[84%] rounded-full bg-ink"></div></div>
+            </div>
+            <button class="h-9 rounded-full bg-ink text-paper text-[13px] font-medium flex items-center justify-center gap-1.5">
+              <svg class="i w-4 h-4 text-gold" viewBox="0 0 24 24" style="stroke-width:2.5"><path d="M20 6 9 17l-5-5"/></svg>Selected
+            </button>
+          </div>
+
+          <!-- Lec 90 -->
+          <div class="grid grid-cols-[64px_128px_1fr_112px_84px_104px] gap-[14px] items-center px-6 py-5 border-b border-line">
+            <div>
+              <div class="text-[10px] font-bold tracking-[0.1em] text-stone-500">LEC</div>
+              <div class="font-serif text-[30px] leading-none tnum">90</div>
+            </div>
+            <div><span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-sky-100 text-sky-700 text-[11px] font-semibold">
+              <svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>Online</span></div>
+            <div>
+              <div class="text-[15px] font-semibold text-stone-600">Asynchronous</div>
+              <div class="text-[13px] text-stone-500">Consult department</div>
+            </div>
+            <div class="text-[13px]">
+              <div class="font-medium tnum">20758</div>
+              <div class="text-stone-500">Wijenayake U.</div>
+            </div>
+            <div class="text-[12px] tnum">
+              <div class="text-stone-600"><b class="text-ink font-semibold">—</b></div>
+              <div class="mt-1.5 h-1 rounded-full bg-stone-100"></div>
+            </div>
+            <button class="h-9 rounded-full border border-line text-[13px] font-medium flex items-center justify-center gap-1.5 text-stone-700">
+              <svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add
+            </button>
+          </div>
+
+          <!-- Lab B03 (selected) -->
+          <div class="grid grid-cols-[64px_128px_1fr_112px_84px_104px] gap-[14px] items-center px-6 py-5 border-b border-line bg-gold-soft/50 relative">
+            <span class="absolute left-0 top-0 bottom-0 w-[3px] bg-gold"></span>
+            <div>
+              <div class="text-[10px] font-bold tracking-[0.1em] text-stone-500">LAB</div>
+              <div class="font-serif text-[30px] leading-none tnum">B03</div>
+            </div>
+            <div class="flex gap-1"><span class="d">M</span><span class="d">T</span><span class="d on">W</span><span class="d">R</span><span class="d">F</span></div>
+            <div>
+              <div class="text-[15px] font-semibold tnum whitespace-nowrap">10:05 – 11:25 AM</div>
+              <div class="text-[13px] text-stone-500">Goldberg CS Bldg 134</div>
+            </div>
+            <div class="text-[13px]">
+              <div class="font-medium tnum">20761</div>
+              <div class="text-stone-500">Staff</div>
+            </div>
+            <div class="text-[12px] tnum">
+              <div class="text-stone-600"><b class="text-ink font-semibold">27</b> / 30</div>
+              <div class="mt-1.5 h-1 rounded-full bg-stone-200/70"><div class="h-full w-[90%] rounded-full bg-ink"></div></div>
+            </div>
+            <button class="h-9 rounded-full bg-ink text-paper text-[13px] font-medium flex items-center justify-center gap-1.5">
+              <svg class="i w-4 h-4 text-gold" viewBox="0 0 24 24" style="stroke-width:2.5"><path d="M20 6 9 17l-5-5"/></svg>Selected
+            </button>
+          </div>
+
+          <!-- Lab B04 (hover) -->
+          <div class="grid grid-cols-[64px_128px_1fr_112px_84px_104px] gap-[14px] items-center px-6 py-5 bg-paper/70">
+            <div>
+              <div class="text-[10px] font-bold tracking-[0.1em] text-stone-500">LAB</div>
+              <div class="font-serif text-[30px] leading-none tnum">B04</div>
+            </div>
+            <div class="flex gap-1"><span class="d on">M</span><span class="d">T</span><span class="d">W</span><span class="d">R</span><span class="d">F</span></div>
+            <div>
+              <div class="text-[15px] font-semibold tnum whitespace-nowrap">1:05 – 2:25 PM</div>
+              <div class="text-[13px] text-stone-500">Goldberg CS Bldg 134</div>
+            </div>
+            <div class="text-[13px]">
+              <div class="font-medium tnum">20762</div>
+              <div class="text-stone-500">Staff</div>
+            </div>
+            <div class="text-[12px] tnum">
+              <div class="text-stone-600"><b class="text-ink font-semibold">22</b> / 30</div>
+              <div class="mt-1.5 h-1 rounded-full bg-stone-200/70"><div class="h-full w-[73%] rounded-full bg-ink"></div></div>
+            </div>
+            <button class="h-9 rounded-full bg-white border border-ink text-[13px] font-medium flex items-center justify-center gap-1.5">
+              <svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Week at a glance -->
+      <section class="mt-14">
+        <div class="flex items-end justify-between">
+          <h2 class="font-serif text-[36px] leading-none tracking-[-0.01em]">Week at a <em>glance</em></h2>
+          <div class="flex items-center gap-4 text-[12px] text-stone-500">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-[4px] bg-sage-200 border border-sage-500/50"></span>Selected</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-[4px] border border-dashed border-stone-400"></span>Other sections</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-[4px] bg-stone-100 border border-stone-300"></span>Your schedule</span>
+          </div>
+        </div>
+        <div class="mt-5 rounded-[20px] bg-white border border-line p-6">
+          <div class="grid grid-cols-[44px_repeat(5,1fr)] text-[11px] font-semibold uppercase tracking-[0.08em] text-stone-400 pb-3">
+            <span></span><span class="pl-2">Mon</span><span class="pl-2">Tue</span><span class="pl-2">Wed</span><span class="pl-2">Thu</span><span class="pl-2">Fri</span>
+          </div>
+          <!-- 8:00 to 18:00 = 600 min, 0.48px/min = 288px -->
+          <div class="relative grid grid-cols-[44px_repeat(5,1fr)] h-[288px]">
+            <div class="relative text-[11px] text-stone-400 tnum">
+              <span class="absolute -top-2">8 AM</span>
+              <span class="absolute top-[50px]">10</span>
+              <span class="absolute top-[108px]">12 PM</span>
+              <span class="absolute top-[165px]">2</span>
+              <span class="absolute top-[223px]">4</span>
+              <span class="absolute top-[280px]">6</span>
+            </div>
+            <!-- hour lines -->
+            <div class="absolute left-[44px] right-0 inset-y-0 pointer-events-none">
+              <div class="absolute inset-x-0 top-0 border-t border-line"></div>
+              <div class="absolute inset-x-0 top-[57.6px] border-t border-line/70 border-dashed"></div>
+              <div class="absolute inset-x-0 top-[115.2px] border-t border-line"></div>
+              <div class="absolute inset-x-0 top-[172.8px] border-t border-line/70 border-dashed"></div>
+              <div class="absolute inset-x-0 top-[230.4px] border-t border-line"></div>
+              <div class="absolute inset-x-0 bottom-0 border-t border-line"></div>
+            </div>
+            <!-- Mon -->
+            <div class="relative border-l border-line px-1">
+              <!-- Lec 01 11:35-12:55 => top (215)*.48=103.2, h 80*.48=38.4 -->
+              <div class="absolute left-1 right-1 top-[103px] h-[38px] rounded-[8px] bg-sage-100 border-l-[3px] border-sage-500 px-2 py-1">
+                <div class="text-[11px] font-semibold text-sage-900">Lec 01</div>
+                <div class="text-[10px] text-sage-700 tnum">11:35–12:55</div>
+              </div>
+              <!-- Lab B04 13:05-14:25 => top 305*.48=146.4 -->
+              <div class="absolute left-1 right-1 top-[146px] h-[38px] rounded-[8px] border border-dashed border-stone-400 bg-white px-2 py-1">
+                <div class="text-[11px] font-semibold text-stone-600">Lab B04</div>
+                <div class="text-[10px] text-stone-500 tnum">1:05–2:25</div>
+              </div>
+              <!-- your schedule STAT 14:35-15:25 => top 395*.48=189.6 h 24 -->
+              <div class="absolute left-1 right-1 top-[190px] h-[24px] rounded-[8px] bg-stone-100 px-2 flex items-center text-[10px] text-stone-500 font-medium">STAT 2060</div>
+            </div>
+            <!-- Tue -->
+            <div class="relative border-l border-line px-1">
+              <!-- STAT T01 08:35-10:25 => top 35*.48=16.8 h 110*.48=52.8 -->
+              <div class="absolute left-1 right-1 top-[17px] h-[53px] rounded-[8px] bg-stone-100 px-2 py-1 text-[10px] text-stone-500 font-medium">STAT 2060</div>
+              <!-- ECON 14:35-15:55 => top 189.6 h 38.4 -->
+              <div class="absolute left-1 right-1 top-[190px] h-[38px] rounded-[8px] bg-stone-100 px-2 py-1 text-[10px] text-stone-500 font-medium">ECON 1101</div>
+            </div>
+            <!-- Wed -->
+            <div class="relative border-l border-line px-1">
+              <!-- Lab B03 10:05-11:25 => top 125*.48=60 -->
+              <div class="absolute left-1 right-1 top-[60px] h-[38px] rounded-[8px] bg-sage-100 border-l-[3px] border-sage-500 px-2 py-1">
+                <div class="text-[11px] font-semibold text-sage-900">Lab B03</div>
+                <div class="text-[10px] text-sage-700 tnum">10:05–11:25</div>
+              </div>
+              <div class="absolute left-1 right-1 top-[103px] h-[38px] rounded-[8px] bg-sage-100 border-l-[3px] border-sage-500 px-2 py-1">
+                <div class="text-[11px] font-semibold text-sage-900">Lec 01</div>
+                <div class="text-[10px] text-sage-700 tnum">11:35–12:55</div>
+              </div>
+              <div class="absolute left-1 right-1 top-[190px] h-[24px] rounded-[8px] bg-stone-100 px-2 flex items-center text-[10px] text-stone-500 font-medium">STAT 2060</div>
+            </div>
+            <!-- Thu -->
+            <div class="relative border-l border-line px-1">
+              <div class="absolute left-1 right-1 top-[190px] h-[38px] rounded-[8px] bg-stone-100 px-2 py-1 text-[10px] text-stone-500 font-medium">STAT 2060 · ECON 1101</div>
+            </div>
+            <!-- Fri -->
+            <div class="relative border-l border-line px-1">
+              <div class="absolute left-1 right-1 top-[190px] h-[24px] rounded-[8px] bg-stone-100 px-2 flex items-center text-[10px] text-stone-500 font-medium">STAT 2060</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sticky top-6">
+      <div class="rounded-[22px] bg-white border border-line overflow-hidden">
+        <!-- add -->
+        <div class="p-6">
+          <div class="flex items-center justify-between text-[13px]">
+            <span class="font-medium text-stone-500">Winter 2026</span>
+            <span class="text-stone-400">2 sections selected</span>
+          </div>
+          <div class="mt-4 space-y-2">
+            <div class="flex items-center gap-3 rounded-[14px] bg-paper border border-line px-3.5 py-2.5">
+              <span class="text-[10px] font-bold tracking-[0.1em] text-stone-500 w-7">LEC</span>
+              <span class="text-[14px] font-semibold tnum">01</span>
+              <span class="text-[13px] text-stone-500 tnum">Mon Wed · 11:35</span>
+              <svg class="i w-4 h-4 ml-auto text-stone-400" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </div>
+            <div class="flex items-center gap-3 rounded-[14px] bg-paper border border-line px-3.5 py-2.5">
+              <span class="text-[10px] font-bold tracking-[0.1em] text-stone-500 w-7">LAB</span>
+              <span class="text-[14px] font-semibold tnum">B03</span>
+              <span class="text-[13px] text-stone-500 tnum">Wed · 10:05</span>
+              <svg class="i w-4 h-4 ml-auto text-stone-400" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </div>
+          </div>
+          <button class="mt-4 w-full h-14 rounded-full bg-gold text-ink text-[16px] font-semibold flex items-center justify-center gap-2">
+            <svg class="i w-5 h-5" viewBox="0 0 24 24" style="stroke-width:2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Add to schedule
+          </button>
+          <div class="mt-3 flex items-center justify-center gap-1.5 text-[12px] font-medium text-sage-700">
+            <svg class="i w-3.5 h-3.5" viewBox="0 0 24 24" style="stroke-width:2.5"><path d="M20 6 9 17l-5-5"/></svg>
+            No conflicts with your schedule
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-2">
+            <button class="h-10 rounded-full border border-line text-[13px] font-medium flex items-center justify-center gap-2"><svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>Save</button>
+            <button class="h-10 rounded-full border border-line text-[13px] font-medium flex items-center justify-center gap-2"><svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Share</button>
+          </div>
+        </div>
+
+        <!-- enrollment -->
+        <div class="px-6 py-5 border-t border-line flex items-center gap-5">
+          <div class="relative w-[76px] h-[76px] shrink-0">
+            <svg viewBox="0 0 80 80" class="w-full h-full -rotate-90">
+              <circle cx="40" cy="40" r="34" fill="none" stroke="#F0EDE6" stroke-width="8"/>
+              <circle cx="40" cy="40" r="34" fill="none" stroke="#191917" stroke-width="8" stroke-linecap="round" stroke-dasharray="179.5 213.6"/>
+            </svg>
+            <div class="absolute inset-0 grid place-items-center font-serif text-[24px] tnum">84%</div>
+          </div>
+          <div>
+            <div class="text-[13px] text-stone-500">Enrolment</div>
+            <div class="text-[20px] font-semibold tnum leading-tight">101 <span class="text-stone-400 font-normal">/ 120</span></div>
+            <div class="mt-1 inline-flex items-center gap-1.5 text-[12px] font-medium text-clay-700"><span class="w-1.5 h-1.5 rounded-full bg-clay-500"></span>19 seats left</div>
+          </div>
+        </div>
+
+        <!-- instructors -->
+        <div class="px-6 py-5 border-t border-line">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-semibold uppercase tracking-[0.08em] text-stone-400">Instructors · W26</span>
+            <span class="text-[11px] text-stone-400">via RateMyProfessors</span>
+          </div>
+          <div class="mt-4 flex items-start gap-3">
+            <span class="w-10 h-10 rounded-full bg-sky-100 text-sky-700 grid place-items-center text-[13px] font-semibold shrink-0">NK</span>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <span class="text-[14px] font-semibold">Kalyaniwalla N.</span>
+                <span class="font-serif text-[24px] leading-none tnum">2.4</span>
+              </div>
+              <div class="mt-1 flex items-center gap-0.5 text-gold">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24"><defs><linearGradient id="h2"><stop offset="40%" stop-color="#FFCD00"/><stop offset="40%" stop-color="#E7E5E4"/></linearGradient></defs><polygon fill="url(#h2)" points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg class="w-3.5 h-3.5 text-stone-200" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg class="w-3.5 h-3.5 text-stone-200" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-3 text-[12px] text-stone-500">
+                <div class="rounded-[12px] bg-paper px-3 py-2"><div class="text-[15px] font-semibold text-ink tnum">61%</div>would take again</div>
+                <div class="rounded-[12px] bg-paper px-3 py-2"><div class="text-[15px] font-semibold text-ink tnum">4.1</div>difficulty</div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 pt-5 border-t border-line flex items-center gap-3">
+            <span class="w-10 h-10 rounded-full bg-plum-100 text-plum-700 grid place-items-center text-[13px] font-semibold shrink-0">UW</span>
+            <div class="flex-1">
+              <div class="text-[14px] font-semibold">Wijenayake U.</div>
+              <div class="text-[12px] text-stone-500">Lec 90 · No RMP ratings yet</div>
+            </div>
+            <svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 rounded-[22px] bg-white border border-line p-6">
+        <div class="text-[11px] font-semibold uppercase tracking-[0.08em] text-stone-400">Also offered</div>
+        <div class="mt-3 divide-y divide-line">
+          <div class="py-3 flex items-center justify-between">
+            <div><div class="text-[14px] font-semibold">Fall 2026</div><div class="text-[12px] text-stone-500">Kalyaniwalla N. · Staff</div></div>
+            <svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+          </div>
+          <div class="py-3 flex items-center justify-between">
+            <div><div class="text-[14px] font-semibold">Winter 2027</div><div class="text-[12px] text-stone-500">Kalyaniwalla N. · Staff</div></div>
+            <svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+          </div>
+          <div class="pt-3 flex items-center justify-between text-stone-400">
+            <div><div class="text-[14px] font-semibold">Summer 2026</div><div class="text-[12px]">Not offered</div></div>
+          </div>
+        </div>
+      </div>
+
+      <a href="#" class="mt-4 block rounded-[22px] bg-ink text-paper p-6">
+        <div class="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.08em] text-stone-400">
+          <span>Where this leads</span>
+          <svg class="i w-4 h-4 text-gold" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </div>
+        <div class="mt-4 text-[13px] font-semibold text-gold tnum">CSCI 3120</div>
+        <div class="font-serif text-[30px] leading-[1.05]">Operating Systems</div>
+        <div class="mt-3 text-[12px] leading-relaxed text-stone-400">Requires CSCI 2122 along with CSCI 2110 and CSCI 2134.</div>
+      </a>
+
+      <div class="mt-4 rounded-[18px] border border-line px-5 py-4 text-[12px] leading-relaxed text-stone-500 flex gap-3">
+        <svg class="i w-4 h-4 shrink-0 mt-0.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <p>Register on Dal Online with CRNs <b class="text-ink font-semibold tnum">20756</b> and <b class="text-ink font-semibold tnum">20761</b>. DalSearch doesn’t register you.</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ================= REVIEWS SPREAD ================= -->
+  <section class="mt-20 pt-14 border-t border-line">
+    <div class="flex items-end justify-between">
+      <div>
+        <div class="text-[13px] font-medium text-stone-500">From 47 Dal students</div>
+        <h2 class="mt-2 font-serif text-[64px] leading-[0.95] tracking-[-0.02em]">Ratings &amp; <em>reviews</em></h2>
+      </div>
+      <div class="flex items-center gap-2 text-[13px] font-medium">
+        <span class="h-9 px-4 rounded-full bg-ink text-paper flex items-center">All instructors</span>
+        <span class="h-9 px-4 rounded-full bg-white border border-line text-stone-600 flex items-center">Kalyaniwalla N.</span>
+        <span class="h-9 px-4 rounded-full bg-white border border-line text-stone-600 flex items-center">Wijenayake U.</span>
+        <span class="ml-3 text-stone-500 flex items-center gap-1">Most helpful <svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></span>
+      </div>
+    </div>
+
+    <div class="mt-8 grid grid-cols-[1fr_372px] gap-16 items-start">
+      <!-- reviews -->
+      <div>
+        <figure class="rounded-[22px] bg-gold-soft/70 border border-gold/40 p-9 relative">
+          <span class="absolute left-8 top-4 font-serif text-[104px] leading-none text-gold">“</span>
+          <blockquote class="pl-14 pr-4 font-serif text-[34px] leading-[1.15] tracking-[-0.005em]">Hard, but it’s the course that finally made pointers click. Start assignments the day they’re out, and go to <em>every</em> lab.</blockquote>
+          <figcaption class="pl-14 mt-6 flex items-center gap-3 text-[13px] text-stone-600">
+            <span class="flex items-center gap-1 text-ink"><b class="font-semibold tnum">4</b><svg class="w-3.5 h-3.5 text-ink" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+            <span class="w-1 h-1 rounded-full bg-stone-400"></span>
+            <span>Winter 2025</span>
+            <span class="w-1 h-1 rounded-full bg-stone-400"></span>
+            <span class="rounded-full bg-white/80 px-2.5 py-0.5 font-medium text-ink">Kalyaniwalla N.</span>
+            <span class="ml-auto flex items-center gap-1.5 text-stone-500"><svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>38 found this helpful</span>
+          </figcaption>
+        </figure>
+
+        <div class="mt-4 grid grid-cols-2 gap-4">
+          <article class="rounded-[20px] bg-white border border-line p-6 flex flex-col">
+            <div class="flex items-center gap-2 text-[12px]">
+              <span class="rounded-full bg-ink text-paper px-2 py-0.5 font-semibold tnum">4 ★</span>
+              <span class="rounded-full bg-clay-50 text-clay-700 px-2 py-0.5 font-medium">Difficulty 5</span>
+              <span class="rounded-full bg-plum-50 text-plum-700 px-2 py-0.5 font-medium">Workload 5</span>
+              <span class="ml-auto text-stone-400">Fall 2024</span>
+            </div>
+            <p class="mt-4 text-[15px] leading-[1.65] text-stone-700">Labs are where you actually learn C. The assembly unit is brutal if you fall behind, but office hours were genuinely helpful and the TAs know their stuff.</p>
+            <div class="mt-auto pt-4 flex items-center justify-between text-[12px] text-stone-500"><span class="font-medium">Kalyaniwalla N.</span><span class="flex items-center gap-1"><svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>21</span></div>
+          </article>
+          <article class="rounded-[20px] bg-white border border-line p-6 flex flex-col">
+            <div class="flex items-center gap-2 text-[12px]">
+              <span class="rounded-full bg-ink text-paper px-2 py-0.5 font-semibold tnum">3 ★</span>
+              <span class="rounded-full bg-clay-50 text-clay-700 px-2 py-0.5 font-medium">Difficulty 4</span>
+              <span class="rounded-full bg-plum-50 text-plum-700 px-2 py-0.5 font-medium">Workload 4</span>
+              <span class="ml-auto text-stone-400">Winter 2025</span>
+            </div>
+            <p class="mt-4 text-[15px] leading-[1.65] text-stone-700">The online section moves fast and the slides are dense. Budget ten or more hours a week for assignments, and use the lab time to ask questions.</p>
+            <div class="mt-auto pt-4 flex items-center justify-between text-[12px] text-stone-500"><span class="font-medium">Wijenayake U. · Online</span><span class="flex items-center gap-1"><svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>14</span></div>
+          </article>
+          <article class="rounded-[20px] bg-white border border-line p-6 flex flex-col">
+            <div class="flex items-center gap-2 text-[12px]">
+              <span class="rounded-full bg-ink text-paper px-2 py-0.5 font-semibold tnum">2 ★</span>
+              <span class="rounded-full bg-clay-50 text-clay-700 px-2 py-0.5 font-medium">Difficulty 5</span>
+              <span class="rounded-full bg-plum-50 text-plum-700 px-2 py-0.5 font-medium">Workload 4</span>
+              <span class="ml-auto text-stone-400">Winter 2024</span>
+            </div>
+            <p class="mt-4 text-[15px] leading-[1.65] text-stone-700">Midterm was much harder than the practice material. Content is useful for later courses, but grading felt strict and feedback came back late.</p>
+            <div class="mt-auto pt-4 flex items-center justify-between text-[12px] text-stone-500"><span class="font-medium">Kalyaniwalla N.</span><span class="flex items-center gap-1"><svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>9</span></div>
+          </article>
+          <article class="rounded-[20px] bg-white border border-line p-6 flex flex-col">
+            <div class="flex items-center gap-2 text-[12px]">
+              <span class="rounded-full bg-ink text-paper px-2 py-0.5 font-semibold tnum">5 ★</span>
+              <span class="rounded-full bg-clay-50 text-clay-700 px-2 py-0.5 font-medium">Difficulty 4</span>
+              <span class="rounded-full bg-plum-50 text-plum-700 px-2 py-0.5 font-medium">Workload 5</span>
+              <span class="ml-auto text-stone-400">Fall 2023</span>
+            </div>
+            <p class="mt-4 text-[15px] leading-[1.65] text-stone-700">Best CS course I’ve taken at Dal. You come out understanding what your code is actually doing on the machine. Worth every late night.</p>
+            <div class="mt-auto pt-4 flex items-center justify-between text-[12px] text-stone-500"><span class="font-medium">Kalyaniwalla N.</span><span class="flex items-center gap-1"><svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>7</span></div>
+          </article>
+        </div>
+        <div class="mt-6 flex justify-center">
+          <button class="h-11 px-6 rounded-full border border-ink/15 bg-white text-[14px] font-medium">Read all 47 reviews</button>
+        </div>
+      </div>
+
+      <!-- summary rail -->
+      <aside class="rounded-[22px] bg-white border border-line p-7">
+        <div class="flex items-end gap-4">
+          <div class="flex items-baseline gap-1"><span class="font-serif text-[104px] leading-[0.78] tracking-[-0.03em] tnum">3.6</span><span class="font-serif text-[28px] text-stone-400">/5</span></div>
+          <div class="pb-1">
+            <div class="flex items-center gap-0.5 text-gold">
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><defs><linearGradient id="h"><stop offset="60%" stop-color="#FFCD00"/><stop offset="60%" stop-color="#E7E5E4"/></linearGradient></defs><polygon fill="url(#h)" points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <svg class="star text-stone-200" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <div class="mt-1.5 text-[12px] text-stone-500">Overall · 47 reviews</div>
+          </div>
+        </div>
+
+        <div class="mt-6 space-y-1.5 text-[12px] text-stone-500 tnum">
+          <div class="flex items-center gap-3"><span class="w-3">5</span><div class="flex-1 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[34%] rounded-full bg-ink"></div></div><span class="w-5 text-right">16</span></div>
+          <div class="flex items-center gap-3"><span class="w-3">4</span><div class="flex-1 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[26%] rounded-full bg-ink"></div></div><span class="w-5 text-right">12</span></div>
+          <div class="flex items-center gap-3"><span class="w-3">3</span><div class="flex-1 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[19%] rounded-full bg-ink"></div></div><span class="w-5 text-right">9</span></div>
+          <div class="flex items-center gap-3"><span class="w-3">2</span><div class="flex-1 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[13%] rounded-full bg-ink"></div></div><span class="w-5 text-right">6</span></div>
+          <div class="flex items-center gap-3"><span class="w-3">1</span><div class="flex-1 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[8%] rounded-full bg-ink"></div></div><span class="w-5 text-right">4</span></div>
+        </div>
+
+        <div class="mt-6 pt-6 border-t border-line space-y-5">
+          <div>
+            <div class="flex items-baseline justify-between text-[13px]"><span class="font-medium">Difficulty</span><span class="text-stone-500 tnum"><b class="text-ink font-semibold">4.3</b> / 5 · Hard</span></div>
+            <div class="mt-2 flex gap-1">
+              <span class="h-2 flex-1 rounded-full bg-clay-500"></span><span class="h-2 flex-1 rounded-full bg-clay-500"></span><span class="h-2 flex-1 rounded-full bg-clay-500"></span><span class="h-2 flex-1 rounded-full bg-clay-500"></span><span class="h-2 flex-1 rounded-full bg-gradient-to-r from-clay-500 from-30% to-stone-100 to-30%"></span>
+            </div>
+          </div>
+          <div>
+            <div class="flex items-baseline justify-between text-[13px]"><span class="font-medium">Workload</span><span class="text-stone-500 tnum"><b class="text-ink font-semibold">4.5</b> / 5 · Heavy</span></div>
+            <div class="mt-2 flex gap-1">
+              <span class="h-2 flex-1 rounded-full bg-plum-500"></span><span class="h-2 flex-1 rounded-full bg-plum-500"></span><span class="h-2 flex-1 rounded-full bg-plum-500"></span><span class="h-2 flex-1 rounded-full bg-plum-500"></span><span class="h-2 flex-1 rounded-full bg-gradient-to-r from-plum-500 from-50% to-stone-100 to-50%"></span>
+            </div>
+          </div>
+        </div>
+
+        <button class="mt-7 w-full h-12 rounded-full bg-ink text-paper text-[14px] font-medium flex items-center justify-center gap-2">
+          <svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Write a review
+        </button>
+        <p class="mt-3 text-center text-[12px] text-stone-400">Anonymous · tagged with your instructor and term</p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="max-w-[1312px] mx-auto px-8 py-8 flex items-center justify-between text-[13px] text-stone-500">
+    <span class="flex items-center gap-2"><img src="../../public/dalsearch.svg" alt="" class="w-4 h-4"> Not affiliated with Dalhousie University.</span>
+    <span>Made by Théo Bourgeois &amp; Chris Langille · Open source · Buy me a coffee</span>
+  </div>
+</footer>
+
+</body>
+</html>

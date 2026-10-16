@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>{{TITLE}} · DalSearch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui'] },
+      colors: {
+        page: '#F5F6F8',
+        ink: '#0F172A',
+        gold: { DEFAULT: '#FFC700', 50: '#FFFAEB', 100: '#FFF3C4', 200: '#FFE58A', 600: '#E6AC00', 700: '#9A6F00' },
+        butter: { bg: '#FFF3C7', ink: '#7A5800', dot: '#F5B800' },
+        mint:   { bg: '#DCF5E7', ink: '#166A41', dot: '#2FBF71' },
+        lilac:  { bg: '#ECE7FF', ink: '#5034C4', dot: '#8B72F2' },
+        sky:    { bg: '#DDEDFF', ink: '#1C5DA6', dot: '#4B9CF2' },
+        peach:  { bg: '#FFE5D8', ink: '#A6441A', dot: '#FF8B5C' },
+        rosy:   { bg: '#FFE4E7', ink: '#BE123C', dot: '#F43F5E' },
+      },
+      boxShadow: {
+        tile: '0 1px 2px rgba(15,23,42,.03), 0 10px 30px -12px rgba(15,23,42,.08)',
+        float: '0 2px 6px rgba(15,23,42,.04), 0 24px 60px -18px rgba(15,23,42,.18)',
+        pill: '0 1px 2px rgba(15,23,42,.04), 0 12px 32px -14px rgba(15,23,42,.14)',
+        gold: '0 6px 16px -6px rgba(230,172,0,.55)',
+      },
+      letterSpacing: { tightest: '-0.04em' },
+    }
+  }
+}
+</script>
+<style>
+  html, body { background: #F5F6F8; }
+  body { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui; color: #0F172A; -webkit-font-smoothing: antialiased; }
+  .tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+  /* Icons: <svg class="i"><use href="#i-name"/></svg> */
+  .i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .i-sm { width: 16px; height: 16px; }
+  .i-xs { width: 13px; height: 13px; stroke-width: 2.4; }
+  .i-lg { width: 20px; height: 20px; }
+
+  /* Surfaces */
+  .tile { background: #fff; border-radius: 24px; box-shadow: 0 1px 2px rgba(15,23,42,.03), 0 10px 30px -12px rgba(15,23,42,.08); outline: 1px solid rgba(15,23,42,.045); outline-offset: -1px; }
+  .tile-sm { background: #fff; border-radius: 18px; box-shadow: 0 1px 2px rgba(15,23,42,.03), 0 8px 22px -12px rgba(15,23,42,.08); outline: 1px solid rgba(15,23,42,.05); outline-offset: -1px; }
+  .well { background: #F5F6F8; border-radius: 16px; }
+  .badge { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; flex-shrink: 0; }
+  .badge-sm { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+  .kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 6px; font-size: 11px; font-weight: 700; color: #64748B; background: #fff; box-shadow: 0 0 0 1px rgba(15,23,42,.10), 0 1px 0 rgba(15,23,42,.08); line-height: 1; }
+  .page-glow {
+    background:
+      radial-gradient(640px 240px at 50% 0%, rgba(255,199,0,.13), transparent 70%),
+      radial-gradient(520px 220px at 32% 0%, rgba(255,228,170,.45), transparent 70%),
+      radial-gradient(480px 220px at 70% 0%, rgba(255,218,196,.35), transparent 70%);
+  }
+  .caret { display: inline-block; width: 2px; height: 20px; background: #E6AC00; margin-left: 1px; vertical-align: -4px; border-radius: 1px; }
+
+  /* Course colors: put c-butter / c-sky / ... on an element, then use .ev .tag .dot .cbg .cink inside it */
+  .c-butter { --bg: #FFF3C7; --ink: #7A5800; --dot: #F5B800; }
+  .c-sky    { --bg: #DDEDFF; --ink: #1C5DA6; --dot: #4B9CF2; }
+  .c-lilac  { --bg: #ECE7FF; --ink: #5034C4; --dot: #8B72F2; }
+  .c-mint   { --bg: #DCF5E7; --ink: #166A41; --dot: #2FBF71; }
+  .c-peach  { --bg: #FFE5D8; --ink: #A6441A; --dot: #FF8B5C; }
+  .c-rosy   { --bg: #FFE4E7; --ink: #BE123C; --dot: #F43F5E; }
+  .dot { background: var(--dot); }
+  .cbg { background: var(--bg); }
+  .cink { color: var(--ink); }
+  .tag { background: var(--bg); color: var(--ink); }
+  .ev { background: var(--bg); color: var(--ink); border-radius: 14px; }
+  .conflict { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #F43F5E; }
+  .hatch { background-image: repeating-linear-gradient(135deg, rgba(244,63,94,.14) 0 3px, transparent 3px 8px); }
+  {{EXTRA_CSS}}
+</style>
+</head>

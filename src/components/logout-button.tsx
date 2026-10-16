@@ -1,17 +1,21 @@
-"use client"
+"use client";
 
-import { useClerk } from "@clerk/nextjs"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
 
 export function LogoutButton() {
-  const router = useRouter()
-  const { signOut } = useClerk()
+    const router = useRouter();
 
-  const logout = async () => {
-    await signOut()
-    router.push("/auth/login")
-  }
+    const logout = async () => {
+        await createClient().auth.signOut();
+        router.push("/auth/login");
+        router.refresh();
+    };
 
-  return <Button className="rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" onClick={logout}>Logout</Button>
+    return (
+        <Button variant="ghost" size="lg" onClick={logout}>
+            Sign out
+        </Button>
+    );
 }

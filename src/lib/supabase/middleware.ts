@@ -2,6 +2,8 @@ import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
 export async function updateSession(request: NextRequest) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return NextResponse.next({ request })
+
   let supabaseResponse = NextResponse.next({
     request,
   })
@@ -39,26 +41,10 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims
 
   const privatePaths = ["/protected", "/reviews", "/panel"]
-  if (
-    !user &&
-    (privatePaths.includes(request.nextUrl.pathname))
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
+  if (!user && privatePaths.some((path) => request.nextUrl.pathname.startsWith(path))) {
     const url = request.nextUrl.clone()
     url.pathname = "/auth/login"
     return NextResponse.redirect(url)
-  }
-
-  // Check if user's email is confirmed for protected paths
-  if (user && privatePaths.includes(request.nextUrl.pathname)) {
-    const { data: { user: authUser } } = await supabase.auth.getUser()
-    if (authUser && !authUser.email_confirmed_at) {
-      // User is logged in but email is not confirmed, redirect to login with message
-      const url = request.nextUrl.clone()
-      url.pathname = "/auth/login"
-      url.searchParams.set("error", "Please confirm your email address before accessing this page.")
-      return NextResponse.redirect(url)
-    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.

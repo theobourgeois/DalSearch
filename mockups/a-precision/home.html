@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440" />
+<title>DalSearch — Search every course at Dal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Geist', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          mono: ['"Geist Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        },
+        colors: {
+          gold: { 50: '#FFFAEB', 100: '#FEF1C7', 200: '#FDE28A', 400: '#FFC824', 500: '#F5B800', 600: '#DDA200', 700: '#A87700' },
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html, body { background: #fff; }
+  body { font-family: Geist, ui-sans-serif, system-ui, sans-serif; color: #18181b; -webkit-font-smoothing: antialiased; font-size: 14px; }
+  .mono { font-family: 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .i { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .kbd { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; min-width: 18px; height: 18px; padding: 0 4px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #e4e4e7; border-radius: 4px; background: #fff; color: #71717a; box-shadow: 0 1px 0 #e4e4e7; line-height: 1; }
+  .hl { color: #18181b; font-weight: 600; }
+  .caret { display: inline-block; width: 1.5px; height: 22px; background: #18181b; margin-left: 1px; transform: translateY(1px); }
+  .grid-bg {
+    background-image: linear-gradient(to right, #efeff1 1px, transparent 1px), linear-gradient(to bottom, #efeff1 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 0%, #000 30%, transparent 75%);
+            mask-image: radial-gradient(ellipse 60% 70% at 50% 0%, #000 30%, transparent 75%);
+  }
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────── Header ───────────────────────── -->
+<header class="relative h-14 border-b border-zinc-200 bg-white z-20">
+  <div class="h-full px-6 flex items-center">
+    <a class="flex items-center gap-2 pr-6">
+      <svg width="22" height="22" viewBox="0 0 753 768" aria-hidden="true"><path fill="#F5B800" fill-rule="evenodd" d="M735.53,705.37l-166.07-169.66c44.79-55.69,71.54-127.02,71.54-204.64,0-178.41-141.72-323.07-316.5-323.07S8,152.66,8,331.07s141.72,323.07,316.5,323.07c76.35,0,146.38-27.61,201.08-73.63l166.07,169.51c19.39,18.1,37.57,6.44,43.88,0,12.62-12.73,12.62-31.91,0-44.64ZM69.77,331.07c0-143.59,114.07-260.02,254.73-260.02s254.88,116.43,254.88,260.02-114.07,260.02-254.73,260.02S69.77,474.66,69.77,331.07Z"/><path fill="#18181b" fill-rule="evenodd" d="M487.19,168.05h-195.29c-26.04,0-48.36,16.74-57.66,40.92h-37.2c-42.78,0-78.12,35.34-78.12,78.12v91.14c9.3-20.46,29.76-35.34,53.94-35.34h68.82l-42.78,174.83c-3.72,11.16,3.72,20.46,13.02,20.46,33.48,0,46.5-5.58,72.54-29.76l27.9,78.12h0c1.86,3.72,3.72,5.58,7.44,5.58s5.58-1.86,7.44-5.58l27.9-78.12c24.18,24.18,39.06,29.76,72.54,29.76,11.16,0,16.74-11.16,13.02-20.46l-22.32-174.83h3.72c42.78,0,78.12-35.34,78.12-78.12v-1.86c16.74-11.16,27.9-29.76,27.9-50.22v-70.68c-5.58,14.88-22.32,26.04-40.92,26.04Zm-167.39,87.42c-5.58,3.72-13.02,1.86-18.6-1.86l-11.16-11.16c-5.58-5.58-5.58-14.88,0-22.32l11.16-11.16c5.58-5.58,13.02-5.58,18.6-1.86l42.78,24.18-42.78,24.18Z"/></svg>
+      <span class="text-[15px] font-semibold tracking-[-0.02em]"><span class="text-gold-600">Dal</span>Search</span>
+    </a>
+    <nav class="flex items-center h-full text-[13px]">
+      <a class="relative h-full flex items-center px-3 text-zinc-500">Explore</a>
+      <a class="relative h-full flex items-center px-3 text-zinc-500">Schedule</a>
+      <a class="relative h-full flex items-center px-3 text-zinc-500">Rooms</a>
+      <a class="relative h-full flex items-center px-3 text-zinc-500">Instructors</a>
+    </nav>
+
+    <button class="absolute left-1/2 -translate-x-1/2 w-[320px] h-8 rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-400 text-[13px] flex items-center gap-2 pl-2.5 pr-1.5">
+      <svg class="i !w-[14px] !h-[14px]" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <span>Search courses…</span>
+      <span class="ml-auto flex gap-0.5"><span class="kbd">⌘</span><span class="kbd">K</span></span>
+    </button>
+
+    <div class="ml-auto flex items-center gap-1.5">
+      <button class="h-8 w-8 rounded-md grid place-items-center text-zinc-500 hover:bg-zinc-100">
+        <svg class="i" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+      <div class="w-px h-5 bg-zinc-200 mx-1.5"></div>
+      <button class="h-7 w-7 rounded-full bg-zinc-900 text-white text-[11px] font-medium grid place-items-center ring-1 ring-zinc-900/10">TB</button>
+    </div>
+  </div>
+</header>
+
+<main class="relative">
+  <div class="grid-bg absolute inset-x-0 top-0 h-[600px] pointer-events-none"></div>
+
+  <!-- ───────────────────────── Hero ───────────────────────── -->
+  <section class="relative pt-[72px] flex flex-col items-center text-center">
+    <a class="inline-flex items-center gap-2 h-7 pl-1 pr-2.5 rounded-full border border-zinc-200 bg-white text-[12px] text-zinc-600">
+      <span class="h-5 px-2 rounded-full bg-zinc-900 text-white text-[11px] font-medium inline-flex items-center">New</span>
+      Fall 2026 &amp; Winter 2027 timetables are live
+      <svg class="i !w-3 !h-3 text-zinc-400" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+    </a>
+    <h1 class="mt-6 text-[54px] leading-[1.04] font-semibold tracking-[-0.04em] text-zinc-900">Search every course at Dal.</h1>
+    <p class="mt-4 text-[16px] text-zinc-500 tracking-[-0.005em]">Sections, seats, instructors and ratings for every term — one keystroke away.</p>
+    <div class="mt-5 flex items-center gap-3 text-[12.5px] text-zinc-500">
+      <span><span class="mono text-zinc-900 font-medium">4,689</span> courses</span>
+      <span class="h-3 w-px bg-zinc-200"></span>
+      <span><span class="mono text-zinc-900 font-medium">167</span> subjects</span>
+      <span class="h-3 w-px bg-zinc-200"></span>
+      <span><span class="mono text-zinc-900 font-medium">680</span> rated instructors</span>
+    </div>
+
+    <!-- Search + palette -->
+    <div class="relative mt-9 w-[820px] text-left">
+      <div class="h-[56px] rounded-xl border border-gold-500 bg-white flex items-center pl-4 pr-2.5 gap-3 shadow-[0_0_0_4px_rgba(245,184,0,0.16),0_1px_2px_rgba(24,24,27,0.06)]">
+        <svg class="i !w-[18px] !h-[18px] text-zinc-900" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <div class="flex items-center text-[17px] tracking-[-0.01em] text-zinc-900">syst<span class="caret"></span></div>
+        <div class="ml-auto flex items-center gap-2">
+          <button class="h-8 pl-2.5 pr-2 rounded-md border border-zinc-200 bg-zinc-50 text-[12px] text-zinc-600 flex items-center gap-1.5">
+            <svg class="i !w-[13px] !h-[13px] text-zinc-400" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+            Winter 2026
+            <svg class="i !w-3 !h-3 text-zinc-400" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <span class="kbd !h-6 !px-1.5">esc</span>
+        </div>
+      </div>
+
+      <!-- Command palette dropdown -->
+      <div class="mt-2 rounded-xl border border-zinc-200 bg-white overflow-hidden shadow-[0_24px_60px_-16px_rgba(24,24,27,0.22),0_4px_12px_-4px_rgba(24,24,27,0.06)]">
+        <div class="grid grid-cols-[1fr_300px]">
+          <!-- results -->
+          <div class="py-1.5">
+            <div class="px-4 pt-2 pb-1.5 flex items-center justify-between text-[11.5px] text-zinc-400">
+              <span class="font-medium text-zinc-500">Courses</span><span class="mono">4 of 27</span>
+            </div>
+            <div class="mx-1.5 h-[38px] px-2.5 rounded-md bg-zinc-100 flex items-center gap-3 text-[13.5px]">
+              <span class="h-5 w-5 rounded-[5px] border border-zinc-200 bg-white grid place-items-center text-zinc-500 flex-none"><svg class="i !w-3 !h-3" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="mono text-[12.5px] text-zinc-900 w-[68px]">CSCI 2122</span>
+              <span class="text-zinc-600 truncate"><span class="hl">Syst</span>ems Programming</span>
+              <span class="ml-auto flex items-center gap-3">
+                <span class="mono text-[11.5px] text-zinc-500">101/120</span>
+                <span class="kbd"><svg class="i !w-[11px] !h-[11px]" viewBox="0 0 24 24"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></span>
+              </span>
+            </div>
+            <div class="mx-1.5 h-[38px] px-2.5 rounded-md flex items-center gap-3 text-[13.5px]">
+              <span class="h-5 w-5 rounded-[5px] border border-zinc-200 bg-zinc-50 grid place-items-center text-zinc-500 flex-none"><svg class="i !w-3 !h-3" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="mono text-[12.5px] text-zinc-500 w-[68px]">CSCI 3120</span>
+              <span class="text-zinc-600 truncate">Operating <span class="hl">Syst</span>ems</span>
+              <span class="ml-auto mono text-[11.5px] text-zinc-400 pr-[30px]">117/150</span>
+            </div>
+            <div class="mx-1.5 h-[38px] px-2.5 rounded-md flex items-center gap-3 text-[13.5px]">
+              <span class="h-5 w-5 rounded-[5px] border border-zinc-200 bg-zinc-50 grid place-items-center text-zinc-500 flex-none"><svg class="i !w-3 !h-3" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="mono text-[12.5px] text-zinc-500 w-[68px]">CSCI 2141</span>
+              <span class="text-zinc-600 truncate">Intro to Database <span class="hl">Syst</span>ems</span>
+              <span class="ml-auto mono text-[11.5px] text-zinc-400 pr-[30px]">100/120</span>
+            </div>
+            <div class="mx-1.5 h-[38px] px-2.5 rounded-md flex items-center gap-3 text-[13.5px]">
+              <span class="h-5 w-5 rounded-[5px] border border-zinc-200 bg-zinc-50 grid place-items-center text-zinc-500 flex-none"><svg class="i !w-3 !h-3" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="mono text-[12.5px] text-zinc-500 w-[68px]">ECED 4402</span>
+              <span class="text-zinc-600 truncate">Real Time <span class="hl">Syst</span>ems</span>
+              <span class="ml-auto mono text-[11.5px] text-zinc-400 pr-[30px]">38/60</span>
+            </div>
+
+            <div class="mx-4 my-1.5 h-px bg-zinc-100"></div>
+            <div class="px-4 pt-1 pb-1.5 flex items-center justify-between text-[11.5px] text-zinc-400">
+              <span class="font-medium text-zinc-500">Instructors</span><span class="mono">2</span>
+            </div>
+            <div class="mx-1.5 h-[38px] px-2.5 rounded-md flex items-center gap-3 text-[13.5px]">
+              <span class="flex flex-none"><span class="h-5 w-5 rounded-full bg-zinc-100 border border-zinc-200 text-[9px] font-semibold text-zinc-600 grid place-items-center">NK</span></span>
+              <span class="text-zinc-900">Kalyaniwalla N.</span>
+              <span class="text-zinc-400 truncate text-[12.5px]">teaches <span class="hl !font-medium !text-zinc-600">Syst</span>ems Programming</span>
+              <span class="ml-auto flex items-center gap-1 mono text-[11.5px] text-zinc-500 pr-[30px]"><svg class="i !w-3 !h-3 text-zinc-400" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>2.4</span>
+            </div>
+            <div class="mx-1.5 h-[38px] px-2.5 rounded-md flex items-center gap-3 text-[13.5px]">
+              <span class="flex flex-none"><span class="h-5 w-5 rounded-full bg-zinc-100 border border-zinc-200 text-[9px] font-semibold text-zinc-600 grid place-items-center">QY</span></span>
+              <span class="text-zinc-900">Ye Q.</span>
+              <span class="text-zinc-400 truncate text-[12.5px]">teaches Operating <span class="hl !font-medium !text-zinc-600">Syst</span>ems</span>
+              <span class="ml-auto flex items-center gap-1 mono text-[11.5px] text-zinc-500 pr-[30px]"><svg class="i !w-3 !h-3 text-zinc-400" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>3.8</span>
+            </div>
+
+            <div class="mx-4 my-1.5 h-px bg-zinc-100"></div>
+            <div class="px-4 pt-1 pb-1.5 flex items-center justify-between text-[11.5px] text-zinc-400">
+              <span class="font-medium text-zinc-500">Rooms</span><span class="mono">1</span>
+            </div>
+            <div class="mx-1.5 mb-1 h-[38px] px-2.5 rounded-md flex items-center gap-3 text-[13.5px]">
+              <span class="flex flex-none"><span class="h-5 w-5 rounded-[5px] bg-zinc-100 border border-zinc-200 grid place-items-center text-zinc-500"><svg class="i !w-3 !h-3" viewBox="0 0 24 24"><path d="M13 4h3a2 2 0 0 1 2 2v14"/><path d="M2 20h3"/><path d="M13 20h9"/><path d="M10 12v.01"/><path d="M13 4.562v16.157a1 1 0 0 1-1.242.97L5 20V5.562a2 2 0 0 1 1.515-1.94l4-1A2 2 0 0 1 13 4.561Z"/></svg></span></span>
+              <span class="text-zinc-900">Goldberg CS Bldg 127</span>
+              <span class="text-zinc-400 truncate text-[12.5px]">hosts <span class="hl !font-medium !text-zinc-600">Syst</span>ems Programming</span>
+              <span class="ml-auto text-[11.5px] text-zinc-400 pr-[30px]">Studley</span>
+            </div>
+          </div>
+
+          <!-- preview -->
+          <aside class="border-l border-zinc-200 bg-zinc-50/70 p-4 flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="mono text-[12px] text-zinc-500">CSCI 2122</span>
+              <span class="h-[18px] px-1.5 rounded border border-zinc-200 bg-white text-[10.5px] text-zinc-500 inline-flex items-center">3 cr</span>
+            </div>
+            <div class="mt-1 text-[16px] font-semibold tracking-[-0.02em]">Systems Programming</div>
+            <p class="mt-1.5 text-[12px] leading-[1.5] text-zinc-500">Assembly, C, memory hierarchies, performance measurement and exception control flow.</p>
+
+            <div class="mt-3.5">
+              <div class="flex items-center justify-between text-[11.5px]">
+                <span class="text-zinc-500">Enrollment · W26</span><span class="mono text-zinc-900">101<span class="text-zinc-400">/120</span></span>
+              </div>
+              <div class="mt-1.5 h-1 rounded-full bg-zinc-200 overflow-hidden"><div class="h-full w-[84%] bg-zinc-900 rounded-full"></div></div>
+            </div>
+
+            <div class="mt-3.5 rounded-lg border border-zinc-200 bg-white divide-y divide-zinc-100 text-[11.5px]">
+              <div class="flex items-center gap-2 px-2.5 h-[28px]"><span class="mono text-zinc-900 w-[52px]">Lec 01</span><span class="mono text-zinc-500">MW</span><span class="mono text-zinc-500 ml-auto">11:35–12:55</span></div>
+              <div class="flex items-center gap-2 px-2.5 h-[28px]"><span class="mono text-zinc-900 w-[52px]">Lab B03</span><span class="mono text-zinc-500">W</span><span class="mono text-zinc-500 ml-auto">10:05–11:25</span></div>
+              <div class="flex items-center gap-2 px-2.5 h-[28px]"><span class="mono text-zinc-900 w-[52px]">Lab B04</span><span class="mono text-zinc-500">M</span><span class="mono text-zinc-500 ml-auto">13:05–14:25</span></div>
+              <div class="flex items-center gap-2 px-2.5 h-[28px]"><span class="mono text-zinc-900 w-[52px]">Lec 90</span><span class="text-zinc-500">Online</span><span class="text-zinc-400 ml-auto">C/D</span></div>
+            </div>
+
+            <div class="mt-3.5 flex items-center gap-2.5">
+              <span class="h-6 w-6 rounded-full bg-white border border-zinc-200 text-[9.5px] font-semibold text-zinc-600 grid place-items-center">NK</span>
+              <div class="leading-tight">
+                <div class="text-[12px] text-zinc-900">Kalyaniwalla N.</div>
+                <div class="text-[11px] text-zinc-500">61% would take again</div>
+              </div>
+              <span class="ml-auto h-6 px-1.5 rounded-md border border-zinc-200 bg-white mono text-[11.5px] text-zinc-900 flex items-center gap-1"><svg class="i !w-3 !h-3 text-zinc-400" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>2.4</span>
+            </div>
+            <div class="mt-auto pt-3.5 flex gap-2">
+              <button class="flex-1 h-8 rounded-md border border-zinc-200 bg-white text-[12.5px] font-medium text-zinc-700 flex items-center justify-center gap-1.5">Open <span class="mono text-[11px] text-zinc-400">↵</span></button>
+              <button class="flex-[1.5] h-8 rounded-md bg-gold-500 text-[12.5px] font-medium text-zinc-900 flex items-center justify-center gap-1.5 shadow-[inset_0_-1px_0_rgba(0,0,0,0.08)]">Add to schedule <span class="mono text-[11px] text-zinc-900/60">⌘↵</span></button>
+            </div>
+          </aside>
+        </div>
+
+        <!-- footer -->
+        <div class="h-10 border-t border-zinc-200 bg-zinc-50/60 px-4 flex items-center gap-4 text-[11.5px] text-zinc-500">
+          <span class="flex items-center gap-1.5"><span class="kbd">↑</span><span class="kbd">↓</span>Navigate</span>
+          <span class="flex items-center gap-1.5"><span class="kbd">↵</span>Open</span>
+          <span class="flex items-center gap-1.5"><span class="kbd">⌘↵</span>Add to schedule</span>
+          <span class="flex items-center gap-1.5"><span class="kbd">tab</span>Switch term</span>
+          <a class="ml-auto flex items-center gap-1 text-zinc-600 font-medium">See all 30 results in Explore <svg class="i !w-3.5 !h-3.5" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── Recently viewed ───────────────────────── -->
+  <section class="relative w-[1120px] mx-auto mt-16">
+    <div class="flex items-center justify-between">
+      <h2 class="flex items-center gap-2 text-[13px] font-medium text-zinc-900">
+        <svg class="i !w-[14px] !h-[14px] text-zinc-400" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+        Recently viewed
+      </h2>
+      <button class="text-[12px] text-zinc-500">Clear</button>
+    </div>
+    <div class="mt-3 grid grid-cols-5 gap-3">
+      <a class="rounded-lg border border-zinc-200 bg-white px-3.5 py-3 hover:border-zinc-300">
+        <div class="flex items-center justify-between"><span class="mono text-[12px] text-zinc-500">CSCI 3110</span><span class="mono text-[11px] text-zinc-400">3 cr</span></div>
+        <div class="mt-1 text-[13.5px] font-medium tracking-[-0.01em] truncate">Algorithms I</div>
+        <div class="mt-2 flex items-center gap-1.5 text-[11.5px] text-zinc-500"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span><span class="mono">78/120</span><span class="text-zinc-300">·</span>2 sections</div>
+      </a>
+      <a class="rounded-lg border border-zinc-200 bg-white px-3.5 py-3">
+        <div class="flex items-center justify-between"><span class="mono text-[12px] text-zinc-500">STAT 2060</span><span class="mono text-[11px] text-zinc-400">3 cr</span></div>
+        <div class="mt-1 text-[13.5px] font-medium tracking-[-0.01em] truncate">Intro Probability &amp; Stats</div>
+        <div class="mt-2 flex items-center gap-1.5 text-[11.5px] text-zinc-500"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span><span class="mono">104/140</span><span class="text-zinc-300">·</span>6 sections</div>
+      </a>
+      <a class="rounded-lg border border-zinc-200 bg-white px-3.5 py-3">
+        <div class="flex items-center justify-between"><span class="mono text-[12px] text-zinc-500">CSCI 3130</span><span class="mono text-[11px] text-zinc-400">3 cr</span></div>
+        <div class="mt-1 text-[13.5px] font-medium tracking-[-0.01em] truncate">Intro to Software Engineering</div>
+        <div class="mt-2 flex items-center gap-1.5 text-[11.5px] text-zinc-500"><span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span><span class="mono">136/150</span><span class="text-zinc-300">·</span>5 sections</div>
+      </a>
+      <a class="rounded-lg border border-zinc-200 bg-white px-3.5 py-3">
+        <div class="flex items-center justify-between"><span class="mono text-[12px] text-zinc-500">ECON 1101</span><span class="mono text-[11px] text-zinc-400">3 cr</span></div>
+        <div class="mt-1 text-[13.5px] font-medium tracking-[-0.01em] truncate">Principles of Microeconomics</div>
+        <div class="mt-2 flex items-center gap-1.5 text-[11.5px] text-zinc-500"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span><span class="mono">90/120</span><span class="text-zinc-300">·</span>2 sections</div>
+      </a>
+      <a class="rounded-lg border border-zinc-200 bg-white px-3.5 py-3">
+        <div class="flex items-center justify-between"><span class="mono text-[12px] text-zinc-500">CSCI 2110</span><span class="mono text-[11px] text-zinc-400">3 cr</span></div>
+        <div class="mt-1 text-[13.5px] font-medium tracking-[-0.01em] truncate">Data Structures and Algorithms</div>
+        <div class="mt-2 flex items-center gap-1.5 text-[11.5px] text-zinc-500"><span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span><span class="mono">109/120</span><span class="text-zinc-300">·</span>4 sections</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── Entry points ───────────────────────── -->
+  <section class="relative w-[1120px] mx-auto mt-10">
+    <div class="grid grid-cols-4 gap-3">
+      <!-- Explore -->
+      <a class="group rounded-[10px] border border-zinc-200 bg-white p-4 flex flex-col">
+        <div class="flex items-center justify-between">
+          <span class="h-7 w-7 rounded-md border border-zinc-200 bg-zinc-50 grid place-items-center text-zinc-600"><svg class="i !w-[15px] !h-[15px]" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+          <svg class="i !w-[14px] !h-[14px] text-zinc-300" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </div>
+        <div class="mt-4 h-[60px] flex flex-col justify-center gap-1.5">
+          <div class="flex gap-1">
+            <span class="mono text-[10.5px] h-5 px-1.5 rounded border border-zinc-200 text-zinc-400 grid place-items-center">1000</span>
+            <span class="mono text-[10.5px] h-5 px-1.5 rounded bg-zinc-900 text-white grid place-items-center">2000</span>
+            <span class="mono text-[10.5px] h-5 px-1.5 rounded bg-zinc-900 text-white grid place-items-center">3000</span>
+            <span class="mono text-[10.5px] h-5 px-1.5 rounded border border-zinc-200 text-zinc-400 grid place-items-center">4000</span>
+          </div>
+          <div class="flex gap-1">
+            <span class="text-[10.5px] h-5 px-1.5 rounded border border-zinc-200 text-zinc-500 flex items-center gap-1"><span class="h-1.5 w-1.5 rounded-full bg-zinc-900"></span>Fits my schedule</span>
+            <span class="mono text-[10.5px] h-5 px-1.5 rounded border border-zinc-200 text-zinc-400 grid place-items-center">CSCI</span>
+          </div>
+        </div>
+        <div class="mt-4 text-[14px] font-medium tracking-[-0.01em]">Explore</div>
+        <div class="mt-0.5 text-[12.5px] text-zinc-500 leading-snug mb-4">Filter by level, term, credits and subject.</div>
+        <div class="mt-auto pt-3 border-t border-zinc-100 mono text-[11.5px] text-zinc-500"><span class="text-zinc-900">4,689</span> courses · 4 terms</div>
+      </a>
+
+      <!-- Schedule -->
+      <a class="rounded-[10px] border border-zinc-200 bg-white p-4 flex flex-col">
+        <div class="flex items-center justify-between">
+          <span class="h-7 w-7 rounded-md border border-zinc-200 bg-zinc-50 grid place-items-center text-zinc-600"><svg class="i !w-[15px] !h-[15px]" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></span>
+          <svg class="i !w-[14px] !h-[14px] text-zinc-300" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </div>
+        <div class="mt-4 h-[60px] grid grid-cols-5 gap-1">
+          <div class="relative rounded-[3px] bg-zinc-50 border border-zinc-100"><div class="absolute inset-x-0.5 rounded-[2px]" style="top:15.8%;height:18.3%;background:rgba(184,149,90,.30);border-left:2px solid #B8955A"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:35.8%;height:13.3%;background:rgba(110,134,184,.28);border-left:2px solid #6E86B8"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:65.8%;height:8.3%;background:rgba(184,149,90,.30);border-left:2px solid #B8955A"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:85.8%;height:8.3%;background:rgba(140,127,191,.28);border-left:2px solid #8C7FBF"></div></div>
+          <div class="relative rounded-[3px] bg-zinc-50 border border-zinc-100"><div class="absolute inset-x-0.5 rounded-[2px]" style="top:20.8%;height:13.3%;background:rgba(140,127,191,.28);border-left:2px solid #8C7FBF"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:50.8%;height:13.3%;background:rgba(95,154,142,.28);border-left:2px solid #5F9A8E"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:65.8%;height:13.3%;background:rgba(188,122,138,.28);border-left:2px solid #BC7A8A"></div></div>
+          <div class="relative rounded-[3px] bg-zinc-50 border border-zinc-100"><div class="absolute inset-x-0.5 rounded-[2px]" style="top:20.8%;height:13.3%;background:rgba(110,134,184,.28);border-left:2px solid #6E86B8"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:35.8%;height:13.3%;background:rgba(110,134,184,.28);border-left:2px solid #6E86B8"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:65.8%;height:8.3%;background:rgba(184,149,90,.30);border-left:2px solid #B8955A"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:85.8%;height:8.3%;background:rgba(140,127,191,.28);border-left:2px solid #8C7FBF"></div></div>
+          <div class="relative rounded-[3px] bg-zinc-50 border border-zinc-100"><div class="absolute inset-x-0.5 rounded-[2px]" style="top:50.8%;height:13.3%;background:rgba(95,154,142,.28);border-left:2px solid #5F9A8E"></div><div class="absolute left-0.5 right-[52%] rounded-[2px]" style="top:65.8%;height:8.3%;background:rgba(220,38,38,.18);border-left:2px solid #DC2626"></div><div class="absolute left-[52%] right-0.5 rounded-[2px]" style="top:65.8%;height:13.3%;background:rgba(220,38,38,.18);border-left:2px solid #DC2626"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:85.8%;height:8.3%;background:rgba(140,127,191,.28);border-left:2px solid #8C7FBF"></div></div>
+          <div class="relative rounded-[3px] bg-zinc-50 border border-zinc-100"><div class="absolute inset-x-0.5 rounded-[2px]" style="top:65.8%;height:8.3%;background:rgba(184,149,90,.30);border-left:2px solid #B8955A"></div><div class="absolute inset-x-0.5 rounded-[2px]" style="top:85.8%;height:8.3%;background:rgba(140,127,191,.28);border-left:2px solid #8C7FBF"></div></div>
+        </div>
+        <div class="mt-4 text-[14px] font-medium tracking-[-0.01em]">Schedule builder</div>
+        <div class="mt-0.5 text-[12.5px] text-zinc-500 leading-snug mb-4">Plan your week, catch conflicts, import from Dal Online.</div>
+        <div class="mt-auto pt-3 border-t border-zinc-100 mono text-[11.5px] text-zinc-500"><span class="text-zinc-900">15</span> cr · <span class="text-red-600">1 conflict</span></div>
+      </a>
+
+      <!-- Rooms -->
+      <a class="rounded-[10px] border border-zinc-200 bg-white p-4 flex flex-col">
+        <div class="flex items-center justify-between">
+          <span class="h-7 w-7 rounded-md border border-zinc-200 bg-zinc-50 grid place-items-center text-zinc-600"><svg class="i !w-[15px] !h-[15px]" viewBox="0 0 24 24"><path d="M13 4h3a2 2 0 0 1 2 2v14"/><path d="M2 20h3"/><path d="M13 20h9"/><path d="M10 12v.01"/><path d="M13 4.562v16.157a1 1 0 0 1-1.242.97L5 20V5.562a2 2 0 0 1 1.515-1.94l4-1A2 2 0 0 1 13 4.561Z"/></svg></span>
+          <svg class="i !w-[14px] !h-[14px] text-zinc-300" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </div>
+        <div class="mt-4 h-[60px] flex flex-col justify-center gap-[4px]">
+          <div class="flex items-center gap-2"><span class="mono text-[9.5px] text-zinc-400 w-2">M</span><div class="flex-1 grid grid-cols-10 gap-[3px]"><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-200"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-200"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i></div></div>
+          <div class="flex items-center gap-2"><span class="mono text-[9.5px] text-zinc-400 w-2">T</span><div class="flex-1 grid grid-cols-10 gap-[3px]"><i class="h-2 rounded-[2px] bg-zinc-200"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-200"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i></div></div>
+          <div class="flex items-center gap-2"><span class="mono text-[9.5px] text-zinc-400 w-2">W</span><div class="flex-1 grid grid-cols-10 gap-[3px]"><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-200"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-200"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-200"></i></div></div>
+          <div class="flex items-center gap-2"><span class="mono text-[9.5px] text-zinc-400 w-2">R</span><div class="flex-1 grid grid-cols-10 gap-[3px]"><i class="h-2 rounded-[2px] bg-zinc-200"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-400"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i><i class="h-2 rounded-[2px] bg-zinc-100"></i></div></div>
+        </div>
+        <div class="mt-4 text-[14px] font-medium tracking-[-0.01em]">Rooms</div>
+        <div class="mt-0.5 text-[12.5px] text-zinc-500 leading-snug mb-4">See any room's weekly occupancy at a glance.</div>
+        <div class="mt-auto pt-3 border-t border-zinc-100 mono text-[11.5px] text-zinc-500">Goldberg 127 · <span class="text-zinc-900">free now</span></div>
+      </a>
+
+      <!-- Instructors -->
+      <a class="rounded-[10px] border border-zinc-200 bg-white p-4 flex flex-col">
+        <div class="flex items-center justify-between">
+          <span class="h-7 w-7 rounded-md border border-zinc-200 bg-zinc-50 grid place-items-center text-zinc-600"><svg class="i !w-[15px] !h-[15px]" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <svg class="i !w-[14px] !h-[14px] text-zinc-300" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+        </div>
+        <div class="mt-4 h-[60px] flex flex-col justify-center gap-1.5 text-[11px]">
+          <div class="flex items-center gap-2"><span class="w-[64px] text-zinc-500 truncate">Sampalli S.</span><div class="flex-1 h-1 rounded-full bg-zinc-100"><div class="h-full w-[84%] rounded-full bg-zinc-800"></div></div><span class="mono text-zinc-600 w-6 text-right">4.2</span></div>
+          <div class="flex items-center gap-2"><span class="w-[64px] text-zinc-500 truncate">Ye Q.</span><div class="flex-1 h-1 rounded-full bg-zinc-100"><div class="h-full w-[76%] rounded-full bg-zinc-800"></div></div><span class="mono text-zinc-600 w-6 text-right">3.8</span></div>
+          <div class="flex items-center gap-2"><span class="w-[64px] text-zinc-500 truncate">Kalyaniwalla N.</span><div class="flex-1 h-1 rounded-full bg-zinc-100"><div class="h-full w-[48%] rounded-full bg-zinc-800"></div></div><span class="mono text-zinc-600 w-6 text-right">2.4</span></div>
+        </div>
+        <div class="mt-4 text-[14px] font-medium tracking-[-0.01em]">Instructors</div>
+        <div class="mt-0.5 text-[12.5px] text-zinc-500 leading-snug mb-4">Compare profs with RateMyProfessors scores.</div>
+        <div class="mt-auto pt-3 border-t border-zinc-100 mono text-[11.5px] text-zinc-500"><span class="text-zinc-900">680</span> rated instructors</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── Footer ───────────────────────── -->
+  <footer class="mt-16 border-t border-zinc-200">
+    <div class="w-[1120px] mx-auto h-16 flex items-center text-[12px] text-zinc-500">
+      <div class="flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 753 768" aria-hidden="true"><path fill="#a1a1aa" fill-rule="evenodd" d="M735.53,705.37l-166.07-169.66c44.79-55.69,71.54-127.02,71.54-204.64,0-178.41-141.72-323.07-316.5-323.07S8,152.66,8,331.07s141.72,323.07,316.5,323.07c76.35,0,146.38-27.61,201.08-73.63l166.07,169.51c19.39,18.1,37.57,6.44,43.88,0,12.62-12.73,12.62-31.91,0-44.64ZM69.77,331.07c0-143.59,114.07-260.02,254.73-260.02s254.88,116.43,254.88,260.02-114.07,260.02-254.73,260.02S69.77,474.66,69.77,331.07Z"/></svg>
+        <span>Not affiliated with Dalhousie University.</span>
+      </div>
+      <span class="mx-3 text-zinc-300">·</span>
+      <span>Created by <span class="text-zinc-700">Théo Bourgeois</span> &amp; <span class="text-zinc-700">Chris Langille</span></span>
+      <div class="ml-auto flex items-center gap-5">
+        <a class="flex items-center gap-1.5 text-zinc-600"><svg class="i !w-[14px] !h-[14px]" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.050-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>Open source</a>
+        <a class="flex items-center gap-1.5 text-zinc-600"><svg class="i !w-[14px] !h-[14px]" viewBox="0 0 24 24"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg>Buy me a coffee</a>
+      </div>
+    </div>
+  </footer>
+</main>
+</body>
+</html>

@@ -41,7 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # python
-src/scripts/__pycache__
+__pycache__/
 
 # clerk configuration (can include secrets)
 /.clerk/

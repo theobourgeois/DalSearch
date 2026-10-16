@@ -1,0 +1,14 @@
+
+  /* ---------- Instructors ---------- */
+  .ir { display: grid; grid-template-columns: minmax(0, 2fr) 96px 120px 90px minmax(0, 2.1fr) 36px; align-items: center; column-gap: 18px; padding: 0 18px; }
+  .ir.li { height: 68px; }
+  .who2 { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .who2 .avatar { width: 36px; height: 36px; background: var(--raised); color: var(--text-2); font-size: 12.5px; }
+  .score2 { font-size: 17px; font-weight: 900; color: var(--text); letter-spacing: -0.01em; }
+  .c3.warnish { color: var(--text-3); font-style: italic; }
+  .ydot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+  .chips2 { display: flex; gap: 6px; flex-wrap: nowrap; overflow: hidden; }
+  .cchip { height: 28px; padding: 0 11px; border-radius: 999px; background: var(--raised); display: flex; align-items: center; font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; }
+  .li.hover .cchip { background: var(--panel); }
+  .cmore { height: 28px; display: flex; align-items: center; font-size: 13px; color: var(--text-3); font-weight: 500; }
+  .none { font-size: 13.5px; color: var(--text-3); font-weight: 500; }

@@ -14,8 +14,6 @@ function log(...args) {
     logResult += logString + "\n";
 }
 
-const TERMS = ["202620", "202630", "202710", "202720"];
-
 const headers = {
     accept: "application/json, text/plain, */*",
     "accept-language": "en-US,en;q=0.9",
@@ -43,7 +41,7 @@ const url = new URL(
     "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains.dal_stuweb_academicTimetable",
 );
 
-export async function getAcademicCalendar(subjectCodes) {
+export async function getAcademicCalendar(subjectCodes, terms) {
     const data = {};
     let i = 1;
     for (const code of subjectCodes) {
@@ -51,7 +49,7 @@ export async function getAcademicCalendar(subjectCodes) {
             crse_numb: null,
             page_num: "1",
             offset: "0",
-            terms: TERMS.join(";"),
+            terms: terms.join(";"),
             page_size: "9999",
             max: "1000",
             subj_code: code.code,
@@ -365,43 +363,96 @@ function transformAcademicCalendar(timetableBySubjectCode) {
     return courses;
 }
 
-async function getSubjectCodes() {
-    try {
-        const res = await fetch(
-            "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains.dal_stuweb_academicTimetable_subjects?MzA%3DdGVybXM%3D=ODE%3DMjAyNTAwOzIwMjQzMDsyMDI1MTA7MjAyNTIwOw%3D%3D&Mzk%3DZGlzdHJpY3Rz=OTk%3DMTAwOzIwMDszMDA7NDAwOw%3D%3D&encoded=true",
-            {
-                headers: {
-                    accept: "application/json, text/plain, */*",
-                    "accept-language": "en-US,en;q=0.9",
-                    "sec-ch-ua": '"Chromium";v="131", "Not_A Brand";v="24"',
-                    "sec-ch-ua-mobile": "?0",
-                    "sec-ch-ua-platform": '"macOS"',
-                    "sec-fetch-dest": "empty",
-                    "sec-fetch-mode": "cors",
-                    "sec-fetch-site": "same-origin",
-                    Referer:
-                        "https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable",
-                    "Referrer-Policy": "strict-origin-when-cross-origin",
-                },
-                body: null,
-                method: "GET",
-            },
-        );
-        const data = await res.json();
-        const transformed = data.map(({ CODE, DESCR }) => ({
-            code: CODE,
-            description: DESCR,
-        }));
+/**
+ * Terms currently listed on Dal's timetable, oldest first. Medicine/Dentistry ("xx00") isn't a regular
+ * Fall/Winter/Summer term, so it's skipped.
+ */
+async function getTerms() {
+    const res = await fetch(
+        "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains.dal_stuweb_academicTimetable_terms?encoded=true",
+        { headers },
+    );
+    if (!res.ok) {
+        throw new Error(`Failed to fetch terms: ${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    const terms = data
+        .map(({ CODE }) => CODE)
+        .filter((code) => /^\d{4}(10|20|30)$/.test(code))
+        .sort();
+    if (terms.length === 0) {
+        throw new Error("No terms listed on the timetable");
+    }
 
-        log(`------ [TOTAL SUBJECTS: ${transformed.length}] ------`);
-        return transformed;
-    } catch (error) {
-        console.error(error);
+    log(`------ [TERMS: ${terms.join(", ")}] ------`);
+    return terms;
+}
+
+async function getSubjectCodes(terms) {
+    const subjectsUrl = new URL(
+        "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains.dal_stuweb_academicTimetable_subjects",
+    );
+    // Same length-prefixed base64 encoding as encodeText, with the lengths the website sends for this endpoint
+    subjectsUrl.search = new URLSearchParams({
+        [btoa("30") + btoa("terms")]: btoa("81") + btoa(terms.join(";") + ";"),
+        [btoa("39") + btoa("districts")]:
+            btoa("99") + btoa("100;200;300;400;"),
+        encoded: "true",
+    }).toString();
+
+    const res = await fetch(subjectsUrl.toString(), {
+        headers: {
+            accept: "application/json, text/plain, */*",
+            "accept-language": "en-US,en;q=0.9",
+            "sec-ch-ua": '"Chromium";v="131", "Not_A Brand";v="24"',
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": '"macOS"',
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            Referer:
+                "https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable",
+            "Referrer-Policy": "strict-origin-when-cross-origin",
+        },
+        body: null,
+        method: "GET",
+    });
+    if (!res.ok) {
+        throw new Error(
+            `Failed to fetch subject codes: ${res.status} ${res.statusText}`,
+        );
+    }
+    const data = await res.json();
+    const transformed = data.map(({ CODE, DESCR }) => ({
+        code: CODE,
+        description: DESCR,
+    }));
+
+    log(`------ [TOTAL SUBJECTS: ${transformed.length}] ------`);
+    return transformed;
+}
+
+// Refuse to overwrite good data with a partial scrape (e.g. Dal blocking or changing its endpoints)
+function assertScrapeComplete(prevCourses, newCourses) {
+    const checks = [
+        ["courses", () => true],
+        ["descriptions", (course) => course.description],
+    ];
+    for (const [name, hasData] of checks) {
+        const before = Object.values(prevCourses).filter(hasData).length;
+        const after = Object.values(newCourses).filter(hasData).length;
+        log(`------ [${name.toUpperCase()}: ${before} -> ${after}] ------`);
+        if (after < before * 0.5) {
+            throw new Error(
+                `Only got ${after} ${name} (previously ${before}), not writing partial data`,
+            );
+        }
     }
 }
 
 async function main() {
-    const subjectCodes = await getSubjectCodes();
+    const terms = await getTerms();
+    const subjectCodes = await getSubjectCodes(terms);
     const args = process.argv.slice(2);
     const argsAfterFirst = args.slice(1);
     const outputFileDir = args[0] || "../../database/";
@@ -409,9 +460,7 @@ async function main() {
     const shouldLog = argsAfterFirst.includes("-l");
     const noCache = argsAfterFirst.includes("-no-cache");
 
-    writeToFile(subjectCodes, outputFileDir + "subjects.json");
-
-    const academicCalendar = await getAcademicCalendar(subjectCodes);
+    const academicCalendar = await getAcademicCalendar(subjectCodes, terms);
     const courses = transformAcademicCalendar(academicCalendar);
 
     log(`------ [TOTAL COURSES: ${Object.keys(courses).length}] ------`);
@@ -430,6 +479,17 @@ async function main() {
         newCourses = await fillInMissingData(newCourses);
     }
 
+    assertScrapeComplete(previousCourses, newCourses);
+
+    // The app reads its term list from here, so only keep terms that actually have classes
+    const termsWithClasses = terms.filter((term) =>
+        Object.values(newCourses).some((course) =>
+            course.termClasses.some((termClass) => termClass.term === term),
+        ),
+    );
+
+    writeToFile(subjectCodes, outputFileDir + "subjects.json");
+    writeToFile(termsWithClasses, outputFileDir + "terms.json");
     writeToFile(newCourses, outputFile);
 
     if (shouldLog) {

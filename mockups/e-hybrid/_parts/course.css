@@ -1,0 +1,32 @@
+/* ---- course page ---- */
+  .stars { --p: 68%; display: inline-block; width: 86px; height: 16px; flex-shrink: 0;
+    background: linear-gradient(90deg, #FFC700 var(--p), #E2E8F0 var(--p));
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 16'><path d='M8 .7l2.3 4.7 5.2.75-3.75 3.66.88 5.16L8 12.53l-4.63 2.44.88-5.16L.5 6.15l5.2-.75z'/></svg>") 0 0 / 17.2px 16px repeat-x;
+            mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 16'><path d='M8 .7l2.3 4.7 5.2.75-3.75 3.66.88 5.16L8 12.53l-4.63 2.44.88-5.16L.5 6.15l5.2-.75z'/></svg>") 0 0 / 17.2px 16px repeat-x; }
+  .stars.sm { width: 70px; height: 13px; -webkit-mask-size: 14px 13px; mask-size: 14px 13px; }
+  .stars.lg { width: 105px; height: 19.5px; -webkit-mask-size: 21px 19.5px; mask-size: 21px 19.5px; }
+  .i.sf { fill: #FFC700; stroke: #FFC700; }
+
+  /* day dots */
+  .dd { width: 22px; height: 22px; border-radius: 999px; display: grid; place-items: center; font-size: 10px; font-weight: 800; background: #F1F5F9; color: #A3AEBF; }
+  .dd.on { background: #0F172A; color: #fff; }
+
+  /* segmented meter */
+  .seg { display: flex; gap: 4px; }
+  .seg > span { position: relative; height: 8px; flex: 1; border-radius: 999px; background: #EEF1F5; overflow: hidden; }
+  .seg > span > b { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: currentColor; }
+
+  /* mini calendar */
+  .calc { position: relative; border-radius: 12px; background-color: #F8F9FB;
+    background-image: linear-gradient(#ECEFF3 1px, transparent 1px); background-size: 100% 20%; }
+  .blk { position: absolute; left: 0; right: 0; border-radius: 9px; padding: 4px 6px; overflow: hidden; white-space: nowrap; }
+  .blk.o { background: #E7EAEF; }
+  .blk.me { background: #FFF3C7; color: #7A5800; box-shadow: inset 0 0 0 1px rgba(245,184,0,.35); }
+  .blk.pv { background: rgba(255,255,255,.85); color: #7A5800; outline: 1.5px dashed #E6AC00; outline-offset: -1.5px; }
+
+  /* room strips */
+  .rs { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; flex: 1; }
+  .rs > i { height: 14px; border-radius: 4px; background: #F1F3F6; }
+  .rs > i.o { background: #D9DEE5; }
+  .rs > i.c { background: #F5B800; }
+  .rs > i.p { background: #FFF8DD; outline: 1.5px dashed #E6AC00; outline-offset: -1.5px; }

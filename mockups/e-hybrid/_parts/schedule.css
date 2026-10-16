@@ -1,0 +1,7 @@
+/* schedule: time grid uses minutes from 8:00 over a 600 min (8 AM to 6 PM) range */
+  .blk { position: absolute; top: calc(var(--s) / 600 * 100%); height: calc((var(--e) - var(--s)) / 600 * 100% - 3px); }
+  .at { position: absolute; top: calc(var(--t) / 600 * 100%); }
+  .hl { position: absolute; left: 0; right: 0; top: calc(var(--t) / 600 * 100%); border-top: 1px solid #ECEEF2; }
+  .hl.half { border-top: 1px dashed #F1F3F6; }
+  .pin { width: 11px; height: 11px; stroke-width: 2.4; }
+  .sel { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0F172A, 0 18px 34px -14px rgba(15,23,42,.35); }

@@ -1,15 +1,14 @@
-import MyReviews from "../api/reviews/get-user-reviews";
+import { Page, PageHeader } from "@/components/layout/page";
+import { MyReviews } from "@/components/reviews/my-reviews";
+import { requireUser } from "@/lib/auth";
 
-export default async function MyReviewPage() {
-  return (
-    <main className="flex justify-center">
-        <section className="w-full sm:w-10/12 sm:m-8 m-2">
-            <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-white">
-                My Reviews
-            </h2>
-            <MyReviews/>
-        </section>
-    </main>
-  
-  )
+export default async function MyReviewsPage() {
+    const { user } = await requireUser();
+
+    return (
+        <Page breadcrumbs={[{ label: "Account", href: "/protected" }, { label: "My reviews" }]}>
+            <PageHeader title="My reviews" />
+            <MyReviews userId={user.id} />
+        </Page>
+    );
 }

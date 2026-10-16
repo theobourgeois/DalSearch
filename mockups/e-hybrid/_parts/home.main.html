@@ -1,0 +1,475 @@
+  <!-- ============ HOME ============ -->
+  <main class="relative min-w-0 flex-1 pb-8 pr-6 pt-5">
+    <div class="page-glow pointer-events-none absolute inset-x-0 top-0 h-[260px]"></div>
+
+    <!-- header -->
+    <header class="relative flex h-11 items-center gap-3">
+      <div class="flex items-center gap-2 text-[14px] font-semibold text-slate-500">
+        <svg class="i i-sm text-slate-400"><use href="#i-home"/></svg>
+        <span class="text-ink">Home</span>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <span class="mr-2 flex items-center gap-2 text-[13.5px] font-semibold text-slate-500 tnum">
+          Wed, Feb 11<span class="text-slate-300">·</span>Week 6 of 13
+        </span>
+        <button class="flex h-10 items-center gap-2 rounded-full bg-white pl-3 pr-3.5 text-[13.5px] font-bold shadow-pill ring-1 ring-slate-900/5"><span class="h-2 w-2 rounded-full bg-gold"></span>Winter 2026<svg class="i i-xs text-slate-400"><use href="#i-chev-updown"/></svg></button>
+      </div>
+    </header>
+
+    <!-- greeting -->
+    <section class="relative mt-6 flex items-end gap-6">
+      <div class="min-w-0">
+        <h1 class="text-[36px] font-extrabold leading-[1.1] tracking-tightest">Good morning, Théo.</h1>
+        <p class="mt-2.5 text-[15px] font-medium text-slate-500">
+          You're in <span class="font-bold text-ink">CSCI 2122 Lab B03</span> until <span class="tnum font-bold text-ink">11:25</span>.
+          <a class="font-bold text-rosy-ink underline decoration-rosy-dot/40 decoration-2 underline-offset-4">1 time conflict on Thursdays</a> needs a look.
+        </p>
+      </div>
+      <div class="ml-auto flex shrink-0 items-center gap-2.5">
+        <button class="flex h-11 items-center gap-2 rounded-full bg-white px-5 text-[14px] font-bold text-ink shadow-pill ring-1 ring-slate-900/5"><svg class="i i-sm text-slate-500"><use href="#i-compass"/></svg>Explore courses</button>
+        <button class="flex h-11 items-center gap-2 rounded-full bg-gold px-5 text-[14px] font-extrabold text-ink shadow-gold"><svg class="i i-sm"><use href="#i-calendar"/></svg>Open schedule</button>
+      </div>
+    </section>
+
+    <!-- ============ ROW 1 ============ -->
+    <div class="relative mt-6 grid grid-cols-12 gap-5">
+
+      <!-- ⌘K palette -->
+      <section class="tile col-span-8 flex flex-col overflow-hidden">
+        <div class="p-4 pb-0">
+          <div class="flex h-14 items-center gap-3 rounded-full bg-white pl-5 pr-2.5 ring-2 ring-gold shadow-[0_0_0_6px_rgba(255,199,0,.14)]">
+            <svg class="i i-lg text-ink"><use href="#i-search"/></svg>
+            <div class="text-[19px] font-semibold tracking-tight text-ink">systems<span class="caret"></span></div>
+            <div class="ml-auto flex items-center gap-2">
+              <span class="flex h-8 items-center gap-1.5 rounded-full bg-page px-3 text-[12.5px] font-bold text-slate-600"><span class="h-1.5 w-1.5 rounded-full bg-gold"></span>Winter 2026</span>
+              <span class="kbd h-8 rounded-full px-2.5 text-[11.5px]">esc</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- scope tabs -->
+        <div class="flex items-center gap-3 px-5 pt-4">
+          <div class="inline-flex items-center gap-0.5 rounded-full bg-page p-1 text-[13px] font-bold">
+            <span class="flex h-8 items-center gap-1.5 rounded-full bg-ink px-3.5 text-white">All <span class="tnum text-white/50">7</span></span>
+            <span class="flex h-8 items-center gap-1.5 rounded-full px-3.5 text-slate-600">Courses <span class="tnum text-slate-400">3</span></span>
+            <span class="flex h-8 items-center gap-1.5 rounded-full px-3.5 text-slate-600">Instructors <span class="tnum text-slate-400">2</span></span>
+            <span class="flex h-8 items-center gap-1.5 rounded-full px-3.5 text-slate-600">Rooms <span class="tnum text-slate-400">2</span></span>
+          </div>
+          <span class="ml-auto flex items-center gap-2 text-[12.5px] font-semibold text-slate-400"><span class="kbd">tab</span>switch scope</span>
+        </div>
+
+        <!-- courses -->
+        <div class="px-3 pt-4">
+          <div class="px-2 text-[11.5px] font-bold uppercase tracking-[.08em] text-slate-400">Courses</div>
+
+          <!-- selected -->
+          <div class="c-butter mt-2 flex items-center gap-3 rounded-[16px] bg-page px-3 py-2.5 ring-1 ring-slate-900/[.05]">
+            <span class="flex w-[104px] shrink-0 items-center gap-1.5"><span class="tag rounded-full px-2 py-[3px] text-[11px] font-extrabold">CSCI</span><b class="tnum text-[14px] font-extrabold">2122</b></span>
+            <div class="min-w-0 flex-1 leading-tight">
+              <div class="truncate text-[14px] font-bold"><mark class="hl">Systems</mark> Programming</div>
+              <div class="mt-1 truncate text-[12px] font-medium text-slate-500">Kalyaniwalla N. · <span class="tnum">Mon/Wed 11:35</span></div>
+            </div>
+            <span class="flex w-[92px] justify-end"><span class="flex h-[22px] items-center gap-1.5 rounded-full bg-white px-2 text-[11.5px] font-bold text-slate-600 ring-1 ring-slate-900/[.08]"><span class="dot h-1.5 w-1.5 rounded-full"></span>In schedule</span></span>
+            <span class="w-9 text-right text-[12.5px] font-semibold text-slate-500 tnum">3 cr</span>
+            <span class="flex w-[104px] items-center justify-end gap-2"><span class="bar w-10"><span style="width:84%"></span></span><span class="tnum text-[12.5px] font-semibold text-slate-600">101/120</span></span>
+            <span class="flex w-11 items-center justify-end gap-1 text-[13px] font-bold tnum"><svg class="i i-xs star"><use href="#i-star"/></svg>2.4</span>
+            <span class="kbd h-6 w-7 bg-white"><svg class="i" style="width:12px;height:12px"><use href="#i-enter"/></svg></span>
+          </div>
+
+          <div class="flex items-center gap-3 rounded-[16px] px-3 py-2.5">
+            <span class="flex w-[104px] shrink-0 items-center gap-1.5"><span class="rounded-full bg-slate-100 px-2 py-[3px] text-[11px] font-extrabold text-slate-600">CSCI</span><b class="tnum text-[14px] font-extrabold">3120</b></span>
+            <div class="min-w-0 flex-1 leading-tight">
+              <div class="truncate text-[14px] font-bold">Operating <mark class="hl">Systems</mark></div>
+              <div class="mt-1 truncate text-[12px] font-medium text-slate-500">Ye Q. · <span class="tnum">Tue/Thu 8:35</span> · Requires CSCI 2122</div>
+            </div>
+            <span class="flex w-[92px] justify-end"><span class="flex h-[22px] items-center gap-1 rounded-full bg-rosy-bg px-2 text-[10.5px] font-extrabold tracking-wide text-rosy-ink"><svg class="i i-xs"><use href="#i-alert"/></svg>CONFLICT</span></span>
+            <span class="w-9 text-right text-[12.5px] font-semibold text-slate-500 tnum">3 cr</span>
+            <span class="flex w-[104px] items-center justify-end gap-2"><span class="bar w-10"><span style="width:78%"></span></span><span class="tnum text-[12.5px] font-semibold text-slate-600">117/150</span></span>
+            <span class="flex w-11 items-center justify-end gap-1 text-[13px] font-bold tnum"><svg class="i i-xs star"><use href="#i-star"/></svg>4.1</span>
+            <span class="w-7"></span>
+          </div>
+
+          <div class="c-lilac flex items-center gap-3 rounded-[16px] px-3 py-2.5">
+            <span class="flex w-[104px] shrink-0 items-center gap-1.5"><span class="tag rounded-full px-2 py-[3px] text-[11px] font-extrabold">CSCI</span><b class="tnum text-[14px] font-extrabold">2141</b></span>
+            <div class="min-w-0 flex-1 leading-tight">
+              <div class="truncate text-[14px] font-bold">Intro to Database <mark class="hl">Systems</mark></div>
+              <div class="mt-1 truncate text-[12px] font-medium text-slate-500">Aziz K. · <span class="tnum">Tue/Thu 13:05</span></div>
+            </div>
+            <span class="flex w-[92px] justify-end"><span class="flex h-[22px] items-center gap-1.5 rounded-full bg-white px-2 text-[11.5px] font-bold text-slate-600 ring-1 ring-slate-900/[.08]"><span class="dot h-1.5 w-1.5 rounded-full"></span>In schedule</span></span>
+            <span class="w-9 text-right text-[12.5px] font-semibold text-slate-500 tnum">3 cr</span>
+            <span class="flex w-[104px] items-center justify-end gap-2"><span class="bar w-10"><span style="width:83%"></span></span><span class="tnum text-[12.5px] font-semibold text-slate-600">100/120</span></span>
+            <span class="flex w-11 items-center justify-end gap-1 text-[13px] font-bold tnum"><svg class="i i-xs star"><use href="#i-star"/></svg>3.7</span>
+            <span class="w-7"></span>
+          </div>
+        </div>
+
+        <!-- instructors + rooms -->
+        <div class="mt-2 grid grid-cols-2 gap-2 px-3">
+          <div>
+            <div class="px-2 text-[11.5px] font-bold uppercase tracking-[.08em] text-slate-400">Instructors</div>
+            <div class="mt-1.5 flex items-center gap-3 rounded-[16px] px-2 py-2">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-lilac-bg text-[12px] font-extrabold text-lilac-ink">NK</span>
+              <div class="min-w-0 flex-1 leading-tight">
+                <div class="truncate text-[13.5px] font-bold">Kalyaniwalla N.</div>
+                <div class="mt-0.5 truncate text-[12px] font-medium text-slate-500">Teaches <mark class="hl">Systems</mark> Programming</div>
+              </div>
+              <span class="flex items-center gap-1 text-[13px] font-bold tnum"><svg class="i i-xs star"><use href="#i-star"/></svg>2.4</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-[16px] px-2 py-2">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sky-bg text-[12px] font-extrabold text-sky-ink">KA</span>
+              <div class="min-w-0 flex-1 leading-tight">
+                <div class="truncate text-[13.5px] font-bold">Aziz K.</div>
+                <div class="mt-0.5 truncate text-[12px] font-medium text-slate-500">Teaches Database <mark class="hl">Systems</mark></div>
+              </div>
+              <span class="flex items-center gap-1 text-[13px] font-bold tnum"><svg class="i i-xs star"><use href="#i-star"/></svg>3.7</span>
+            </div>
+          </div>
+          <div>
+            <div class="px-2 text-[11.5px] font-bold uppercase tracking-[.08em] text-slate-400">Rooms</div>
+            <div class="mt-1.5 flex items-center gap-3 rounded-[16px] px-2 py-2">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-[12px] bg-slate-100 text-slate-500"><svg class="i i-sm"><use href="#i-building"/></svg></span>
+              <div class="min-w-0 flex-1 leading-tight">
+                <div class="truncate text-[13.5px] font-bold">Goldberg CS <span class="tnum">127</span></div>
+                <div class="mt-0.5 truncate text-[12px] font-medium text-slate-500">Hosts <mark class="hl">Systems</mark> Programming</div>
+              </div>
+              <span class="text-[12px] font-semibold text-slate-400">Studley</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-[16px] px-2 py-2">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-[12px] bg-slate-100 text-slate-500"><svg class="i i-sm"><use href="#i-building"/></svg></span>
+              <div class="min-w-0 flex-1 leading-tight">
+                <div class="truncate text-[13.5px] font-bold">Tupper Theatre B</div>
+                <div class="mt-0.5 truncate text-[12px] font-medium text-slate-500">Hosts Operating <mark class="hl">Systems</mark></div>
+              </div>
+              <span class="text-[12px] font-semibold text-slate-400">Carleton</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- open in explore -->
+        <div class="mx-4 mt-3 flex h-11 items-center gap-2.5 rounded-full border border-dashed border-slate-200 px-4 text-[13px] font-semibold text-slate-600">
+          <svg class="i i-sm text-slate-400"><use href="#i-compass"/></svg>
+          <span>Open all results for <b class="font-extrabold text-ink">“systems”</b> in Explore</span>
+          <span class="ml-auto flex gap-1"><span class="kbd">⌘</span><span class="kbd">E</span></span>
+        </div>
+
+        <!-- key hints -->
+        <div class="mt-auto pt-4"><div class="flex items-center gap-5 border-t border-slate-900/[.05] bg-slate-50/70 px-5 py-3 text-[12.5px] font-semibold text-slate-500">
+          <span class="flex items-center gap-1.5"><span class="kbd">↑</span><span class="kbd">↓</span>Navigate</span>
+          <span class="flex items-center gap-1.5"><span class="kbd"><svg class="i" style="width:11px;height:11px"><use href="#i-enter"/></svg></span>Open</span>
+          <span class="flex items-center gap-1.5"><span class="kbd">⌘</span><span class="kbd"><svg class="i" style="width:11px;height:11px"><use href="#i-enter"/></svg></span>Add to schedule</span>
+          <span class="ml-auto text-slate-400">Searching <b class="tnum font-bold text-slate-600">4,689</b> courses</span>
+        </div></div>
+      </section>
+
+      <!-- Today -->
+      <section class="tile col-span-4 flex flex-col p-5">
+        <div class="flex items-center gap-2.5">
+          <span class="badge-sm bg-butter-bg text-butter-ink"><svg class="i i-sm"><use href="#i-sun"/></svg></span>
+          <h2 class="text-[17px] font-extrabold tracking-tight">Today</h2>
+          <span class="text-[13px] font-semibold text-slate-400">Wed, Feb 11</span>
+          <a class="ml-auto flex items-center gap-0.5 text-[12.5px] font-bold text-slate-500">Schedule<svg class="i i-xs"><use href="#i-chev-right"/></svg></a>
+        </div>
+
+        <div class="mt-4 flex flex-col gap-1">
+          <!-- done -->
+          <div class="c-sky flex items-center gap-3 rounded-[16px] px-2 py-2 opacity-50">
+            <span class="w-10 text-[12.5px] font-bold text-slate-400 tnum">8:35</span>
+            <span class="dot h-9 w-1 rounded-full"></span>
+            <div class="min-w-0 flex-1 leading-tight">
+              <div class="text-[13.5px] font-extrabold">CSCI 2110 <span class="font-semibold text-slate-500">Lab B02</span></div>
+              <div class="mt-0.5 text-[12px] font-medium text-slate-500">Goldberg CS 143 · 80 min</div>
+            </div>
+            <svg class="i i-sm text-slate-400"><use href="#i-check"/></svg>
+          </div>
+
+          <!-- now -->
+          <div class="c-butter rounded-[18px] bg-butter-bg px-2 py-2.5 ring-1 ring-butter-dot/40">
+            <div class="flex items-center gap-3">
+              <span class="w-10 text-[12.5px] font-extrabold text-butter-ink tnum">10:05</span>
+              <span class="dot h-9 w-1 rounded-full"></span>
+              <div class="min-w-0 flex-1 leading-tight">
+                <div class="text-[13.5px] font-extrabold">CSCI 2122 <span class="font-semibold text-butter-ink/80">Lab B03</span></div>
+                <div class="mt-0.5 flex items-center gap-1 text-[12px] font-semibold text-butter-ink"><svg class="i i-xs"><use href="#i-pin"/></svg>Goldberg CS 134</div>
+              </div>
+              <span class="mr-1 flex h-[22px] items-center gap-1.5 rounded-full bg-gold px-2 text-[10.5px] font-extrabold tracking-wide text-ink shadow-gold"><span class="h-1.5 w-1.5 rounded-full bg-ink"></span>NOW</span>
+            </div>
+            <div class="mt-2.5 flex items-center gap-3 pl-[64px] pr-1">
+              <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-white"><div class="h-full w-[56%] rounded-full bg-butter-dot"></div></div>
+              <span class="text-[11.5px] font-bold text-butter-ink tnum">35 min left</span>
+            </div>
+          </div>
+
+          <div class="c-butter flex items-center gap-3 rounded-[16px] px-2 py-2">
+            <span class="w-10 text-[12.5px] font-bold text-slate-500 tnum">11:35</span>
+            <span class="dot h-9 w-1 rounded-full"></span>
+            <div class="min-w-0 flex-1 leading-tight">
+              <div class="text-[13.5px] font-extrabold">CSCI 2122 <span class="font-semibold text-slate-500">Lec 01</span></div>
+              <div class="mt-0.5 text-[12px] font-medium text-slate-500">Goldberg CS 127 · 80 min</div>
+            </div>
+            <span class="text-[11.5px] font-bold text-slate-400 tnum">in 45m</span>
+          </div>
+          <div class="flex h-7 items-center gap-3 px-2">
+            <span class="w-10"></span>
+            <span class="flex h-full w-1 justify-center"><span class="h-full border-l-2 border-dotted border-slate-300"></span></span>
+            <span class="text-[12px] font-semibold text-slate-400 tnum">1h 40m free</span>
+            <a class="ml-auto flex items-center gap-1 text-[12px] font-bold text-slate-500">Find a room<svg class="i i-xs"><use href="#i-arrow-right"/></svg></a>
+          </div>
+          <div class="c-mint flex items-center gap-3 rounded-[16px] px-2 py-2">
+            <span class="w-10 text-[12.5px] font-bold text-slate-500 tnum">14:35</span>
+            <span class="dot h-9 w-1 rounded-full"></span>
+            <div class="min-w-0 flex-1 leading-tight">
+              <div class="text-[13.5px] font-extrabold">STAT 2060 <span class="font-semibold text-slate-500">Lec 01</span></div>
+              <div class="mt-0.5 text-[12px] font-medium text-slate-500">Dunn 117 · 50 min</div>
+            </div>
+          </div>
+          <div class="c-sky flex items-center gap-3 rounded-[16px] px-2 py-2">
+            <span class="w-10 text-[12.5px] font-bold text-slate-500 tnum">16:35</span>
+            <span class="dot h-9 w-1 rounded-full"></span>
+            <div class="min-w-0 flex-1 leading-tight">
+              <div class="text-[13.5px] font-extrabold">CSCI 2110 <span class="font-semibold text-slate-500">Lec 01</span></div>
+              <div class="mt-0.5 text-[12px] font-medium text-slate-500">Goldberg CS 127 · 50 min</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- tomorrow -->
+        <div class="mt-auto pt-4">
+          <div class="flex items-center gap-2 px-2 text-[11.5px] font-bold uppercase tracking-[.08em] text-slate-400">Tomorrow · Thu<span class="h-px flex-1 bg-slate-900/[.06]"></span></div>
+          <div class="mt-2 flex flex-col gap-1">
+            <div class="c-lilac flex h-9 items-center gap-3 px-2">
+              <span class="w-10 text-[12.5px] font-bold text-slate-500 tnum">13:05</span>
+              <span class="dot h-5 w-1 rounded-full"></span>
+              <span class="truncate text-[13px] font-bold">CSCI 2141 <span class="font-semibold text-slate-500">Lec 01 · Rowe 1020</span></span>
+            </div>
+            <div class="hatch flex h-10 items-center gap-3 rounded-[14px] px-2 ring-1 ring-rosy-dot/30">
+              <span class="w-10 text-[12.5px] font-extrabold text-rosy-ink tnum">14:35</span>
+              <span class="flex h-5 w-1 flex-col overflow-hidden rounded-full"><span class="flex-1 bg-mint-dot"></span><span class="flex-1 bg-peach-dot"></span></span>
+              <span class="truncate text-[13px] font-bold">STAT 2060 <span class="text-slate-400">+</span> ECON 1101</span>
+              <span class="ml-auto rounded-full bg-rosy-dot px-2 py-[3px] text-[10.5px] font-extrabold tracking-wide text-white">CONFLICT</span>
+            </div>
+            <div class="c-sky flex h-9 items-center gap-3 px-2">
+              <span class="w-10 text-[12.5px] font-bold text-slate-500 tnum">16:35</span>
+              <span class="dot h-5 w-1 rounded-full"></span>
+              <span class="truncate text-[13px] font-bold">CSCI 2110 <span class="font-semibold text-slate-500">Lec 01 · Goldberg CS 127</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ ROW 2 · This week ============ -->
+    <section class="tile relative mt-5 p-5">
+      <div class="flex items-center gap-2.5">
+        <span class="badge-sm bg-sky-bg text-sky-ink"><svg class="i i-sm"><use href="#i-calendar"/></svg></span>
+        <h2 class="text-[17px] font-extrabold tracking-tight">This week</h2>
+        <span class="text-[13px] font-semibold text-slate-400 tnum">Feb 9 – 13</span>
+        <span class="ml-1 flex h-6 items-center rounded-full bg-page px-2.5 text-[12px] font-bold text-slate-600 tnum">19h 10m in class</span>
+        <span class="flex h-6 items-center gap-1 rounded-full bg-rosy-bg px-2.5 text-[12px] font-bold text-rosy-ink tnum"><svg class="i i-xs"><use href="#i-alert"/></svg>Thu 14:35 · 50 min overlap</span>
+        <div class="ml-auto flex items-center gap-4 text-[12.5px] font-bold text-slate-600">
+          <span class="c-butter flex items-center gap-1.5"><span class="dot h-2.5 w-2.5 rounded-full"></span>CSCI 2122</span>
+          <span class="c-sky flex items-center gap-1.5"><span class="dot h-2.5 w-2.5 rounded-full"></span>CSCI 2110</span>
+          <span class="c-lilac flex items-center gap-1.5"><span class="dot h-2.5 w-2.5 rounded-full"></span>CSCI 2141</span>
+          <span class="c-mint flex items-center gap-1.5"><span class="dot h-2.5 w-2.5 rounded-full"></span>STAT 2060</span>
+          <span class="c-peach flex items-center gap-1.5"><span class="dot h-2.5 w-2.5 rounded-full"></span>ECON 1101</span>
+          <span class="flex items-center gap-1.5 text-rosy-ink"><span class="h-2.5 w-2.5 rounded-[4px] hatch ring-[1.5px] ring-rosy-dot"></span>Conflict</span>
+        </div>
+      </div>
+
+      <!-- hour axis -->
+      <div class="mt-5 flex">
+        <div class="w-[84px] shrink-0"></div>
+        <div class="relative mr-3 h-5 flex-1 text-[11.5px] font-bold text-slate-400 tnum">
+          <span class="absolute -translate-x-1/2" style="left:0%">8</span>
+          <span class="absolute -translate-x-1/2" style="left:10%">9</span>
+          <span class="absolute -translate-x-1/2" style="left:20%">10</span>
+          <span class="absolute -translate-x-1/2" style="left:30%">11</span>
+          <span class="absolute -translate-x-1/2" style="left:40%">12</span>
+          <span class="absolute -translate-x-1/2" style="left:50%">13</span>
+          <span class="absolute -translate-x-1/2" style="left:60%">14</span>
+          <span class="absolute -translate-x-1/2" style="left:70%">15</span>
+          <span class="absolute -translate-x-1/2" style="left:80%">16</span>
+          <span class="absolute -translate-x-1/2" style="left:90%">17</span>
+          <span class="absolute -translate-x-1/2" style="left:100%">18</span>
+        </div>
+      </div>
+
+      <div class="relative flex">
+        <div class="pointer-events-none absolute left-[-8px] right-[4px] top-[104px] h-[52px] rounded-[14px] bg-gold-50 ring-1 ring-gold/25"></div>
+        <!-- day labels -->
+        <div class="relative flex w-[84px] shrink-0 flex-col pl-1 text-[13.5px]">
+          <div class="flex h-[52px] items-center gap-2 font-bold text-slate-600"><span class="w-9">Mon</span><span class="text-[12px] font-semibold text-slate-400 tnum">9</span></div>
+          <div class="flex h-[52px] items-center gap-2 font-bold text-slate-600"><span class="w-9">Tue</span><span class="text-[12px] font-semibold text-slate-400 tnum">10</span></div>
+          <div class="flex h-[52px] items-center gap-2 font-extrabold text-ink"><span class="w-9">Wed</span><span class="grid h-[22px] min-w-[22px] place-items-center rounded-full bg-gold px-1 text-[11.5px] font-extrabold tnum">11</span></div>
+          <div class="flex h-[52px] items-center gap-2 font-bold text-slate-600"><span class="w-9">Thu</span><span class="text-[12px] font-semibold text-slate-400 tnum">12</span><svg class="i i-xs text-rosy-dot"><use href="#i-alert"/></svg></div>
+          <div class="flex h-[52px] items-center gap-2 font-bold text-slate-600"><span class="w-9">Fri</span><span class="text-[12px] font-semibold text-slate-400 tnum">13</span></div>
+        </div>
+
+        <!-- grid -->
+        <div class="relative mr-3 flex-1">
+          <div class="wk-grid pointer-events-none absolute inset-0"></div>
+          <div class="pointer-events-none absolute inset-y-0 right-0 w-px bg-slate-900/[.06]"></div>
+
+          <!-- Mon -->
+          <div class="relative h-[52px] border-b border-slate-900/[.05]">
+            <div class="wk-ev c-butter ev" style="left:35.833%;width:13.333%">CSCI 2122<small>Lec 01</small></div>
+            <div class="wk-ev c-mint ev" style="left:65.833%;width:8.333%">STAT 2060</div>
+            <div class="wk-ev c-sky ev" style="left:85.833%;width:8.333%">CSCI 2110</div>
+          </div>
+          <!-- Tue -->
+          <div class="relative h-[52px] border-b border-slate-900/[.05]">
+            <div class="wk-ev c-mint ev" style="left:5.833%;width:18.333%">STAT 2060<small>Tut T01</small></div>
+            <div class="wk-ev c-lilac ev" style="left:50.833%;width:13.333%">CSCI 2141<small>Lec 01</small></div>
+            <div class="wk-ev c-peach ev" style="left:65.833%;width:13.333%">ECON 1101<small>Lec 01</small></div>
+          </div>
+          <!-- Wed (today) -->
+          <div class="relative h-[52px] border-b border-transparent">
+            <div class="wk-ev c-sky ev opacity-45" style="left:5.833%;width:13.333%">CSCI 2110<small>Lab B02</small></div>
+            <div class="wk-ev c-butter ev ring-2 ring-butter-dot/70" style="left:20.833%;width:13.333%"><span class="absolute inset-y-0 left-0 w-[56%] bg-butter-dot/25"></span><span class="relative">CSCI 2122</span><small class="relative ml-auto">Lab B03</small></div>
+            <div class="wk-ev c-butter ev" style="left:35.833%;width:13.333%">CSCI 2122<small>Lec 01</small></div>
+            <div class="wk-ev c-mint ev" style="left:65.833%;width:8.333%">STAT 2060</div>
+            <div class="wk-ev c-sky ev" style="left:85.833%;width:8.333%">CSCI 2110</div>
+            <!-- now line -->
+            <div class="absolute bottom-[3px] top-[3px] z-20 w-[2px] -translate-x-1/2 rounded-full bg-gold-600" style="left:28.333%"></div>
+            <div class="absolute top-[-15px] z-20 -translate-x-1/2 rounded-full bg-gold px-2 py-[3px] text-[10.5px] font-extrabold leading-none text-ink shadow-gold tnum" style="left:28.333%">10:50</div>
+          </div>
+          <!-- Thu -->
+          <div class="relative h-[52px] border-b border-slate-900/[.05]">
+            <div class="wk-ev c-lilac ev" style="left:50.833%;width:13.333%">CSCI 2141<small>Lec 01</small></div>
+            <div class="hatch absolute bottom-[5px] top-[5px] rounded-[9px]" style="left:65.833%;width:8.333%"></div>
+            <div class="wk-half c-mint cbg cink conflict-soft top-[6px]" style="left:65.833%;width:8.333%">STAT 2060</div>
+            <div class="wk-half c-peach cbg cink conflict-soft bottom-[6px]" style="left:65.833%;width:13.333%">ECON 1101<span class="ml-1.5 font-semibold opacity-70">Lec 01</span></div>
+            <div class="wk-ev c-sky ev" style="left:85.833%;width:8.333%">CSCI 2110</div>
+          </div>
+          <!-- Fri -->
+          <div class="relative h-[52px]">
+            <div class="wk-ev c-mint ev" style="left:65.833%;width:8.333%">STAT 2060</div>
+            <div class="wk-ev c-sky ev" style="left:85.833%;width:8.333%">CSCI 2110</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ROW 3 ============ -->
+    <div class="mt-5 grid grid-cols-12 gap-5">
+
+      <!-- Recently viewed -->
+      <section class="tile col-span-8 p-5">
+        <div class="flex items-center gap-2.5">
+          <span class="badge-sm bg-peach-bg text-peach-ink"><svg class="i i-sm"><use href="#i-history"/></svg></span>
+          <h2 class="text-[17px] font-extrabold tracking-tight">Recently viewed</h2>
+          <a class="ml-auto text-[12.5px] font-bold text-slate-400">Clear</a>
+        </div>
+        <div class="mt-4 grid grid-cols-2 gap-3">
+          <!-- CSCI 2122 -->
+          <div class="c-butter rounded-[18px] bg-slate-50 p-4 ring-1 ring-slate-900/[.04]">
+            <div class="flex items-center gap-2">
+              <span class="tag rounded-full px-2 py-[3px] text-[11px] font-extrabold">CSCI</span><b class="tnum text-[14px] font-extrabold">2122</b>
+              <span class="ml-1 flex h-[22px] items-center gap-1.5 rounded-full bg-white px-2 text-[11.5px] font-bold text-slate-600 ring-1 ring-slate-900/[.08]"><span class="dot h-1.5 w-1.5 rounded-full"></span>In schedule</span>
+              <span class="ml-auto text-[12px] font-semibold text-slate-400">12m ago</span>
+            </div>
+            <div class="mt-2.5 text-[15.5px] font-extrabold tracking-tight">Systems Programming</div>
+            <div class="mt-0.5 text-[12.5px] font-medium text-slate-500 tnum">Mon/Wed 11:35 · Goldberg CS 127</div>
+            <div class="mt-3.5 flex items-center gap-2.5 text-[12.5px] font-semibold text-slate-500">
+              <span class="flex items-center gap-1 font-bold text-ink tnum"><svg class="i i-xs star"><use href="#i-star"/></svg>2.4</span>Kalyaniwalla N.
+              <span class="ml-auto flex items-center gap-2"><span class="bar w-14 bg-white ring-1 ring-slate-900/[.05]"><span style="width:84%"></span></span><span class="tnum text-slate-600">101/120</span></span>
+            </div>
+          </div>
+          <!-- CSCI 2134 -->
+          <div class="rounded-[18px] bg-slate-50 p-4 ring-1 ring-slate-900/[.04]">
+            <div class="flex items-center gap-2">
+              <span class="rounded-full bg-white px-2 py-[3px] text-[11px] font-extrabold text-slate-600 ring-1 ring-slate-900/[.06]">CSCI</span><b class="tnum text-[14px] font-extrabold">2134</b>
+              <span class="ml-1 flex h-[22px] items-center gap-1 rounded-full bg-mint-bg px-2 text-[11.5px] font-bold text-mint-ink"><svg class="i i-xs"><use href="#i-check"/></svg>Fits</span>
+              <span class="ml-auto text-[12px] font-semibold text-slate-400">2h ago</span>
+            </div>
+            <div class="mt-2.5 text-[15.5px] font-extrabold tracking-tight">Software Development</div>
+            <div class="mt-0.5 text-[12.5px] font-medium text-slate-500 tnum">Tue/Thu 11:35 · Lab Fri 10:05</div>
+            <div class="mt-3.5 flex items-center gap-2.5 text-[12.5px] font-semibold text-slate-500">
+              <span class="font-bold text-slate-400">No ratings</span>Staff
+              <span class="ml-auto flex items-center gap-2"><span class="bar w-14 bg-white ring-1 ring-slate-900/[.05]"><span style="width:73%"></span></span><span class="tnum text-slate-600">88/120</span></span>
+            </div>
+          </div>
+          <!-- CSCI 3110 -->
+          <div class="rounded-[18px] bg-slate-50 p-4 ring-1 ring-slate-900/[.04]">
+            <div class="flex items-center gap-2">
+              <span class="rounded-full bg-white px-2 py-[3px] text-[11px] font-extrabold text-slate-600 ring-1 ring-slate-900/[.06]">CSCI</span><b class="tnum text-[14px] font-extrabold">3110</b>
+              <span class="ml-1 flex h-[22px] items-center gap-1 rounded-full bg-rosy-bg px-2 text-[10.5px] font-extrabold tracking-wide text-rosy-ink"><svg class="i i-xs"><use href="#i-alert"/></svg>CONFLICT</span>
+              <span class="ml-auto text-[12px] font-semibold text-slate-400">Yesterday</span>
+            </div>
+            <div class="mt-2.5 text-[15.5px] font-extrabold tracking-tight">Algorithms I</div>
+            <div class="mt-0.5 truncate text-[12.5px] font-semibold text-rosy-ink tnum">Tue 10:05–10:25 overlaps STAT 2060 Tut T01</div>
+            <div class="mt-3.5 flex items-center gap-2.5 text-[12.5px] font-semibold text-slate-500">
+              <span class="flex items-center gap-1 font-bold text-ink tnum"><svg class="i i-xs star"><use href="#i-star"/></svg>3.6</span>Wilde N.
+              <span class="ml-auto flex items-center gap-2"><span class="bar w-14 bg-white ring-1 ring-slate-900/[.05]"><span style="width:65%"></span></span><span class="tnum text-slate-600">78/120</span></span>
+            </div>
+          </div>
+          <!-- CSCI 3130 -->
+          <div class="rounded-[18px] bg-slate-50 p-4 ring-1 ring-slate-900/[.04]">
+            <div class="flex items-center gap-2">
+              <span class="rounded-full bg-white px-2 py-[3px] text-[11px] font-extrabold text-slate-600 ring-1 ring-slate-900/[.06]">CSCI</span><b class="tnum text-[14px] font-extrabold">3130</b>
+              <span class="ml-1 flex h-[22px] items-center gap-1 rounded-full bg-rosy-bg px-2 text-[10.5px] font-extrabold tracking-wide text-rosy-ink"><svg class="i i-xs"><use href="#i-alert"/></svg>CONFLICT</span>
+              <span class="ml-auto text-[12px] font-semibold text-slate-400">Yesterday</span>
+            </div>
+            <div class="mt-2.5 text-[15.5px] font-extrabold tracking-tight">Intro to Software Engineering</div>
+            <div class="mt-0.5 truncate text-[12.5px] font-semibold text-rosy-ink tnum">Tue/Thu 13:05–14:25 overlaps CSCI 2141 Lec 01</div>
+            <div class="mt-3.5 flex items-center gap-2.5 text-[12.5px] font-semibold text-slate-500">
+              <span class="flex items-center gap-1 font-bold text-ink tnum"><svg class="i i-xs star"><use href="#i-star"/></svg>3.2</span>Rahman M.
+              <span class="ml-auto flex items-center gap-2"><span class="bar w-14 bg-white ring-1 ring-slate-900/[.05]"><span style="width:91%;background:#F5B800"></span></span><span class="tnum text-slate-600">136/150</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats + quick actions -->
+      <section class="tile col-span-4 flex flex-col p-5">
+        <div class="well grid grid-cols-[1.05fr_.85fr_1.3fr] py-4">
+          <div class="px-3.5">
+            <div class="text-[24px] font-extrabold leading-none tracking-tight tnum">4,689</div>
+            <div class="mt-1.5 text-[12px] font-semibold text-slate-500">courses</div>
+          </div>
+          <div class="border-l border-slate-900/[.07] px-3.5">
+            <div class="text-[24px] font-extrabold leading-none tracking-tight tnum">167</div>
+            <div class="mt-1.5 text-[12px] font-semibold text-slate-500">subjects</div>
+          </div>
+          <div class="border-l border-slate-900/[.07] px-3.5">
+            <div class="text-[24px] font-extrabold leading-none tracking-tight tnum">680</div>
+            <div class="mt-1.5 text-[12px] font-semibold text-slate-500">instructors rated</div>
+          </div>
+        </div>
+
+        <div class="mt-4 px-1.5 text-[11.5px] font-bold uppercase tracking-[.08em] text-slate-400">Quick actions</div>
+        <div class="mt-1 flex flex-1 flex-col justify-between">
+          <a class="flex items-center gap-3 rounded-[16px] px-1.5 py-2">
+            <span class="badge-sm bg-mint-bg text-mint-ink"><svg class="i i-sm"><use href="#i-building"/></svg></span>
+            <span class="min-w-0 leading-tight"><span class="block text-[13.5px] font-bold">Find a free room</span><span class="mt-0.5 block truncate text-[12px] font-medium text-slate-500">Live availability for every room</span></span>
+            <span class="ml-auto flex shrink-0 gap-1"><span class="kbd">G</span><span class="kbd">R</span></span>
+          </a>
+          <a class="flex items-center gap-3 rounded-[16px] px-1.5 py-2">
+            <span class="badge-sm bg-lilac-bg text-lilac-ink"><svg class="i i-sm"><use href="#i-star"/></svg></span>
+            <span class="min-w-0 leading-tight"><span class="block text-[13.5px] font-bold">Browse instructor ratings</span><span class="mt-0.5 block truncate text-[12px] font-medium text-slate-500">Rating, difficulty, would take again</span></span>
+            <span class="ml-auto flex shrink-0 gap-1"><span class="kbd">G</span><span class="kbd">I</span></span>
+          </a>
+          <a class="flex items-center gap-3 rounded-[16px] px-1.5 py-2">
+            <span class="badge-sm bg-sky-bg text-sky-ink"><svg class="i i-sm"><use href="#i-compass"/></svg></span>
+            <span class="min-w-0 leading-tight"><span class="block text-[13.5px] font-bold">Courses that fit my schedule</span><span class="mt-0.5 block truncate text-[12px] font-medium text-slate-500">Only sections with zero conflicts</span></span>
+            <span class="ml-auto flex shrink-0 gap-1"><span class="kbd">G</span><span class="kbd">E</span></span>
+          </a>
+          <a class="flex items-center gap-3 rounded-[16px] px-1.5 py-2">
+            <span class="badge-sm bg-peach-bg text-peach-ink"><svg class="i i-sm"><use href="#i-link"/></svg></span>
+            <span class="min-w-0 leading-tight"><span class="block text-[13.5px] font-bold">Share my schedule</span><span class="mt-0.5 block truncate text-[12px] font-medium text-slate-500">Read-only link or PNG export</span></span>
+            <span class="ml-auto flex shrink-0 gap-1"><span class="kbd">⇧</span><span class="kbd">S</span></span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <!-- footer -->
+    <footer class="mt-6 flex items-center gap-2 px-1 text-[12.5px] font-semibold text-slate-400">
+      <span>Not affiliated with Dalhousie University</span>
+      <span class="text-slate-300">·</span>
+      <span>Made by <span class="text-slate-600">Théo Bourgeois</span> &amp; <span class="text-slate-600">Chris Langille</span></span>
+      <div class="ml-auto flex items-center gap-4 text-slate-600">
+        <a class="flex items-center gap-1.5"><svg class="i i-sm text-slate-400"><use href="#i-github"/></svg>Open source</a>
+        <a class="flex items-center gap-1.5"><svg class="i i-sm text-slate-400"><use href="#i-coffee"/></svg>Buy me a coffee</a>
+      </div>
+    </footer>
+  </main>

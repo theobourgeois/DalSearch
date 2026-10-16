@@ -1,0 +1,584 @@
+  <!-- ============ COURSE: CSCI 2122 ============ -->
+  <main class="relative min-w-0 flex-1 pb-8 pr-6 pt-5">
+    <svg width="0" height="0" class="absolute">
+      <defs>
+        <symbol id="ic-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+        <symbol id="ic-hourglass" viewBox="0 0 24 24"><path d="M5 22h14M5 2h14M17 22v-4.17a2 2 0 0 0-.59-1.42L12 12l-4.41 4.41A2 2 0 0 0 7 17.83V22M7 2v4.17a2 2 0 0 0 .59 1.42L12 12l4.41-4.41A2 2 0 0 0 17 6.17V2"/></symbol>
+        <symbol id="ic-branch" viewBox="0 0 24 24"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+        <symbol id="ic-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.5"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+        <symbol id="ic-pencil" viewBox="0 0 24 24"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></symbol>
+        <symbol id="ic-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+        <symbol id="ic-text" viewBox="0 0 24 24"><path d="M15 12H3M17 18H3M21 6H3"/></symbol>
+        <symbol id="ic-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></symbol>
+      </defs>
+    </svg>
+    <div class="page-glow pointer-events-none absolute inset-x-0 top-0 h-[260px]"></div>
+
+    <!-- header -->
+    <header class="relative flex h-11 items-center gap-3">
+      <nav class="flex items-center gap-2 text-[14px] font-semibold text-slate-500">
+        <a class="flex items-center gap-1.5"><svg class="i i-sm text-slate-400"><use href="#i-compass"/></svg>Explore</a>
+        <svg class="i i-xs text-slate-300"><use href="#i-chev-right"/></svg>
+        <a>Computer Science</a>
+        <svg class="i i-xs text-slate-300"><use href="#i-chev-right"/></svg>
+        <span class="tnum font-bold text-ink">CSCI 2122</span>
+      </nav>
+      <div class="ml-auto flex items-center gap-2">
+        <div class="flex h-10 items-center rounded-full bg-white px-1 shadow-pill ring-1 ring-slate-900/5">
+          <button class="grid h-8 w-8 place-items-center rounded-full text-slate-500"><svg class="i i-sm"><use href="#i-chev-left"/></svg></button>
+          <span class="h-4 w-px bg-slate-200"></span>
+          <button class="grid h-8 w-8 place-items-center rounded-full text-slate-500"><svg class="i i-sm"><use href="#i-chev-right"/></svg></button>
+        </div>
+        <button class="flex h-10 items-center gap-2 rounded-full bg-white pl-3.5 pr-4 text-[13.5px] font-bold shadow-pill ring-1 ring-slate-900/5"><svg class="i i-sm text-slate-500"><use href="#i-link"/></svg>Copy link</button>
+        <button class="flex h-10 items-center gap-2 rounded-full bg-white pl-3 pr-3.5 text-[13.5px] font-bold shadow-pill ring-1 ring-slate-900/5"><span class="h-2 w-2 rounded-full bg-gold"></span>Winter 2026<svg class="i i-xs text-slate-400"><use href="#i-chev-updown"/></svg></button>
+      </div>
+    </header>
+
+    <div class="relative mt-4 grid grid-cols-[minmax(0,1fr)_336px] items-start gap-5">
+      <!-- ===================== MAIN COLUMN ===================== -->
+      <div class="flex min-w-0 flex-col gap-5">
+
+        <!-- hero -->
+        <section class="tile relative overflow-hidden px-6 pb-4 pt-6">
+          <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(420px_220px_at_100%_0%,rgba(255,199,0,.11),transparent_70%)]"></div>
+          <div class="relative flex items-start gap-5">
+            <div class="grid h-[76px] w-[76px] shrink-0 place-items-center rounded-[22px] bg-butter-bg text-butter-ink ring-1 ring-butter-dot/25">
+              <div class="text-center leading-none"><div class="text-[11px] font-extrabold tracking-[.14em]">CSCI</div><div class="tnum mt-1.5 text-[23px] font-extrabold tracking-tight">2122</div></div>
+            </div>
+            <div class="relative min-w-0 flex-1 pt-0.5">
+              <div class="absolute right-0 top-0 flex items-center gap-2">
+                <span class="inline-flex h-9 items-center gap-2 whitespace-nowrap rounded-full bg-butter-bg pl-1.5 pr-3.5 text-[13px] font-bold text-butter-ink ring-1 ring-butter-dot/30"><span class="grid h-6 w-6 place-items-center rounded-full bg-gold text-ink"><svg class="i i-xs"><use href="#i-check"/></svg></span>In schedule · 2 sections</span>
+                <button class="grid h-9 w-9 place-items-center rounded-full bg-white text-slate-500 ring-1 ring-slate-900/10"><svg class="i i-sm"><use href="#i-more"/></svg></button>
+              </div>
+              <div class="text-[13px] font-semibold text-slate-500"><span class="tnum font-bold text-slate-600">CSCI 2122</span><span class="mx-1.5 text-slate-300">/</span>Faculty of Computer Science</div>
+              <h1 class="mt-1 whitespace-nowrap text-[38px] font-extrabold leading-[1.08] tracking-tightest">Systems Programming</h1>
+              <div class="mt-3.5 flex flex-wrap items-center gap-2 text-[12.5px] font-bold text-slate-600">
+                <span class="tnum inline-flex h-8 items-center gap-1.5 rounded-full bg-slate-100 px-3"><svg class="i i-xs text-slate-400"><use href="#i-layers"/></svg>3 credit hours</span>
+                <span class="tnum inline-flex h-8 items-center gap-1.5 rounded-full bg-slate-100 px-3"><svg class="i i-xs text-slate-400"><use href="#i-hash"/></svg>2000 level</span>
+                <span class="inline-flex h-8 items-center gap-1.5 rounded-full bg-slate-100 px-3"><svg class="i i-xs text-slate-400"><use href="#i-pin"/></svg>Studley campus</span>
+                <span class="inline-flex h-8 items-center gap-1.5 rounded-full bg-slate-100 px-3"><svg class="i i-xs text-slate-400"><use href="#i-book"/></svg>Lecture + Lab</span>
+              </div>
+            </div>
+          </div>
+          <div class="relative mt-5 flex items-center gap-1 border-t border-slate-100 pt-4">
+            <a class="flex h-9 items-center rounded-full bg-ink px-4 text-[13.5px] font-bold text-white">Overview</a>
+            <a class="flex h-9 items-center gap-2 rounded-full px-3.5 text-[13.5px] font-bold text-slate-500">Sections<span class="tnum grid h-5 min-w-5 place-items-center rounded-full bg-slate-100 px-1.5 text-[11.5px] font-extrabold text-slate-500">4</span></a>
+            <a class="flex h-9 items-center gap-2 rounded-full px-3.5 text-[13.5px] font-bold text-slate-500">Reviews<span class="tnum grid h-5 min-w-5 place-items-center rounded-full bg-slate-100 px-1.5 text-[11.5px] font-extrabold text-slate-500">38</span></a>
+            <a class="flex h-9 items-center gap-2 rounded-full px-3.5 text-[13.5px] font-bold text-slate-500">Instructors<span class="tnum grid h-5 min-w-5 place-items-center rounded-full bg-slate-100 px-1.5 text-[11.5px] font-extrabold text-slate-500">2</span></a>
+            <div class="ml-auto flex items-center gap-1.5 text-[12px] font-semibold text-slate-400"><span class="kbd">1</span>–<span class="kbd">4</span><span class="ml-0.5">switch tabs</span></div>
+          </div>
+        </section>
+
+        <!-- stat tiles -->
+        <section class="grid grid-cols-4 gap-5">
+          <article class="tile flex items-center justify-between gap-2 p-5">
+            <div>
+              <p class="text-[13px] font-bold text-slate-500">Enrollment</p>
+              <p class="tnum mt-1.5 text-[28px] font-extrabold leading-none tracking-tight">101<span class="text-[16px] text-slate-400">/120</span></p>
+              <p class="mt-2.5 inline-flex items-center gap-1.5 text-[12px] font-bold text-mint-ink"><span class="h-1.5 w-1.5 rounded-full bg-mint-dot"></span>19 seats left</p>
+            </div>
+            <span class="relative grid h-[58px] w-[58px] shrink-0 place-items-center">
+              <svg viewBox="0 0 58 58" class="absolute inset-0 -rotate-90"><circle cx="29" cy="29" r="24" fill="none" stroke="#F1F5F9" stroke-width="7"/><circle cx="29" cy="29" r="24" fill="none" stroke="#FFC700" stroke-width="7" stroke-linecap="round" stroke-dasharray="126.7 150.8"/></svg>
+              <span class="tnum text-[12.5px] font-extrabold">84%</span>
+            </span>
+          </article>
+          <article class="tile p-5">
+            <div class="flex items-center justify-between"><p class="text-[13px] font-bold text-slate-500">Overall</p><span class="grid h-8 w-8 place-items-center rounded-[11px] bg-butter-bg text-butter-ink"><svg class="i i-sm"><use href="#i-star"/></svg></span></div>
+            <p class="tnum -mt-1 text-[28px] font-extrabold leading-none tracking-tight">3.4<span class="text-[16px] text-slate-400">/5</span></p>
+            <div class="mt-2.5 flex items-center gap-2"><span class="stars sm" style="--p:68%"></span><span class="tnum text-[12px] font-bold text-slate-400">38 reviews</span></div>
+          </article>
+          <article class="tile p-5">
+            <div class="flex items-center justify-between"><p class="text-[13px] font-bold text-slate-500">Difficulty</p><span class="grid h-8 w-8 place-items-center rounded-[11px] bg-peach-bg text-peach-ink"><svg class="i i-sm"><use href="#ic-flame"/></svg></span></div>
+            <p class="tnum -mt-1 text-[28px] font-extrabold leading-none tracking-tight">4.2<span class="text-[16px] text-slate-400">/5</span><span class="ml-2 align-middle text-[13px] font-extrabold tracking-normal text-peach-ink">Hard</span></p>
+            <div class="seg mt-3.5 text-peach-dot"><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:20%"></b></span></div>
+          </article>
+          <article class="tile p-5">
+            <div class="flex items-center justify-between"><p class="text-[13px] font-bold text-slate-500">Workload</p><span class="grid h-8 w-8 place-items-center rounded-[11px] bg-lilac-bg text-lilac-ink"><svg class="i i-sm"><use href="#ic-hourglass"/></svg></span></div>
+            <p class="tnum -mt-1 text-[28px] font-extrabold leading-none tracking-tight">4.4<span class="text-[16px] text-slate-400">/5</span><span class="ml-2 align-middle text-[13px] font-extrabold tracking-normal text-lilac-ink">Heavy</span></p>
+            <div class="seg mt-3.5 text-lilac-dot"><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:40%"></b></span></div>
+          </article>
+        </section>
+
+        <!-- description -->
+        <section class="tile p-6">
+          <div class="flex items-center gap-3">
+            <span class="badge bg-sky-bg text-sky-ink"><svg class="i i-lg"><use href="#ic-text"/></svg></span>
+            <h2 class="text-[18px] font-extrabold tracking-tight">About this course</h2>
+            <a class="ml-auto inline-flex items-center gap-1.5 text-[12.5px] font-bold text-slate-500">Academic calendar<svg class="i i-xs"><use href="#i-external"/></svg></a>
+          </div>
+          <p class="mt-4 max-w-[720px] text-[15px] font-medium leading-[1.7] text-slate-600">This course presents tools, techniques, and concepts for systems programming. Students will be exposed to assembly and will be introduced to the C programming language. The course also discusses memory hierarchies, performance measurement, exception control flow, and performance related issues. Students will be involved in significant amount of low-level programming.</p>
+          <div class="mt-4 flex flex-wrap items-center gap-2 text-[12px] font-bold text-slate-600">
+            <span class="whitespace-nowrap rounded-full bg-slate-50 px-2.5 py-1.5 ring-1 ring-slate-900/[.06]">Assembly</span>
+            <span class="whitespace-nowrap rounded-full bg-slate-50 px-2.5 py-1.5 ring-1 ring-slate-900/[.06]">C programming</span>
+            <span class="whitespace-nowrap rounded-full bg-slate-50 px-2.5 py-1.5 ring-1 ring-slate-900/[.06]">Memory hierarchies</span>
+            <span class="whitespace-nowrap rounded-full bg-slate-50 px-2.5 py-1.5 ring-1 ring-slate-900/[.06]">Performance measurement</span>
+            <span class="whitespace-nowrap rounded-full bg-slate-50 px-2.5 py-1.5 ring-1 ring-slate-900/[.06]">Exception control flow</span>
+          </div>
+        </section>
+
+        <!-- prerequisite path -->
+        <section class="tile p-6">
+          <div class="flex items-center gap-3">
+            <span class="badge bg-lilac-bg text-lilac-ink"><svg class="i i-lg"><use href="#ic-branch"/></svg></span>
+            <h2 class="text-[18px] font-extrabold tracking-tight">Prerequisite path</h2>
+            <span class="text-[13px] font-semibold text-slate-400">Requires all of <span class="tnum">CSCI 1110</span> and <span class="tnum">CSCI 1120</span></span>
+          </div>
+          <div class="relative mt-5 h-[166px] w-[748px] whitespace-nowrap">
+            <div class="absolute left-1 top-0 text-[11px] font-extrabold uppercase tracking-[.1em] text-slate-400">Requires</div>
+            <div class="absolute top-0 text-[11px] font-extrabold uppercase tracking-[.1em] text-slate-400" style="left:260px">This course</div>
+            <div class="absolute top-0 text-[11px] font-extrabold uppercase tracking-[.1em] text-slate-400" style="left:522px">Unlocks</div>
+            <svg class="absolute inset-0" width="748" height="166" viewBox="0 0 748 166" fill="none">
+              <path d="M192 58 C 230 58, 222 98, 258 98" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+              <path d="M192 138 C 230 138, 222 98, 258 98" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round"/>
+              <path d="M470 98 C 506 98, 484 58, 520 58" stroke="#F5B800" stroke-width="2" stroke-linecap="round"/>
+              <path d="M470 98 C 506 98, 484 138, 520 138" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="2 5" stroke-linecap="round"/>
+              <circle cx="192" cy="58" r="4" fill="#fff" stroke="#CBD5E1" stroke-width="2"/>
+              <circle cx="192" cy="138" r="4" fill="#fff" stroke="#CBD5E1" stroke-width="2"/>
+              <circle cx="520" cy="58" r="4" fill="#fff" stroke="#F5B800" stroke-width="2"/>
+            </svg>
+            <a class="absolute left-0 flex h-[58px] w-[188px] items-center gap-3 rounded-[18px] bg-slate-50 px-4 ring-1 ring-slate-900/[.06]" style="top:29px">
+              <span class="leading-tight"><span class="tnum block text-[14px] font-extrabold">CSCI 1110</span><span class="block text-[12px] font-semibold text-slate-400">Required · 1000 level</span></span>
+              <svg class="i i-xs ml-auto text-slate-300"><use href="#i-arrow-right"/></svg>
+            </a>
+            <a class="absolute left-0 flex h-[58px] w-[188px] items-center gap-3 rounded-[18px] bg-slate-50 px-4 ring-1 ring-slate-900/[.06]" style="top:109px">
+              <span class="leading-tight"><span class="tnum block text-[14px] font-extrabold">CSCI 1120</span><span class="block text-[12px] font-semibold text-slate-400">Required · 1000 level</span></span>
+              <svg class="i i-xs ml-auto text-slate-300"><use href="#i-arrow-right"/></svg>
+            </a>
+            <div class="absolute flex h-[76px] w-[212px] flex-col justify-center rounded-[20px] bg-butter-bg px-4 shadow-[0_0_0_5px_rgba(255,199,0,.13)] ring-1 ring-butter-dot/40" style="left:258px;top:60px">
+              <div class="flex items-center gap-2"><span class="tnum text-[16px] font-extrabold text-ink">CSCI 2122</span><span class="ml-auto rounded-full bg-white px-2 py-0.5 text-[10.5px] font-extrabold text-butter-ink ring-1 ring-butter-dot/30">You are here</span></div>
+              <div class="mt-0.5 text-[12.5px] font-bold text-butter-ink/80">Systems Programming</div>
+            </div>
+            <a class="absolute flex h-[58px] w-[228px] flex-col justify-center rounded-[18px] bg-white px-4 ring-1 ring-slate-900/[.09] shadow-[0_6px_16px_-10px_rgba(15,23,42,.25)]" style="left:520px;top:29px">
+              <span class="flex items-baseline gap-1.5 leading-tight"><span class="tnum text-[14px] font-extrabold">CSCI 3120</span><span class="text-[12.5px] font-semibold text-slate-500">Operating Systems</span></span>
+              <span class="mt-0.5 block text-[11.5px] font-semibold text-slate-400">Also needs <span class="tnum">CSCI 2110</span> · in schedule</span>
+            </a>
+            <a class="absolute flex h-[58px] w-[228px] items-center gap-2.5 rounded-[18px] border-[1.5px] border-dashed border-slate-200 px-4 text-[12.5px] font-bold text-slate-500" style="left:520px;top:109px">
+              <svg class="i i-sm text-slate-400"><use href="#i-layers"/></svg>+ 2 more 3000-level courses
+            </a>
+          </div>
+        </section>
+
+        <!-- sections -->
+        <section class="tile p-6">
+          <div class="flex items-center gap-3">
+            <span class="badge bg-sky-bg text-sky-ink"><svg class="i i-lg"><use href="#i-layers"/></svg></span>
+            <div class="leading-tight"><h2 class="text-[18px] font-extrabold tracking-tight">Sections</h2><p class="text-[12.5px] font-semibold text-slate-400">4 sections · choose 1 lecture + 1 lab</p></div>
+            <div class="ml-auto flex items-center gap-0.5 rounded-full bg-slate-100 p-1 text-[12.5px] font-bold text-slate-500">
+              <button class="h-8 rounded-full bg-ink px-3.5 text-white shadow-[0_1px_3px_rgba(15,23,42,.18)]">Winter 2026</button>
+              <button class="h-8 rounded-full px-3 text-slate-300 line-through decoration-slate-300">Summer 2026</button>
+              <button class="h-8 rounded-full px-3">Fall 2026</button>
+              <button class="h-8 rounded-full px-3">Winter 2027</button>
+            </div>
+          </div>
+
+          <div class="mt-5 grid grid-cols-[46px_36px_122px_98px_minmax(0,1fr)_46px_76px_88px] items-center gap-2.5 px-3 text-[10.5px] font-extrabold uppercase tracking-[.1em] text-slate-400">
+            <span>Type</span><span>Sec</span><span>Days</span><span>Time</span><span>Room</span><span>CRN</span><span>Seats</span><span></span>
+          </div>
+
+          <div class="mt-3 flex items-center gap-2 px-3 text-[11.5px] font-bold text-slate-400"><span class="h-px flex-1 bg-slate-100"></span>Lecture · choose 1<span class="h-px flex-1 bg-slate-100"></span></div>
+          <div class="mt-2 flex flex-col gap-1.5">
+            <div class="grid grid-cols-[46px_36px_122px_98px_minmax(0,1fr)_46px_76px_88px] items-center gap-2.5 rounded-2xl bg-gold-50 px-3 py-2.5 ring-1 ring-gold/40">
+              <span class="w-fit rounded-full bg-sky-bg px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide text-sky-ink">Lec</span>
+              <span class="tnum text-[14.5px] font-extrabold">01</span>
+              <div class="flex gap-[3px]"><span class="dd on">M</span><span class="dd">T</span><span class="dd on">W</span><span class="dd">R</span><span class="dd">F</span></div>
+              <span class="tnum text-[13.5px] font-bold">11:35–12:55</span>
+              <span class="min-w-0 leading-tight"><span class="block truncate text-[13px] font-bold">Goldberg CS 127</span><span class="block truncate text-[12px] font-semibold text-slate-400">Kalyaniwalla N.</span></span>
+              <span class="tnum text-[12px] font-bold text-slate-500">20756</span>
+              <span class="leading-none"><span class="tnum block text-[11.5px] font-bold text-slate-600">101/120</span><span class="mt-1.5 block h-1.5 rounded-full bg-white ring-1 ring-slate-900/[.05]"><span class="block h-full w-[84%] rounded-full bg-butter-dot"></span></span></span>
+              <button class="inline-flex h-8 items-center justify-center gap-1.5 rounded-full bg-gold text-[12.5px] font-extrabold text-ink shadow-gold"><svg class="i i-xs"><use href="#i-check"/></svg>Added</button>
+            </div>
+            <div class="grid grid-cols-[46px_36px_122px_98px_minmax(0,1fr)_46px_76px_88px] items-center gap-2.5 rounded-2xl px-3 py-2.5">
+              <span class="w-fit rounded-full bg-sky-bg px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide text-sky-ink">Lec</span>
+              <span class="tnum text-[14.5px] font-extrabold">90</span>
+              <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-lilac-bg px-2.5 py-1 text-[11.5px] font-extrabold text-lilac-ink"><svg class="i i-xs"><use href="#i-wifi"/></svg>Online</span>
+              <span class="text-[13px] font-semibold text-slate-400">Async</span>
+              <span class="min-w-0 leading-tight"><span class="block truncate text-[13px] font-bold">Consult Department</span><span class="block truncate text-[12px] font-semibold text-slate-400">Wijenayake U.</span></span>
+              <span class="tnum text-[12px] font-bold text-slate-500">20758</span>
+              <span class="text-[12px] font-bold text-slate-300">—</span>
+              <button class="inline-flex h-8 items-center justify-center gap-1.5 rounded-full bg-white text-[12.5px] font-bold text-ink ring-1 ring-slate-900/10"><svg class="i i-xs"><use href="#i-plus"/></svg>Add</button>
+            </div>
+          </div>
+
+          <div class="mt-3 flex items-center gap-2 px-3 text-[11.5px] font-bold text-slate-400"><span class="h-px flex-1 bg-slate-100"></span>Lab · choose 1<span class="h-px flex-1 bg-slate-100"></span></div>
+          <div class="mt-2 flex flex-col gap-1.5">
+            <div class="grid grid-cols-[46px_36px_122px_98px_minmax(0,1fr)_46px_76px_88px] items-center gap-2.5 rounded-2xl bg-gold-50 px-3 py-2.5 ring-1 ring-gold/40">
+              <span class="w-fit rounded-full bg-mint-bg px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide text-mint-ink">Lab</span>
+              <span class="tnum text-[14.5px] font-extrabold">B03</span>
+              <div class="flex gap-[3px]"><span class="dd">M</span><span class="dd">T</span><span class="dd on">W</span><span class="dd">R</span><span class="dd">F</span></div>
+              <span class="tnum text-[13.5px] font-bold">10:05–11:25</span>
+              <span class="min-w-0 leading-tight"><span class="block truncate text-[13px] font-bold">Goldberg CS 134</span><span class="block truncate text-[12px] font-semibold text-slate-400">Staff</span></span>
+              <span class="tnum text-[12px] font-bold text-slate-500">20761</span>
+              <span class="leading-none"><span class="tnum block text-[11.5px] font-bold text-slate-600">52/60</span><span class="mt-1.5 block h-1.5 rounded-full bg-white ring-1 ring-slate-900/[.05]"><span class="block h-full w-[87%] rounded-full bg-butter-dot"></span></span></span>
+              <button class="inline-flex h-8 items-center justify-center gap-1.5 rounded-full bg-gold text-[12.5px] font-extrabold text-ink shadow-gold"><svg class="i i-xs"><use href="#i-check"/></svg>Added</button>
+            </div>
+            <div class="rounded-2xl border-[1.5px] border-dashed border-gold-600/45 bg-white px-3 pb-2.5 pt-2.5">
+              <div class="grid grid-cols-[46px_36px_122px_98px_minmax(0,1fr)_46px_76px_88px] items-center gap-2.5">
+                <span class="w-fit rounded-full bg-mint-bg px-2 py-0.5 text-[10.5px] font-extrabold uppercase tracking-wide text-mint-ink">Lab</span>
+                <span class="tnum text-[14.5px] font-extrabold">B04</span>
+                <div class="flex gap-[3px]"><span class="dd on">M</span><span class="dd">T</span><span class="dd">W</span><span class="dd">R</span><span class="dd">F</span></div>
+                <span class="tnum text-[13.5px] font-bold">13:05–14:25</span>
+                <span class="min-w-0 leading-tight"><span class="block truncate text-[13px] font-bold">Goldberg CS 134</span><span class="block truncate text-[12px] font-semibold text-slate-400">Staff</span></span>
+                <span class="tnum text-[12px] font-bold text-slate-500">20762</span>
+                <span class="leading-none"><span class="tnum block text-[11.5px] font-bold text-slate-600">49/60</span><span class="mt-1.5 block h-1.5 rounded-full bg-slate-100"><span class="block h-full w-[82%] rounded-full bg-butter-dot"></span></span></span>
+                <button class="inline-flex h-8 items-center justify-center gap-1.5 rounded-full bg-white text-[12.5px] font-bold text-ink ring-1 ring-slate-900/10"><svg class="i i-xs"><use href="#i-swap"/></svg>Swap</button>
+              </div>
+              <div class="mt-2 flex items-center gap-2 pl-[94px] text-[12px] font-semibold text-slate-500">
+                <span class="inline-flex items-center gap-1 rounded-full bg-mint-bg px-2 py-0.5 text-[11px] font-extrabold text-mint-ink"><svg class="i i-xs"><use href="#i-check"/></svg>Fits</span>
+                <span><b class="font-extrabold text-ink">Swap with B03</b> · moves your lab from Wed 10:05 to Mon 13:05, no conflicts</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-2.5 ring-1 ring-slate-900/[.04]">
+            <p class="flex items-center gap-2 text-[13px] font-semibold text-slate-500"><span class="grid h-5 w-5 place-items-center rounded-full bg-mint-dot text-white"><svg class="i i-xs"><use href="#i-check"/></svg></span><b class="font-extrabold text-ink">Lec 01 + Lab B03</b> selected · fits your schedule</p>
+            <button class="inline-flex h-8 items-center gap-2 rounded-full bg-white px-3.5 text-[12.5px] font-bold text-ink ring-1 ring-slate-900/10"><svg class="i i-xs"><use href="#ic-copy"/></svg>Copy CRNs <span class="tnum font-semibold text-slate-400">20756, 20761</span></button>
+          </div>
+        </section>
+
+        <!-- week preview + instructors -->
+        <div class="grid grid-cols-[minmax(0,1fr)_316px] gap-5">
+          <section class="tile flex flex-col p-6">
+            <div class="flex items-center gap-3">
+              <span class="badge bg-butter-bg text-butter-ink"><svg class="i i-lg"><use href="#i-calendar"/></svg></span>
+              <h2 class="text-[18px] font-extrabold tracking-tight">Week preview</h2>
+              <span class="ml-auto inline-flex items-center gap-2 text-[12px] font-bold text-slate-500">My schedule<span class="relative h-[18px] w-8 rounded-full bg-gold"><span class="absolute right-[2px] top-[2px] h-[14px] w-[14px] rounded-full bg-white shadow"></span></span></span>
+            </div>
+            <div class="mt-4 flex flex-1 flex-col">
+              <div class="grid grid-cols-[24px_repeat(5,1fr)] gap-1.5 pb-2 text-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                <span></span><span>Mon</span><span>Tue</span><span class="text-ink">Wed</span><span>Thu</span><span>Fri</span>
+              </div>
+              <div class="grid h-[256px] grid-cols-[24px_repeat(5,1fr)] gap-1.5">
+                <div class="tnum relative text-[10px] font-bold text-slate-400">
+                  <span class="absolute -translate-y-1/2" style="top:0%">08</span><span class="absolute -translate-y-1/2" style="top:20%">10</span><span class="absolute -translate-y-1/2" style="top:40%">12</span><span class="absolute -translate-y-1/2" style="top:60%">14</span><span class="absolute -translate-y-1/2" style="top:80%">16</span><span class="absolute -translate-y-1/2" style="top:100%">18</span>
+                </div>
+                <!-- Mon -->
+                <div class="calc">
+                  <div class="blk me" style="top:35.83%;height:13.33%"><b class="block text-[10px] font-extrabold leading-[12px]">Lec 01</b><span class="tnum block text-[9.5px] font-semibold leading-[12px] opacity-75">11:35</span></div>
+                  <div class="blk pv" style="top:50.83%;height:13.33%"><b class="block text-[10px] font-extrabold leading-[12px]">Lab B04</b><span class="tnum block text-[9.5px] font-semibold leading-[12px] opacity-75">13:05</span></div>
+                  <div class="blk o" style="top:65.83%;height:8.33%"></div>
+                  <div class="blk o" style="top:85.83%;height:8.33%"></div>
+                </div>
+                <!-- Tue -->
+                <div class="calc">
+                  <div class="blk o" style="top:5.83%;height:18.33%"></div>
+                  <div class="blk o" style="top:50.83%;height:13.33%"></div>
+                  <div class="blk o" style="top:65.83%;height:13.33%"></div>
+                </div>
+                <!-- Wed -->
+                <div class="calc">
+                  <div class="blk o" style="top:5.83%;height:13.33%"></div>
+                  <div class="blk me" style="top:20.83%;height:13.33%;box-shadow:inset 0 0 0 1.5px #F5B800"><b class="block text-[10px] font-extrabold leading-[12px]">Lab B03</b></div>
+                  <div class="blk me" style="top:35.83%;height:13.33%"><b class="block text-[10px] font-extrabold leading-[12px]">Lec 01</b><span class="tnum block text-[9.5px] font-semibold leading-[12px] opacity-75">11:35</span></div>
+                  <div class="blk o" style="top:65.83%;height:8.33%"></div>
+                  <div class="blk o" style="top:85.83%;height:8.33%"></div>
+                  <div class="absolute -left-[3px] -right-[3px] h-[2px] rounded-full bg-gold-600" style="top:28.33%"><span class="absolute -left-[3px] -top-[3px] h-2 w-2 rounded-full bg-gold-600 ring-2 ring-white"></span></div>
+                </div>
+                <!-- Thu -->
+                <div class="calc">
+                  <div class="blk o" style="top:50.83%;height:13.33%"></div>
+                  <div class="blk o" style="top:65.83%;height:8.33%;right:52%"></div>
+                  <div class="blk o" style="top:65.83%;height:13.33%;left:52%"></div>
+                  <div class="blk o" style="top:85.83%;height:8.33%"></div>
+                </div>
+                <!-- Fri -->
+                <div class="calc">
+                  <div class="blk o" style="top:65.83%;height:8.33%"></div>
+                  <div class="blk o" style="top:85.83%;height:8.33%"></div>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center gap-3.5 whitespace-nowrap pl-[30px] text-[11.5px] font-bold text-slate-500">
+                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-[4px] bg-butter-bg ring-1 ring-butter-dot/50"></span>CSCI 2122</span>
+                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-[4px] bg-[#E7EAEF]"></span>Other courses</span>
+                <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-[4px] border-[1.5px] border-dashed border-gold-600"></span>B04 preview</span>
+                <span class="ml-auto inline-flex items-center gap-1.5 text-gold-700"><span class="h-[2px] w-3 rounded-full bg-gold-600"></span>Now</span>
+              </div>
+            </div>
+          </section>
+
+          <div class="flex flex-col gap-5">
+            <section class="tile flex flex-1 flex-col p-5">
+              <div class="flex items-center gap-3">
+                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-lilac-bg text-[13px] font-extrabold text-lilac-ink">NK</span>
+                <div class="min-w-0 flex-1 leading-tight"><p class="truncate text-[14.5px] font-extrabold">Nauzer Kalyaniwalla</p><p class="mt-0.5 text-[12px] font-semibold text-slate-400">Lec 01 · also Fall 26, Winter 27</p></div>
+                <svg class="i i-sm text-slate-300"><use href="#i-external"/></svg>
+              </div>
+              <div class="mt-4 flex items-end gap-2.5">
+                <p class="tnum text-[34px] font-extrabold leading-none tracking-tight">2.4<span class="text-[16px] text-slate-400">/5</span></p>
+                <div class="pb-1"><span class="stars" style="--p:48%"></span><p class="text-[11.5px] font-bold text-slate-400">RateMyProfessors</p></div>
+              </div>
+              <div class="mt-4 grid grid-cols-2 gap-2">
+                <div class="rounded-2xl bg-slate-50 px-3 py-2.5 ring-1 ring-slate-900/[.04]">
+                  <div class="flex items-center justify-between text-[12px] font-bold text-slate-500">Take again<span class="tnum text-[13px] font-extrabold text-ink">61%</span></div>
+                  <div class="mt-2 h-1.5 rounded-full bg-slate-200/70"><div class="h-full w-[61%] rounded-full bg-mint-dot"></div></div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 px-3 py-2.5 ring-1 ring-slate-900/[.04]">
+                  <div class="flex items-center justify-between text-[12px] font-bold text-slate-500">Difficulty<span class="tnum text-[13px] font-extrabold text-ink">4.1</span></div>
+                  <div class="mt-2 h-1.5 rounded-full bg-slate-200/70"><div class="h-full w-[82%] rounded-full bg-peach-dot"></div></div>
+                </div>
+              </div>
+              <div class="mt-auto flex gap-1.5 whitespace-nowrap pt-3.5 text-[11px] font-bold text-slate-500">
+                <span class="rounded-full bg-slate-100 px-2 py-1">Tough grader</span>
+                <span class="rounded-full bg-slate-100 px-2 py-1">Lots of homework</span>
+                <span class="tnum rounded-full bg-slate-100 px-2 py-1 text-slate-400">+2</span>
+              </div>
+            </section>
+            <section class="tile p-5">
+              <div class="flex items-center gap-3">
+                <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-mint-bg text-[13px] font-extrabold text-mint-ink">UW</span>
+                <div class="min-w-0 flex-1 leading-tight"><p class="truncate text-[14.5px] font-extrabold">Wijenayake U.</p><p class="mt-0.5 text-[12px] font-semibold text-slate-400">Lec 90 · Online</p></div>
+                <svg class="i i-sm text-slate-300"><use href="#i-external"/></svg>
+              </div>
+              <div class="mt-4 flex items-center gap-3 rounded-2xl border-[1.5px] border-dashed border-slate-200 px-3.5 py-3">
+                <span class="stars sm" style="--p:0%"></span>
+                <div class="whitespace-nowrap leading-tight"><p class="text-[13px] font-extrabold text-slate-600">No RMP ratings yet</p><p class="mt-0.5 text-[11.5px] font-semibold text-slate-400">Rate on RateMyProfessors</p></div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== RIGHT RAIL ===================== -->
+      <aside class="flex flex-col gap-5">
+
+        <!-- in your schedule -->
+        <section class="tile p-5">
+          <div class="flex items-center gap-2.5">
+            <span class="badge-sm bg-gold text-ink shadow-gold"><svg class="i i-sm"><use href="#i-calendar"/></svg></span>
+            <h3 class="text-[15px] font-extrabold tracking-tight">In your Winter 2026 schedule</h3>
+          </div>
+          <div class="mt-4 flex flex-col gap-1.5 whitespace-nowrap">
+            <div class="c-butter flex items-start gap-3 rounded-2xl bg-slate-50 px-3 py-3 ring-1 ring-slate-900/[.04]">
+              <span class="tag mt-px w-[58px] shrink-0 rounded-full py-0.5 text-center text-[11.5px] font-extrabold">Lec 01</span>
+              <div class="min-w-0 flex-1 leading-tight">
+                <div class="flex items-center"><span class="tnum text-[13px] font-bold">Mon/Wed 11:35–12:55</span><span class="tnum ml-auto pl-2 text-[11.5px] font-bold text-slate-400">20756</span></div>
+                <p class="mt-0.5 text-[11.5px] font-semibold text-slate-400">Goldberg CS 127 · next at 11:35</p>
+              </div>
+            </div>
+            <div class="c-butter flex items-start gap-3 rounded-2xl bg-slate-50 px-3 py-3 ring-1 ring-slate-900/[.04]">
+              <span class="tag mt-px w-[58px] shrink-0 rounded-full py-0.5 text-center text-[11.5px] font-extrabold">Lab B03</span>
+              <div class="min-w-0 flex-1 leading-tight">
+                <div class="flex items-center"><span class="tnum text-[13px] font-bold">Wed 10:05–11:25</span><span class="tnum ml-auto pl-2 text-[11.5px] font-bold text-slate-400">20761</span></div>
+                <p class="mt-0.5 flex items-center gap-1 text-[11.5px] font-semibold text-slate-400">Goldberg CS 134 ·<span class="inline-flex items-center gap-1 font-bold text-gold-700"><span class="h-1.5 w-1.5 rounded-full bg-gold-600"></span>in progress</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-2.5 rounded-2xl bg-mint-bg px-3 py-2.5 text-mint-ink">
+            <span class="grid h-6 w-6 place-items-center rounded-full bg-mint-dot text-white"><svg class="i i-xs"><use href="#i-check"/></svg></span>
+            <div class="leading-tight"><p class="text-[13px] font-extrabold">No conflicts ✓</p><p class="text-[11.5px] font-semibold text-mint-ink/75">Fits with your 4 other courses</p></div>
+          </div>
+          <div class="mt-5 flex gap-2">
+            <button class="inline-flex h-10 flex-1 items-center justify-center gap-1.5 rounded-full bg-gold text-[13px] font-extrabold text-ink shadow-gold">Open schedule<svg class="i i-xs"><use href="#i-arrow-right"/></svg></button>
+            <button class="inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-white px-4 text-[13px] font-bold text-slate-600 ring-1 ring-slate-900/10"><svg class="i i-xs"><use href="#i-x"/></svg>Remove</button>
+          </div>
+        </section>
+
+        <!-- enrollment -->
+        <section class="tile p-5">
+          <div class="flex items-center gap-2.5">
+            <span class="badge-sm bg-butter-bg text-butter-ink"><svg class="i i-sm"><use href="#ic-chart"/></svg></span>
+            <h3 class="text-[15px] font-extrabold tracking-tight">Enrollment</h3>
+            <span class="ml-auto rounded-full bg-mint-bg px-2.5 py-1 text-[11.5px] font-extrabold text-mint-ink tnum">19 open</span>
+          </div>
+          <div class="mt-4 flex items-end gap-1.5">
+            <span class="tnum text-[30px] font-extrabold leading-none tracking-tight">101</span>
+            <span class="tnum pb-0.5 text-[13px] font-bold text-slate-400">/ 120 seats</span>
+            <span class="tnum ml-auto pb-0.5 text-[12px] font-bold text-slate-500">84% full</span>
+          </div>
+          <div class="mt-3 h-2 rounded-full bg-slate-100"><div class="h-full w-[84%] rounded-full bg-gold"></div></div>
+          <div class="mt-5 flex flex-col gap-3 text-[12px] font-bold">
+            <div class="flex items-center gap-3"><span class="tnum w-[52px] text-slate-500">Lec 01</span><span class="h-1.5 flex-1 rounded-full bg-slate-100"><span class="block h-full w-[84%] rounded-full bg-butter-dot"></span></span><span class="tnum w-[52px] text-right text-slate-600">101/120</span></div>
+            <div class="flex items-center gap-3"><span class="tnum w-[52px] text-slate-500">Lec 90</span><span class="h-1.5 flex-1 rounded-full bg-slate-100"></span><span class="w-[52px] text-right text-slate-300">Online</span></div>
+            <div class="flex items-center gap-3"><span class="tnum w-[52px] text-slate-500">Lab B03</span><span class="h-1.5 flex-1 rounded-full bg-slate-100"><span class="block h-full w-[87%] rounded-full bg-butter-dot"></span></span><span class="tnum w-[52px] text-right text-slate-600">52/60</span></div>
+            <div class="flex items-center gap-3"><span class="tnum w-[52px] text-slate-500">Lab B04</span><span class="h-1.5 flex-1 rounded-full bg-slate-100"><span class="block h-full w-[82%] rounded-full bg-butter-dot"></span></span><span class="tnum w-[52px] text-right text-slate-600">49/60</span></div>
+          </div>
+        </section>
+
+        <!-- key facts -->
+        <section class="tile p-5">
+          <div class="flex items-center gap-2.5">
+            <span class="badge-sm bg-sky-bg text-sky-ink"><svg class="i i-sm"><use href="#i-info"/></svg></span>
+            <h3 class="text-[15px] font-extrabold tracking-tight">Key facts</h3>
+          </div>
+          <dl class="mt-3 flex flex-col divide-y divide-slate-100 text-[13px]">
+            <div class="flex items-center py-2.5"><dt class="w-[108px] font-semibold text-slate-500">Credit hours</dt><dd class="tnum font-bold">3.0</dd></div>
+            <div class="flex items-center py-2.5"><dt class="w-[108px] font-semibold text-slate-500">Subject</dt><dd class="font-bold">Computer Science</dd></div>
+            <div class="flex items-center py-2.5"><dt class="w-[108px] font-semibold text-slate-500">Level</dt><dd class="tnum font-bold">2000</dd></div>
+            <div class="flex items-center py-2.5"><dt class="w-[108px] font-semibold text-slate-500">Format</dt><dd class="font-bold">Lecture + Lab</dd></div>
+            <div class="flex items-center py-2.5"><dt class="w-[108px] font-semibold text-slate-500">Campus</dt><dd class="font-bold">Studley</dd></div>
+            <div class="flex items-center py-2.5"><dt class="w-[108px] font-semibold text-slate-500">Prerequisites</dt><dd class="flex gap-1.5"><span class="tnum rounded-full bg-slate-100 px-2 py-0.5 text-[11.5px] font-extrabold">CSCI 1110</span><span class="tnum rounded-full bg-slate-100 px-2 py-0.5 text-[11.5px] font-extrabold">CSCI 1120</span></dd></div>
+            <div class="flex items-center pt-2.5"><dt class="w-[108px] font-semibold text-slate-500">Unlocks</dt><dd><span class="tnum rounded-full bg-gold-50 px-2 py-0.5 text-[11.5px] font-extrabold text-gold-700 ring-1 ring-gold/30">CSCI 3120</span></dd></div>
+          </dl>
+        </section>
+
+        <!-- offered terms -->
+        <section class="tile p-5">
+          <div class="flex items-center gap-2.5">
+            <span class="badge-sm bg-mint-bg text-mint-ink"><svg class="i i-sm"><use href="#i-repeat"/></svg></span>
+            <h3 class="text-[15px] font-extrabold tracking-tight">Offered terms</h3>
+          </div>
+          <div class="mt-3.5 grid grid-cols-2 gap-2 text-[12.5px] font-bold">
+            <span class="flex h-10 items-center gap-2 rounded-xl bg-gold-50 px-3 text-ink ring-1 ring-gold/45"><span class="h-2 w-2 rounded-full bg-gold"></span>Winter 2026</span>
+            <span class="flex h-10 items-center gap-2 rounded-xl px-3 text-slate-300 line-through decoration-slate-300 ring-1 ring-slate-900/[.06]">Summer 2026</span>
+            <span class="flex h-10 items-center gap-2 rounded-xl bg-slate-50 px-3 text-slate-600 ring-1 ring-slate-900/[.05]"><span class="h-2 w-2 rounded-full bg-slate-300"></span>Fall 2026</span>
+            <span class="flex h-10 items-center gap-2 rounded-xl bg-slate-50 px-3 text-slate-600 ring-1 ring-slate-900/[.05]"><span class="h-2 w-2 rounded-full bg-slate-300"></span>Winter 2027</span>
+          </div>
+          <p class="mt-3 text-[12px] font-semibold text-slate-400">Not offered Summer 2026 · next offering <b class="font-bold text-slate-600">Fall 2026</b></p>
+        </section>
+
+        <!-- instructors by term -->
+        <section class="tile p-5">
+          <div class="flex items-center gap-2.5">
+            <span class="badge-sm bg-peach-bg text-peach-ink"><svg class="i i-sm"><use href="#i-users"/></svg></span>
+            <h3 class="text-[15px] font-extrabold tracking-tight">Instructors by term</h3>
+          </div>
+          <div class="mt-3.5 flex flex-col divide-y divide-slate-100 text-[12.5px]">
+            <div class="flex items-start gap-3 pb-3">
+              <span class="w-[82px] shrink-0 pt-px font-extrabold text-gold-700">Winter 2026</span>
+              <div class="flex flex-1 flex-col gap-1.5">
+                <div class="flex items-center font-bold">Kalyaniwalla N.<span class="tnum ml-auto inline-flex items-center gap-1 text-[12px] font-extrabold"><svg class="i i-xs sf"><use href="#i-star"/></svg>2.4</span></div>
+                <div class="flex items-center font-bold">Wijenayake U.<span class="ml-auto text-[11.5px] font-semibold text-slate-400">No ratings</span></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 py-3">
+              <span class="w-[82px] shrink-0 font-bold text-slate-500">Fall 2026</span>
+              <div class="flex flex-1 items-center font-bold text-slate-700">Kalyaniwalla N.<span class="tnum ml-auto inline-flex items-center gap-1 text-[12px] font-extrabold text-ink"><svg class="i i-xs sf"><use href="#i-star"/></svg>2.4</span></div>
+            </div>
+            <div class="flex items-center gap-3 pt-3">
+              <span class="w-[82px] shrink-0 font-bold text-slate-500">Winter 2027</span>
+              <div class="flex flex-1 items-center font-bold text-slate-700">Kalyaniwalla N.<span class="tnum ml-auto inline-flex items-center gap-1 text-[12px] font-extrabold text-ink"><svg class="i i-xs sf"><use href="#i-star"/></svg>2.4</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- where it meets -->
+        <section class="tile p-5">
+          <div class="flex items-center gap-2.5">
+            <span class="badge-sm bg-lilac-bg text-lilac-ink"><svg class="i i-sm"><use href="#i-building"/></svg></span>
+            <h3 class="text-[15px] font-extrabold tracking-tight">Where it meets</h3>
+            <a class="ml-auto inline-flex items-center gap-1 text-[12px] font-bold text-slate-500">Rooms<svg class="i i-xs"><use href="#i-arrow-right"/></svg></a>
+          </div>
+
+          <div class="mt-4">
+            <div class="flex items-center gap-2 text-[13px]"><span class="font-extrabold">Goldberg CS <span class="tnum">127</span></span><span class="ml-auto rounded-full bg-butter-bg px-2 py-0.5 text-[11px] font-extrabold text-butter-ink">Lec 01</span></div>
+            <div class="mt-3 flex flex-col gap-1 text-[9.5px] font-extrabold text-slate-400">
+              <div class="flex items-center gap-2"><span class="w-3">M</span><div class="rs"><i class="o"></i><i class="o"></i><i></i><i class="c"></i><i class="c"></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i></div></div>
+              <div class="flex items-center gap-2"><span class="w-3">T</span><div class="rs"><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i></div></div>
+              <div class="flex items-center gap-2"><span class="w-3">W</span><div class="rs"><i class="o"></i><i class="o"></i><i></i><i class="c"></i><i class="c"></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i></div></div>
+              <div class="flex items-center gap-2"><span class="w-3">R</span><div class="rs"><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i><i></i><i class="o"></i><i class="o"></i></div></div>
+              <div class="flex items-center gap-2"><span class="w-3">F</span><div class="rs"><i class="o"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i></div></div>
+            </div>
+          </div>
+
+          <div class="mt-5 border-t border-slate-100 pt-5">
+            <div class="flex items-center gap-2 text-[13px]"><span class="font-extrabold">Goldberg CS <span class="tnum">134</span></span><span class="ml-auto rounded-full bg-butter-bg px-2 py-0.5 text-[11px] font-extrabold text-butter-ink">Labs B03 · B04</span></div>
+            <div class="mt-3 flex flex-col gap-1 text-[9.5px] font-extrabold text-slate-400">
+              <div class="flex items-center gap-2"><span class="w-3">M</span><div class="rs"><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i class="p"></i><i class="p"></i><i></i><i class="o"></i><i></i></div></div>
+              <div class="flex items-center gap-2"><span class="w-3">T</span><div class="rs"><i class="o"></i><i class="o"></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i></i></div></div>
+              <div class="flex items-center gap-2"><span class="w-3">W</span><div class="rs"><i></i><i></i><i class="c"></i><i class="c"></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i></div></div>
+              <div class="flex items-center gap-2"><span class="w-3">R</span><div class="rs"><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i></div></div>
+              <div class="flex items-center gap-2"><span class="w-3">F</span><div class="rs"><i></i><i></i><i></i><i></i><i class="o"></i><i class="o"></i><i></i><i></i><i></i><i></i></div></div>
+            </div>
+            <div class="mt-1.5 flex items-center gap-2"><span class="w-3"></span><div class="tnum flex flex-1 justify-between text-[10px] font-bold text-slate-400"><span>08</span><span>13</span><span>18</span></div></div>
+          </div>
+          <div class="mt-4 flex items-center gap-3 text-[11px] font-bold text-slate-500">
+            <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-[3px] bg-butter-dot"></span>Yours</span>
+            <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-[3px] bg-[#D9DEE5]"></span>Booked</span>
+            <span class="inline-flex items-center gap-1.5"><span class="h-2.5 w-2.5 rounded-[3px] border-[1.5px] border-dashed border-gold-600"></span>B04 option</span>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <!-- ratings & reviews (full width) -->
+    <section class="tile relative mt-5 p-6">
+      <div class="flex items-center gap-3">
+        <span class="badge bg-mint-bg text-mint-ink"><svg class="i i-lg"><use href="#i-message"/></svg></span>
+        <h2 class="text-[18px] font-extrabold tracking-tight">Ratings &amp; reviews</h2>
+        <span class="tnum rounded-full bg-slate-100 px-2.5 py-1 text-[12px] font-bold text-slate-500">38</span>
+        <div class="ml-auto flex items-center gap-2">
+          <div class="flex items-center gap-0.5 rounded-full bg-slate-100 p-1 text-[12.5px] font-bold text-slate-500">
+            <button class="h-8 rounded-full bg-ink px-3.5 text-white">All instructors</button>
+            <button class="h-8 rounded-full px-3">Kalyaniwalla N.<span class="tnum ml-1.5 text-slate-400">34</span></button>
+            <button class="h-8 rounded-full px-3">Wijenayake U.<span class="tnum ml-1.5 text-slate-400">4</span></button>
+          </div>
+          <button class="inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-[13px] font-bold text-white"><svg class="i i-sm"><use href="#ic-pencil"/></svg>Write a review</button>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-[260px_minmax(0,1fr)_minmax(0,1fr)] rounded-[20px] bg-[#F8F9FB] ring-1 ring-slate-900/[.05]">
+        <!-- overall -->
+        <div class="flex flex-col justify-center px-6 py-5">
+          <p class="text-[11px] font-extrabold uppercase tracking-[.1em] text-slate-400">Overall</p>
+          <div class="mt-2 flex items-end gap-3">
+            <p class="tnum text-[46px] font-extrabold leading-[.9] tracking-tight">3.4</p>
+            <div class="pb-0.5"><span class="stars" style="--p:68%"></span><p class="mt-0.5 text-[12px] font-bold text-slate-400">38 student reviews</p></div>
+          </div>
+        </div>
+        <!-- distribution -->
+        <div class="flex flex-col justify-center gap-1.5 border-l border-slate-200/70 px-6 py-5 text-[11.5px] font-bold text-slate-500">
+          <div class="flex items-center gap-3"><span class="tnum w-2">5</span><span class="h-1.5 flex-1 rounded-full bg-slate-200/70"><span class="block h-full w-[82%] rounded-full bg-gold"></span></span><span class="tnum w-4 text-right">9</span></div>
+          <div class="flex items-center gap-3"><span class="tnum w-2">4</span><span class="h-1.5 flex-1 rounded-full bg-slate-200/70"><span class="block h-full w-full rounded-full bg-gold"></span></span><span class="tnum w-4 text-right">11</span></div>
+          <div class="flex items-center gap-3"><span class="tnum w-2">3</span><span class="h-1.5 flex-1 rounded-full bg-slate-200/70"><span class="block h-full w-[82%] rounded-full bg-gold"></span></span><span class="tnum w-4 text-right">9</span></div>
+          <div class="flex items-center gap-3"><span class="tnum w-2">2</span><span class="h-1.5 flex-1 rounded-full bg-slate-200/70"><span class="block h-full w-[55%] rounded-full bg-gold"></span></span><span class="tnum w-4 text-right">6</span></div>
+          <div class="flex items-center gap-3"><span class="tnum w-2">1</span><span class="h-1.5 flex-1 rounded-full bg-slate-200/70"><span class="block h-full w-[27%] rounded-full bg-gold"></span></span><span class="tnum w-4 text-right">3</span></div>
+        </div>
+        <!-- difficulty / workload -->
+        <div class="flex flex-col justify-center gap-4 border-l border-slate-200/70 px-6 py-5">
+          <div>
+            <div class="flex items-center text-[12.5px] font-bold text-slate-500">Difficulty<span class="tnum ml-auto font-extrabold text-ink">4.2</span><span class="ml-1.5 text-peach-ink">Hard</span></div>
+            <div class="seg mt-2 text-peach-dot"><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:20%"></b></span></div>
+          </div>
+          <div>
+            <div class="flex items-center text-[12.5px] font-bold text-slate-500">Workload<span class="tnum ml-auto font-extrabold text-ink">4.4</span><span class="ml-1.5 text-lilac-ink">Heavy</span></div>
+            <div class="seg mt-2 text-lilac-dot"><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:100%"></b></span><span><b style="width:40%"></b></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 grid grid-cols-2 gap-4">
+        <!-- review 1 -->
+        <article class="flex flex-col rounded-[20px] p-5 ring-1 ring-slate-900/[.07]">
+          <div class="flex items-center gap-3">
+            <span class="grid h-10 w-10 place-items-center rounded-full bg-sky-bg text-sky-ink"><svg class="i i-lg"><use href="#ic-user"/></svg></span>
+            <div class="flex-1 leading-tight">
+              <p class="text-[14px] font-extrabold">Anonymous student</p>
+              <div class="mt-1 flex items-center gap-1.5 text-[11px] font-bold text-slate-500"><span class="rounded-full bg-slate-100 px-2 py-0.5">Kalyaniwalla N.</span><span class="rounded-full bg-slate-100 px-2 py-0.5">Fall 2025</span></div>
+            </div>
+            <span class="stars sm" style="--p:80%"></span>
+          </div>
+          <p class="mt-4 text-[14.5px] font-medium leading-[1.65] text-slate-600">“Hard, but this is the course where C finally clicked for me. Labs are long, so start assignments the day they’re released. Office hours were a lifesaver.”</p>
+          <div class="mt-auto flex items-center gap-2 pt-5">
+            <span class="tnum rounded-full bg-peach-bg px-2.5 py-1 text-[11px] font-extrabold text-peach-ink">Difficulty 4</span>
+            <span class="tnum rounded-full bg-lilac-bg px-2.5 py-1 text-[11px] font-extrabold text-lilac-ink">Workload 5</span>
+            <span class="tnum ml-auto inline-flex items-center gap-1.5 text-[12px] font-bold text-slate-400"><svg class="i i-sm"><use href="#i-thumb"/></svg>18 helpful</span>
+          </div>
+        </article>
+
+        <!-- review 2 -->
+        <article class="flex flex-col rounded-[20px] p-5 ring-1 ring-slate-900/[.07]">
+          <div class="flex items-center gap-3">
+            <span class="grid h-10 w-10 place-items-center rounded-full bg-peach-bg text-peach-ink"><svg class="i i-lg"><use href="#ic-user"/></svg></span>
+            <div class="flex-1 leading-tight">
+              <p class="text-[14px] font-extrabold">Anonymous student</p>
+              <div class="mt-1 flex items-center gap-1.5 text-[11px] font-bold text-slate-500"><span class="rounded-full bg-slate-100 px-2 py-0.5">Kalyaniwalla N.</span><span class="rounded-full bg-slate-100 px-2 py-0.5">Winter 2025</span></div>
+            </div>
+            <span class="stars sm" style="--p:60%"></span>
+          </div>
+          <p class="mt-4 text-[14.5px] font-medium leading-[1.65] text-slate-600">“Lectures move quickly through assembly and memory hierarchies, so the textbook helps a lot. Expect a real jump in difficulty from 1110/1120, but you come out a much stronger programmer.”</p>
+          <div class="mt-auto flex items-center gap-2 pt-5">
+            <span class="tnum rounded-full bg-peach-bg px-2.5 py-1 text-[11px] font-extrabold text-peach-ink">Difficulty 5</span>
+            <span class="tnum rounded-full bg-lilac-bg px-2.5 py-1 text-[11px] font-extrabold text-lilac-ink">Workload 4</span>
+            <span class="tnum ml-auto inline-flex items-center gap-1.5 text-[12px] font-bold text-slate-400"><svg class="i i-sm"><use href="#i-thumb"/></svg>11 helpful</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="mt-6 flex items-center gap-2 px-1 text-[12.5px] font-semibold text-slate-400">
+      <span>Not affiliated with Dalhousie University</span><span class="text-slate-300">·</span>
+      <span>Made by Théo Bourgeois &amp; Chris Langille</span>
+      <span class="ml-auto inline-flex items-center gap-1.5 text-slate-500"><svg class="i i-xs"><use href="#i-github"/></svg>Open source</span><span class="text-slate-300">·</span>
+      <span class="inline-flex items-center gap-1.5 text-slate-500"><svg class="i i-xs"><use href="#i-coffee"/></svg>Buy me a coffee</span>
+    </footer>
+  </main>

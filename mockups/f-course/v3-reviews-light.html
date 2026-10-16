@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>CSCI 2122 Systems Programming · DalSearch</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0C0C0E;
+    --panel: #141416;
+    --raised: #1C1C1F;
+    --block: #222226;
+    --line: rgba(255, 255, 255, 0.07);
+    --line-2: rgba(255, 255, 255, 0.12);
+    --text: #F4F4F5;
+    --text-2: #A6A6AD;
+    --text-3: #6E6E76;
+    --body: #CDCDD2;
+    --accent: #FFD21F;
+    --accent-ink: #17150D;
+    --green: #3DD68C;
+    --red: #F25F5C;
+
+    --c-2110: #5C8FF0;
+    --c-2141: #9D80EC;
+    --c-2060: #3FBF8C;
+    --c-1101: #EF7B5C;
+  }
+  .light {
+    --bg: #F3F3F5;
+    --panel: #FFFFFF;
+    --raised: #F3F3F5;
+    --block: #EEEEF1;
+    --line: rgba(0, 0, 0, 0.08);
+    --line-2: rgba(0, 0, 0, 0.14);
+    --text: #121214;
+    --text-2: #5C5C64;
+    --text-3: #92929A;
+    --body: #3A3A40;
+    --green: #16A365;
+    --red: #DC3B3B;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body {
+    font-family: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+    color: var(--text); font-size: 14px; line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  svg.i { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+  svg.i.sm { width: 15px; height: 15px; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+
+  .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+
+  /* ---------- Sidebar ---------- */
+  .side { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 16px 12px 12px; }
+  .brand { display: flex; align-items: center; gap: 9px; padding: 2px 8px; }
+  .brand svg { width: 24px; height: 24px; }
+  .brand span { font-size: 17px; font-weight: 900; letter-spacing: -0.02em; }
+  .search {
+    margin: 16px 0 10px; height: 38px; border-radius: 999px; border: 1px solid var(--line-2);
+    display: flex; align-items: center; gap: 8px; padding: 0 14px; color: var(--text-3); font-size: 14px; font-weight: 500;
+  }
+  .search kbd { margin-left: auto; font: inherit; font-size: 12px; color: var(--text-3); }
+  .nav a { display: flex; align-items: center; gap: 11px; height: 38px; padding: 0 14px; border-radius: 999px; font-size: 14.5px; font-weight: 500; color: var(--text-2); }
+  .nav a.on { background: var(--raised); color: var(--text); font-weight: 700; }
+  .light .nav a.on { background: var(--panel); box-shadow: 0 0 0 1px var(--line); }
+  .grp { display: flex; align-items: center; justify-content: space-between; margin: 22px 14px 6px; font-size: 13px; font-weight: 700; color: var(--text-3); }
+  .grp span { font-weight: 500; }
+  .crs { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 14px; border-radius: 999px; font-size: 14px; }
+  .crs .sw { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .crs b { font-weight: 700; flex-shrink: 0; }
+  .crs span { color: var(--text-3); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .crs .warn { margin-left: auto; color: var(--red); }
+  .side .user { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 10px 14px; }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; font-size: 12px; font-weight: 700; }
+  .user .name { font-size: 14px; font-weight: 700; }
+  .user .sub { font-size: 12.5px; color: var(--text-3); font-weight: 500; }
+
+  /* ---------- Main ---------- */
+  .main { margin: 10px 10px 10px 0; background: var(--panel); border: 1px solid var(--line); border-radius: 26px; min-width: 0; }
+  .crumbs { display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 24px; border-bottom: 1px solid var(--line); font-size: 13.5px; font-weight: 500; color: var(--text-3); }
+  .crumbs b { color: var(--text-2); font-weight: 700; }
+  .crumbs .tools { margin-left: auto; display: flex; gap: 2px; color: var(--text-3); }
+  .crumbs .tools button { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 6px; }
+
+  .wrap { padding: 0 40px 32px; }
+  .head { padding-top: 36px; }
+  .actions { display: flex; align-items: center; gap: 16px; margin-top: 26px; }
+  .actions .hint { font-size: 14px; color: var(--text-2); font-weight: 500; }
+  .actions .icons { margin-left: auto; display: flex; gap: 4px; color: var(--text-2); }
+  .actions .icons button { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; }
+  .actions .icons svg { width: 23px; height: 23px; }
+  .code { font-size: 46px; line-height: 1; font-weight: 900; letter-spacing: -0.035em; }
+  .title { font-size: 23px; font-weight: 500; color: var(--body); margin-top: 8px; letter-spacing: -0.01em; }
+  .cta { display: flex; align-items: center; gap: 14px; }
+  .cta .hint { font-size: 13.5px; color: var(--text-2); font-weight: 500; text-align: right; line-height: 1.35; }
+  .cta .hint b { color: var(--text); font-weight: 700; }
+  .primary { height: 48px; padding: 0 26px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .ghost { width: 42px; height: 42px; border-radius: 8px; border: 1px solid var(--line-2); display: grid; place-items: center; color: var(--text-2); }
+
+  .tabs { display: flex; gap: 28px; margin-top: 30px; border-bottom: 1px solid var(--line); }
+  .tab { position: relative; padding: 0 0 13px; font-size: 15px; font-weight: 700; color: var(--text-3); }
+  .tab span { font-weight: 500; margin-left: 4px; }
+  .tab-overview .tab[data-t=overview], .tab-schedule .tab[data-t=schedule], .tab-reviews .tab[data-t=reviews] { color: var(--text); }
+  .tab-overview .tab[data-t=overview]::after, .tab-schedule .tab[data-t=schedule]::after, .tab-reviews .tab[data-t=reviews]::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1.5px; height: 3px; background: var(--text); border-radius: 999px;
+  }
+  .pane { display: none; }
+  .tab-overview .pane[data-t=overview], .tab-schedule .pane[data-t=schedule], .tab-reviews .pane[data-t=reviews] { display: block; }
+
+  .cols { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 48px; padding-top: 32px; }
+
+  h2 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+  .row-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .desc { font-size: 15.5px; line-height: 1.65; color: var(--body); font-weight: 500; max-width: 640px; }
+  .seg { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--raised); }
+  .seg span { height: 30px; padding: 0 14px; border-radius: 999px; display: flex; align-items: center; font-size: 13px; font-weight: 700; color: var(--text-2); }
+  .seg span.on { background: var(--panel); color: var(--text); box-shadow: 0 0 0 1px var(--line-2); }
+  .seg span.off { color: var(--text-3); text-decoration: line-through; font-weight: 500; }
+
+  .table { margin-top: 14px; }
+  .tr { display: grid; grid-template-columns: 32px minmax(0, 1.1fr) 96px 112px minmax(0, 1fr) 64px; align-items: center; column-gap: 12px; padding: 0 18px; }
+  .th { height: 34px; font-size: 13px; font-weight: 500; color: var(--text-3); border-bottom: 1px solid var(--line); }
+  .grp-row { font-size: 13px; font-weight: 700; color: var(--text-3); padding: 16px 18px 4px; }
+  .r { height: 58px; border-radius: 20px; font-size: 14.5px; font-weight: 500; color: var(--text-2); }
+  .r.sel { background: var(--raised); color: var(--text); }
+  .r .s1 { font-size: 14.5px; font-weight: 700; color: var(--text); }
+  .r .s2 { font-size: 12.5px; color: var(--text-3); margin-top: 1px; }
+  .r .right { text-align: right; }
+  .pick { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--text-3); }
+  .pick.on { border: 0; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; }
+  .pick.on svg { width: 12px; height: 12px; }
+  .note { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding: 0 18px; font-size: 14px; font-weight: 500; color: var(--text-2); }
+  .note svg { color: var(--green); }
+  .note a { color: var(--text); font-weight: 700; margin-left: 4px; text-decoration: underline; text-decoration-color: var(--text-3); text-underline-offset: 3px; }
+
+  .block-gap { margin-top: 44px; }
+  .scores { display: flex; align-items: baseline; gap: 36px; margin-top: 16px; }
+  .score b { font-size: 30px; font-weight: 900; letter-spacing: -0.02em; }
+  .score span { margin-left: 8px; font-size: 14px; color: var(--text-2); font-weight: 500; }
+  .quote { margin-top: 18px; padding: 18px 22px; border-radius: 24px; background: var(--raised); max-width: 680px; }
+  .quote p { font-size: 15px; line-height: 1.55; color: var(--body); font-weight: 500; }
+  .quote div { margin-top: 8px; font-size: 13px; color: var(--text-3); font-weight: 500; }
+  .link { font-size: 14px; font-weight: 700; color: var(--text-2); }
+
+  /* ---------- Calendar ---------- */
+  .legend { display: flex; gap: 16px; font-size: 13px; font-weight: 500; color: var(--text-2); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+  .cal { --ppm: 0.9333px; display: grid; grid-template-columns: 44px repeat(5, 1fr); margin-top: 18px; }
+  .cal .dh { height: 30px; font-size: 13px; font-weight: 700; color: var(--text-2); padding-left: 8px; }
+  .cal .dh span { font-weight: 500; color: var(--text-3); margin-left: 4px; }
+  .hours { position: relative; height: calc(600 * var(--ppm)); }
+  .hours span { position: absolute; right: 10px; transform: translateY(-50%); font-size: 12px; color: var(--text-3); font-weight: 500; }
+  .day { position: relative; height: calc(600 * var(--ppm)); border-left: 1px solid var(--line);
+    background-image: linear-gradient(var(--line) 1px, transparent 1px); background-size: 100% calc(60 * var(--ppm)); }
+  .ev { position: absolute; left: 4px; right: 4px; top: calc(var(--s) * var(--ppm) + 1px); height: calc((var(--e) - var(--s)) * var(--ppm) - 2px);
+    border-radius: 12px; background: var(--block); padding: 6px 10px; font-size: 12px; line-height: 1.3; color: var(--text-2); overflow: hidden; }
+  .ev b { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text); font-weight: 700; }
+  .ev b i { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .ev.me { background: var(--accent); color: rgba(23, 21, 13, 0.75); }
+  .ev.me b { color: var(--accent-ink); }
+  .ev.alt { background: transparent; border: 1.5px dashed var(--text-3); color: var(--text-2); }
+  .ev.alt b { color: var(--text); }
+  .ev.clash { outline: 1.5px solid var(--red); outline-offset: -1.5px; }
+  .ev.half-l { right: calc(50% + 2px); }
+  .ev.half-r { left: calc(50% + 2px); }
+  .facts { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 40px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+  .fact b { display: block; font-size: 22px; font-weight: 900; letter-spacing: -0.02em; }
+  .fact span { display: block; margin-top: 3px; font-size: 13.5px; color: var(--text-2); font-weight: 500; }
+  .sub-note { margin-top: 18px; font-size: 13.5px; color: var(--text-3); font-weight: 500; }
+
+  /* ---------- Reviews ---------- */
+  .composer { display: flex; align-items: center; gap: 12px; margin-top: 22px; padding: 8px 8px 8px 10px; border: 1px solid var(--line-2); border-radius: 999px; }
+  .composer .ph { flex: 1; font-size: 14.5px; color: var(--text-3); font-weight: 500; }
+  .btn2 { height: 38px; padding: 0 18px; border-radius: 999px; background: var(--raised); font-size: 13.5px; font-weight: 700; color: var(--text); }
+  .msgs { margin-top: 8px; }
+  .msg { display: grid; grid-template-columns: 34px 1fr; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .msg .avatar { width: 34px; height: 34px; background: var(--raised); color: var(--text-3); }
+  .msg .avatar svg { width: 18px; height: 18px; fill: currentColor; }
+  .who { display: flex; align-items: baseline; gap: 10px; }
+  .who b { font-size: 14.5px; font-weight: 700; }
+  .who span { font-size: 13px; color: var(--text-3); font-weight: 500; }
+  .msg p { margin-top: 5px; font-size: 15px; line-height: 1.55; color: var(--body); font-weight: 500; max-width: 660px; }
+  .msg .foot { display: flex; gap: 16px; margin-top: 10px; font-size: 13px; color: var(--text-3); font-weight: 500; }
+  .msg .foot b { color: var(--text-2); font-weight: 700; }
+  .msg .foot .helpful { margin-left: auto; }
+
+  /* ---------- Properties ---------- */
+  .props { border-left: 1px solid var(--line); padding-left: 28px; align-self: start; }
+  .prop { display: grid; grid-template-columns: 108px 1fr; gap: 12px; align-items: start; padding: 6px 0; font-size: 14px; font-weight: 500; }
+  .prop dt { color: var(--text-3); }
+  .prop dd { color: var(--text); line-height: 1.55; }
+  .prop dd a { text-decoration: underline; text-decoration-color: var(--text-3); text-underline-offset: 3px; }
+  .prop dd .dim { color: var(--text-3); }
+  .props hr { border: 0; border-top: 1px solid var(--line); margin: 18px 0; }
+  .props h3 { font-size: 13px; font-weight: 700; color: var(--text-3); margin-bottom: 12px; }
+  .prof { display: flex; gap: 11px; }
+  .prof + .prof { margin-top: 14px; }
+  .prof .avatar { background: var(--raised); color: var(--text-2); }
+  .prof b { display: block; font-size: 14.5px; font-weight: 700; }
+  .prof span { display: block; font-size: 13px; color: var(--text-2); font-weight: 500; margin-top: 1px; }
+  .prof em { font-style: normal; color: var(--text); font-weight: 700; }
+  .ext { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--text-2); }
+  .footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--text-3); font-weight: 500; }
+</style>
+</head>
+<body class="tab-reviews">
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+<symbol id="f-buildings" viewBox="0 0 256 256"><path d="M239.73,208H224V96a16,16,0,0,0-16-16H164a4,4,0,0,0-4,4V208H144V32.41a16.43,16.43,0,0,0-6.16-13,16,16,0,0,0-18.72-.69L39.12,72A16,16,0,0,0,32,85.34V208H16.27A8.18,8.18,0,0,0,8,215.47,8,8,0,0,0,16,224H240a8,8,0,0,0,8-8.53A8.18,8.18,0,0,0,239.73,208ZM76,184a8,8,0,0,1-8.53,8A8.18,8.18,0,0,1,60,183.72V168.27A8.19,8.19,0,0,1,67.47,160,8,8,0,0,1,76,168Zm0-56a8,8,0,0,1-8.53,8A8.19,8.19,0,0,1,60,127.72V112.27A8.19,8.19,0,0,1,67.47,104,8,8,0,0,1,76,112Zm40,56a8,8,0,0,1-8.53,8,8.18,8.18,0,0,1-7.47-8.26V168.27a8.19,8.19,0,0,1,7.47-8.26,8,8,0,0,1,8.53,8Zm0-56a8,8,0,0,1-8.53,8,8.19,8.19,0,0,1-7.47-8.26V112.27a8.19,8.19,0,0,1,7.47-8.26,8,8,0,0,1,8.53,8Z"/></symbol>
+<symbol id="f-calendar-blank" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,48H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24Z"/></symbol>
+<symbol id="f-check-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="f-compass" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm51.58,57.79-32,64a4.08,4.08,0,0,1-1.79,1.79l-64,32a4,4,0,0,1-5.37-5.37l32-64a4.08,4.08,0,0,1,1.79-1.79l64-32A4,4,0,0,1,179.58,81.79Z"/></symbol>
+<symbol id="f-house" viewBox="0 0 256 256"><path d="M224,120v96a8,8,0,0,1-8,8H160a8,8,0,0,1-8-8V164a4,4,0,0,0-4-4H108a4,4,0,0,0-4,4v52a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a16,16,0,0,1,4.69-11.31l80-80a16,16,0,0,1,22.62,0l80,80A16,16,0,0,1,224,120Z"/></symbol>
+<symbol id="f-users" viewBox="0 0 256 256"><path d="M164.47,195.63a8,8,0,0,1-6.7,12.37H10.23a8,8,0,0,1-6.7-12.37,95.83,95.83,0,0,1,47.22-37.71,60,60,0,1,1,66.5,0A95.83,95.83,0,0,1,164.47,195.63Zm87.91-.15a95.87,95.87,0,0,0-47.13-37.56A60,60,0,0,0,144.7,54.59a4,4,0,0,0-1.33,6A75.83,75.83,0,0,1,147,150.53a4,4,0,0,0,1.07,5.53,112.32,112.32,0,0,1,29.85,30.83,23.92,23.92,0,0,1,3.65,16.47,4,4,0,0,0,3.95,4.64h60.3a8,8,0,0,0,7.73-5.93A8.22,8.22,0,0,0,252.38,195.48Z"/></symbol>
+<symbol id="r-arrow-up-right" viewBox="0 0 256 256"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/></symbol>
+<symbol id="r-bookmark-simple" viewBox="0 0 256 256"><path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z"/></symbol>
+<symbol id="r-buildings" viewBox="0 0 256 256"><path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.88-13.32L39.12,72A16,16,0,0,0,32,85.34V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM208,96V208H144V96ZM48,85.34,128,32V208H48ZM112,112v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm-32,0v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm0,56v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Zm32,0v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Z"/></symbol>
+<symbol id="r-calendar-blank" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></symbol>
+<symbol id="r-caret-down" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="r-caret-left" viewBox="0 0 256 256"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></symbol>
+<symbol id="r-caret-right" viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+<symbol id="r-check" viewBox="0 0 256 256"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="r-compass" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.58-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.15-20.07Z"/></symbol>
+<symbol id="r-dots-three" viewBox="0 0 256 256"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"/></symbol>
+<symbol id="r-gear-six" viewBox="0 0 256 256"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67,8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A112.1,112.1,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.62a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67,8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73,8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.08,8.08,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8.08,8.08,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z"/></symbol>
+<symbol id="r-house" viewBox="0 0 256 256"><path d="M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z"/></symbol>
+<symbol id="r-magnifying-glass" viewBox="0 0 256 256"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></symbol>
+<symbol id="r-plus" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></symbol>
+<symbol id="r-share-network" viewBox="0 0 256 256"><path d="M176,160a39.89,39.89,0,0,0-28.62,12.09l-46.1-29.63a39.8,39.8,0,0,0,0-28.92l46.1-29.63a40,40,0,1,0-8.66-13.45l-46.1,29.63a40,40,0,1,0,0,55.82l46.1,29.63A40,40,0,1,0,176,160Zm0-128a24,24,0,1,1-24,24A24,24,0,0,1,176,32ZM64,152a24,24,0,1,1,24-24A24,24,0,0,1,64,152Zm112,72a24,24,0,1,1,24-24A24,24,0,0,1,176,224Z"/></symbol>
+<symbol id="r-users" viewBox="0 0 256 256"><path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"/></symbol>
+<symbol id="f-warning-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"/></symbol>
+<symbol id="r-link-simple" viewBox="0 0 256 256"><path d="M165.66,90.34a8,8,0,0,1,0,11.32l-64,64a8,8,0,0,1-11.32-11.32l64-64A8,8,0,0,1,165.66,90.34ZM215.6,40.4a56,56,0,0,0-79.2,0L106.34,70.45a8,8,0,0,0,11.32,11.32l30.06-30a40,40,0,0,1,56.57,56.56l-30.07,30.06a8,8,0,0,0,11.31,11.32L215.6,119.6a56,56,0,0,0,0-79.2ZM138.34,174.22l-30.06,30.06a40,40,0,1,1-56.56-56.57l30.05-30.05a8,8,0,0,0-11.32-11.32L40.4,136.4a56,56,0,0,0,79.2,79.2l30.06-30.07a8,8,0,0,0-11.32-11.31Z"/></symbol>
+    <symbol id="gargoyle" viewBox="150 150 400 580"><path d="M487.19,168.05h-195.29c-26.04,0-48.36,16.74-57.66,40.92h-37.2c-42.78,0-78.12,35.34-78.12,78.12v91.14c9.3-20.46,29.76-35.34,53.94-35.34h68.82l-42.78,174.83c-3.72,11.16,3.72,20.46,13.02,20.46,33.48,0,46.5-5.58,72.54-29.76l27.9,78.12h0c1.86,3.72,3.72,5.58,7.44,5.58s5.58-1.86,7.44-5.58l27.9-78.12c24.18,24.18,39.06,29.76,72.54,29.76,11.16,0,16.74-11.16,13.02-20.46l-22.32-174.83h3.72c42.78,0,78.12-35.34,78.12-78.12v-1.86c16.74-11.16,27.9-29.76,27.9-50.22v-70.68c-5.58,14.88-22.32,26.04-40.92,26.04Zm-167.39,87.42c-5.58,3.72-13.02,1.86-18.6-1.86l-11.16-11.16c-5.58-5.58-5.58-14.88,0-22.32l11.16-11.16c5.58-5.58,13.02-5.58,18.6-1.86l42.78,24.18-42.78,24.18Z"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- ================= Sidebar ================= -->
+  <aside class="side">
+    <div class="brand">
+      <svg viewBox="0 0 753 768"><path fill="var(--accent)" d="M735.53,705.37l-166.07-169.66c44.79-55.69,71.54-127.02,71.54-204.64,0-178.41-141.72-323.07-316.5-323.07S8,152.66,8,331.07s141.72,323.07,316.5,323.07c76.35,0,146.38-27.61,201.08-73.63l166.07,169.51c19.39,18.1,37.57,6.44,43.88,0,12.62-12.73,12.62-31.91,0-44.64ZM69.77,331.07c0-143.59,114.07-260.02,254.73-260.02s254.88,116.43,254.88,260.02-114.07,260.02-254.73,260.02S69.77,474.66,69.77,331.07Z"/><path fill="var(--text)" d="M487.19,168.05h-195.29c-26.04,0-48.36,16.74-57.66,40.92h-37.2c-42.78,0-78.12,35.34-78.12,78.12v91.14c9.3-20.46,29.76-35.34,53.94-35.34h68.82l-42.78,174.83c-3.72,11.16,3.72,20.46,13.02,20.46,33.48,0,46.5-5.58,72.54-29.76l27.9,78.12h0c1.86,3.72,3.72,5.58,7.44,5.58s5.58-1.86,7.44-5.58l27.9-78.12c24.18,24.18,39.06,29.76,72.54,29.76,11.16,0,16.74-11.16,13.02-20.46l-22.32-174.83h3.72c42.78,0,78.12-35.34,78.12-78.12v-1.86c16.74-11.16,27.9-29.76,27.9-50.22v-70.68c-5.58,14.88-22.32,26.04-40.92,26.04Zm-167.39,87.42c-5.58,3.72-13.02,1.86-18.6-1.86l-11.16-11.16c-5.58-5.58-5.58-14.88,0-22.32l11.16-11.16c5.58-5.58,13.02-5.58,18.6-1.86l42.78,24.18-42.78,24.18Z"/></svg>
+      <span>DalSearch</span>
+    </div>
+    <div class="search"><svg class="i sm"><use href="#r-magnifying-glass"/></svg>Search<kbd>/</kbd></div>
+    <nav class="nav">
+      <a><svg class="i"><use href="#r-house"/></svg>Home</a>
+      <a class="on"><svg class="i"><use href="#f-compass"/></svg>Explore</a>
+      <a><svg class="i"><use href="#r-calendar-blank"/></svg>Schedule</a>
+      <a><svg class="i"><use href="#r-buildings"/></svg>Rooms</a>
+      <a><svg class="i"><use href="#r-users"/></svg>Instructors</a>
+    </nav>
+
+    <div class="grp">Winter 2026 <span class="num">12 credits</span></div>
+    <a class="crs"><i class="sw" style="background:var(--c-2110)"></i><b class="num">CSCI 2110</b><span>Data Structures</span></a>
+    <a class="crs"><i class="sw" style="background:var(--c-2141)"></i><b class="num">CSCI 2141</b><span>Databases</span></a>
+    <a class="crs"><i class="sw" style="background:var(--c-2060)"></i><b class="num">STAT 2060</b><span>Probability</span><svg class="i sm warn"><use href="#f-warning-circle"/></svg></a>
+    <a class="crs"><i class="sw" style="background:var(--c-1101)"></i><b class="num">ECON 1101</b><span>Microeconomics</span><svg class="i sm warn"><use href="#f-warning-circle"/></svg></a>
+
+    <div class="grp">Saved</div>
+    <a class="crs"><i class="sw" style="background:var(--text-3)"></i><b class="num">CSCI 3120</b><span>Operating Systems</span></a>
+    <a class="crs"><i class="sw" style="background:var(--text-3)"></i><b class="num">CSCI 3110</b><span>Algorithms I</span></a>
+
+    <div class="grp">Other terms</div>
+    <a class="crs"><b style="font-weight:500;color:var(--text-2)">Fall 2026</b><span style="margin-left:auto" class="num">6 credits</span></a>
+    <a class="crs"><b style="font-weight:500;color:var(--text-2)">Winter 2027</b><span style="margin-left:auto">Empty</span></a>
+
+    <div class="user">
+      <div class="avatar" style="background:var(--c-2110);color:#fff">TB</div>
+      <div><div class="name">Théo B.</div><div class="sub">Computer Science</div></div>
+    </div>
+  </aside>
+
+  <!-- ================= Main ================= -->
+  <main class="main">
+    <div class="crumbs">
+      <span>Explore</span><svg class="i sm"><use href="#r-caret-right"/></svg>
+      <span>Computer Science</span><svg class="i sm"><use href="#r-caret-right"/></svg>
+      <b class="num">CSCI 2122</b>
+    </div>
+
+    <div class="wrap">
+      <header class="head">
+        <div>
+          <div class="code num">CSCI 2122</div>
+          <div class="title">Systems Programming</div>
+        </div>
+      </header>
+
+      <div class="actions">
+        <button class="primary"><svg class="i"><use href="#r-plus"/></svg>Add to schedule</button>
+        <span class="hint">Lec 01 and Lab B03 selected</span>
+        <div class="icons">
+          <button title="Save for later"><svg class="i"><use href="#r-bookmark-simple"/></svg></button>
+          <button title="Share"><svg class="i"><use href="#r-share-network"/></svg></button>
+          <button title="More"><svg class="i"><use href="#r-dots-three"/></svg></button>
+        </div>
+      </div>
+
+      <nav class="tabs">
+        <a class="tab" data-t="overview">Overview</a>
+        <a class="tab" data-t="schedule">Schedule</a>
+        <a class="tab" data-t="reviews">Reviews<span class="num">38</span></a>
+      </nav>
+
+      <div class="cols">
+        <div>
+
+          <!-- ============ Overview ============ -->
+          <section class="pane" data-t="overview">
+            <p class="desc">This course presents tools, techniques, and concepts for systems programming. Students will be exposed to assembly and will be introduced to the C programming language. The course also discusses memory hierarchies, performance measurement, exception control flow, and performance related issues. Students will be involved in a significant amount of low-level programming.</p>
+
+            <div class="row-head block-gap">
+              <h2>Sections</h2>
+              <div class="seg"><span class="on">Winter 2026</span><span>Fall 2026</span><span>Winter 2027</span></div>
+            </div>
+            <div class="table">
+              <div class="tr th"><span></span><span>Section</span><span>Days</span><span>Time</span><span>Location</span><span style="text-align:right">Seats</span></div>
+              <div class="grp-row">Lecture, pick one</div>
+              <div class="tr r sel">
+                <span class="pick on"><svg class="i"><use href="#r-check"/></svg></span>
+                <span><div class="s1">Lec 01</div><div class="s2">Kalyaniwalla N.</div></span>
+                <span>Mon, Wed</span><span class="num">11:35-12:55</span><span>Goldberg CS 127</span><span class="right num">101/120</span>
+              </div>
+              <div class="tr r">
+                <span class="pick"></span>
+                <span><div class="s1">Lec 90</div><div class="s2">Wijenayake U.</div></span>
+                <span>Online</span><span style="color:var(--text-3)">Self-paced</span><span>Consult department</span><span class="right" style="color:var(--text-3)">Open</span>
+              </div>
+              <div class="grp-row">Lab, pick one</div>
+              <div class="tr r sel">
+                <span class="pick on"><svg class="i"><use href="#r-check"/></svg></span>
+                <span><div class="s1">Lab B03</div><div class="s2">Staff</div></span>
+                <span>Wed</span><span class="num">10:05-11:25</span><span>Goldberg CS 134</span><span class="right num">52/60</span>
+              </div>
+              <div class="tr r">
+                <span class="pick"></span>
+                <span><div class="s1">Lab B04</div><div class="s2">Staff</div></span>
+                <span>Mon</span><span class="num">13:05-14:25</span><span>Goldberg CS 134</span><span class="right num">49/60</span>
+              </div>
+              <div class="note"><svg class="i sm"><use href="#f-check-circle"/></svg>No conflicts with your 4 other courses.<a>See your week</a></div>
+            </div>
+
+            <div class="row-head block-gap">
+              <h2>What students say</h2>
+              <a class="link">All 38 reviews</a>
+            </div>
+            <div class="scores num">
+              <div class="score"><b>3.4</b><span>overall</span></div>
+              <div class="score"><b>4.2</b><span>difficulty</span></div>
+              <div class="score"><b>4.4</b><span>workload</span></div>
+            </div>
+            <div class="quote">
+              <p>Hard, but this is the course where C finally clicked for me. Labs are long, so start them the day they're released.</p>
+              <div>Most helpful review, Fall 2025 with Kalyaniwalla N.</div>
+            </div>
+          </section>
+
+          <!-- ============ Schedule ============ -->
+          <section class="pane" data-t="schedule">
+            <div class="row-head">
+              <h2>Your week with CSCI 2122</h2>
+              <div class="seg"><span class="on">Winter 2026</span><span>Fall 2026</span><span>Winter 2027</span></div>
+            </div>
+            <div class="legend" style="margin-top:14px">
+              <span><i style="background:var(--accent)"></i>Lec 01 + Lab B03</span>
+              <span><i style="background:var(--block);box-shadow:0 0 0 1px var(--line-2)"></i>Your courses</span>
+              <span><i style="border:1.5px dashed var(--text-3)"></i>Other sections</span>
+            </div>
+
+            <div class="cal">
+              <div></div>
+              <div class="dh">Mon</div><div class="dh">Tue</div><div class="dh">Wed</div><div class="dh">Thu</div><div class="dh">Fri</div>
+
+              <div class="hours">
+                <span style="top:0">8</span><span style="top:calc(60*var(--ppm))">9</span><span style="top:calc(120*var(--ppm))">10</span>
+                <span style="top:calc(180*var(--ppm))">11</span><span style="top:calc(240*var(--ppm))">12</span><span style="top:calc(300*var(--ppm))">13</span>
+                <span style="top:calc(360*var(--ppm))">14</span><span style="top:calc(420*var(--ppm))">15</span><span style="top:calc(480*var(--ppm))">16</span>
+                <span style="top:calc(540*var(--ppm))">17</span><span style="top:calc(600*var(--ppm))">18</span>
+              </div>
+
+              <!-- Mon -->
+              <div class="day">
+                <div class="ev me" style="--s:215;--e:295"><b>Lec 01</b>11:35-12:55<br>Goldberg CS 127</div>
+                <div class="ev alt" style="--s:305;--e:385"><b>Lab B04</b>13:05-14:25<br>Switch to this lab</div>
+                <div class="ev" style="--s:395;--e:445"><b><i style="background:var(--c-2060)"></i>STAT 2060</b>14:35-15:25</div>
+                <div class="ev" style="--s:515;--e:565"><b><i style="background:var(--c-2110)"></i>CSCI 2110</b>16:35-17:25</div>
+              </div>
+              <!-- Tue -->
+              <div class="day">
+                <div class="ev" style="--s:35;--e:145"><b><i style="background:var(--c-2060)"></i>STAT 2060</b>Tut T01<br>8:35-10:25</div>
+                <div class="ev" style="--s:305;--e:385"><b><i style="background:var(--c-2141)"></i>CSCI 2141</b>13:05-14:25</div>
+                <div class="ev" style="--s:395;--e:475"><b><i style="background:var(--c-1101)"></i>ECON 1101</b>14:35-15:55</div>
+              </div>
+              <!-- Wed -->
+              <div class="day">
+                <div class="ev" style="--s:35;--e:115"><b><i style="background:var(--c-2110)"></i>CSCI 2110</b>Lab B02<br>8:35-9:55</div>
+                <div class="ev me" style="--s:125;--e:205"><b>Lab B03</b>10:05-11:25<br>Goldberg CS 134</div>
+                <div class="ev me" style="--s:215;--e:295"><b>Lec 01</b>11:35-12:55<br>Goldberg CS 127</div>
+                <div class="ev" style="--s:395;--e:445"><b><i style="background:var(--c-2060)"></i>STAT 2060</b>14:35-15:25</div>
+                <div class="ev" style="--s:515;--e:565"><b><i style="background:var(--c-2110)"></i>CSCI 2110</b>16:35-17:25</div>
+              </div>
+              <!-- Thu -->
+              <div class="day">
+                <div class="ev" style="--s:305;--e:385"><b><i style="background:var(--c-2141)"></i>CSCI 2141</b>13:05-14:25</div>
+                <div class="ev clash half-l" style="--s:395;--e:445"><b><i style="background:var(--c-2060)"></i>STAT</b>14:35</div>
+                <div class="ev clash half-r" style="--s:395;--e:475"><b><i style="background:var(--c-1101)"></i>ECON</b>14:35</div>
+                <div class="ev" style="--s:515;--e:565"><b><i style="background:var(--c-2110)"></i>CSCI 2110</b>16:35-17:25</div>
+              </div>
+              <!-- Fri -->
+              <div class="day">
+                <div class="ev" style="--s:395;--e:445"><b><i style="background:var(--c-2060)"></i>STAT 2060</b>14:35-15:25</div>
+                <div class="ev" style="--s:515;--e:565"><b><i style="background:var(--c-2110)"></i>CSCI 2110</b>16:35-17:25</div>
+              </div>
+            </div>
+
+            <div class="facts num">
+              <div class="fact"><b>+4 hours</b><span>of class a week</span></div>
+              <div class="fact"><b>0 new conflicts</b><span>Thursday's STAT/ECON clash is unrelated</span></div>
+              <div class="fact"><b>8:35 to 17:25</b><span>Your Wednesdays become full days</span></div>
+            </div>
+            <p class="sub-note">Lec 90 is online and self-paced, so it isn't shown on the calendar.</p>
+          </section>
+
+          <!-- ============ Reviews ============ -->
+          <section class="pane" data-t="reviews">
+            <div class="row-head">
+              <div class="scores num" style="margin-top:0">
+                <div class="score"><b>3.4</b><span>overall</span></div>
+                <div class="score"><b>4.2</b><span>difficulty</span></div>
+                <div class="score"><b>4.4</b><span>workload</span></div>
+              </div>
+              <div class="seg"><span class="on">All instructors</span><span>Kalyaniwalla N.</span><span>Wijenayake U.</span></div>
+            </div>
+
+            <div class="composer">
+              <div class="avatar" style="background:var(--c-2110);color:#fff">TB</div>
+              <div class="ph">Took CSCI 2122? Share what it was like. Reviews are anonymous.</div>
+              <button class="btn2">Write a review</button>
+            </div>
+
+            <div class="msgs">
+              <div class="msg">
+                <div class="avatar"><svg><use href="#gargoyle"/></svg></div>
+                <div>
+                  <div class="who"><b>Anonymous</b><span>Fall 2025, Kalyaniwalla N.</span></div>
+                  <p>Hard, but this is the course where C finally clicked for me. Labs are long, so start them the day they're released. Office hours were a lifesaver.</p>
+                  <div class="foot num"><span>Overall <b>4</b></span><span>Difficulty <b>4</b></span><span>Workload <b>5</b></span><span class="helpful">18 found this helpful</span></div>
+                </div>
+              </div>
+              <div class="msg">
+                <div class="avatar"><svg><use href="#gargoyle"/></svg></div>
+                <div>
+                  <div class="who"><b>Anonymous</b><span>Winter 2025, Kalyaniwalla N.</span></div>
+                  <p>Lectures move quickly through assembly and memory hierarchies, so the textbook helps a lot. Expect a real jump in difficulty from 1110 and 1120, but you come out a much stronger programmer.</p>
+                  <div class="foot num"><span>Overall <b>3</b></span><span>Difficulty <b>5</b></span><span>Workload <b>4</b></span><span class="helpful">11 found this helpful</span></div>
+                </div>
+              </div>
+              <div class="msg">
+                <div class="avatar"><svg><use href="#gargoyle"/></svg></div>
+                <div>
+                  <div class="who"><b>Anonymous</b><span>Winter 2025, Wijenayake U., online</span></div>
+                  <p>Took the online section. Self-paced worked well for me but you need discipline. The bit manipulation assignment ate a whole weekend.</p>
+                  <div class="foot num"><span>Overall <b>4</b></span><span>Difficulty <b>4</b></span><span>Workload <b>4</b></span><span class="helpful">7 found this helpful</span></div>
+                </div>
+              </div>
+              <div class="msg">
+                <div class="avatar"><svg><use href="#gargoyle"/></svg></div>
+                <div>
+                  <div class="who"><b>Anonymous</b><span>Fall 2024, Kalyaniwalla N.</span></div>
+                  <p>Midterm was much harder than the practice one. Content is useful for later courses but grading felt strict and feedback came back late.</p>
+                  <div class="foot num"><span>Overall <b>2</b></span><span>Difficulty <b>5</b></span><span>Workload <b>4</b></span><span class="helpful">9 found this helpful</span></div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:18px"><a class="link">Show 34 more reviews</a></div>
+          </section>
+        </div>
+
+        <!-- ============ Properties (all tabs) ============ -->
+        <aside class="props">
+          <dl>
+            <div class="prop"><dt>Credit hours</dt><dd class="num">3</dd></div>
+            <div class="prop"><dt>Level</dt><dd class="num">2000</dd></div>
+            <div class="prop"><dt>Format</dt><dd>Lecture and lab</dd></div>
+            <div class="prop"><dt>Campus</dt><dd>Studley</dd></div>
+            <div class="prop"><dt>Enrollment</dt><dd class="num">101 of 120 <span class="dim">(19 left)</span></dd></div>
+            <div class="prop"><dt>Prerequisites</dt><dd class="num"><a>CSCI 1110</a><br><a>CSCI 1120</a></dd></div>
+            <div class="prop"><dt>Leads to</dt><dd class="num"><a>CSCI 3120</a></dd></div>
+            <div class="prop"><dt>Offered</dt><dd>Winter 2026<br>Fall 2026<br>Winter 2027</dd></div>
+          </dl>
+          <hr>
+          <h3>Instructors this term</h3>
+          <div class="prof">
+            <div class="avatar">NK</div>
+            <div><b>Kalyaniwalla N.</b><span><em class="num">2.4</em> on RateMyProfessors</span><span class="num">61% would take again</span></div>
+          </div>
+          <div class="prof">
+            <div class="avatar">UW</div>
+            <div><b>Wijenayake U.</b><span>Online section</span><span>No ratings yet</span></div>
+          </div>
+          <hr>
+          <a class="ext">Open in Dal timetable<svg class="i sm"><use href="#r-arrow-up-right"/></svg></a>
+        </aside>
+      </div>
+
+      <div class="footer">DalSearch is not affiliated with Dalhousie University. Made by Théo Bourgeois and Chris Langille.</div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

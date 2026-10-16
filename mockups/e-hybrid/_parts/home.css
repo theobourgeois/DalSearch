@@ -1,0 +1,10 @@
+/* home: page-specific */
+  .i.star { fill: #FFC700; stroke: #FFC700; stroke-width: 1.5; }
+  mark.hl { background: #FFF3C4; color: inherit; border-radius: 5px; padding: 0 2px; margin: 0 -1px; box-shadow: inset 0 -2px 0 #FFE58A; }
+  .wk-grid { background-image: linear-gradient(to right, rgba(15,23,42,.06) 1px, transparent 1px); background-size: 10% 100%; }
+  .wk-ev { position: absolute; top: 8px; bottom: 8px; display: flex; align-items: center; gap: 6px; padding: 0 10px; border-radius: 12px; white-space: nowrap; overflow: hidden; font-size: 12px; font-weight: 800; letter-spacing: -0.01em; }
+  .wk-ev small { font-size: 11px; font-weight: 600; opacity: .7; }
+  .wk-half { position: absolute; height: 17px; display: flex; align-items: center; padding: 0 8px; border-radius: 7px; white-space: nowrap; overflow: hidden; font-size: 10.5px; font-weight: 800; line-height: 1; }
+  .conflict-soft { box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px #F43F5E; }
+  .bar { height: 6px; border-radius: 999px; background: #EEF0F3; overflow: hidden; }
+  .bar > span { display: block; height: 100%; border-radius: 999px; background: #94A3B8; }

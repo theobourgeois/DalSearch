@@ -1,29 +1,26 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import { createClient } from "@/lib/supabase/server";
+import { getSession } from "@/lib/auth";
 
+/** Flags a DalSearch review ({ review_id }) or reports a RateMyProfessors one ({ external_review_id }). */
 export async function POST(req: Request) {
-  const { userId } = await auth();
-  
-  if (!userId) {
+  const session = await getSession();
+
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const supabase = await createClient();
-  const { review_id } = await req.json();
+  const { review_id, external_review_id } = await req.json();
 
-  if (!review_id) {
-    return NextResponse.json({ error: "review_id is required" }, { status: 400 });
+  if (!review_id === !external_review_id) {
+    return NextResponse.json({ error: "Send review_id or external_review_id" }, { status: 400 });
   }
 
-  const { error } = await supabase
-    .from("flags")
-    .insert({ 
-      review_id,
-      user_id: userId 
-    })
+  const { error } = review_id
+    ? await session.supabase.from("flags").insert({ review_id })
+    : await session.supabase.from("external_review_flags").insert({ external_review_id });
 
-  if (error) {
+  // 23505: this student already flagged the review, which is fine.
+  if (error && error.code !== "23505") {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
