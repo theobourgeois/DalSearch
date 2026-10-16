@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils"
-import { useSignUp } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,6 +11,8 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { VerifyEmailForm } from "@/components/verify-email-form"
+import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -22,118 +23,109 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
   const [repeatPassword, setRepeatPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [needsVerification, setNeedsVerification] = useState(false)
   const router = useRouter()
-  const { isLoaded, signUp, setActive } = useSignUp()
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!isLoaded) return
-    
-    setIsLoading(true)
     setError(null)
 
     if (password !== repeatPassword) {
       setError("Passwords do not match")
-      setIsLoading(false)
       return
     }
 
-    if (!email.endsWith("@dal.ca")) {
-      setError("You must use a valid @dal.ca email address")
-      setIsLoading(false)
+    setIsLoading(true)
+    const { data, error } = await createClient().auth.signUp({ email: email.trim(), password })
+    setIsLoading(false)
+
+    // The database decides who may sign up (@dal.ca addresses plus anyone in allowed_emails)
+    // and its refusal comes back as the error message.
+    if (error) {
+      setError(error.message)
       return
     }
 
-    try {
-      const result = await signUp.create({
-        emailAddress: email,
-        password,
-      })
-
-      // Send verification email
-      if (result.status === "complete") {
-        await setActive({ session: result.createdSessionId })
-        
-        // Sync user with Supabase profile
-        await fetch("/api/auth/sync-user", {
-          method: "POST",
-        })
-        
-        router.push("/protected")
-      } else {
-        // Email verification required
-        await signUp.prepareEmailAddressVerification({ strategy: "email_code" })
-        router.push("/auth/sign-up-success")
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message)
-      } else {
-        setError("An error occurred during sign up")
-      }
-    } finally {
-      setIsLoading(false)
+    // Supabase doesn't say outright that an address is taken: it returns a user with no identities.
+    if (data.user?.identities?.length === 0) {
+      setError("An account with this email already exists. Log in instead.")
+      return
     }
+
+    if (data.session) {
+      router.replace("/protected")
+      router.refresh()
+      return
+    }
+
+    setNeedsVerification(true)
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create a new account using your Dalhousie email</CardDescription>
+          <CardTitle className="text-2xl">{needsVerification ? "Verify your email" : "Sign up"}</CardTitle>
+          <CardDescription>
+            {needsVerification
+              ? "Enter the code we emailed you to finish signing up"
+              : "Create a new account using your Dalhousie email"}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSignUp}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="NetID@dal.ca"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+          {needsVerification ? (
+            <VerifyEmailForm email={email.trim()} onBack={() => setNeedsVerification(false)} />
+          ) : (
+            <form onSubmit={handleSignUp}>
+              <div className="flex flex-col gap-6">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="NetID@dal.ca"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="repeat-password">Repeat Password</Label>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="password">Password</Label>
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
-                <Input
-                  id="repeat-password"
-                  type="password"
-                  required
-                  value={repeatPassword}
-                  onChange={(e) => setRepeatPassword(e.target.value)}
-                />
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="repeat-password">Repeat Password</Label>
+                  </div>
+                  <Input
+                    id="repeat-password"
+                    type="password"
+                    required
+                    value={repeatPassword}
+                    onChange={(e) => setRepeatPassword(e.target.value)}
+                  />
+                </div>
+                {error && <p className="text-sm text-danger">{error}</p>}
+                <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Creating an account..." : "Sign up"}
+                </Button>
               </div>
-              {error && <p className="text-sm text-danger">{error}</p>}
-              <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating an account..." : "Sign up"}
-              </Button>
-            </div>
-            <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <Link href="/auth/login" className="underline underline-offset-4">
-                Login
-              </Link>
-            </div>
-          </form>
+              <div className="mt-4 text-center text-sm">
+                Already have an account?{" "}
+                <Link href="/auth/login" className="underline underline-offset-4">
+                  Login
+                </Link>
+              </div>
+            </form>
+          )}
         </CardContent>
       </Card>
     </div>

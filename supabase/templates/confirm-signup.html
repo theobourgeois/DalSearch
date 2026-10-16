@@ -1,0 +1,80 @@
+<!--
+  Supabase → Authentication → Emails → Templates → Confirm signup
+  Subject: Your DalSearch code
+-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light only" />
+    <title>Your DalSearch code</title>
+  </head>
+  <body style="margin: 0; padding: 0; background: #f3f3f5">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #f3f3f5">
+      <tr>
+        <td align="center" style="padding: 48px 16px">
+          <table
+            role="presentation"
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            style="max-width: 440px; background: #ffffff; border-radius: 28px"
+          >
+            <tr>
+              <td
+                style="
+                  padding: 40px 40px 36px;
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+                  color: #121214;
+                "
+              >
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 0 32px">
+                  <tr>
+                    <td style="padding-right: 10px; vertical-align: middle">
+                      <img
+                        src="https://wdihjqsyzerbgwoqybrm.supabase.co/storage/v1/object/public/email/logo.png"
+                        width="24"
+                        height="24"
+                        alt=""
+                        style="display: block; border: 0"
+                      />
+                    </td>
+                    <td style="vertical-align: middle; font-size: 17px; font-weight: 900; letter-spacing: -0.02em">
+                      DalSearch
+                    </td>
+                  </tr>
+                </table>
+                <h1 style="margin: 0 0 8px; font-size: 24px; font-weight: 700; letter-spacing: -0.01em">
+                  Finish signing up
+                </h1>
+                <p style="margin: 0 0 28px; font-size: 15px; line-height: 1.55; color: #3a3a40">
+                  Enter this code on DalSearch to confirm your email.
+                </p>
+                <p
+                  style="
+                    margin: 0 0 28px;
+                    padding: 18px 0;
+                    background: #f3f3f5;
+                    border-radius: 999px;
+                    text-align: center;
+                    font-size: 32px;
+                    font-weight: 700;
+                    letter-spacing: 0.3em;
+                    text-indent: 0.3em;
+                    font-variant-numeric: tabular-nums;
+                  "
+                >
+                  {{ .Token }}
+                </p>
+                <p style="margin: 0; font-size: 13px; line-height: 1.55; color: #92929a">
+                  The code expires in an hour. If you didn't try to sign up, you can ignore this email.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import {
     BuildingsIcon,
     CalendarBlankIcon,
@@ -21,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { Dot } from "@/components/ui/status";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
+import { displayName, useUser } from "@/hooks/use-user";
 import { termCodes, termLabel, type Term } from "@/lib/constants";
 import { formatCourseCode, totalCredits } from "@/lib/schedule";
 import type { CourseAndSubjectCode } from "@/lib/types";
@@ -176,10 +176,10 @@ function OtherTermsSection({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function Account() {
-    const { isLoaded, isSignedIn, user } = useUser();
-    if (!isLoaded) return <div className="h-9" />;
+    const user = useUser();
+    if (user === undefined) return <div className="h-9" />;
 
-    if (!isSignedIn) {
+    if (!user) {
         return (
             <Button asChild variant="outline" size="sm">
                 <Link href="/auth/login">Sign in</Link>
@@ -187,10 +187,10 @@ function Account() {
         );
     }
 
-    const name = user.fullName || user.primaryEmailAddress?.emailAddress || "Account";
+    const name = displayName(user);
     return (
         <Link href="/protected" className="flex min-w-0 items-center gap-2.5 rounded-full">
-            <Avatar name={name} imageUrl={user.hasImage ? user.imageUrl : undefined} className="size-8" />
+            <Avatar name={name} className="size-8" />
             <span className="min-w-0 leading-tight">
                 <span className="block truncate text-sm font-bold">{name}</span>
                 <span className="block text-xs font-medium text-fg-subtle">Account</span>

@@ -1,15 +1,20 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getSession, isModerator } from "@/lib/auth";
 
 export async function POST(req: Request) {
-  const supabase = await createClient();
+  const session = await getSession();
+
+  if (!session || !isModerator(session.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const { review_id } = await req.json();
 
   if (!review_id) {
     return NextResponse.json({ error: "review_id is required" }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await session.supabase
     .from("flags")
     .delete()
     .eq("review_id", review_id)

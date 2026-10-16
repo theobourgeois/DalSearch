@@ -1,16 +1,28 @@
 import "server-only";
 
 import { redirect } from "next/navigation";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { createClient } from "@/lib/supabase/server";
 
-/** The signed-in, verified user for account pages; anyone else is sent to the login page. */
-export async function requireVerifiedUser() {
-    const { userId } = await auth();
-    if (!userId) redirect("/auth/login");
+/** Lowest to highest, matching the user_role enum in the database. */
+export type Role = "user" | "admin" | "owner";
 
-    const user = await currentUser();
-    if (user && user.emailAddresses[0]?.verification?.status !== "verified") {
-        redirect("/auth/login?error=Please verify your email address before accessing this page.");
-    }
-    return { userId, user };
+/** The signed-in user, their role and a Supabase client acting as them, or null when signed out. */
+export async function getSession() {
+    const supabase = await createClient();
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return null;
+
+    const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+    return { supabase, user, role: (profile?.role ?? "user") as Role };
 }
+
+/** The session for account pages; anyone signed out is sent to the login page. */
+export async function requireUser() {
+    const session = await getSession();
+    if (!session) redirect("/auth/login");
+    return session;
+}
+
+export const isModerator = (role: Role) => role === "admin" || role === "owner";
