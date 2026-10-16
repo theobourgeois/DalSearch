@@ -2,26 +2,42 @@ name: Data Refresh
 on:
   schedule:
     - cron: "0 8 * * 1"
+  workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 180
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
         with:
           ref: main
-      - name: Make run.sh executable
-        run: chmod +x ./src/scripts/run.sh
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install Python dependencies
+        run: pip install -r src/scripts/py/requirements.txt
       - name: Run the script
-        run: cd src/scripts/ && ./run.sh
-      - name: Set up Git config
+        run: ./src/scripts/run.sh
+      - name: Upload scrape log
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: scrape-log
+          path: database/logs/
+          if-no-files-found: ignore
+      - name: Commit and push changes
         run: |
           git config --global user.email "${{ secrets.GH_USER_EMAIL }}"
           git config --global user.name "${{ secrets.GH_USER_NAME }}"
-      - name: Commit and push changes
-        run: |
-          git add .
+          git add database/*.json
+          if git diff --cached --quiet; then
+            echo "No data changes"
+            exit 0
+          fi
           git commit -m "Data refresh update"
-          git push origin main  # Push to 'main' branch
-        env:
-          # Use the GitHub token to authenticate the push
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git push origin main

@@ -1,9 +1,12 @@
-/** Client-safe constants. Nothing in this file may import from the course database. */
+/** Client-safe constants. Nothing in this file may import from the course database except the tiny term list. */
 
-/** Terms in the timetable data, oldest first: "<academic year end><10 Fall | 20 Winter | 30 Summer>". */
-export const termCodes = ["202620", "202630", "202710", "202720"] as const;
+import termData from "../../database/terms.json";
 
-export type Term = (typeof termCodes)[number];
+/** A term code: "<academic year end><10 Fall | 20 Winter | 30 Summer>", e.g. "202710". */
+export type Term = string;
+
+/** Terms in the timetable data, oldest first. The scraper writes this list from Dal's timetable. */
+export const termCodes: readonly Term[] = termData;
 
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 

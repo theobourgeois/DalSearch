@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { Term } from "@/lib/constants";
+import { termCodes, type Term } from "@/lib/constants";
 import { useScheduleStore } from "@/store/schedule-store";
 
 const CurrentTermContext = createContext<Term | null>(null);
@@ -20,9 +20,9 @@ export function useCurrentTerm(): Term {
     return term;
 }
 
-/** The term the student is planning: the one they picked, or the current term. */
+/** The term the student is planning: the one they picked, or the current term once that term leaves the timetable. */
 export function usePlannedTerm(): Term {
     const picked = useScheduleStore((state) => state.term);
     const current = useCurrentTerm();
-    return picked ?? current;
+    return picked && termCodes.includes(picked) ? picked : current;
 }
