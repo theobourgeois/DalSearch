@@ -34,3 +34,9 @@ jobs:
           # The scrape takes about an hour, so pick up anything pushed in the meantime
           git pull --rebase --autostash origin ${{ github.ref_name }}
           git push origin HEAD:${{ github.ref_name }}
+      # After the commit so a RateMyProfessors failure can't hold up the timetable data.
+      - name: Import RateMyProfessors reviews
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: python3 src/scripts/py/rmp_reviews.py
