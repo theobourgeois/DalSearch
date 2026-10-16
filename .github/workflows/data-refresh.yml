@@ -21,13 +21,6 @@ jobs:
         run: pip install -r src/scripts/py/requirements.txt
       - name: Run the script
         run: ./src/scripts/run.sh
-      - name: Upload scrape log
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: scrape-log
-          path: database/logs/
-          if-no-files-found: ignore
       - name: Commit and push changes
         run: |
           git config --global user.email "${{ secrets.GH_USER_EMAIL }}"
