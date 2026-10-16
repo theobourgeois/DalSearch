@@ -2,14 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: var(--font-poppins);
-
-}
-
 @layer base {
-  :root {
-    --font-poppins: 'Poppins', sans-serif;
-    --radius: 0.5rem;
-  }
+    :root {
+        --canvas: 243 243 245;
+        --panel: 255 255 255;
+        --raised: 243 243 245;
+        --block: 236 236 240;
+        --fg: 18 18 20;
+        --fg-body: 58 58 64;
+        --fg-muted: 92 92 100;
+        --fg-subtle: 146 146 154;
+        --line: rgb(0 0 0 / 0.08);
+        --line-strong: rgb(0 0 0 / 0.14);
+        --accent: 255 210 31;
+        --accent-fg: 23 21 13;
+        --success: 22 163 101;
+        --danger: 220 59 59;
+        color-scheme: light;
+    }
+
+    .dark {
+        --canvas: 12 12 14;
+        --panel: 20 20 22;
+        --raised: 28 28 31;
+        --block: 34 34 38;
+        --fg: 244 244 245;
+        --fg-body: 205 205 210;
+        --fg-muted: 166 166 173;
+        --fg-subtle: 110 110 118;
+        --line: rgb(255 255 255 / 0.07);
+        --line-strong: rgb(255 255 255 / 0.12);
+        --success: 61 214 140;
+        --danger: 242 95 92;
+        color-scheme: dark;
+    }
+
+    body {
+        @apply bg-canvas font-sans text-fg antialiased;
+        font-feature-settings: "tnum" 1;
+    }
+
+    ::selection {
+        @apply bg-accent/40;
+    }
 }

@@ -1,0 +1,13 @@
+
+  /* ---------- Rooms ---------- */
+  .roomsearch { display: flex; align-items: center; gap: 10px; width: 420px; height: 48px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 15px; font-weight: 500; color: var(--text-3); }
+  .roomsearch svg { color: var(--text-2); }
+  .page-rooms .cal { --ppm: 0.98px; margin-top: 18px; }
+  .page-rooms .ev { padding: 7px 10px; }
+  .status { display: flex; gap: 12px; align-items: flex-start; }
+  .status > i { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; background: var(--red); }
+  .status b { display: block; font-size: 15px; font-weight: 700; }
+  .status span { display: block; font-size: 13.5px; color: var(--text-2); font-weight: 500; margin-top: 2px; }
+  .free { display: flex; padding: 7px 0; }
+  .free b { display: block; font-size: 14.5px; font-weight: 700; }
+  .free span { display: block; font-size: 13px; color: var(--green); font-weight: 500; margin-top: 1px; }

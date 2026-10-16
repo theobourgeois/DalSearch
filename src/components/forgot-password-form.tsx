@@ -140,7 +140,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                     className="text-center text-2xl tracking-widest"
                     maxLength={6}
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-fg-muted">
                     Check your email (including spam folder) for the verification code
                   </p>
                 </div>
@@ -156,10 +156,10 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                     disabled={isLoading}
                   />
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                {error && <p className="text-sm text-danger">{error}</p>}
                 <Button 
                   type="submit" 
-                  className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" 
+                  variant="primary" className="w-full" 
                   disabled={isLoading || !code || !password}
                 >
                   {isLoading ? "Resetting..." : "Reset Password"}
@@ -204,10 +204,10 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                     disabled={isLoading}
                   />
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                {error && <p className="text-sm text-danger">{error}</p>}
                 <Button 
                   type="submit" 
-                  className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" 
+                  variant="primary" className="w-full" 
                   disabled={isLoading || !email}
                 >
                   {isLoading ? "Sending..." : "Send Verification Code"}

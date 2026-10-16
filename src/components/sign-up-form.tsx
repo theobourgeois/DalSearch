@@ -122,8 +122,8 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                   onChange={(e) => setRepeatPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" disabled={isLoading}>
+              {error && <p className="text-sm text-danger">{error}</p>}
+              <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
                 {isLoading ? "Creating an account..." : "Sign up"}
               </Button>
             </div>

@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { Check } from "lucide-react";
-
+import { CheckIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { focusRing } from "./styles";
 
 const Checkbox = React.forwardRef<
     React.ElementRef<typeof CheckboxPrimitive.Root>,
@@ -13,15 +13,15 @@ const Checkbox = React.forwardRef<
     <CheckboxPrimitive.Root
         ref={ref}
         className={cn(
-            "peer h-4 w-4 shrink-0 rounded-sm border border-gray-200 border-gray-900 shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-gray-900 data-[state=checked]:text-gray-50 dark:border-gray-800 dark:border-gray-50 dark:focus-visible:ring-gray-300 dark:data-[state=checked]:bg-gray-50 dark:data-[state=checked]:text-gray-900",
-            className
+            "peer grid size-[18px] shrink-0 place-items-center rounded-md border-[1.5px] border-fg-subtle transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+            "data-[state=checked]:border-fg data-[state=checked]:bg-fg data-[state=checked]:text-panel",
+            focusRing,
+            className,
         )}
         {...props}
     >
-        <CheckboxPrimitive.Indicator
-            className={cn("flex items-center justify-center text-current")}
-        >
-            <Check className="h-4 w-4" />
+        <CheckboxPrimitive.Indicator>
+            <CheckIcon weight="bold" className="size-3" />
         </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
 ));

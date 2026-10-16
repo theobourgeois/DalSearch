@@ -18,10 +18,10 @@ function LoginFormFallback() {
       <CardContent>
         <div className="flex flex-col gap-6">
           <div className="grid gap-2">
-            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+            <div className="h-10 bg-raised rounded animate-pulse" />
+            <div className="h-10 bg-raised rounded animate-pulse" />
           </div>
-          <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          <div className="h-10 bg-raised rounded animate-pulse" />
         </div>
       </CardContent>
     </Card>
@@ -30,7 +30,7 @@ function LoginFormFallback() {
 
 export default function Page() {
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div className="flex justify-center py-10">
       <div className="w-full max-w-sm">
         <Suspense fallback={<LoginFormFallback />}>
           <LoginForm />

@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>CSCI 2122 Systems Programming · DalSearch</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0B;
+    --panel: #141416;
+    --raised: #1E1E21;
+    --hover: #26262A;
+    --line: rgba(255, 255, 255, 0.07);
+    --text: #F4F4F5;
+    --text-2: #A6A6AC;
+    --text-3: #6F6F76;
+    --body: #CFCFD4;
+    --accent: #FFD21F;
+    --accent-ink: #151515;
+    --green: #3DD68C;
+    --red: #F25F5C;
+    --cover-shadow: 0 10px 40px rgba(0, 0, 0, 0.55);
+
+    --c-2122: #F2A23A;
+    --c-2110: #5C8FF0;
+    --c-2141: #9D80EC;
+    --c-2060: #3FBF8C;
+    --c-1101: #EF7B5C;
+    --c-saved: #2C2C31;
+  }
+  .light {
+    --bg: #EDEDEF;
+    --panel: #FFFFFF;
+    --raised: #F2F2F4;
+    --hover: #E9E9EC;
+    --line: rgba(0, 0, 0, 0.08);
+    --text: #121214;
+    --text-2: #5E5E66;
+    --text-3: #93939B;
+    --body: #3A3A40;
+    --accent-ink: #151515;
+    --green: #17A866;
+    --red: #DC3B3B;
+    --cover-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+    --c-saved: #E4E4E8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body {
+    font-family: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  svg.i { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+  svg.i.sm { width: 16px; height: 16px; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+
+  .app { display: grid; grid-template-columns: 296px 1fr; gap: 8px; padding: 8px; min-height: 100vh; }
+  .panel { background: var(--panel); border-radius: 10px; }
+
+  /* ---------- Sidebar ---------- */
+  .side { display: flex; flex-direction: column; gap: 8px; position: sticky; top: 8px; height: calc(100vh - 16px); }
+  .side-top { padding: 18px 12px 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; }
+  .brand svg { width: 28px; height: 28px; }
+  .brand span { font-size: 19px; font-weight: 900; letter-spacing: -0.02em; }
+  .search {
+    margin: 18px 0 10px; height: 40px; border-radius: 8px; background: var(--raised);
+    display: flex; align-items: center; gap: 10px; padding: 0 12px; color: var(--text-3); font-size: 14.5px; font-weight: 500;
+  }
+  .nav a {
+    display: flex; align-items: center; gap: 14px; height: 40px; padding: 0 10px;
+    font-size: 15px; font-weight: 700; color: var(--text-2);
+  }
+  .nav a.on { color: var(--text); }
+  .nav a.on svg { color: var(--text); }
+
+  .library { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .lib-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 6px; }
+  .lib-head h2 { font-size: 15px; font-weight: 700; }
+  .term-btn { display: flex; align-items: center; gap: 4px; font-size: 13.5px; font-weight: 700; color: var(--text-2); }
+  .lib-sub { padding: 0 20px 10px; font-size: 13px; color: var(--text-3); font-weight: 500; }
+  .lib-scroll { flex: 1; min-height: 0; overflow: hidden; padding-bottom: 8px; }
+  .lib-list { padding: 0 8px; }
+  .lib-row { display: flex; align-items: center; gap: 12px; padding: 7px 12px; border-radius: 6px; }
+  .cover-sm {
+    width: 44px; height: 44px; border-radius: 5px; flex-shrink: 0;
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 4px 5px;
+    color: rgba(0, 0, 0, 0.82); line-height: 1;
+  }
+  .cover-sm small { font-size: 8.5px; font-weight: 700; letter-spacing: 0.04em; opacity: 0.75; }
+  .cover-sm b { font-size: 14px; font-weight: 900; letter-spacing: -0.02em; margin-top: 2px; }
+  .cover-sm.saved { color: var(--text-2); }
+  .lib-row .t { min-width: 0; }
+  .lib-row .t1 { font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lib-row .t2 { font-size: 13px; color: var(--text-2); font-weight: 500; margin-top: 2px; white-space: nowrap; }
+  .lib-row .t2.warn { color: var(--red); }
+  .lib-group { padding: 18px 20px 6px; font-size: 13px; font-weight: 700; color: var(--text-3); }
+  .lib-more { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; font-size: 14px; font-weight: 700; color: var(--text-2); }
+  .lib-more span { font-weight: 500; color: var(--text-3); font-size: 13px; }
+  .user {
+    margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+    border-top: 1px solid var(--line);
+  }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; }
+  .user .name { font-size: 14px; font-weight: 700; }
+  .user .sub { font-size: 12.5px; color: var(--text-3); font-weight: 500; }
+  .user .gear { margin-left: auto; color: var(--text-3); }
+
+  /* ---------- Main ---------- */
+  .main { padding: 20px 40px 28px; min-width: 0; }
+  .topbar { display: flex; gap: 8px; }
+  .round { width: 32px; height: 32px; border-radius: 50%; background: var(--raised); display: grid; place-items: center; color: var(--text-2); }
+
+  .hero { display: flex; align-items: flex-end; gap: 28px; margin-top: 20px; }
+  .cover {
+    width: 212px; height: 212px; border-radius: 8px; flex-shrink: 0; background: var(--c-2122);
+    box-shadow: var(--cover-shadow); padding: 18px; display: flex; flex-direction: column; justify-content: space-between;
+    color: rgba(0, 0, 0, 0.85);
+  }
+  .cover small { font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+  .cover b { font-size: 76px; font-weight: 900; letter-spacing: -0.045em; line-height: 0.8; }
+  .hero .eyebrow { font-size: 14px; font-weight: 700; color: var(--text-2); }
+  .hero h1 { font-size: 78px; line-height: 0.95; font-weight: 900; letter-spacing: -0.04em; margin: 10px 0 18px; }
+  .hero .meta { font-size: 15px; color: var(--text-2); font-weight: 500; }
+  .hero .meta b { color: var(--text); font-weight: 700; margin-right: 6px; }
+
+  .actions { display: flex; align-items: center; gap: 18px; margin-top: 32px; }
+  .primary {
+    height: 48px; padding: 0 26px; border-radius: 24px; background: var(--accent); color: var(--accent-ink);
+    font-size: 15.5px; font-weight: 700; display: flex; align-items: center; gap: 8px;
+  }
+  .actions .hint { font-size: 14px; color: var(--text-2); font-weight: 500; }
+  .actions .icons { display: flex; gap: 6px; margin-left: auto; color: var(--text-2); }
+  .actions .icons button { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; }
+  .actions .icons svg { width: 24px; height: 24px; }
+
+  .cols { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; margin-top: 36px; }
+
+  .desc { font-size: 16px; line-height: 1.65; color: var(--body); max-width: 660px; font-weight: 500; }
+
+  h2.sec { font-size: 22px; font-weight: 900; letter-spacing: -0.02em; }
+  .sec-head { display: flex; align-items: center; justify-content: space-between; margin-top: 48px; }
+  .chips { display: flex; gap: 8px; margin-top: 16px; }
+  .chip { height: 32px; padding: 0 14px; border-radius: 16px; background: var(--raised); font-size: 13.5px; font-weight: 700; display: flex; align-items: center; }
+  .chip.on { background: var(--text); color: var(--panel); }
+
+  .table { margin-top: 18px; }
+  .tr { display: grid; grid-template-columns: 36px minmax(0, 1fr) 104px 118px 164px 68px; align-items: center; column-gap: 12px; padding: 0 12px; }
+  .th { height: 36px; font-size: 13px; font-weight: 500; color: var(--text-3); border-bottom: 1px solid var(--line); }
+  .group { font-size: 13px; font-weight: 700; color: var(--text-3); padding: 18px 12px 6px; }
+  .row { height: 60px; border-radius: 6px; font-size: 14.5px; font-weight: 500; color: var(--text-2); }
+  .row.sel { background: var(--raised); color: var(--text); }
+  .row .s1 { font-size: 15px; font-weight: 700; color: var(--text); }
+  .row .s2 { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+  .row .seats { text-align: right; }
+  .pick { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--text-3); }
+  .pick.on { border: 0; background: var(--accent); display: grid; place-items: center; color: var(--accent-ink); }
+  .pick.on svg { width: 13px; height: 13px; }
+  .fits { display: flex; align-items: center; gap: 8px; margin-top: 16px; padding: 0 12px; font-size: 14px; color: var(--text-2); font-weight: 500; }
+  .fits svg { color: var(--green); }
+
+  .btn2 { height: 34px; padding: 0 16px; border-radius: 17px; border: 1px solid var(--line); font-size: 13.5px; font-weight: 700; }
+  .scores { display: flex; align-items: flex-end; gap: 44px; margin-top: 18px; }
+  .score b { display: block; font-size: 44px; line-height: 1; font-weight: 900; letter-spacing: -0.03em; }
+  .score span { display: block; margin-top: 6px; font-size: 13.5px; color: var(--text-2); font-weight: 500; }
+  .scores .count { margin-left: auto; font-size: 13.5px; color: var(--text-3); font-weight: 500; padding-bottom: 2px; }
+
+  .msgs { margin-top: 28px; }
+  .msg { display: grid; grid-template-columns: 40px 1fr; gap: 14px; padding: 14px 0; }
+  .msg + .msg { border-top: 1px solid var(--line); }
+  .msg .avatar { width: 40px; height: 40px; }
+  .msg .avatar svg { width: 22px; height: 22px; fill: #fff; }
+  .msg .who { display: flex; align-items: baseline; gap: 8px; }
+  .msg .who b { font-size: 15px; font-weight: 700; }
+  .msg .who span { font-size: 12.5px; color: var(--text-3); font-weight: 500; }
+  .msg p { font-size: 15px; line-height: 1.55; color: var(--body); margin-top: 4px; font-weight: 500; max-width: 640px; }
+  .msg .foot { display: flex; align-items: center; gap: 14px; margin-top: 10px; font-size: 13px; color: var(--text-3); font-weight: 500; }
+  .react { height: 26px; padding: 0 10px; border-radius: 8px; background: var(--raised); color: var(--text-2); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .react.on { background: rgba(255, 210, 31, 0.12); color: var(--text); box-shadow: inset 0 0 0 1px rgba(255, 210, 31, 0.45); }
+  .more-link { display: inline-block; margin-top: 10px; margin-left: 54px; font-size: 14px; font-weight: 700; color: var(--text-2); }
+
+  /* ---------- Properties ---------- */
+  .props { border-left: 1px solid var(--line); padding-left: 32px; align-self: start; }
+  .prop { display: grid; grid-template-columns: 116px 1fr; gap: 12px; padding: 7px 0; font-size: 14px; font-weight: 500; }
+  .prop dt { color: var(--text-3); }
+  .prop dd { color: var(--text); line-height: 1.6; }
+  .prop { align-items: start; }
+  .prop dd a { text-decoration: underline; text-decoration-color: var(--text-3); text-underline-offset: 3px; }
+  .props hr { border: 0; border-top: 1px solid var(--line); margin: 18px 0; }
+  .props h3 { font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+  .prof { display: flex; gap: 12px; }
+  .prof + .prof { margin-top: 16px; }
+  .prof .avatar { background: var(--raised); color: var(--text-2); font-size: 12.5px; font-weight: 700; }
+  .prof b { display: block; font-size: 14.5px; font-weight: 700; }
+  .prof span { display: block; font-size: 13px; color: var(--text-2); font-weight: 500; margin-top: 2px; }
+  .prof em { font-style: normal; color: var(--text); font-weight: 700; }
+  .ext { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--text-2); }
+
+  .footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--text-3); font-weight: 500; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+<symbol id="f-buildings" viewBox="0 0 256 256"><path d="M239.73,208H224V96a16,16,0,0,0-16-16H164a4,4,0,0,0-4,4V208H144V32.41a16.43,16.43,0,0,0-6.16-13,16,16,0,0,0-18.72-.69L39.12,72A16,16,0,0,0,32,85.34V208H16.27A8.18,8.18,0,0,0,8,215.47,8,8,0,0,0,16,224H240a8,8,0,0,0,8-8.53A8.18,8.18,0,0,0,239.73,208ZM76,184a8,8,0,0,1-8.53,8A8.18,8.18,0,0,1,60,183.72V168.27A8.19,8.19,0,0,1,67.47,160,8,8,0,0,1,76,168Zm0-56a8,8,0,0,1-8.53,8A8.19,8.19,0,0,1,60,127.72V112.27A8.19,8.19,0,0,1,67.47,104,8,8,0,0,1,76,112Zm40,56a8,8,0,0,1-8.53,8,8.18,8.18,0,0,1-7.47-8.26V168.27a8.19,8.19,0,0,1,7.47-8.26,8,8,0,0,1,8.53,8Zm0-56a8,8,0,0,1-8.53,8,8.19,8.19,0,0,1-7.47-8.26V112.27a8.19,8.19,0,0,1,7.47-8.26,8,8,0,0,1,8.53,8Z"/></symbol>
+<symbol id="f-calendar-blank" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,48H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24Z"/></symbol>
+<symbol id="f-check-circle" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="f-compass" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm51.58,57.79-32,64a4.08,4.08,0,0,1-1.79,1.79l-64,32a4,4,0,0,1-5.37-5.37l32-64a4.08,4.08,0,0,1,1.79-1.79l64-32A4,4,0,0,1,179.58,81.79Z"/></symbol>
+<symbol id="f-house" viewBox="0 0 256 256"><path d="M224,120v96a8,8,0,0,1-8,8H160a8,8,0,0,1-8-8V164a4,4,0,0,0-4-4H108a4,4,0,0,0-4,4v52a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V120a16,16,0,0,1,4.69-11.31l80-80a16,16,0,0,1,22.62,0l80,80A16,16,0,0,1,224,120Z"/></symbol>
+<symbol id="f-users" viewBox="0 0 256 256"><path d="M164.47,195.63a8,8,0,0,1-6.7,12.37H10.23a8,8,0,0,1-6.7-12.37,95.83,95.83,0,0,1,47.22-37.71,60,60,0,1,1,66.5,0A95.83,95.83,0,0,1,164.47,195.63Zm87.91-.15a95.87,95.87,0,0,0-47.13-37.56A60,60,0,0,0,144.7,54.59a4,4,0,0,0-1.33,6A75.83,75.83,0,0,1,147,150.53a4,4,0,0,0,1.07,5.53,112.32,112.32,0,0,1,29.85,30.83,23.92,23.92,0,0,1,3.65,16.47,4,4,0,0,0,3.95,4.64h60.3a8,8,0,0,0,7.73-5.93A8.22,8.22,0,0,0,252.38,195.48Z"/></symbol>
+<symbol id="r-arrow-up-right" viewBox="0 0 256 256"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z"/></symbol>
+<symbol id="r-bookmark-simple" viewBox="0 0 256 256"><path d="M184,32H72A16,16,0,0,0,56,48V224a8,8,0,0,0,12.24,6.78L128,193.43l59.77,37.35A8,8,0,0,0,200,224V48A16,16,0,0,0,184,32Zm0,177.57-51.77-32.35a8,8,0,0,0-8.48,0L72,209.57V48H184Z"/></symbol>
+<symbol id="r-buildings" viewBox="0 0 256 256"><path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.88-13.32L39.12,72A16,16,0,0,0,32,85.34V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM208,96V208H144V96ZM48,85.34,128,32V208H48ZM112,112v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm-32,0v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm0,56v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Zm32,0v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Z"/></symbol>
+<symbol id="r-calendar-blank" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z"/></symbol>
+<symbol id="r-caret-down" viewBox="0 0 256 256"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="r-caret-left" viewBox="0 0 256 256"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/></symbol>
+<symbol id="r-caret-right" viewBox="0 0 256 256"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+<symbol id="r-check" viewBox="0 0 256 256"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="r-compass" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.58-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.15-20.07Z"/></symbol>
+<symbol id="r-dots-three" viewBox="0 0 256 256"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"/></symbol>
+<symbol id="r-gear-six" viewBox="0 0 256 256"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67,8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A112.1,112.1,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.62a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67,8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73,8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.08,8.08,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8.08,8.08,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z"/></symbol>
+<symbol id="r-house" viewBox="0 0 256 256"><path d="M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V160h32v56a8,8,0,0,0,8,8h64a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H160V152a8,8,0,0,0-8-8H104a8,8,0,0,0-8,8v56H48V120l80-80,80,80Z"/></symbol>
+<symbol id="r-magnifying-glass" viewBox="0 0 256 256"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></symbol>
+<symbol id="r-plus" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></symbol>
+<symbol id="r-share-network" viewBox="0 0 256 256"><path d="M176,160a39.89,39.89,0,0,0-28.62,12.09l-46.1-29.63a39.8,39.8,0,0,0,0-28.92l46.1-29.63a40,40,0,1,0-8.66-13.45l-46.1,29.63a40,40,0,1,0,0,55.82l46.1,29.63A40,40,0,1,0,176,160Zm0-128a24,24,0,1,1-24,24A24,24,0,0,1,176,32ZM64,152a24,24,0,1,1,24-24A24,24,0,0,1,64,152Zm112,72a24,24,0,1,1,24-24A24,24,0,0,1,176,224Z"/></symbol>
+<symbol id="r-users" viewBox="0 0 256 256"><path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,98.7a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,168a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.94-14.85,60,60,0,0,1,55.53,105.64,95.83,95.83,0,0,1,47.22,37.71A8,8,0,0,1,250.14,206.7Z"/></symbol>
+    <symbol id="gargoyle" viewBox="150 150 400 580"><path d="M487.19,168.05h-195.29c-26.04,0-48.36,16.74-57.66,40.92h-37.2c-42.78,0-78.12,35.34-78.12,78.12v91.14c9.3-20.46,29.76-35.34,53.94-35.34h68.82l-42.78,174.83c-3.72,11.16,3.72,20.46,13.02,20.46,33.48,0,46.5-5.58,72.54-29.76l27.9,78.12h0c1.86,3.72,3.72,5.58,7.44,5.58s5.58-1.86,7.44-5.58l27.9-78.12c24.18,24.18,39.06,29.76,72.54,29.76,11.16,0,16.74-11.16,13.02-20.46l-22.32-174.83h3.72c42.78,0,78.12-35.34,78.12-78.12v-1.86c16.74-11.160,27.9-29.76,27.9-50.22v-70.68c-5.58,14.88-22.32,26.04-40.92,26.04Zm-167.39,87.42c-5.58,3.72-13.020,1.86-18.6-1.86l-11.16-11.16c-5.58-5.58-5.58-14.88,0-22.32l11.16-11.16c5.58-5.58,13.02-5.58,18.6-1.86l42.78,24.18-42.78,24.18Z"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+
+  <!-- ================= Sidebar ================= -->
+  <aside class="side">
+    <div class="panel side-top">
+      <div class="brand">
+        <svg viewBox="0 0 753 768"><path fill="var(--accent)" d="M735.53,705.37l-166.07-169.66c44.79-55.69,71.54-127.02,71.54-204.64,0-178.41-141.72-323.07-316.5-323.07S8,152.66,8,331.07s141.72,323.07,316.5,323.07c76.35,0,146.38-27.61,201.08-73.63l166.07,169.51c19.39,18.1,37.57,6.44,43.88,0,12.62-12.73,12.62-31.91,0-44.64ZM69.77,331.07c0-143.59,114.07-260.02,254.73-260.02s254.88,116.43,254.88,260.02-114.07,260.02-254.73,260.02S69.77,474.66,69.77,331.07Z"/><path fill="var(--text)" d="M487.19,168.05h-195.29c-26.04,0-48.36,16.74-57.66,40.92h-37.2c-42.78,0-78.12,35.34-78.12,78.12v91.14c9.3-20.46,29.76-35.34,53.94-35.34h68.82l-42.78,174.83c-3.72,11.16,3.72,20.46,13.02,20.46,33.48,0,46.5-5.58,72.54-29.76l27.9,78.12h0c1.86,3.72,3.72,5.58,7.44,5.58s5.58-1.86,7.44-5.58l27.9-78.12c24.18,24.18,39.06,29.76,72.54,29.76,11.16,0,16.74-11.16,13.02-20.46l-22.32-174.83h3.72c42.78,0,78.12-35.34,78.12-78.12v-1.86c16.74-11.16,27.9-29.76,27.9-50.22v-70.68c-5.58,14.88-22.32,26.04-40.92,26.04Zm-167.39,87.42c-5.58,3.72-13.02,1.86-18.6-1.86l-11.16-11.16c-5.58-5.58-5.58-14.88,0-22.32l11.16-11.16c5.58-5.58,13.02-5.58,18.6-1.86l42.78,24.18-42.78,24.18Z"/></svg>
+        <span>DalSearch</span>
+      </div>
+      <div class="search"><svg class="i"><use href="#r-magnifying-glass"/></svg>Search courses</div>
+      <nav class="nav">
+        <a><svg class="i"><use href="#r-house"/></svg>Home</a>
+        <a class="on"><svg class="i"><use href="#f-compass"/></svg>Explore</a>
+        <a><svg class="i"><use href="#r-calendar-blank"/></svg>Schedule</a>
+        <a><svg class="i"><use href="#r-buildings"/></svg>Rooms</a>
+        <a><svg class="i"><use href="#r-users"/></svg>Instructors</a>
+      </nav>
+    </div>
+
+    <div class="panel library">
+      <div class="lib-head">
+        <h2>Your courses</h2>
+        <button class="term-btn">Winter 2026<svg class="i sm"><use href="#r-caret-down"/></svg></button>
+      </div>
+      <div class="lib-sub num">4 courses, 12 credit hours</div>
+      <div class="lib-scroll">
+      <div class="lib-list">
+        <div class="lib-row">
+          <div class="cover-sm" style="background:var(--c-2110)"><small>CSCI</small><b>2110</b></div>
+          <div class="t"><div class="t1">Data Structures and Algorithms</div><div class="t2">Lec 01 and Lab B02</div></div>
+        </div>
+        <div class="lib-row">
+          <div class="cover-sm" style="background:var(--c-2141)"><small>CSCI</small><b>2141</b></div>
+          <div class="t"><div class="t1">Intro to Database Systems</div><div class="t2">Lec 01</div></div>
+        </div>
+        <div class="lib-row">
+          <div class="cover-sm" style="background:var(--c-2060)"><small>STAT</small><b>2060</b></div>
+          <div class="t"><div class="t1">Intro Probability and Stats</div><div class="t2 warn">Clashes with ECON 1101 on Thu</div></div>
+        </div>
+        <div class="lib-row">
+          <div class="cover-sm" style="background:var(--c-1101)"><small>ECON</small><b>1101</b></div>
+          <div class="t"><div class="t1">Principles of Microeconomics</div><div class="t2 warn">Clashes with STAT 2060 on Thu</div></div>
+        </div>
+      </div>
+
+      <div class="lib-group">Saved for later</div>
+      <div class="lib-list">
+        <div class="lib-row">
+          <div class="cover-sm saved" style="background:var(--c-saved)"><small>CSCI</small><b>3120</b></div>
+          <div class="t"><div class="t1">Operating Systems</div><div class="t2">Needs CSCI 2122</div></div>
+        </div>
+        <div class="lib-row">
+          <div class="cover-sm saved" style="background:var(--c-saved)"><small>CSCI</small><b>3110</b></div>
+          <div class="t"><div class="t1">Algorithms I</div><div class="t2">Fall 2026</div></div>
+        </div>
+      </div>
+
+      <div class="lib-more" style="margin-top:8px">Fall 2026 <span class="num">2 courses</span></div>
+      <div class="lib-more">Winter 2027 <span>Empty</span></div>
+      </div>
+
+      <div class="user">
+        <div class="avatar" style="background:#5C8FF0;color:#fff;font-weight:700;font-size:13px">TB</div>
+        <div><div class="name">Théo B.</div><div class="sub">Computer Science, year 2</div></div>
+        <svg class="i gear"><use href="#r-gear-six"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= Main ================= -->
+  <main class="panel main">
+    <div class="topbar">
+      <button class="round"><svg class="i sm"><use href="#r-caret-left"/></svg></button>
+      <button class="round"><svg class="i sm"><use href="#r-caret-right"/></svg></button>
+    </div>
+
+    <section class="hero">
+      <div class="cover"><small>CSCI</small><b>2122</b></div>
+      <div>
+        <div class="eyebrow">Computer Science</div>
+        <h1>Systems Programming</h1>
+        <div class="meta num"><b>Kalyaniwalla N.</b>3 credit hours, 19 of 120 seats left this term</div>
+      </div>
+    </section>
+
+    <div class="actions">
+      <button class="primary"><svg class="i"><use href="#r-plus"/></svg>Add to schedule</button>
+      <span class="hint">Lec 01 and Lab B03 selected</span>
+      <div class="icons">
+        <button title="Save for later"><svg class="i"><use href="#r-bookmark-simple"/></svg></button>
+        <button title="Share"><svg class="i"><use href="#r-share-network"/></svg></button>
+        <button title="More"><svg class="i"><use href="#r-dots-three"/></svg></button>
+      </div>
+    </div>
+
+    <div class="cols">
+      <!-- ---------- Left column ---------- -->
+      <div>
+        <p class="desc">This course presents tools, techniques, and concepts for systems programming. Students will be exposed to assembly and will be introduced to the C programming language. The course also discusses memory hierarchies, performance measurement, exception control flow, and performance related issues. Students will be involved in a significant amount of low-level programming.</p>
+
+        <div class="sec-head"><h2 class="sec">Sections</h2></div>
+        <div class="chips">
+          <span class="chip on">Winter 2026</span>
+          <span class="chip">Fall 2026</span>
+          <span class="chip">Winter 2027</span>
+        </div>
+
+        <div class="table">
+          <div class="tr th"><span></span><span>Section</span><span>Days</span><span>Time</span><span>Location</span><span class="seats" style="text-align:right">Seats</span></div>
+
+          <div class="group">Lecture, pick one</div>
+          <div class="tr row sel">
+            <span class="pick on"><svg class="i"><use href="#r-check"/></svg></span>
+            <span><div class="s1">Lec 01</div><div class="s2">Kalyaniwalla N.</div></span>
+            <span>Mon, Wed</span><span class="num">11:35-12:55</span><span>Goldberg CS 127</span><span class="seats num">101/120</span>
+          </div>
+          <div class="tr row">
+            <span class="pick"></span>
+            <span><div class="s1">Lec 90</div><div class="s2">Wijenayake U.</div></span>
+            <span>Online</span><span style="color:var(--text-3)">Self-paced</span><span>Consult department</span><span class="seats" style="color:var(--text-3)">Open</span>
+          </div>
+
+          <div class="group">Lab, pick one</div>
+          <div class="tr row sel">
+            <span class="pick on"><svg class="i"><use href="#r-check"/></svg></span>
+            <span><div class="s1">Lab B03</div><div class="s2">Staff</div></span>
+            <span>Wed</span><span class="num">10:05-11:25</span><span>Goldberg CS 134</span><span class="seats num">52/60</span>
+          </div>
+          <div class="tr row">
+            <span class="pick"></span>
+            <span><div class="s1">Lab B04</div><div class="s2">Staff</div></span>
+            <span>Mon</span><span class="num">13:05-14:25</span><span>Goldberg CS 134</span><span class="seats num">49/60</span>
+          </div>
+
+          <div class="fits"><svg class="i sm"><use href="#f-check-circle"/></svg>Both fit around your other 4 courses.</div>
+        </div>
+
+        <div class="sec-head">
+          <h2 class="sec">Reviews</h2>
+          <button class="btn2">Write a review</button>
+        </div>
+        <div class="scores num">
+          <div class="score"><b>3.4</b><span>Overall</span></div>
+          <div class="score"><b>4.2</b><span>Difficulty</span></div>
+          <div class="score"><b>4.4</b><span>Workload</span></div>
+          <div class="count">From 38 students</div>
+        </div>
+
+        <div class="msgs">
+          <div class="msg">
+            <div class="avatar" style="background:#5865F2"><svg><use href="#gargoyle"/></svg></div>
+            <div>
+              <div class="who"><b>Anonymous student</b><span>Fall 2025, Kalyaniwalla N.</span></div>
+              <p>Hard, but this is the course where C finally clicked for me. Labs are long, so start them the day they're released. Office hours were a lifesaver.</p>
+              <div class="foot num"><span>Overall 4</span><span>Difficulty 4</span><span>Workload 5</span><span class="react">Helpful 18</span></div>
+            </div>
+          </div>
+          <div class="msg">
+            <div class="avatar" style="background:#3BA55C"><svg><use href="#gargoyle"/></svg></div>
+            <div>
+              <div class="who"><b>Anonymous student</b><span>Winter 2025, Kalyaniwalla N.</span></div>
+              <p>Lectures move quickly through assembly and memory hierarchies, so the textbook helps a lot. Expect a real jump in difficulty from 1110 and 1120, but you come out a much stronger programmer.</p>
+              <div class="foot num"><span>Overall 3</span><span>Difficulty 5</span><span>Workload 4</span><span class="react">Helpful 11</span></div>
+            </div>
+          </div>
+          <div class="msg">
+            <div class="avatar" style="background:#ED4245"><svg><use href="#gargoyle"/></svg></div>
+            <div>
+              <div class="who"><b>Anonymous student</b><span>Winter 2025, Wijenayake U., online</span></div>
+              <p>Took the online section. Self-paced worked well for me but you need discipline. The bit manipulation assignment ate a whole weekend.</p>
+              <div class="foot num"><span>Overall 4</span><span>Difficulty 4</span><span>Workload 4</span><span class="react">Helpful 7</span></div>
+            </div>
+          </div>
+        </div>
+        <a class="more-link">Show all 38 reviews</a>
+      </div>
+
+      <!-- ---------- Properties ---------- -->
+      <aside class="props">
+        <dl>
+          <div class="prop"><dt>Credit hours</dt><dd class="num">3</dd></div>
+          <div class="prop"><dt>Level</dt><dd class="num">2000</dd></div>
+          <div class="prop"><dt>Format</dt><dd>Lecture and lab</dd></div>
+          <div class="prop"><dt>Campus</dt><dd>Studley</dd></div>
+          <div class="prop"><dt>Enrollment</dt><dd class="num">101 of 120</dd></div>
+          <div class="prop"><dt>Prerequisites</dt><dd class="num"><a>CSCI 1110</a><br><a>CSCI 1120</a></dd></div>
+          <div class="prop"><dt>Leads to</dt><dd class="num"><a>CSCI 3120</a></dd></div>
+          <div class="prop"><dt>Also offered</dt><dd>Fall 2026<br>Winter 2027</dd></div>
+        </dl>
+        <hr>
+        <h3>Instructors this term</h3>
+        <div class="prof">
+          <div class="avatar">NK</div>
+          <div><b>Kalyaniwalla N.</b><span><em class="num">2.4</em> on RateMyProfessors</span><span class="num">61% would take again</span></div>
+        </div>
+        <div class="prof">
+          <div class="avatar">UW</div>
+          <div><b>Wijenayake U.</b><span>Online section</span><span>No ratings yet</span></div>
+        </div>
+        <hr>
+        <a class="ext">Open in Dal timetable<svg class="i sm"><use href="#r-arrow-up-right"/></svg></a>
+      </aside>
+    </div>
+
+    <div class="footer">DalSearch is not affiliated with Dalhousie University. Made by Théo Bourgeois and Chris Langille.</div>
+  </main>
+</div>
+</body>
+</html>

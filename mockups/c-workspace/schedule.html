@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>DalSearch · Schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+      },
+      colors: {
+        canvas: '#0A0A0B',
+        panel: '#111113',
+        panel2: '#16161A',
+        raised: '#1B1B20',
+        gold: { DEFAULT: '#FACC15', soft: '#FDE68A', dim: '#A16207' },
+      },
+    },
+  },
+}
+</script>
+<style>
+  html, body { background: #0A0A0B; }
+  body { font-family: Inter, ui-sans-serif, system-ui; font-feature-settings: "cv11", "tnum"; -webkit-font-smoothing: antialiased; color: #f4f4f5; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-feature-settings: "zero" 0; letter-spacing: -0.01em; }
+  .i { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .i-sm { width: 14px; height: 14px; }
+  .i-xs { width: 12px; height: 12px; stroke-width: 2; }
+  .kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 5px; font-size: 10.5px; font-weight: 500; color: #a1a1aa; background: rgba(255,255,255,0.045); border: 1px solid rgba(255,255,255,0.09); box-shadow: inset 0 -1px 0 rgba(255,255,255,0.04); line-height: 1; }
+  .hl { box-shadow: inset 0 1px 0 rgba(255,255,255,0.045); }
+  .card { background: #111113; border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.035); }
+  /* course hues */
+  .c-indigo  { --c: 129 140 248; --t: 199 210 254; }
+  .c-emerald { --c: 52 211 153;  --t: 167 243 208; }
+  .c-sky     { --c: 56 189 248;  --t: 186 230 253; }
+  .c-amber   { --c: 251 146 60;  --t: 254 215 170; }
+  .c-rose    { --c: 244 114 182; --t: 251 207 232; }
+  .dot { background: rgb(var(--c)); }
+  .ev { background: linear-gradient(rgb(var(--c) / 0.15), rgb(var(--c) / 0.15)), #111113; border-left: 2px solid rgb(var(--c)); color: rgb(var(--t)); }
+  .tint { background: rgb(var(--c) / 0.12); color: rgb(var(--t)); }
+  .txt { color: rgb(var(--t)); }
+  .bar { background: rgb(var(--c)); }
+  .conflict { outline: 1.5px solid #F87171; outline-offset: -1px; }
+  .hatch { background-image: repeating-linear-gradient(135deg, rgba(248,113,113,0.22) 0 2px, transparent 2px 6px); }
+  .caret { display: inline-block; width: 1.5px; height: 19px; background: #FACC15; margin-left: 1px; vertical-align: -3px; border-radius: 1px; }
+</style>
+</head>
+<body class="text-[13px] leading-[18px]">
+
+<!-- Icon sprite (Lucide paths) -->
+<svg width="0" height="0" class="absolute">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-chev-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-chev-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-chev-updown" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+    <symbol id="i-enter" viewBox="0 0 24 24"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-5-4"/></symbol>
+    <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></symbol>
+    <symbol id="i-chev-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-arrow-up-down" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+    <symbol id="i-hash" viewBox="0 0 24 24"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></symbol>
+    <symbol id="i-thumb" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-unlock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a10 10 0 0 1 14 0"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/></symbol>
+  </defs>
+</svg>
+
+<div class="flex min-h-screen">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="w-[248px] shrink-0 flex flex-col px-3 pt-3 pb-3 sticky top-0 h-screen">
+    <div class="flex items-center gap-2.5 h-9 px-2">
+      <svg viewBox="0 0 753 768" class="w-[19px] h-[19px]" fill="#FACC15"><path d="M735.53,705.37l-166.07-169.66c44.79-55.69,71.54-127.02,71.54-204.64,0-178.41-141.72-323.07-316.5-323.07S8,152.66,8,331.07s141.72,323.07,316.5,323.07c76.35,0,146.38-27.61,201.08-73.63l166.07,169.51c19.39,18.1,37.57,6.44,43.88,0,12.62-12.73,12.62-31.91,0-44.64ZM69.77,331.07c0-143.59,114.07-260.02,254.73-260.02s254.88,116.43,254.88,260.02-114.07,260.02-254.73,260.02S69.77,474.66,69.77,331.07Z"/><path d="M487.19,168.05h-195.29c-26.04,0-48.36,16.74-57.66,40.92h-37.2c-42.78,0-78.12,35.34-78.12,78.12v91.14c9.3-20.46,29.76-35.34,53.94-35.34h68.82l-42.78,174.83c-3.72,11.16,3.72,20.46,13.02,20.46,33.48,0,46.5-5.58,72.54-29.76l27.9,78.12h0c1.86,3.72,3.72,5.58,7.44,5.58s5.58-1.86,7.44-5.58l27.9-78.12c24.18,24.18,39.06,29.76,72.54,29.76,11.16,0,16.74-11.16,13.02-20.46l-22.32-174.83h3.72c42.78,0,78.12-35.34,78.12-78.12v-1.86c16.74-11.16,27.9-29.76,27.9-50.22v-70.68c-5.58,14.88-22.32,26.04-40.92,26.04Zm-167.39,87.42c-5.58,3.72-13.02,1.86-18.6-1.86l-11.16-11.16c-5.58-5.58-5.58-14.88,0-22.32l11.16-11.16c5.58-5.58,13.02-5.58,18.6-1.86l42.78,24.18-42.78,24.18Z"/></svg>
+      <span class="text-[15px] font-semibold tracking-[-0.015em] text-zinc-100"><span class="text-gold">Dal</span>Search</span>
+      <button class="ml-auto text-zinc-500 hover:text-zinc-300"><svg class="i"><use href="#i-panel"/></svg></button>
+    </div>
+
+    <button class="mt-3 h-8 w-full flex items-center gap-2 px-2.5 rounded-lg bg-white/[0.035] border border-white/[0.08] text-zinc-500 hl">
+      <svg class="i i-sm"><use href="#i-search"/></svg>
+      <span>Search</span>
+      <span class="ml-auto flex gap-1"><span class="kbd">⌘</span><span class="kbd">K</span></span>
+    </button>
+
+    <nav class="mt-4 flex flex-col gap-px">
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-400"><svg class="i text-zinc-500"><use href="#i-home"/></svg>Home</a>
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-400"><svg class="i text-zinc-500"><use href="#i-compass"/></svg>Explore</a>
+      <a class="relative h-8 flex items-center gap-2.5 px-2.5 rounded-md bg-white/[0.06] text-zinc-100 font-medium hl">
+        <span class="absolute -left-3 top-2 bottom-2 w-[2px] rounded-r bg-gold"></span>
+        <svg class="i text-gold"><use href="#i-calendar"/></svg>Schedule<span class="ml-auto flex items-center gap-1 text-[11px] text-red-300/90"><span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>2</span>
+      </a>
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-400"><svg class="i text-zinc-500"><use href="#i-building"/></svg>Rooms</a>
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-400"><svg class="i text-zinc-500"><use href="#i-users"/></svg>Instructors</a>
+    </nav>
+
+    <div class="mt-6 px-2.5 flex items-center gap-1.5 text-[11.5px] font-medium text-zinc-500">
+      <svg class="i i-xs"><use href="#i-chev-down"/></svg>
+      <span>Winter 2026</span>
+      <span class="ml-auto mono text-[11px] text-zinc-400 px-1.5 h-[18px] inline-flex items-center rounded bg-white/[0.05] border border-white/[0.07]">15 cr</span>
+    </div>
+    <div class="mt-1.5 flex flex-col gap-px">
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-300 c-indigo"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px]">CSCI 2122</span><span class="text-zinc-500 truncate">Systems Prog.</span></a>
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-300 c-emerald"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px]">CSCI 2110</span><span class="text-zinc-500 truncate">Data Structures</span></a>
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-300 c-sky"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px]">CSCI 2141</span><span class="text-zinc-500 truncate">Databases</span></a>
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-300 c-amber"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px]">STAT 2060</span><span class="text-zinc-500 truncate">Probability</span></a>
+      <a class="h-8 flex items-center gap-2.5 px-2.5 rounded-md text-zinc-300 c-rose"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px]">ECON 1101</span><span class="text-zinc-500 truncate">Microecon.</span><svg class="i i-xs ml-auto text-red-400"><use href="#i-alert"/></svg></a>
+    </div>
+
+    <div class="mt-4 flex flex-col gap-3">
+      <div class="px-2.5 flex items-center gap-1.5 text-[11.5px] font-medium text-zinc-500"><svg class="i i-xs"><use href="#i-chev-right"/></svg><span>Summer 2026</span><span class="ml-auto mono text-[11px] text-zinc-600 px-1.5">0 cr</span></div>
+      <div class="px-2.5 flex items-center gap-1.5 text-[11.5px] font-medium text-zinc-500"><svg class="i i-xs"><use href="#i-chev-right"/></svg><span>Fall 2026</span><span class="ml-auto mono text-[11px] text-zinc-500 px-1.5">6 cr</span></div>
+      <div class="px-2.5 flex items-center gap-1.5 text-[11.5px] font-medium text-zinc-500"><svg class="i i-xs"><use href="#i-chev-right"/></svg><span>Winter 2027</span><span class="ml-auto mono text-[11px] text-zinc-600 px-1.5">0 cr</span></div>
+    </div>
+
+    <div class="mt-auto">
+      <div class="mx-1 mb-3 rounded-lg border border-white/[0.07] bg-white/[0.02] px-3 py-2.5">
+        <div class="flex items-center gap-2 text-zinc-300 text-[12px] font-medium"><svg class="i i-sm text-zinc-400"><use href="#i-upload"/></svg>Import from Dal Online</div>
+        <div class="mt-0.5 text-[11.5px] leading-4 text-zinc-500">Pull your registered sections in one click.</div>
+      </div>
+      <div class="flex items-center gap-2.5 px-2 h-10 border-t border-white/[0.06] pt-3">
+        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-zinc-600 to-zinc-800 border border-white/10 flex items-center justify-center text-[11px] font-semibold text-zinc-200">TB</div>
+        <div class="leading-4">
+          <div class="text-zinc-200 font-medium">Théo B.</div>
+          <div class="text-[11px] text-zinc-500">Account</div>
+        </div>
+        <div class="ml-auto flex items-center p-0.5 rounded-md bg-white/[0.04] border border-white/[0.07]">
+          <span class="w-6 h-6 flex items-center justify-center text-zinc-500"><svg class="i i-sm"><use href="#i-sun"/></svg></span>
+          <span class="w-6 h-6 flex items-center justify-center rounded-[5px] bg-white/[0.08] text-zinc-100 hl"><svg class="i i-sm"><use href="#i-moon"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ CONTENT ============ -->
+  <main class="flex-1 min-w-0 my-2 mr-2 h-[calc(100vh-16px)] rounded-xl border border-white/[0.07] bg-[#0E0E10] flex flex-col overflow-hidden">
+    <!-- toolbar -->
+    <header class="h-12 shrink-0 flex items-center gap-2 px-4 border-b border-white/[0.06]">
+      <svg class="i i-sm text-zinc-500"><use href="#i-calendar"/></svg>
+      <span class="text-zinc-200 font-medium">Schedule</span>
+      <span class="mx-1.5 w-px h-4 bg-white/10"></span>
+      <button class="h-7 pl-2.5 pr-2 flex items-center gap-2 rounded-md border border-white/[0.08] bg-white/[0.03] text-zinc-200 hl">
+        <span class="w-1.5 h-1.5 rounded-full bg-gold"></span>Winter 2026<span class="mono text-[10.5px] text-zinc-500">202620</span><svg class="i i-xs text-zinc-500"><use href="#i-chev-updown"/></svg>
+      </button>
+      <span class="ml-1 text-zinc-500 text-[12px]">5 courses · <span class="text-zinc-300">15 credit hours</span> · 20 h/week</span>
+
+      <div class="ml-auto flex items-center gap-2">
+        <div class="flex p-0.5 rounded-md bg-black/30 border border-white/[0.07] text-[12px]">
+          <span class="h-6 px-2.5 flex items-center rounded-[5px] bg-white/[0.09] text-zinc-100 font-medium hl">Week</span>
+          <span class="h-6 px-2.5 flex items-center rounded-[5px] text-zinc-500">Day</span>
+        </div>
+        <span class="mx-0.5 w-px h-4 bg-white/10"></span>
+        <button class="h-7 px-2.5 flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.03] text-zinc-300 hl"><svg class="i i-xs text-zinc-500"><use href="#i-download"/></svg>Export<svg class="i i-xs text-zinc-500"><use href="#i-chev-down"/></svg></button>
+        <button class="h-7 px-2.5 flex items-center gap-1.5 rounded-md bg-gold text-zinc-950 font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]"><svg class="i i-xs"><use href="#i-link"/></svg>Share</button>
+      </div>
+    </header>
+
+    <div class="flex-1 min-h-0 flex">
+      <!-- ===== CALENDAR ===== -->
+      <section class="flex-1 min-w-0 flex flex-col">
+        <!-- conflict banner -->
+        <div class="shrink-0 mx-4 mt-3 mb-1 h-10 flex items-center gap-3 px-3 rounded-lg border border-red-400/25 bg-red-500/[0.07] whitespace-nowrap">
+          <span class="w-6 h-6 rounded-md bg-red-500/15 text-red-300 flex items-center justify-center"><svg class="i i-sm"><use href="#i-alert"/></svg></span>
+          <span class="text-red-200 font-medium">2 time conflicts</span>
+          <span class="text-red-200/60 text-[12px] flex items-center gap-2">
+            <span class="mono text-[11.5px] text-red-200/90">ECON 1101 Tut</span>×<span class="mono text-[11.5px] text-red-200/90">CSCI 2122 Lec</span><span class="text-red-200/40">Mon 11:35</span>
+            <span class="w-1 h-1 rounded-full bg-red-300/40"></span>
+            <span class="mono text-[11.5px] text-red-200/90">STAT 2060 Lec</span>×<span class="mono text-[11.5px] text-red-200/90">ECON 1101 Lec</span><span class="text-red-200/40">Thu 14:35</span>
+          </span>
+          <button class="ml-auto h-6 px-2 rounded-md border border-red-300/25 text-red-200 text-[12px]">Review</button>
+        </div>
+
+          <div class="flex-1 min-h-0 flex flex-col">
+            <div class="h-[46px] shrink-0 grid grid-cols-[60px_repeat(5,1fr)] border-b border-white/[0.06]">
+              <div class="flex items-end justify-end pr-2.5 pb-1.5 mono text-[10px] text-zinc-600">AST</div>
+              <div class="h-full px-3 flex flex-col justify-center border-l border-white/[0.06]"><div class="flex items-center gap-1.5 text-zinc-200 font-medium">Mon <svg class="i i-xs text-red-400"><use href="#i-alert"/></svg></div><div class="text-[11px] text-zinc-500">5 classes · 5h 40m</div></div><div class="h-full px-3 flex flex-col justify-center border-l border-white/[0.06]"><div class="flex items-center gap-1.5 text-zinc-200 font-medium">Tue</div><div class="text-[11px] text-zinc-500">3 classes · 4h</div></div><div class="h-full px-3 flex flex-col justify-center border-l border-white/[0.06] bg-white/[0.018]"><div class="flex items-center gap-2"><span class="text-zinc-50 font-semibold">Wed</span><span class="h-[18px] px-1.5 rounded bg-gold text-zinc-950 text-[10.5px] font-semibold flex items-center">Today</span></div><div class="text-[11px] text-zinc-500">4 classes · 4h 20m</div></div><div class="h-full px-3 flex flex-col justify-center border-l border-white/[0.06]"><div class="flex items-center gap-1.5 text-zinc-200 font-medium">Thu <svg class="i i-xs text-red-400"><use href="#i-alert"/></svg></div><div class="text-[11px] text-zinc-500">4 classes · 4h 20m</div></div><div class="h-full px-3 flex flex-col justify-center border-l border-white/[0.06]"><div class="flex items-center gap-1.5 text-zinc-200 font-medium">Fri</div><div class="text-[11px] text-zinc-500">2 classes · 1h 40m</div></div>
+            </div>
+            <div class="relative flex-1 grid grid-cols-[60px_repeat(5,1fr)] pt-3 pb-3">
+              <div class="relative" style="height:760px"><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:0px">08:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:76px">09:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:152px">10:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:228px">11:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:304px">12:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:380px">13:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:456px">14:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:532px">15:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:608px">16:00</span><span class="absolute right-2.5 -translate-y-1/2 mono text-[10.5px] text-zinc-600" style="top:760px">18:00</span><span class="absolute right-1.5 -translate-y-1/2 z-30 h-[18px] px-1 rounded-[4px] bg-gold text-zinc-950 mono text-[10px] font-semibold flex items-center" style="top:704.27px">17:16</span></div>
+              <div class="absolute left-[60px] right-0 top-3 pointer-events-none" style="height:760px"><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:0px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:76px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:152px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:228px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:304px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:380px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:456px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:532px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:608px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:684px"></div><div class="absolute inset-x-0 border-t border-white/[0.065]" style="top:760px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:38px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:114px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:190px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:266px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:342px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:418px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:494px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:570px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:646px"></div><div class="absolute inset-x-0 border-t border-dashed border-white/[0.04]" style="top:722px"></div></div>
+              <div class="relative border-l border-white/[0.06]" style="height:760px">
+      <div class="absolute inset-x-0 hatch opacity-70" style="top:272.33px;height:63.34px"></div>
+      <div class="absolute rounded-[7px] ev c-amber overflow-hidden" style="top:120.33px;height:139.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">STAT 2060</span><span class="ml-auto text-[10.5px] opacity-70">Tut T03</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">LSC C206</div>
+          <div class="mono text-[10.5px] leading-[14px] opacity-60 mt-0.5">09:35–11:25</div>
+        </div></div>
+<div class="absolute rounded-[7px] ev c-indigo overflow-hidden conflict shadow-[0_0_0_2px_#0E0E10,0_0_0_3.5px_#FACC15,0_8px_24px_-6px_rgba(0,0,0,0.7)] z-20" style="top:272.33px;height:101.34px;left:4px;right:calc(50% + 2px)"><div class="px-1.5 pt-1.5 whitespace-nowrap">
+          <div class="mono text-[10.5px] leading-[14px] font-semibold tracking-[-0.04em]">CSCI 2122</div>
+          <div class="text-[10.5px] leading-[14px] opacity-80">Lec 01</div>
+          <div class="mono text-[10px] leading-[14px] opacity-60">11:35</div>
+        </div></div>
+<div class="absolute rounded-[7px] ev c-rose overflow-hidden conflict" style="top:272.33px;height:63.34px;left:calc(50% + 2px);right:4px"><div class="px-1.5 pt-1.5 whitespace-nowrap">
+          <div class="mono text-[10.5px] leading-[14px] font-semibold tracking-[-0.04em]">ECON 1101</div>
+          <div class="text-[10.5px] leading-[14px] opacity-80">Tut T01</div>
+          <div class="mono text-[10px] leading-[14px] opacity-60">11:35</div>
+        </div></div><span style="top:264.33px;right:-3px" class="absolute z-30 w-[18px] h-[18px] rounded-full bg-red-500 text-white flex items-center justify-center ring-2 ring-[#0E0E10]"><svg class="i" style="width:11px;height:11px;stroke-width:2.5"><use href="#i-alert"/></svg></span>
+<div class="absolute rounded-[7px] ev c-amber overflow-hidden" style="top:500.33px;height:63.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">STAT 2060</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Dunn 117</div>
+          
+        </div></div>
+<div class="absolute rounded-[7px] ev c-emerald overflow-hidden" style="top:652.33px;height:63.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Goldberg CS 127</div>
+          
+        </div></div>
+      
+    </div>
+<div class="relative border-l border-white/[0.06]" style="height:760px">
+      
+      <div class="absolute rounded-[7px] ev c-emerald overflow-hidden" style="top:158.33px;height:101.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="ml-auto text-[10.5px] opacity-70">Lab B01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Goldberg CS 143</div>
+          <div class="mono text-[10.5px] leading-[14px] opacity-60 mt-0.5">10:05–11:25</div>
+        </div></div>
+<div class="absolute rounded-[7px] ev c-sky overflow-hidden" style="top:386.33px;height:101.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2141</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Rowe 1020</div>
+          <div class="mono text-[10.5px] leading-[14px] opacity-60 mt-0.5">13:05–14:25</div>
+        </div></div>
+<div class="absolute rounded-[7px] ev c-rose overflow-hidden" style="top:500.33px;height:101.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">ECON 1101</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Rowe 1020</div>
+          <div class="mono text-[10.5px] leading-[14px] opacity-60 mt-0.5">14:35–15:55</div>
+        </div></div>
+      
+    </div>
+<div class="relative border-l border-white/[0.06] bg-white/[0.018]" style="height:760px">
+      
+      <div class="absolute rounded-[7px] ev c-indigo overflow-hidden" style="top:158.33px;height:101.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2122</span><span class="ml-auto text-[10.5px] opacity-70">Lab B03</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Goldberg CS 134</div>
+          <div class="mono text-[10.5px] leading-[14px] opacity-60 mt-0.5">10:05–11:25</div>
+        </div></div>
+<div class="absolute rounded-[7px] ev c-indigo overflow-hidden shadow-[0_0_0_2px_#0E0E10,0_0_0_3.5px_#FACC15,0_8px_24px_-6px_rgba(0,0,0,0.7)] z-20" style="top:272.33px;height:101.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2122</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Goldberg CS 127</div>
+          <div class="mono text-[10.5px] leading-[14px] opacity-60 mt-0.5">11:35–12:55</div>
+        </div></div>
+<div class="absolute rounded-[7px] ev c-amber overflow-hidden" style="top:500.33px;height:63.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">STAT 2060</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Dunn 117</div>
+          
+        </div></div>
+<div class="absolute rounded-[7px] ev c-emerald overflow-hidden" style="top:652.33px;height:63.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Goldberg CS 127</div>
+          
+        </div></div>
+      <div class="absolute -left-px right-0 z-30 h-0 border-t-[1.5px] border-gold" style="top:704.27px"><span class="absolute -left-[5px] -top-[5px] w-[9px] h-[9px] rounded-full bg-gold ring-2 ring-[#0E0E10]"></span></div>
+    </div>
+<div class="relative border-l border-white/[0.06]" style="height:760px">
+      <div class="absolute inset-x-0 hatch opacity-70" style="top:500.33px;height:63.34px"></div>
+      <div class="absolute rounded-[7px] ev c-sky overflow-hidden" style="top:386.33px;height:101.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2141</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Rowe 1020</div>
+          <div class="mono text-[10.5px] leading-[14px] opacity-60 mt-0.5">13:05–14:25</div>
+        </div></div>
+<div class="absolute rounded-[7px] ev c-amber overflow-hidden conflict" style="top:500.33px;height:63.34px;left:4px;right:calc(50% + 2px)"><div class="px-1.5 pt-1.5 whitespace-nowrap">
+          <div class="mono text-[10.5px] leading-[14px] font-semibold tracking-[-0.04em]">STAT 2060</div>
+          <div class="text-[10.5px] leading-[14px] opacity-80">Lec 01</div>
+          <div class="mono text-[10px] leading-[14px] opacity-60">14:35</div>
+        </div></div>
+<div class="absolute rounded-[7px] ev c-rose overflow-hidden conflict" style="top:500.33px;height:101.34px;left:calc(50% + 2px);right:4px"><div class="px-1.5 pt-1.5 whitespace-nowrap">
+          <div class="mono text-[10.5px] leading-[14px] font-semibold tracking-[-0.04em]">ECON 1101</div>
+          <div class="text-[10.5px] leading-[14px] opacity-80">Lec 01</div>
+          <div class="mono text-[10px] leading-[14px] opacity-60">14:35</div>
+        </div></div><span style="top:492.33px;right:-3px" class="absolute z-30 w-[18px] h-[18px] rounded-full bg-red-500 text-white flex items-center justify-center ring-2 ring-[#0E0E10]"><svg class="i" style="width:11px;height:11px;stroke-width:2.5"><use href="#i-alert"/></svg></span>
+<div class="absolute rounded-[7px] ev c-emerald overflow-hidden" style="top:652.33px;height:63.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Goldberg CS 127</div>
+          
+        </div></div>
+      
+    </div>
+<div class="relative border-l border-white/[0.06]" style="height:760px">
+      
+      <div class="absolute rounded-[7px] ev c-amber overflow-hidden" style="top:500.33px;height:63.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">STAT 2060</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Dunn 117</div>
+          
+        </div></div>
+<div class="absolute rounded-[7px] ev c-emerald overflow-hidden" style="top:652.33px;height:63.34px;left:4px;right:4px"><div class="px-2.5 pt-1.5">
+          <div class="flex items-center gap-1.5"><span class="mono text-[11.5px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="ml-auto text-[10.5px] opacity-70">Lec 01</span></div>
+          <div class="text-[11px] leading-[15px] opacity-75 truncate">Goldberg CS 127</div>
+          
+        </div></div>
+      
+    </div>
+
+            </div>
+          </div>
+
+      </section>
+
+      <!-- ===== INSPECTOR ===== -->
+      <aside class="w-[352px] shrink-0 border-l border-white/[0.06] bg-[#111113] flex flex-col">
+        <div class="h-11 shrink-0 flex items-center gap-2 px-4 border-b border-white/[0.06]">
+          <span class="w-2 h-2 rounded-[3px] bg-indigo-400"></span>
+          <span class="mono text-[12.5px] text-zinc-100">CSCI 2122</span>
+          <span class="text-zinc-500">Lec 01</span>
+          <div class="ml-auto flex items-center gap-1 text-zinc-500">
+            <span class="w-7 h-7 flex items-center justify-center rounded-md"><svg class="i i-sm"><use href="#i-external"/></svg></span>
+            <span class="w-7 h-7 flex items-center justify-center rounded-md"><svg class="i i-sm"><use href="#i-x"/></svg></span>
+          </div>
+        </div>
+
+        <div class="flex-1 min-h-0 overflow-hidden px-4 pt-4 flex flex-col gap-4">
+          <div>
+            <h2 class="text-[18px] leading-6 font-semibold tracking-[-0.02em] text-zinc-50">Systems Programming</h2>
+            <div class="mt-0.5 text-zinc-500">Lecture · Section 01 · 3 credit hours</div>
+          </div>
+
+          <div class="rounded-lg border border-red-400/25 bg-red-500/[0.07] px-3 py-2.5">
+            <div class="flex items-center gap-1.5 text-red-300 font-medium text-[12.5px]"><svg class="i i-sm"><use href="#i-alert"/></svg>Overlaps ECON 1101 Tut T01</div>
+            <div class="mt-0.5 pl-[22px] text-[11.5px] text-red-200/70">Mon 11:35–12:25 · 50 min shared</div>
+          </div>
+
+          <dl class="flex flex-col gap-[9px] text-[12.5px]">
+            <div class="flex items-center gap-3"><dt class="w-[76px] text-zinc-500 flex items-center gap-2"><svg class="i i-sm text-zinc-600"><use href="#i-clock"/></svg>When</dt><dd class="text-zinc-200"><span class="text-zinc-400">Mon, Wed</span> <span class="mono text-[12px]">11:35–12:55</span></dd></div>
+            <div class="flex items-center gap-3"><dt class="w-[76px] text-zinc-500 flex items-center gap-2"><svg class="i i-sm text-zinc-600"><use href="#i-pin"/></svg>Room</dt><dd class="text-zinc-200 flex items-center gap-1.5">Goldberg CS Bldg <span class="mono text-[12px]">127</span><svg class="i i-xs text-zinc-600"><use href="#i-arrow-right"/></svg></dd></div>
+            <div class="flex items-center gap-3"><dt class="w-[76px] text-zinc-500 flex items-center gap-2"><svg class="i i-sm text-zinc-600"><use href="#i-users"/></svg>Instructor</dt><dd class="text-zinc-200 flex items-center gap-2">Kalyaniwalla N.<span class="flex items-center gap-1 text-[11.5px] text-zinc-400"><svg class="i i-xs text-gold fill-gold"><use href="#i-star"/></svg>2.4</span><span class="text-[11.5px] text-zinc-500">61% · diff 4.1</span></dd></div>
+            <div class="flex items-center gap-3"><dt class="w-[76px] text-zinc-500 flex items-center gap-2"><svg class="i i-sm text-zinc-600"><use href="#i-hash"/></svg>CRN</dt><dd class="flex items-center gap-2"><span class="mono text-[12px] text-zinc-200">20756</span><span class="h-5 px-1.5 inline-flex items-center rounded border border-white/[0.08] text-[10.5px] text-zinc-500">Copy</span></dd></div>
+            <div class="flex items-center gap-3"><dt class="w-[76px] text-zinc-500 flex items-center gap-2"><svg class="i i-sm text-zinc-600"><use href="#i-layers"/></svg>Seats</dt><dd class="flex-1 flex items-center gap-2.5"><span class="mono text-[12px] text-zinc-200">101/120</span><span class="flex-1 h-1 rounded-full bg-white/[0.07]"><span class="block h-full w-[84%] rounded-full bg-zinc-400"></span></span><span class="text-[11.5px] text-emerald-300/90">19 open</span></dd></div>
+          </dl>
+
+          <div>
+            <div class="mb-2 flex items-center text-[11px] font-medium uppercase tracking-[0.06em] text-zinc-500"><svg class="i i-xs mr-1.5"><use href="#i-swap"/></svg>Swap section</div>
+            <div class="flex flex-col gap-1.5">
+              <div class="rounded-lg border border-white/[0.07] bg-white/[0.02] px-3 py-2 flex items-center gap-3">
+                <span class="w-3.5 h-3.5 rounded-full border-[4px] border-indigo-400"></span>
+                <div class="leading-4 flex-1 min-w-0"><div class="flex items-center gap-2"><span class="mono text-[12px] text-zinc-100">Lec 01</span><span class="mono text-[11px] text-zinc-500">MW 11:35</span></div><div class="text-[11px] text-red-300/80">Current · 1 conflict</div></div>
+              </div>
+              <div class="rounded-lg border border-emerald-400/25 bg-emerald-400/[0.05] px-3 py-2 flex items-center gap-3">
+                <span class="w-3.5 h-3.5 rounded-full border border-white/25"></span>
+                <div class="leading-4 flex-1 min-w-0"><div class="flex items-center gap-2"><span class="mono text-[12px] text-zinc-100">Lec 90</span><span class="text-[11px] text-zinc-500">Online · C/D</span></div><div class="text-[11px] text-emerald-300/90">Resolves conflict · Wijenayake U.</div></div>
+                <button class="h-6 px-2 rounded-md bg-white/[0.08] border border-white/10 text-zinc-100 text-[11.5px] font-medium hl">Swap</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="h-px bg-white/[0.06]"></div>
+
+          <!-- summary -->
+          <div>
+            <div class="mb-2 text-[11px] font-medium uppercase tracking-[0.06em] text-zinc-500">Winter 2026 summary</div>
+            <div class="grid grid-cols-4 rounded-lg border border-white/[0.07] divide-x divide-white/[0.06] bg-black/20">
+              <div class="px-2.5 py-2"><div class="text-[16px] font-semibold text-zinc-50">15</div><div class="text-[10.5px] text-zinc-500">credits</div></div>
+              <div class="px-2.5 py-2"><div class="text-[16px] font-semibold text-zinc-50">5</div><div class="text-[10.5px] text-zinc-500">courses</div></div>
+              <div class="px-2.5 py-2"><div class="text-[16px] font-semibold text-zinc-50">20h</div><div class="text-[10.5px] text-zinc-500">per week</div></div>
+              <div class="px-2.5 py-2"><div class="text-[16px] font-semibold text-red-300">2</div><div class="text-[10.5px] text-zinc-500">conflicts</div></div>
+            </div>
+            <div class="mt-3 flex flex-col">
+              <div class="h-7 px-1.5 flex items-center gap-2.5 c-indigo bg-white/[0.04] rounded-md"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px] text-zinc-200 w-[68px]">CSCI 2122</span><span class="text-[11.5px] text-zinc-500 flex-1 truncate">Lec 01 · Lab B03</span><svg class="i i-xs text-red-400"><use href="#i-alert"/></svg><span class="mono text-[11px] text-zinc-500 w-7 text-right">3 cr</span></div>
+              <div class="h-7 px-1.5 flex items-center gap-2.5 c-emerald"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px] text-zinc-200 w-[68px]">CSCI 2110</span><span class="text-[11.5px] text-zinc-500 flex-1 truncate">Lec 01 · Lab B01</span><span class="w-3"></span><span class="mono text-[11px] text-zinc-500 w-7 text-right">3 cr</span></div>
+              <div class="h-7 px-1.5 flex items-center gap-2.5 c-sky"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px] text-zinc-200 w-[68px]">CSCI 2141</span><span class="text-[11.5px] text-zinc-500 flex-1 truncate">Lec 01</span><span class="w-3"></span><span class="mono text-[11px] text-zinc-500 w-7 text-right">3 cr</span></div>
+              <div class="h-7 px-1.5 flex items-center gap-2.5 c-amber"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px] text-zinc-200 w-[68px]">STAT 2060</span><span class="text-[11.5px] text-zinc-500 flex-1 truncate">Lec 01 · Tut T03</span><svg class="i i-xs text-red-400"><use href="#i-alert"/></svg><span class="mono text-[11px] text-zinc-500 w-7 text-right">3 cr</span></div>
+              <div class="h-7 px-1.5 flex items-center gap-2.5 c-rose"><span class="w-2 h-2 rounded-[3px] dot"></span><span class="mono text-[12px] text-zinc-200 w-[68px]">ECON 1101</span><span class="text-[11.5px] text-zinc-500 flex-1 truncate">Lec 01 · Tut T01</span><svg class="i i-xs text-red-400"><use href="#i-alert"/></svg><span class="mono text-[11px] text-zinc-500 w-7 text-right">3 cr</span></div>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <span class="text-[12px] text-zinc-400 flex items-center gap-1.5"><svg class="i i-sm text-zinc-500"><use href="#i-timer"/></svg>Buffer between classes</span>
+              <div class="ml-auto flex p-0.5 rounded-md bg-black/30 border border-white/[0.06] mono text-[11px]">
+                <span class="h-5 px-2 flex items-center rounded text-zinc-500">0</span>
+                <span class="h-5 px-2 flex items-center rounded bg-white/[0.09] text-zinc-100">10</span>
+                <span class="h-5 px-2 flex items-center rounded text-zinc-500">15</span>
+                <span class="h-5 pl-1 pr-1.5 flex items-center text-zinc-600">min</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="shrink-0 p-4 border-t border-white/[0.06] flex flex-col gap-2">
+          <button class="h-8 w-full flex items-center justify-center gap-2 rounded-lg border border-white/[0.09] bg-white/[0.035] text-zinc-200 hl"><svg class="i i-sm text-zinc-400"><use href="#i-upload"/></svg>Import from Dal Online</button>
+          <div class="grid grid-cols-3 gap-2">
+            <button class="h-8 flex items-center justify-center gap-1.5 rounded-lg border border-white/[0.09] bg-white/[0.035] text-zinc-300 text-[12px] hl"><svg class="i i-xs text-zinc-500"><use href="#i-image"/></svg>PNG</button>
+            <button class="h-8 flex items-center justify-center gap-1.5 rounded-lg border border-white/[0.09] bg-white/[0.035] text-zinc-300 text-[12px] hl"><svg class="i i-xs text-zinc-500"><use href="#i-file"/></svg>PDF</button>
+            <button class="h-8 flex items-center justify-center gap-1.5 rounded-lg bg-gold text-zinc-950 text-[12px] font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]"><svg class="i i-xs"><use href="#i-link"/></svg>Link</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</body>
+</html>

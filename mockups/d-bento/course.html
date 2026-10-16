@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSCI 2122 Systems Programming · DalSearch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui'] },
+      colors: {
+        page: '#F5F6F8',
+        ink: '#0F172A',
+        gold: { DEFAULT: '#FFC700', 50: '#FFFAEB', 100: '#FFF3C4', 200: '#FFE58A', 600: '#E6AC00', 700: '#9A6F00' },
+        butter: { bg: '#FFF3C7', ink: '#7A5800', dot: '#F5B800' },
+        mint:   { bg: '#DCF5E7', ink: '#166A41', dot: '#2FBF71' },
+        lilac:  { bg: '#ECE7FF', ink: '#5034C4', dot: '#8B72F2' },
+        sky:    { bg: '#DDEDFF', ink: '#1C5DA6', dot: '#4B9CF2' },
+        peach:  { bg: '#FFE5D8', ink: '#A6441A', dot: '#FF8B5C' },
+        rosy:   { bg: '#FFE4E7', ink: '#BE123C', dot: '#F43F5E' },
+      },
+      boxShadow: {
+        tile: '0 1px 2px rgba(15,23,42,.03), 0 10px 30px -12px rgba(15,23,42,.08)',
+        float: '0 2px 6px rgba(15,23,42,.04), 0 24px 60px -18px rgba(15,23,42,.18)',
+        pill: '0 1px 2px rgba(15,23,42,.04), 0 12px 32px -14px rgba(15,23,42,.14)',
+        gold: '0 6px 16px -6px rgba(230,172,0,.55)',
+      },
+      letterSpacing: { tightest: '-0.04em' },
+    }
+  }
+}
+</script>
+<style>
+  html, body { background: #F5F6F8; }
+  body { font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui; color: #0F172A; -webkit-font-smoothing: antialiased; }
+  .tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+  .tile { background: #fff; border-radius: 28px; box-shadow: 0 1px 2px rgba(15,23,42,.03), 0 10px 30px -12px rgba(15,23,42,.08); outline: 1px solid rgba(15,23,42,.045); outline-offset: -1px; }
+  .hero-glow {
+    background:
+      radial-gradient(520px 340px at 50% 18%, rgba(255,199,0,.20), transparent 70%),
+      radial-gradient(460px 320px at 34% 8%, rgba(255,226,160,.55), transparent 70%),
+      radial-gradient(420px 300px at 68% 14%, rgba(255,214,190,.45), transparent 70%),
+      radial-gradient(900px 420px at 50% 0%, rgba(255,246,220,.9), transparent 75%);
+  }
+  .dotgrid { background-image: radial-gradient(rgba(15,23,42,.07) 1px, transparent 1px); background-size: 22px 22px; }
+  .blk { position: absolute; top: calc(var(--s) * var(--ppm)); height: calc((var(--e) - var(--s)) * var(--ppm) - 3px); }
+  .page-glow {
+    background:
+      radial-gradient(640px 240px at 50% 0%, rgba(255,199,0,.13), transparent 70%),
+      radial-gradient(520px 220px at 32% 0%, rgba(255,228,170,.45), transparent 70%),
+      radial-gradient(480px 220px at 70% 0%, rgba(255,218,196,.35), transparent 70%);
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .blk.mini { height: calc((var(--e) - var(--s)) * var(--ppm) - 1px); }
+  .blk.pct { top: calc(var(--s) / var(--range) * 100%); height: calc((var(--e) - var(--s)) / var(--range) * 100% - 3px); }
+  .badge { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<!-- Floating pill nav -->
+<header class="relative z-30 pt-5">
+  <nav class="mx-auto flex w-fit items-center gap-1 rounded-full bg-white/85 p-2 pl-3 shadow-pill ring-1 ring-slate-900/5 backdrop-blur">
+    <a href="home.html" class="flex items-center gap-2 pr-4">
+      <span class="grid h-9 w-9 place-items-center rounded-[12px] bg-gold shadow-gold">
+        <svg viewBox="0 0 753 767.69" class="h-[22px] w-[22px] text-ink" fill="currentColor"><path d="M735.53,705.37l-166.07-169.66c44.79-55.69,71.54-127.020,71.54-204.64,0-178.41-141.72-323.07-316.5-323.07S8,152.66,8,331.07s141.72,323.07,316.5,323.07c76.35,0,146.38-27.61,201.08-73.63l166.07,169.51c19.39,18.1,37.57,6.44,43.88,0,12.62-12.73,12.62-31.910,0-44.64ZM69.77,331.07c0-143.59,114.07-260.02,254.73-260.02s254.88,116.43,254.88,260.020-114.07,260.02-254.73,260.02S69.77,474.66,69.77,331.07Z"/><path d="M487.19,168.05h-195.29c-26.04,0-48.36,16.74-57.66,40.92h-37.2c-42.78,0-78.12,35.34-78.12,78.12v91.14c9.3-20.46,29.76-35.34,53.94-35.34h68.82l-42.78,174.83c-3.72,11.16,3.72,20.46,13.02,20.46,33.48,0,46.5-5.580,72.54-29.76l27.9,78.12h0c1.86,3.72,3.72,5.58,7.44,5.58s5.58-1.86,7.44-5.58l27.9-78.120c24.18,24.18,39.06,29.76,72.54,29.76,11.16,0,16.74-11.16,13.02-20.46l-22.32-174.83h3.72c42.780,0,78.12-35.34,78.12-78.12v-1.86c16.74-11.16,27.9-29.76,27.9-50.22v-70.68c-5.58,14.88-22.32,26.04-40.92,26.04Zm-167.39,87.42c-5.58,3.72-13.02,1.86-18.6-1.86l-11.16-11.16c-5.58-5.58-5.580-14.88,0-22.32l11.16-11.16c5.58-5.58,13.02-5.58,18.6-1.86l42.78,24.18-42.78,24.18Z"/></svg>
+      </span>
+      <span class="text-[17px] tracking-tight"><span class="font-extrabold">Dal</span><span class="font-semibold text-slate-500">Search</span></span>
+    </a>
+    <a href="explore.html" class="rounded-full px-4 py-2 text-[14px] font-semibold text-slate-600">Explore</a>
+    <a href="schedule.html" class="rounded-full px-4 py-2 text-[14px] font-semibold text-slate-600">Schedule</a>
+    <a href="#" class="rounded-full px-4 py-2 text-[14px] font-semibold text-slate-600">Rooms</a>
+    <a href="#" class="rounded-full px-4 py-2 text-[14px] font-semibold text-slate-600">Instructors</a>
+    <span class="mx-2 h-6 w-px bg-slate-200"></span>
+    <button class="grid h-10 w-10 place-items-center rounded-full text-slate-600"><i data-i="search" class="h-[18px] w-[18px]"></i></button>
+    <button class="grid h-10 w-10 place-items-center rounded-full text-slate-600"><i data-i="moon" class="h-[18px] w-[18px]"></i></button>
+    <a href="#" class="ml-1 rounded-full bg-ink px-5 py-2.5 text-[14px] font-bold text-white">Sign in</a>
+  </nav>
+</header>
+<div class="page-glow pointer-events-none absolute inset-x-0 top-0 h-[420px]"></div>
+
+<main class="relative mx-auto max-w-[1280px] px-6">
+  <!-- Breadcrumb -->
+  <div class="flex items-center justify-between pt-10">
+    <nav class="flex items-center gap-2 text-[13px] font-semibold text-slate-500">
+      <a href="explore.html" class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 font-bold text-ink ring-1 ring-slate-900/[.06]"><i data-i="chev-l" class="h-4 w-4" data-sw="2.4"></i>Explore</a>
+      <i data-i="chev-r" class="h-4 w-4 text-slate-300"></i>
+      <a>Computer Science</a>
+      <i data-i="chev-r" class="h-4 w-4 text-slate-300"></i>
+      <span class="tnum font-bold text-ink">CSCI 2122</span>
+    </nav>
+    <span class="text-[13px] font-semibold text-slate-400">Data from Dal’s 2025/2026 timetable</span>
+  </div>
+
+  <section class="mt-5 grid grid-cols-12 gap-5">
+    <!-- Hero tile -->
+    <article class="tile relative col-span-8 flex flex-col overflow-hidden p-9">
+      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(420px_260px_at_92%_8%,rgba(255,199,0,.14),transparent_70%)]"></div>
+      <!-- decorative code card -->
+      <div class="pointer-events-none absolute right-9 top-9 h-[196px] w-[236px]">
+        <div class="absolute inset-0 rotate-[7deg] rounded-[22px] bg-sky-bg"></div>
+        <div class="absolute inset-0 -rotate-[3deg] rounded-[22px] bg-white p-4 shadow-float ring-1 ring-slate-900/5">
+          <div class="flex gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-rose-300"></span><span class="h-2.5 w-2.5 rounded-full bg-gold"></span><span class="h-2.5 w-2.5 rounded-full bg-mint-dot/70"></span><span class="ml-auto text-[10px] font-bold text-slate-300">main.c</span></div>
+          <pre class="mt-3 font-mono text-[11.5px] leading-[1.7] text-slate-500"><span class="text-lilac-ink">#include</span> <span class="text-mint-ink">&lt;stdio.h&gt;</span>
+
+<span class="text-sky-ink">int</span> <b class="text-ink">main</b>(<span class="text-sky-ink">void</span>) {
+  <span class="text-sky-ink">char</span> *s = <span class="text-mint-ink">"hi, Dal"</span>;
+  printf(<span class="text-mint-ink">"%s\n"</span>, s);
+  <span class="text-lilac-ink">return</span> <span class="text-peach-ink">0</span>;<span class="ml-0.5 inline-block h-3.5 w-[2px] translate-y-0.5 bg-gold-600"></span>
+}</pre>
+        </div>
+      </div>
+
+      <div class="relative flex flex-1 flex-col">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-sky-bg py-1 pl-1 pr-3 text-[12px] font-bold text-sky-ink"><span class="grid h-6 w-6 place-items-center rounded-full bg-white/75"><i data-i="code" class="h-3.5 w-3.5" data-sw="2.6"></i></span>Computer Science</span>
+          <span class="tnum rounded-full bg-slate-100 px-3 py-1.5 text-[12px] font-bold text-slate-600">3 credit hours</span>
+          <span class="tnum rounded-full bg-slate-100 px-3 py-1.5 text-[12px] font-bold text-slate-600">2000 level</span>
+        </div>
+        <p class="tnum mt-7 text-[18px] font-extrabold tracking-tight text-slate-400">CSCI 2122</p>
+        <h1 class="mt-1 text-[56px] font-extrabold leading-[1.02] tracking-tightest">Systems<br/>Programming</h1>
+        <p class="mt-5 max-w-[600px] text-[16px] font-medium leading-[1.65] text-slate-500">Tools, techniques, and concepts for systems programming. You’ll be exposed to assembly, introduced to C, and dig into memory hierarchies, performance measurement, exception control flow and other performance-related issues, with a significant amount of low-level programming.</p>
+        <div class="mt-auto flex items-center gap-3 pt-8">
+          <button class="inline-flex h-12 items-center gap-2 rounded-full bg-gold pl-5 pr-6 text-[15px] font-extrabold text-ink shadow-gold"><i data-i="plus" class="h-5 w-5" data-sw="2.6"></i>Add to schedule</button>
+          <button class="inline-flex h-12 items-center gap-2 rounded-full bg-white px-5 text-[15px] font-bold text-ink ring-1 ring-slate-900/10"><i data-i="bookmark" class="h-[18px] w-[18px]" data-sw="2.2"></i>Save</button>
+          <button class="grid h-12 w-12 place-items-center rounded-full bg-white text-ink ring-1 ring-slate-900/10"><i data-i="share" class="h-[18px] w-[18px]" data-sw="2.2"></i></button>
+          <span class="ml-3 text-[13px] font-semibold text-slate-400">Offered <b class="font-bold text-slate-600">Winter 26 · Fall 26 · Winter 27</b></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Right column -->
+    <div class="col-span-4 flex flex-col gap-5">
+      <article class="tile p-6">
+        <div class="flex items-center gap-3">
+          <div class="badge bg-lilac-bg text-lilac-ink !h-10 !w-10 !rounded-xl"><i data-i="branch" class="h-5 w-5" data-sw="2.2"></i></div>
+          <h2 class="text-[18px] font-extrabold tracking-tight">Prerequisites</h2>
+        </div>
+        <div class="mt-4 flex items-center gap-2">
+          <a class="flex-1 rounded-2xl bg-slate-50 px-3.5 py-2.5 ring-1 ring-slate-900/[.05]"><span class="tnum block text-[14px] font-extrabold">CSCI 1110</span><span class="block text-[12px] font-semibold text-slate-400">Intro to CS I</span></a>
+          <span class="text-[12px] font-extrabold text-slate-400">and</span>
+          <a class="flex-1 rounded-2xl bg-slate-50 px-3.5 py-2.5 ring-1 ring-slate-900/[.05]"><span class="tnum block text-[14px] font-extrabold">CSCI 1120</span><span class="block text-[12px] font-semibold text-slate-400">Intro to CS II</span></a>
+        </div>
+        <div class="mt-3 flex items-center gap-3 rounded-2xl bg-gold-50 px-3.5 py-2.5 ring-1 ring-gold/30">
+          <span class="text-[12px] font-extrabold uppercase tracking-wide text-gold-700">Unlocks</span>
+          <span class="tnum text-[14px] font-extrabold">CSCI 3120</span><span class="truncate text-[13px] font-semibold text-slate-500">Operating Systems</span>
+          <i data-i="arrow-right" class="ml-auto h-4 w-4 text-slate-400"></i>
+        </div>
+      </article>
+
+      <article class="tile flex-1 p-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="badge bg-peach-bg text-peach-ink !h-10 !w-10 !rounded-xl"><i data-i="users" class="h-5 w-5" data-sw="2.2"></i></div>
+            <h2 class="text-[18px] font-extrabold tracking-tight">Instructors</h2>
+          </div>
+          <span class="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-500">Winter 2026</span>
+        </div>
+        <div class="mt-4 rounded-2xl bg-slate-50 p-3.5 ring-1 ring-slate-900/[.05]">
+          <div class="flex items-center gap-3">
+            <span class="grid h-10 w-10 place-items-center rounded-full bg-lilac-bg text-[13px] font-extrabold text-lilac-ink">NK</span>
+            <div class="min-w-0 flex-1"><p class="truncate text-[14px] font-extrabold">Nauzer Kalyaniwalla</p><p class="text-[12px] font-semibold text-slate-400">RateMyProfessors</p></div>
+            <span class="tnum inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[14px] font-extrabold ring-1 ring-slate-900/[.06]"><i data-i="star-f" class="h-4 w-4 text-gold"></i>2.4</span>
+          </div>
+          <div class="mt-3 flex gap-2 text-[12px] font-bold">
+            <span class="tnum flex-1 rounded-xl bg-white px-2.5 py-1.5 text-center ring-1 ring-slate-900/[.04]"><b class="font-extrabold text-ink">61%</b> <span class="text-slate-400">take again</span></span>
+            <span class="tnum flex-1 rounded-xl bg-white px-2.5 py-1.5 text-center ring-1 ring-slate-900/[.04]"><b class="font-extrabold text-ink">4.1</b> <span class="text-slate-400">difficulty</span></span>
+          </div>
+        </div>
+        <div class="mt-2 flex items-center gap-3 px-3.5 py-2.5">
+          <span class="grid h-10 w-10 place-items-center rounded-full bg-mint-bg text-[13px] font-extrabold text-mint-ink">UW</span>
+          <div class="min-w-0 flex-1"><p class="truncate text-[14px] font-extrabold">Wijenayake U.</p><p class="text-[12px] font-semibold text-slate-400">No ratings yet</p></div>
+          <span class="text-[12px] font-bold text-slate-400">—</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Stats row -->
+    <article class="tile col-span-3 flex items-center justify-between rounded-[24px] p-6">
+      <div>
+        <p class="text-[13px] font-bold text-slate-500">Enrollment</p>
+        <p class="tnum mt-1 text-[30px] font-extrabold leading-none tracking-tight">101<span class="text-[18px] text-slate-400">/120</span></p>
+        <p class="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold text-mint-ink"><span class="h-1.5 w-1.5 rounded-full bg-mint-dot"></span>19 seats left</p>
+      </div>
+      <span class="relative grid h-[72px] w-[72px] place-items-center">
+        <svg viewBox="0 0 72 72" class="absolute inset-0 -rotate-90"><circle cx="36" cy="36" r="30" fill="none" stroke="#F1F5F9" stroke-width="8"/><circle cx="36" cy="36" r="30" fill="none" stroke="#FFC700" stroke-width="8" stroke-linecap="round" stroke-dasharray="158.3 188.5"/></svg>
+        <span class="tnum text-[14px] font-extrabold">84%</span>
+      </span>
+    </article>
+    <article class="tile col-span-3 rounded-[24px] p-6">
+      <div class="flex items-center justify-between"><p class="text-[13px] font-bold text-slate-500">Overall rating</p><span class="grid h-8 w-8 place-items-center rounded-xl bg-butter-bg text-butter-ink"><i data-i="star" class="h-4 w-4" data-sw="2.4"></i></span></div>
+      <div class="mt-1 flex items-end gap-3"><p class="tnum text-[30px] font-extrabold leading-none tracking-tight">3.8<span class="text-[18px] text-slate-400">/5</span></p></div>
+      <div class="mt-3 flex items-center gap-2"><span class="relative inline-flex"><span class="flex gap-0.5 text-slate-200"><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i></span><span class="absolute inset-y-0 left-0 flex gap-0.5 overflow-hidden text-gold" style="width:76.0%"><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i></span></span><span class="text-[12px] font-bold text-slate-400">24 reviews</span></div>
+    </article>
+    <article class="tile col-span-3 rounded-[24px] p-6">
+      <div class="flex items-center justify-between"><p class="text-[13px] font-bold text-slate-500">Difficulty</p><span class="grid h-8 w-8 place-items-center rounded-xl bg-peach-bg text-peach-ink"><i data-i="flame" class="h-4 w-4" data-sw="2.4"></i></span></div>
+      <p class="tnum mt-1 text-[30px] font-extrabold leading-none tracking-tight">4.0<span class="text-[18px] text-slate-400">/5</span> <span class="ml-1 align-middle text-[13px] font-bold tracking-normal text-peach-ink">Challenging</span></p>
+      <div class="mt-3 flex gap-1"><span class="h-2 flex-1 rounded-full bg-peach-dot"></span><span class="h-2 flex-1 rounded-full bg-peach-dot"></span><span class="h-2 flex-1 rounded-full bg-peach-dot"></span><span class="h-2 flex-1 rounded-full bg-peach-dot"></span><span class="h-2 flex-1 rounded-full bg-slate-100"></span></div>
+    </article>
+    <article class="tile col-span-3 rounded-[24px] p-6">
+      <div class="flex items-center justify-between"><p class="text-[13px] font-bold text-slate-500">Workload</p><span class="grid h-8 w-8 place-items-center rounded-xl bg-lilac-bg text-lilac-ink"><i data-i="hourglass" class="h-4 w-4" data-sw="2.4"></i></span></div>
+      <p class="tnum mt-1 text-[30px] font-extrabold leading-none tracking-tight">4.3<span class="text-[18px] text-slate-400">/5</span> <span class="ml-1 align-middle text-[13px] font-bold tracking-normal text-lilac-ink">Heavy</span></p>
+      <div class="mt-3 flex gap-1"><span class="h-2 flex-1 rounded-full bg-lilac-dot"></span><span class="h-2 flex-1 rounded-full bg-lilac-dot"></span><span class="h-2 flex-1 rounded-full bg-lilac-dot"></span><span class="h-2 flex-1 rounded-full bg-lilac-dot"></span><span class="relative h-2 flex-1 overflow-hidden rounded-full bg-slate-100"><span class="absolute inset-y-0 left-0 w-[30%] bg-lilac-dot"></span></span></div>
+    </article>
+
+    <!-- Sections -->
+    <article class="tile col-span-8 p-7">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="badge bg-sky-bg text-sky-ink !h-10 !w-10 !rounded-xl"><i data-i="layers" class="h-5 w-5" data-sw="2.2"></i></div>
+          <div><h2 class="text-[20px] font-extrabold tracking-tight">Sections</h2></div>
+        </div>
+        <div class="grid grid-cols-3 gap-1 rounded-full bg-slate-100 p-1 text-[13px]">
+          <button class="rounded-full bg-white px-4 py-1.5 font-extrabold text-ink shadow-[0_1px_3px_rgba(15,23,42,.1)]">Winter 2026</button>
+          <button class="rounded-full px-4 py-1.5 font-bold text-slate-500">Fall 2026</button>
+          <button class="rounded-full px-4 py-1.5 font-bold text-slate-500">Winter 2027</button>
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-[64px_52px_150px_118px_1fr_74px_44px] gap-3 px-3 text-[11px] font-extrabold uppercase tracking-[0.1em] text-slate-400">
+        <span>Type</span><span>Sec</span><span>Days</span><span>Time</span><span>Location</span><span>CRN</span><span></span>
+      </div>
+      <div class="mt-3 flex items-center gap-2 px-3 text-[12px] font-bold text-slate-500"><span class="h-px flex-1 bg-slate-100"></span>Lecture · choose 1<span class="h-px flex-1 bg-slate-100"></span></div>
+      <div class="mt-2 space-y-1.5">
+          <div class="grid grid-cols-[64px_52px_150px_118px_1fr_74px_44px] items-center gap-3 rounded-2xl px-3 py-3 bg-gold-50 ring-1 ring-gold/40">
+            <span class="w-fit rounded-full bg-sky-bg px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-sky-ink">Lec</span>
+            <span class="tnum text-[15px] font-extrabold">01</span>
+            <div class="flex gap-1"><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-ink text-white">M</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">T</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-ink text-white">W</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">T</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">F</span></div>
+            <span class="tnum text-[14px] font-bold text-ink">11:35 – 12:55</span>
+            <span class="min-w-0"><span class="block truncate text-[13px] font-bold text-ink">Goldberg CS Bldg 127</span><span class="block truncate text-[12px] font-semibold text-slate-400">Kalyaniwalla N.</span></span>
+            <span class="tnum text-[12px] font-bold text-slate-400">20756</span>
+            <button class="grid h-10 w-10 place-items-center rounded-full bg-gold text-ink shadow-gold"><i data-i="check" class="h-[18px] w-[18px]" data-sw="3"></i></button>
+          </div>
+          <div class="grid grid-cols-[64px_52px_150px_118px_1fr_74px_44px] items-center gap-3 rounded-2xl px-3 py-3">
+            <span class="w-fit rounded-full bg-sky-bg px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-sky-ink">Lec</span>
+            <span class="tnum text-[15px] font-extrabold">90</span>
+            <span class="inline-flex w-fit items-center gap-1.5 rounded-full bg-lilac-bg px-2.5 py-1 text-[11px] font-extrabold text-lilac-ink"><i data-i="monitor" class="h-3.5 w-3.5" data-sw="2.4"></i>Online</span>
+            <span class="text-[13px] font-semibold text-slate-400">Async</span>
+            <span class="min-w-0"><span class="block truncate text-[13px] font-bold text-ink">Consult Department</span><span class="block truncate text-[12px] font-semibold text-slate-400">Online section</span></span>
+            <span class="tnum text-[12px] font-bold text-slate-400">20758</span>
+            <button class="grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-ink"><i data-i="plus" class="h-[18px] w-[18px]" data-sw="2.6"></i></button>
+          </div>
+      </div>
+      <div class="mt-4 flex items-center gap-2 px-3 text-[12px] font-bold text-slate-500"><span class="h-px flex-1 bg-slate-100"></span>Lab · choose 1<span class="h-px flex-1 bg-slate-100"></span></div>
+      <div class="mt-2 space-y-1.5">
+          <div class="grid grid-cols-[64px_52px_150px_118px_1fr_74px_44px] items-center gap-3 rounded-2xl px-3 py-3 bg-gold-50 ring-1 ring-gold/40">
+            <span class="w-fit rounded-full bg-mint-bg px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-mint-ink">Lab</span>
+            <span class="tnum text-[15px] font-extrabold">B03</span>
+            <div class="flex gap-1"><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">M</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">T</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-ink text-white">W</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">T</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">F</span></div>
+            <span class="tnum text-[14px] font-bold text-ink">10:05 – 11:25</span>
+            <span class="min-w-0"><span class="block truncate text-[13px] font-bold text-ink">Goldberg CS Bldg 134</span><span class="block truncate text-[12px] font-semibold text-slate-400">Wijenayake U.</span></span>
+            <span class="tnum text-[12px] font-bold text-slate-400">20761</span>
+            <button class="grid h-10 w-10 place-items-center rounded-full bg-gold text-ink shadow-gold"><i data-i="check" class="h-[18px] w-[18px]" data-sw="3"></i></button>
+          </div>
+          <div class="grid grid-cols-[64px_52px_150px_118px_1fr_74px_44px] items-center gap-3 rounded-2xl px-3 py-3 bg-slate-50 ring-1 ring-slate-900/[.06]">
+            <span class="w-fit rounded-full bg-mint-bg px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-wide text-mint-ink">Lab</span>
+            <span class="tnum text-[15px] font-extrabold">B04</span>
+            <div class="flex gap-1"><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-ink text-white">M</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">T</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">W</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">T</span><span class="grid h-6 w-6 place-items-center rounded-full text-[10px] font-extrabold bg-slate-100 text-slate-400">F</span></div>
+            <span class="tnum text-[14px] font-bold text-ink">13:05 – 14:25</span>
+            <span class="min-w-0"><span class="block truncate text-[13px] font-bold text-ink">Goldberg CS Bldg 134</span><span class="block truncate text-[12px] font-semibold text-slate-400">Wijenayake U.</span></span>
+            <span class="tnum text-[12px] font-bold text-slate-400">20762</span>
+            <button class="grid h-10 w-10 place-items-center rounded-full bg-ink text-white"><i data-i="plus" class="h-[18px] w-[18px]" data-sw="2.6"></i></button>
+          </div>
+      </div>
+      <div class="mt-5 flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 ring-1 ring-slate-900/[.04]">
+        <p class="text-[13px] font-semibold text-slate-500"><b class="font-extrabold text-ink">Lec 01 + Lab B03</b> selected · fits your schedule</p>
+        <button class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-[12px] font-bold text-ink ring-1 ring-slate-900/10"><i data-i="file" class="h-3.5 w-3.5" data-sw="2.2"></i>Copy CRNs <span class="tnum font-semibold text-slate-400">20756, 20761</span></button>
+      </div>
+    </article>
+
+    <!-- Week preview -->
+    <article class="tile col-span-4 flex flex-col p-7">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="badge bg-butter-bg text-butter-ink !h-10 !w-10 !rounded-xl"><i data-i="calendar" class="h-5 w-5" data-sw="2.2"></i></div>
+          <h2 class="text-[20px] font-extrabold tracking-tight">Week preview</h2>
+        </div>
+        <span class="tnum rounded-full bg-mint-bg px-2.5 py-1 text-[11px] font-extrabold text-mint-ink">No conflicts</span>
+      </div>
+      <div class="mt-5 flex flex-1 flex-col rounded-[20px] bg-[#F8F9FB] p-4 pb-5 ring-1 ring-slate-900/[.05]">
+        <div class="grid grid-cols-[22px_repeat(5,1fr)] gap-1.5 pb-2 text-center text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+          <span></span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
+        </div>
+        <div class="relative mt-1 grid flex-1 grid-cols-[22px_repeat(5,1fr)] gap-1.5" style="--range:360">
+          <div class="tnum relative text-[10px] font-semibold text-slate-400"><span class="absolute" style="top:calc(0/360*100% - 6px)">9</span><span class="absolute" style="top:calc(60/360*100% - 6px)">10</span><span class="absolute" style="top:calc(120/360*100% - 6px)">11</span><span class="absolute" style="top:calc(180/360*100% - 6px)">12</span><span class="absolute" style="top:calc(240/360*100% - 6px)">1</span><span class="absolute" style="top:calc(300/360*100% - 6px)">2</span><span class="absolute" style="top:calc(360/360*100% - 6px)">3</span></div>
+          <div class="pointer-events-none absolute inset-y-0 left-[28px] right-0"><div class="absolute inset-x-0 border-t border-slate-200/70" style="top:calc(0/360*100%)"></div><div class="absolute inset-x-0 border-t border-slate-200/70" style="top:calc(60/360*100%)"></div><div class="absolute inset-x-0 border-t border-slate-200/70" style="top:calc(120/360*100%)"></div><div class="absolute inset-x-0 border-t border-slate-200/70" style="top:calc(180/360*100%)"></div><div class="absolute inset-x-0 border-t border-slate-200/70" style="top:calc(240/360*100%)"></div><div class="absolute inset-x-0 border-t border-slate-200/70" style="top:calc(300/360*100%)"></div><div class="absolute inset-x-0 border-t border-slate-200/70" style="top:calc(360/360*100%)"></div></div>
+          <div class="relative"><div class="blk pct inset-x-0 rounded-[11px] px-1.5 py-1.5 bg-butter-bg text-butter-ink" style="--s:155;--e:235"><b class="block whitespace-nowrap text-[10px] font-extrabold leading-[13px]">Lec 01</b><span class="tnum block text-[10px] font-semibold leading-[13px] opacity-75">11:35</span></div><div class="blk pct inset-x-0 rounded-[11px] px-1.5 py-1.5 border-2 border-dashed border-slate-300 bg-white/70 text-slate-500" style="--s:245;--e:325"><b class="block whitespace-nowrap text-[10px] font-extrabold leading-[13px]">Lab B04</b><span class="tnum block text-[10px] font-semibold leading-[13px] opacity-75">1:05</span></div></div><div class="relative"></div><div class="relative"><div class="blk pct inset-x-0 rounded-[11px] px-1.5 py-1.5 bg-butter-bg text-butter-ink" style="--s:65;--e:145"><b class="block whitespace-nowrap text-[10px] font-extrabold leading-[13px]">Lab B03</b><span class="tnum block text-[10px] font-semibold leading-[13px] opacity-75">10:05</span></div><div class="blk pct inset-x-0 rounded-[11px] px-1.5 py-1.5 bg-butter-bg text-butter-ink" style="--s:155;--e:235"><b class="block whitespace-nowrap text-[10px] font-extrabold leading-[13px]">Lec 01</b><span class="tnum block text-[10px] font-semibold leading-[13px] opacity-75">11:35</span></div></div><div class="relative"></div><div class="relative"></div>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center gap-4 text-[12px] font-bold text-slate-500">
+        <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-[4px] bg-butter-bg ring-1 ring-butter-dot/50"></span>Selected</span>
+        <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-[4px] border-2 border-dashed border-slate-300"></span>Hovering</span>
+      </div>
+    </article>
+
+    <!-- Reviews -->
+    <article class="tile col-span-12 p-7">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="badge bg-mint-bg text-mint-ink !h-10 !w-10 !rounded-xl"><i data-i="message" class="h-5 w-5" data-sw="2.2"></i></div>
+          <h2 class="text-[20px] font-extrabold tracking-tight">Ratings &amp; reviews</h2>
+          <span class="tnum rounded-full bg-slate-100 px-2.5 py-1 text-[12px] font-bold text-slate-500">24</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="inline-flex h-10 items-center gap-1.5 rounded-full px-4 text-[13px] font-bold text-slate-600">See all reviews<i data-i="arrow-right" class="h-4 w-4"></i></button>
+          <button class="inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-[13px] font-bold text-white"><i data-i="pencil" class="h-4 w-4" data-sw="2.2"></i>Write a review</button>
+        </div>
+      </div>
+      <div class="mt-5 grid grid-cols-[300px_1fr_1fr] gap-5">
+      <div class="flex flex-col justify-center rounded-[22px] bg-[#F8F9FB] p-6 ring-1 ring-slate-900/[.05]">
+        <div class="flex items-end gap-3">
+          <p class="tnum text-[52px] font-extrabold leading-none tracking-tight">3.8</p>
+          <div class="pb-1.5"><span class="relative inline-flex"><span class="flex gap-0.5 text-slate-200"><i data-i="star-f" class="h-[18px] w-[18px]"></i><i data-i="star-f" class="h-[18px] w-[18px]"></i><i data-i="star-f" class="h-[18px] w-[18px]"></i><i data-i="star-f" class="h-[18px] w-[18px]"></i><i data-i="star-f" class="h-[18px] w-[18px]"></i></span><span class="absolute inset-y-0 left-0 flex gap-0.5 overflow-hidden text-gold" style="width:76.0%"><i data-i="star-f" class="h-[18px] w-[18px]"></i><i data-i="star-f" class="h-[18px] w-[18px]"></i><i data-i="star-f" class="h-[18px] w-[18px]"></i><i data-i="star-f" class="h-[18px] w-[18px]"></i><i data-i="star-f" class="h-[18px] w-[18px]"></i></span></span><p class="mt-1 text-[12px] font-bold text-slate-400">24 student reviews</p></div>
+        </div>
+        <div class="mt-5 space-y-2.5 text-[12px] font-bold">
+          <div class="flex items-center gap-3"><span class="w-[70px] text-slate-500">Overall</span><span class="h-2 flex-1 rounded-full bg-slate-200/70"><span class="block h-full w-[76%] rounded-full bg-gold"></span></span><span class="tnum w-6 text-right">3.8</span></div>
+          <div class="flex items-center gap-3"><span class="w-[70px] text-slate-500">Difficulty</span><span class="h-2 flex-1 rounded-full bg-slate-200/70"><span class="block h-full w-[80%] rounded-full bg-peach-dot"></span></span><span class="tnum w-6 text-right">4.0</span></div>
+          <div class="flex items-center gap-3"><span class="w-[70px] text-slate-500">Workload</span><span class="h-2 flex-1 rounded-full bg-slate-200/70"><span class="block h-full w-[86%] rounded-full bg-lilac-dot"></span></span><span class="tnum w-6 text-right">4.3</span></div>
+        </div>
+      </div>
+
+      <div class="flex flex-col rounded-[22px] p-6 ring-1 ring-slate-900/[.07]">
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 place-items-center rounded-full bg-sky-bg text-sky-ink"><i data-i="user" class="h-5 w-5" data-sw="2.2"></i></span>
+          <div class="flex-1"><p class="text-[14px] font-extrabold">Anonymous student</p><p class="text-[12px] font-semibold text-slate-400">Fall 2025 · Kalyaniwalla N.</p></div>
+          <span class="relative inline-flex"><span class="flex gap-0.5 text-slate-200"><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i></span><span class="absolute inset-y-0 left-0 flex gap-0.5 overflow-hidden text-gold" style="width:80.0%"><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i></span></span>
+        </div>
+        <p class="mt-4 text-[15px] font-medium leading-[1.65] text-slate-600">“Hard, but this is the course where C finally clicked for me. Labs are long, so start assignments the day they’re released. Office hours were a lifesaver.”</p>
+        <div class="mt-auto flex items-center gap-2 pt-5">
+          <span class="tnum rounded-full bg-peach-bg px-2.5 py-1 text-[11px] font-extrabold text-peach-ink">Difficulty 4</span>
+          <span class="tnum rounded-full bg-lilac-bg px-2.5 py-1 text-[11px] font-extrabold text-lilac-ink">Workload 5</span>
+          <span class="ml-auto inline-flex items-center gap-1.5 text-[12px] font-bold text-slate-400"><i data-i="thumb" class="h-4 w-4" data-sw="2.2"></i>18 helpful</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col rounded-[22px] p-6 ring-1 ring-slate-900/[.07]">
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 place-items-center rounded-full bg-peach-bg text-peach-ink"><i data-i="user" class="h-5 w-5" data-sw="2.2"></i></span>
+          <div class="flex-1"><p class="text-[14px] font-extrabold">Anonymous student</p><p class="text-[12px] font-semibold text-slate-400">Winter 2025 · Kalyaniwalla N.</p></div>
+          <span class="relative inline-flex"><span class="flex gap-0.5 text-slate-200"><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i></span><span class="absolute inset-y-0 left-0 flex gap-0.5 overflow-hidden text-gold" style="width:60.0%"><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i><i data-i="star-f" class="h-4 w-4"></i></span></span>
+        </div>
+        <p class="mt-4 text-[15px] font-medium leading-[1.65] text-slate-600">“Lectures move quickly through assembly and memory hierarchies, so the textbook helps a lot. Expect a real jump in difficulty from 1110/1120, but you come out a much stronger programmer.”</p>
+        <div class="mt-auto flex items-center gap-2 pt-5">
+          <span class="tnum rounded-full bg-peach-bg px-2.5 py-1 text-[11px] font-extrabold text-peach-ink">Difficulty 5</span>
+          <span class="tnum rounded-full bg-lilac-bg px-2.5 py-1 text-[11px] font-extrabold text-lilac-ink">Workload 4</span>
+          <span class="ml-auto inline-flex items-center gap-1.5 text-[12px] font-bold text-slate-400"><i data-i="thumb" class="h-4 w-4" data-sw="2.2"></i>11 helpful</span>
+        </div>
+      </div>
+      </div>
+    </article>
+  </section>
+</main>
+
+<footer class="mx-auto mt-14 max-w-[1280px] px-6 pb-12">
+  <div class="flex items-center justify-between border-t border-slate-200/80 pt-8 text-[13px] font-medium text-slate-500">
+    <div class="flex items-center gap-3">
+      <span class="text-[15px] tracking-tight text-ink"><span class="font-extrabold">Dal</span><span class="font-semibold text-slate-500">Search</span></span>
+      <span class="text-slate-300">·</span>
+      <span>Not affiliated with Dalhousie University</span>
+    </div>
+    <div class="flex items-center gap-6">
+      <span>Created by Théo Bourgeois &amp; Chris Langille</span>
+      <a class="font-semibold text-ink">GitHub</a>
+      <a class="font-semibold text-ink">Buy me a coffee</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Lucide-style icon set (inline SVG, injected in place of <i data-i="name">) */
+const ICONS = {
+  'search': '<circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/>',
+  'moon': '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  'arrow-right': '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  'arrow-up-right': '<path d="M7 17 17 7M8 7h9v9"/>',
+  'trending': '<path d="M22 7 13.5 15.5 8.5 10.5 2 17"/><path d="M16 7h6v6"/>',
+  'calendar': '<rect width="18" height="18" x="3" y="4" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  'calendar-check': '<rect width="18" height="18" x="3" y="4" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="m9 16 2 2 4-4"/>',
+  'compass': '<circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/>',
+  'door': '<path d="M13 4h3a2 2 0 0 1 2 2v14"/><path d="M2 20h3"/><path d="M13 20h9"/><path d="M10 12v.01"/><path d="M13 4.56v16.16a1 1 0 0 1-1.24.97L5 20V5.56a2 2 0 0 1 1.52-1.94l4-1A2 2 0 0 1 13 4.56Z"/>',
+  'star': '<path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.53L12 17.5l-5.87 3.07 1.12-6.53L2.5 9.41l6.56-.95z"/>',
+  'star-f': '<path fill="currentColor" stroke="none" d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.53L12 17.5l-5.87 3.07 1.12-6.53L2.5 9.41l6.56-.95z"/>',
+  'history': '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+  'github': '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.350 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-5-2"/>',
+  'coffee': '<path d="M10 2v2M14 2v2M6 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/>',
+  'check': '<path d="M20 6 9 17l-5-5"/>',
+  'plus': '<path d="M12 5v14M5 12h14"/>',
+  'x': '<path d="M18 6 6 18M6 6l12 12"/>',
+  'alert': '<path d="M12 7v6M12 17h.01"/>',
+  'alert-tri': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/>',
+  'chev-r': '<path d="m9 18 6-6-6-6"/>',
+  'chev-l': '<path d="m15 18-6-6 6-6"/>',
+  'chev-d': '<path d="m6 9 6 6 6-6"/>',
+  'code': '<path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/>',
+  'brain': '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M12 5v13"/>',
+  'leaf': '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  'briefcase': '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+  'sigma': '<path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2"/>',
+  'chart': '<path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/>',
+  'flask': '<path d="M10 2v7.53a2 2 0 0 1-.21.9L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.07-10.12a2 2 0 0 1-.21-.9V2"/><path d="M8.5 2h7M7 16h10"/>',
+  'atom': '<circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/>',
+  'book': '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  'music': '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  'landmark': '<path d="M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 2l8 5H4z"/>',
+  'grid': '<rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/>',
+  'list': '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  'sliders': '<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"/>',
+  'layers': '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>',
+  'clock': '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  'pin': '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  'users': '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  'user': '<circle cx="12" cy="8" r="4.5"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  'share': '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98M15.41 6.51l-6.82 3.98"/>',
+  'download': '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/>',
+  'import': '<path d="M12 3v12M8 11l4 4 4-4"/><path d="M8 5H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4"/>',
+  'link': '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  'bookmark': '<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>',
+  'branch': '<path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
+  'flame': '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  'hourglass': '<path d="M5 22h14M5 2h14M17 22v-4.17a2 2 0 0 0-.59-1.42L12 12l-4.41 4.41A2 2 0 0 0 7 17.83V22M7 2v4.17a2 2 0 0 0 .59 1.42L12 12l4.41-4.41A2 2 0 0 0 17 6.17V2"/>',
+  'message': '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  'thumb': '<path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>',
+  'pencil': '<path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>',
+  'info': '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  'more': '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+  'monitor': '<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/>',
+  'image': '<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/>',
+  'file': '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>',
+  'eye': '<path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/>',
+  'trash': '<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  'sparkle': '<path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/>',
+  'refresh': '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  'cap': '<path d="M21.42 10.92a1 1 0 0 0-.02-1.84L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.83l8.57 3.91a2 2 0 0 0 1.66 0z"/><path d="M22 10v6M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+  'wand': '<path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3M5 6v4M19 14v4M10 2v2M7 8H3M21 16h-4M11 3H9"/>',
+};
+document.querySelectorAll('i[data-i]').forEach(el => {
+  el.outerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${el.dataset.sw || 2}" stroke-linecap="round" stroke-linejoin="round" class="${el.className} shrink-0" aria-hidden="true">${ICONS[el.dataset.i] || ''}</svg>`;
+});
+</script>
+</body>
+</html>

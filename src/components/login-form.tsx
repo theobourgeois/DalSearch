@@ -248,8 +248,8 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                     We sent a verification code to {email}. Please enter it above.
                   </p>
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" disabled={isLoading || !verificationCode}>
+                {error && <p className="text-sm text-danger">{error}</p>}
+                <Button type="submit" variant="primary" className="w-full" disabled={isLoading || !verificationCode}>
                   {isLoading ? "Verifying..." : "Verify Code"}
                 </Button>
                 <Button
@@ -301,8 +301,8 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" disabled={isLoading}>
+                {error && <p className="text-sm text-danger">{error}</p>}
+                <Button type="submit" variant="primary" className="w-full" disabled={isLoading}>
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
               </div>

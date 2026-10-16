@@ -1,6 +1,6 @@
-import { courses } from "@/lib/course-utils";
+import { courses } from "@/lib/data";
 
-const STATIC_PAGES = ["/", "/explore", "/schedule"];
+const STATIC_PAGES = ["/", "/explore", "/schedule", "/rooms", "/instructors"];
 
 export async function GET() {
   const urls = [

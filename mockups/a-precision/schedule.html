@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1440" />
+<title>Schedule — Winter 2026 — DalSearch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Geist', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          mono: ['"Geist Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        },
+        colors: {
+          gold: { 50: '#FFFAEB', 100: '#FEF1C7', 200: '#FDE28A', 400: '#FFC824', 500: '#F5B800', 600: '#DDA200', 700: '#A87700' },
+        },
+      },
+    },
+  };
+</script>
+<style>
+  html, body { background: #fff; }
+  body { font-family: Geist, ui-sans-serif, system-ui, sans-serif; color: #18181b; -webkit-font-smoothing: antialiased; font-size: 14px; }
+  .mono { font-family: 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  .i { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .kbd { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; min-width: 18px; height: 18px; padding: 0 4px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #e4e4e7; border-radius: 4px; background: #fff; color: #71717a; box-shadow: 0 1px 0 #e4e4e7; line-height: 1; }
+  .ev { position: absolute; background: var(--bg); color: var(--tx); border-left: 3px solid var(--bd); border-radius: 6px; padding: 5px 8px 5px 8px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(24,24,27,0.035); }
+  .ev .sub { color: var(--sub); }
+  .ev.conflict { box-shadow: inset 0 0 0 1px rgba(220,38,38,0.45); }
+  .hour { position: absolute; left: 0; right: 0; border-top: 1px solid #f0f0f2; }
+  .half { position: absolute; left: 0; right: 0; border-top: 1px dashed #f6f6f7; }
+  .hatch { background-image: repeating-linear-gradient(135deg, rgba(220,38,38,0.16) 0 1.5px, transparent 1.5px 6px); }
+</style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+<!-- ───────────────────────── Header ───────────────────────── -->
+<header class="relative h-14 border-b border-zinc-200 bg-white z-20 flex-none">
+  <div class="h-full px-6 flex items-center">
+    <a class="flex items-center gap-2 pr-6">
+      <svg width="22" height="22" viewBox="0 0 753 768" aria-hidden="true"><path fill="#F5B800" fill-rule="evenodd" d="M735.53,705.37l-166.07-169.66c44.79-55.69,71.54-127.02,71.54-204.64,0-178.41-141.72-323.07-316.5-323.07S8,152.66,8,331.07s141.72,323.07,316.5,323.07c76.35,0,146.38-27.61,201.08-73.63l166.07,169.51c19.39,18.1,37.57,6.44,43.88,0,12.62-12.73,12.62-31.91,0-44.64ZM69.77,331.07c0-143.59,114.07-260.02,254.73-260.02s254.88,116.43,254.88,260.02-114.07,260.02-254.73,260.02S69.77,474.66,69.77,331.07Z"/><path fill="#18181b" fill-rule="evenodd" d="M487.19,168.05h-195.29c-26.04,0-48.36,16.74-57.66,40.92h-37.2c-42.78,0-78.12,35.34-78.12,78.12v91.14c9.3-20.46,29.76-35.34,53.94-35.34h68.82l-42.78,174.83c-3.72,11.16,3.72,20.46,13.02,20.46,33.48,0,46.5-5.58,72.54-29.76l27.9,78.12h0c1.86,3.72,3.72,5.58,7.44,5.58s5.58-1.86,7.44-5.58l27.9-78.12c24.18,24.18,39.06,29.76,72.54,29.76,11.16,0,16.74-11.16,13.02-20.46l-22.32-174.83h3.72c42.78,0,78.12-35.34,78.12-78.12v-1.86c16.74-11.16,27.9-29.76,27.9-50.22v-70.68c-5.58,14.88-22.32,26.04-40.92,26.04Zm-167.39,87.42c-5.58,3.72-13.02,1.86-18.6-1.86l-11.16-11.16c-5.58-5.58-5.58-14.88,0-22.32l11.16-11.16c5.58-5.58,13.02-5.58,18.6-1.86l42.78,24.18-42.78,24.18Z"/></svg>
+      <span class="text-[15px] font-semibold tracking-[-0.02em]"><span class="text-gold-600">Dal</span>Search</span>
+    </a>
+    <nav class="flex items-center h-full text-[13px]">
+      <a class="relative h-full flex items-center px-3 text-zinc-500">Explore</a>
+      <a class="relative h-full flex items-center px-3 text-zinc-900 font-medium">Schedule<span class="absolute left-3 right-3 -bottom-px h-[2px] rounded-full bg-gold-500"></span></a>
+      <a class="relative h-full flex items-center px-3 text-zinc-500">Rooms</a>
+      <a class="relative h-full flex items-center px-3 text-zinc-500">Instructors</a>
+    </nav>
+    <button class="absolute left-1/2 -translate-x-1/2 w-[320px] h-8 rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-400 text-[13px] flex items-center gap-2 pl-2.5 pr-1.5">
+      <svg class="i !w-[14px] !h-[14px]" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <span>Search courses…</span>
+      <span class="ml-auto flex gap-0.5"><span class="kbd">⌘</span><span class="kbd">K</span></span>
+    </button>
+    <div class="ml-auto flex items-center gap-1.5">
+      <button class="h-8 w-8 rounded-md grid place-items-center text-zinc-500"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+      <div class="w-px h-5 bg-zinc-200 mx-1.5"></div>
+      <button class="h-7 w-7 rounded-full bg-zinc-900 text-white text-[11px] font-medium grid place-items-center">TB</button>
+    </div>
+  </div>
+</header>
+
+<div class="flex-1 min-h-0 flex">
+  <!-- ───────────────────────── Calendar ───────────────────────── -->
+  <main class="flex-1 min-w-0 flex flex-col">
+    <!-- toolbar -->
+    <div class="h-14 flex-none px-6 flex items-center gap-3 border-b border-zinc-200">
+      <h1 class="text-[17px] font-semibold tracking-[-0.02em]">Winter 2026</h1>
+      <span class="mono text-[11.5px] text-zinc-400">202620</span>
+      <span class="h-5 w-px bg-zinc-200 mx-1"></span>
+      <span class="text-[12.5px] text-zinc-500"><span class="mono text-zinc-900">5</span> courses · <span class="mono text-zinc-900">8</span> sections · <span class="mono text-zinc-900">19h 10m</span> / week</span>
+      <div class="ml-auto flex items-center gap-2">
+        <div class="h-8 p-0.5 rounded-md border border-zinc-200 bg-zinc-50 flex text-[12px]">
+          <button class="h-full px-2.5 rounded bg-white text-zinc-900 font-medium shadow-[0_0_0_1px_#e4e4e7,0_1px_2px_rgba(0,0,0,0.04)] flex items-center gap-1.5"><svg class="i !w-3.5 !h-3.5" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>Week</button>
+          <button class="h-full px-2.5 rounded text-zinc-500 flex items-center gap-1.5"><svg class="i !w-3.5 !h-3.5" viewBox="0 0 24 24"><path d="M3 12h.01"/><path d="M3 18h.01"/><path d="M3 6h.01"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M8 6h13"/></svg>List</button>
+        </div>
+        <button class="h-8 w-8 rounded-md border border-zinc-200 grid place-items-center text-zinc-500"><svg class="i !w-[15px] !h-[15px]" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+      </div>
+    </div>
+
+    <!-- grid -->
+    <div class="flex-1 min-h-0 px-6 pt-0 pb-5 flex flex-col">
+      <!-- day header -->
+      <div class="grid grid-cols-[60px_repeat(5,1fr)] h-11 flex-none border-b border-zinc-200">
+        <div></div>
+        <div class="px-3 flex items-center justify-between border-l border-zinc-100"><span class="text-[12.5px] font-medium">Mon</span><span class="mono text-[10.5px] text-zinc-400">4h 50m</span></div>
+        <div class="px-3 flex items-center justify-between border-l border-zinc-100"><span class="text-[12.5px] font-medium">Tue</span><span class="mono text-[10.5px] text-zinc-400">4h 00m</span></div>
+        <div class="px-3 flex items-center justify-between border-l border-zinc-100"><span class="text-[12.5px] font-medium">Wed</span><span class="mono text-[10.5px] text-zinc-400">4h 20m</span></div>
+        <div class="px-3 flex items-center justify-between border-l border-zinc-100 bg-zinc-50/70"><span class="text-[12.5px] font-medium flex items-center gap-1.5">Thu<span class="h-[18px] px-1.5 rounded bg-zinc-900 text-white text-[10px] font-medium inline-flex items-center">Today</span></span><span class="mono text-[10.5px] text-red-500">1 conflict</span></div>
+        <div class="px-3 flex items-center justify-between border-l border-zinc-100"><span class="text-[12.5px] font-medium">Fri</span><span class="mono text-[10.5px] text-zinc-400">1h 40m</span></div>
+      </div>
+
+      <div class="relative grid grid-cols-[60px_repeat(5,1fr)] flex-none" style="height:741px">
+        <!-- gutter -->
+        <div class="relative">
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:-7px">08:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:67px">09:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:141px">10:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:215px">11:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:289px">12:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:363px">13:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:437px">14:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:511px">15:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:585px">16:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:659px">17:00</span>
+          <span class="absolute right-3 mono text-[10.5px] text-zinc-400" style="top:733px">18:00</span>
+
+          <!-- now label -->
+          <span class="absolute right-1.5 h-[18px] px-1.5 rounded bg-gold-500 text-zinc-900 mono text-[10.5px] font-medium inline-flex items-center z-10" style="top:189.3px">10:40</span>
+        </div>
+
+        <!-- lines -->
+        <div class="absolute left-[60px] right-0 top-0 bottom-0 pointer-events-none">
+          <div class="hour" style="top:74px"></div><div class="hour" style="top:148px"></div><div class="hour" style="top:222px"></div><div class="hour" style="top:296px"></div><div class="hour" style="top:370px"></div><div class="hour" style="top:444px"></div><div class="hour" style="top:518px"></div><div class="hour" style="top:592px"></div><div class="hour" style="top:666px"></div><div class="hour" style="top:740px"></div><div class="half" style="top:37px"></div><div class="half" style="top:111px"></div><div class="half" style="top:185px"></div><div class="half" style="top:259px"></div><div class="half" style="top:333px"></div><div class="half" style="top:407px"></div><div class="half" style="top:481px"></div><div class="half" style="top:555px"></div><div class="half" style="top:629px"></div><div class="half" style="top:703px"></div>
+        </div>
+
+        <div class="relative border-l border-zinc-100"><div class="ev" style="top:118.2px;height:133.7px;left:4px;right:4px;--bg:#F7F1E6;--bd:#B8955A;--tx:#5A4320;--sub:#8A7045"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">STAT 2060</span><span class="mono text-[10.5px] sub">Tut T03</span></div><div class="mono text-[11px] sub mt-0.5">9:35–11:25</div><div class="text-[11px] sub truncate mt-0.5">LSC Common Area C206</div></div>
+<div class="ev" style="top:266.2px;height:96.7px;left:4px;right:4px;--bg:#EDF1F8;--bd:#6E86B8;--tx:#2B3D66;--sub:#5A6E96"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2122</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mono text-[11px] sub mt-0.5">11:35–12:55</div><div class="text-[11px] sub truncate mt-0.5">Goldberg CS 127</div></div>
+<div class="ev" style="top:488.2px;height:59.7px;left:4px;right:4px;--bg:#F7F1E6;--bd:#B8955A;--tx:#5A4320;--sub:#8A7045"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">STAT 2060</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mt-0.5 flex items-center gap-1.5 text-[11px] sub"><span class="mono">14:35–15:25</span><span class="opacity-50">·</span><span class="truncate">Dunn 117</span></div></div>
+<div class="ev" style="top:636.2px;height:59.7px;left:4px;right:4px;--bg:#F1EFF8;--bd:#8C7FBF;--tx:#3D336E;--sub:#6D62A0"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mt-0.5 flex items-center gap-1.5 text-[11px] sub"><span class="mono">16:35–17:25</span><span class="opacity-50">·</span><span class="truncate">Goldberg CS 127</span></div></div>
+</div>
+        <div class="relative border-l border-zinc-100"><div class="ev" style="top:155.2px;height:96.7px;left:4px;right:4px;--bg:#F1EFF8;--bd:#8C7FBF;--tx:#3D336E;--sub:#6D62A0"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="mono text-[10.5px] sub">Lab B01</span></div><div class="mono text-[11px] sub mt-0.5">10:05–11:25</div><div class="text-[11px] sub truncate mt-0.5">Goldberg CS 143</div></div>
+<div class="ev" style="top:377.2px;height:96.7px;left:4px;right:4px;--bg:#EBF4F1;--bd:#5F9A8E;--tx:#22504A;--sub:#4E7F75"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2141</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mono text-[11px] sub mt-0.5">13:05–14:25</div><div class="text-[11px] sub truncate mt-0.5">Rowe 1020</div></div>
+<div class="ev" style="top:488.2px;height:96.7px;left:4px;right:4px;--bg:#F8EDF0;--bd:#BC7A8A;--tx:#682E3C;--sub:#985B6A"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">ECON 1101</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mono text-[11px] sub mt-0.5">14:35–15:55</div><div class="text-[11px] sub truncate mt-0.5">Rowe 1020</div></div>
+</div>
+        <div class="relative border-l border-zinc-100"><div class="ev" style="top:155.2px;height:96.7px;left:4px;right:4px;--bg:#EDF1F8;--bd:#6E86B8;--tx:#2B3D66;--sub:#5A6E96"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2122</span><span class="mono text-[10.5px] sub">Lab B03</span></div><div class="mono text-[11px] sub mt-0.5">10:05–11:25</div><div class="text-[11px] sub truncate mt-0.5">Goldberg CS 134</div></div>
+<div class="ev" style="top:266.2px;height:96.7px;left:4px;right:4px;--bg:#EDF1F8;--bd:#6E86B8;--tx:#2B3D66;--sub:#5A6E96"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2122</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mono text-[11px] sub mt-0.5">11:35–12:55</div><div class="text-[11px] sub truncate mt-0.5">Goldberg CS 127</div></div>
+<div class="ev" style="top:488.2px;height:59.7px;left:4px;right:4px;--bg:#F7F1E6;--bd:#B8955A;--tx:#5A4320;--sub:#8A7045"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">STAT 2060</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mt-0.5 flex items-center gap-1.5 text-[11px] sub"><span class="mono">14:35–15:25</span><span class="opacity-50">·</span><span class="truncate">Dunn 117</span></div></div>
+<div class="ev" style="top:636.2px;height:59.7px;left:4px;right:4px;--bg:#F1EFF8;--bd:#8C7FBF;--tx:#3D336E;--sub:#6D62A0"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mt-0.5 flex items-center gap-1.5 text-[11px] sub"><span class="mono">16:35–17:25</span><span class="opacity-50">·</span><span class="truncate">Goldberg CS 127</span></div></div>
+</div>
+        <div class="relative border-l border-zinc-100 bg-zinc-50/50">
+          <div class="ev" style="top:377.2px;height:96.7px;left:4px;right:4px;--bg:#EBF4F1;--bd:#5F9A8E;--tx:#22504A;--sub:#4E7F75"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2141</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mono text-[11px] sub mt-0.5">13:05–14:25</div><div class="text-[11px] sub truncate mt-0.5">Rowe 1020</div></div>
+<div class="ev conflict" style="top:488.2px;height:59.7px;left:4px;right:calc(50% + 2px);--bg:#F7F1E6;--bd:#B8955A;--tx:#5A4320;--sub:#8A7045"><div class="mono text-[11.5px] font-semibold tracking-[-0.02em] leading-tight">STAT 2060</div><div class="mono text-[10.5px] sub leading-tight mt-0.5">Lec 01</div><div class="mono text-[10.5px] sub leading-tight mt-0.5">14:35–15:25</div></div>
+<div class="ev conflict" style="top:488.2px;height:96.7px;left:calc(50% + 2px);right:4px;--bg:#F8EDF0;--bd:#BC7A8A;--tx:#682E3C;--sub:#985B6A"><div class="mono text-[11.5px] font-semibold tracking-[-0.02em] leading-tight">ECON 1101</div><div class="mono text-[10.5px] sub leading-tight mt-0.5">Lec 01</div><div class="mono text-[10.5px] sub leading-tight mt-0.5">14:35–15:55</div><div class="text-[10.5px] sub truncate mt-0.5">Rowe 1020</div></div>
+<div class="ev" style="top:636.2px;height:59.7px;left:4px;right:4px;--bg:#F1EFF8;--bd:#8C7FBF;--tx:#3D336E;--sub:#6D62A0"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mt-0.5 flex items-center gap-1.5 text-[11px] sub"><span class="mono">16:35–17:25</span><span class="opacity-50">·</span><span class="truncate">Goldberg CS 127</span></div></div>
+
+          <!-- conflict overlap band 14:35–15:25 -->
+          <div class="absolute left-[3px] right-[3px] rounded-[6px] hatch pointer-events-none" style="top:487.2px;height:61.7px"></div>
+          <div class="absolute left-1.5 z-10 h-[18px] px-1.5 rounded bg-red-600 text-white mono text-[10px] font-semibold tracking-[0.03em] inline-flex items-center gap-1 shadow-[0_2px_6px_rgba(220,38,38,0.3)]" style="top:553.8px">CONFLICT · 50m</div>
+          <!-- now line -->
+          <div class="absolute left-0 right-0 z-10" style="top:197.3px"><div class="h-[2px] bg-gold-500"></div><span class="absolute -left-[5px] -top-[4px] h-2.5 w-2.5 rounded-full bg-gold-500 ring-2 ring-white"></span></div>
+        </div>
+        <div class="relative border-l border-zinc-100"><div class="ev" style="top:488.2px;height:59.7px;left:4px;right:4px;--bg:#F7F1E6;--bd:#B8955A;--tx:#5A4320;--sub:#8A7045"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">STAT 2060</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mt-0.5 flex items-center gap-1.5 text-[11px] sub"><span class="mono">14:35–15:25</span><span class="opacity-50">·</span><span class="truncate">Dunn 117</span></div></div>
+<div class="ev" style="top:636.2px;height:59.7px;left:4px;right:4px;--bg:#F1EFF8;--bd:#8C7FBF;--tx:#3D336E;--sub:#6D62A0"><div class="flex items-center justify-between gap-2"><span class="mono text-[12px] font-semibold tracking-[-0.02em]">CSCI 2110</span><span class="mono text-[10.5px] sub">Lec 01</span></div><div class="mt-0.5 flex items-center gap-1.5 text-[11px] sub"><span class="mono">16:35–17:25</span><span class="opacity-50">·</span><span class="truncate">Goldberg CS 127</span></div></div>
+</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ───────────────────────── Right panel ───────────────────────── -->
+  <aside class="w-[348px] flex-none border-l border-zinc-200 bg-zinc-50/50 flex flex-col">
+    <div class="p-4 space-y-4 flex-1 min-h-0">
+      <!-- term switcher -->
+      <button class="w-full h-10 px-3 rounded-lg border border-zinc-200 bg-white flex items-center gap-2.5 text-[13px] shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+        <svg class="i !w-[15px] !h-[15px] text-zinc-400" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+        <span class="font-medium">2025/2026 Winter</span>
+        <span class="mono text-[11px] text-zinc-400">202620</span>
+        <svg class="i !w-3.5 !h-3.5 text-zinc-400 ml-auto" viewBox="0 0 24 24"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+      </button>
+
+      <!-- credits -->
+      <div class="rounded-lg border border-zinc-200 bg-white p-3.5">
+        <div class="flex items-end justify-between">
+          <div>
+            <div class="text-[11.5px] text-zinc-500">Credit hours</div>
+            <div class="mt-0.5 flex items-baseline gap-1"><span class="mono text-[24px] font-medium tracking-[-0.03em]">15</span><span class="mono text-[13px] text-zinc-400">/ 15</span></div>
+          </div>
+          <span class="h-[22px] px-2 rounded-md bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-[11px] font-medium inline-flex items-center gap-1"><svg class="i !w-3 !h-3" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Full-time load</span>
+        </div>
+        <div class="mt-3 flex h-1.5 gap-[3px]">
+          <span class="flex-1 rounded-full bg-[#6E86B8]"></span><span class="flex-1 rounded-full bg-[#8C7FBF]"></span><span class="flex-1 rounded-full bg-[#5F9A8E]"></span><span class="flex-1 rounded-full bg-[#B8955A]"></span><span class="flex-1 rounded-full bg-[#BC7A8A]"></span>
+        </div>
+      </div>
+
+      <!-- conflict -->
+      <div class="rounded-lg border border-red-200 bg-red-50/70 p-3.5">
+        <div class="flex items-start gap-2.5">
+          <span class="mt-px h-5 w-5 rounded-md bg-red-600 text-white grid place-items-center flex-none"><svg class="i !w-3 !h-3 !stroke-[2.25]" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
+          <div class="min-w-0">
+            <div class="text-[13px] font-medium text-red-900">1 time conflict</div>
+            <div class="mt-0.5 text-[12px] leading-[1.5] text-red-800/80"><span class="mono text-red-900">STAT 2060</span> Lec 01 and <span class="mono text-red-900">ECON 1101</span> Lec 01 overlap on <span class="mono text-red-900">Thu 14:35–15:25</span>.</div>
+            <div class="mt-2.5 flex items-center gap-2">
+              <button class="h-7 px-2.5 rounded-md bg-white border border-red-200 text-[12px] font-medium text-red-700">Find alternatives</button>
+              <button class="h-7 px-2 rounded-md text-[12px] text-red-700/70">Ignore</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- courses -->
+      <div>
+        <div class="flex items-center justify-between px-0.5">
+          <span class="text-[12.5px] font-medium">Courses <span class="mono text-zinc-400 font-normal ml-0.5">5</span></span>
+          <button class="h-6 px-1.5 rounded-md text-[12px] text-zinc-600 flex items-center gap-1"><svg class="i !w-3.5 !h-3.5" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg>Add course</button>
+        </div>
+        <div class="mt-2 rounded-lg border border-zinc-200 bg-white divide-y divide-zinc-100">
+          <div class="px-3 py-2.5 flex items-start gap-2.5">
+            <span class="mt-[5px] h-2 w-2 rounded-[3px] bg-[#6E86B8] flex-none"></span>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2"><span class="mono text-[12.5px] font-medium">CSCI 2122</span><span class="text-[12.5px] text-zinc-500 truncate">Systems Programming</span></div>
+              <div class="mt-1 flex items-center gap-1 mono text-[10.5px]"><span class="h-[18px] px-1.5 rounded bg-zinc-100 text-zinc-600 inline-flex items-center">Lec 01</span><span class="h-[18px] px-1.5 rounded bg-zinc-100 text-zinc-600 inline-flex items-center">Lab B03</span><span class="ml-1 text-zinc-400">20756 · 20761</span></div>
+            </div>
+            <span class="mono text-[11.5px] text-zinc-400 mt-0.5">3</span>
+          </div>
+          <div class="px-3 py-2.5 flex items-start gap-2.5">
+            <span class="mt-[5px] h-2 w-2 rounded-[3px] bg-[#8C7FBF] flex-none"></span>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2"><span class="mono text-[12.5px] font-medium">CSCI 2110</span><span class="text-[12.5px] text-zinc-500 truncate">Data Structures and Algorithms</span></div>
+              <div class="mt-1 flex items-center gap-1 mono text-[10.5px]"><span class="h-[18px] px-1.5 rounded bg-zinc-100 text-zinc-600 inline-flex items-center">Lec 01</span><span class="h-[18px] px-1.5 rounded bg-zinc-100 text-zinc-600 inline-flex items-center">Lab B01</span><span class="ml-1 text-zinc-400">20748 · 20750</span></div>
+            </div>
+            <span class="mono text-[11.5px] text-zinc-400 mt-0.5">3</span>
+          </div>
+          <div class="px-3 py-2.5 flex items-start gap-2.5 bg-zinc-50/80">
+            <span class="mt-[5px] h-2 w-2 rounded-[3px] bg-[#5F9A8E] flex-none"></span>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2"><span class="mono text-[12.5px] font-medium">CSCI 2141</span><span class="text-[12.5px] text-zinc-500 truncate">Intro to Database Systems</span></div>
+              <div class="mt-1 flex items-center gap-1 mono text-[10.5px]"><span class="h-[18px] px-1.5 rounded bg-white border border-zinc-200 text-zinc-600 inline-flex items-center">Lec 01</span><span class="ml-1 text-zinc-400">20770</span></div>
+            </div>
+            <button class="h-6 w-6 -mr-1 rounded-md border border-zinc-200 bg-white grid place-items-center text-zinc-500"><svg class="i !w-3.5 !h-3.5" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+          </div>
+          <div class="px-3 py-2.5 flex items-start gap-2.5">
+            <span class="mt-[5px] h-2 w-2 rounded-[3px] bg-[#B8955A] flex-none"></span>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2"><span class="mono text-[12.5px] font-medium">STAT 2060</span><span class="text-[12.5px] text-zinc-500 truncate">Intro Probability &amp; Stats</span></div>
+              <div class="mt-1 flex items-center gap-1 mono text-[10.5px]"><span class="h-[18px] px-1.5 rounded bg-red-50 border border-red-200 text-red-700 inline-flex items-center">Lec 01</span><span class="h-[18px] px-1.5 rounded bg-zinc-100 text-zinc-600 inline-flex items-center">Tut T03</span><span class="ml-1 text-zinc-400">22965 · 22968</span></div>
+            </div>
+            <span class="mono text-[11.5px] text-zinc-400 mt-0.5">3</span>
+          </div>
+          <div class="px-3 py-2.5 flex items-start gap-2.5">
+            <span class="mt-[5px] h-2 w-2 rounded-[3px] bg-[#BC7A8A] flex-none"></span>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2"><span class="mono text-[12.5px] font-medium">ECON 1101</span><span class="text-[12.5px] text-zinc-500 truncate">Principles of Microeconomics</span></div>
+              <div class="mt-1 flex items-center gap-1 mono text-[10.5px]"><span class="h-[18px] px-1.5 rounded bg-red-50 border border-red-200 text-red-700 inline-flex items-center">Lec 01</span><span class="ml-1 text-zinc-400">20950</span></div>
+            </div>
+            <span class="mono text-[11.5px] text-zinc-400 mt-0.5">3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- buffer -->
+      <div class="flex items-center justify-between px-0.5">
+        <div>
+          <div class="text-[12.5px] font-medium">Buffer between classes</div>
+          <div class="text-[11.5px] text-zinc-500">Flags gaps shorter than this</div>
+        </div>
+        <div class="grid grid-cols-3 rounded-md border border-zinc-200 bg-white p-0.5 mono text-[11px]">
+          <button class="h-6 px-2 rounded text-zinc-500">0</button>
+          <button class="h-6 px-2 rounded bg-zinc-100 text-zinc-900 shadow-[inset_0_0_0_1px_#e4e4e7]">10</button>
+          <button class="h-6 px-2 rounded text-zinc-500">15m</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- actions -->
+    <div class="p-4 border-t border-zinc-200 bg-white space-y-2">
+      <button class="w-full h-9 rounded-md border border-zinc-200 bg-white text-[13px] font-medium text-zinc-700 flex items-center justify-center gap-2">
+        <svg class="i !w-[15px] !h-[15px] text-zinc-500" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        Import from Dal Online
+      </button>
+      <div class="grid grid-cols-2 gap-2">
+        <button class="h-9 rounded-md border border-zinc-200 bg-white text-[13px] font-medium text-zinc-700 flex items-center justify-center gap-1.5">
+          <svg class="i !w-[15px] !h-[15px] text-zinc-500" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+          Export<span class="mono text-[10.5px] text-zinc-400">PNG/PDF</span>
+        </button>
+        <button class="h-9 rounded-md bg-gold-500 text-[13px] font-medium text-zinc-900 flex items-center justify-center gap-1.5 shadow-[inset_0_-1px_0_rgba(0,0,0,0.1)]">
+          <svg class="i !w-[15px] !h-[15px]" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Share link
+        </button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer class="h-9 flex-none border-t border-zinc-200 px-6 flex items-center text-[11.5px] text-zinc-500">
+  <span>Not affiliated with Dalhousie University.</span>
+  <span class="mx-2.5 text-zinc-300">·</span>
+  <span>Created by <span class="text-zinc-700">Théo Bourgeois</span> &amp; <span class="text-zinc-700">Chris Langille</span></span>
+  <div class="ml-auto flex items-center gap-4 text-zinc-600">
+    <a>Open source</a><a>Buy me a coffee</a>
+  </div>
+</footer>
+</body>
+</html>

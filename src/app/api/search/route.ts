@@ -1,4 +1,4 @@
-import { courses } from "@/lib/course-utils";
+import { courses } from "@/lib/data";
 import Fuse from "fuse.js";
 
 const fuse = new Fuse(Object.values(courses), {

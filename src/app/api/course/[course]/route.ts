@@ -1,9 +1,7 @@
-import { courses } from "@/lib/course-utils";
-import { CourseAndSubjectCode } from "@/lib/types";
+import { getCourse } from "@/lib/data";
 
-export async function GET(request: Request) {
-  const code = request.url.split('/').pop()?.toUpperCase();
-  const course = code ? courses[code as CourseAndSubjectCode] : null;
+export async function GET(_request: Request, { params }: { params: Promise<{ course: string }> }) {
+  const course = getCourse((await params).course);
 
   if (!course) {
     return new Response('Course not found', { status: 404 });

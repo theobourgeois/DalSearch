@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>DalSearch: Find the course that fits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      colors: {
+        paper: '#FAF8F3',
+        ink: '#191917',
+        line: '#E8E4DA',
+        gold: { DEFAULT: '#FFCD00', soft: '#FFF3BF', deep: '#E8B800' },
+        sage: { 50: '#F1F4EC', 100: '#E4EBDB', 200: '#CFDCC1', 500: '#7E9A6A', 700: '#4A6339', 900: '#2E3F24' },
+        clay: { 50: '#FBF0EA', 100: '#F5E0D4', 200: '#EBC6B1', 500: '#C77A55', 700: '#8E4A2C', 900: '#5C2E1A' },
+        sky:  { 50: '#EEF3F8', 100: '#DEE8F1', 200: '#C2D5E6', 500: '#6A94BA', 700: '#365C7D', 900: '#1F3A52' },
+        plum: { 50: '#F5EFF5', 100: '#EBDFEA', 200: '#D9C3D7', 500: '#9C6B97', 700: '#6B3F67', 900: '#452842' },
+        sand: { 50: '#FAF5E8', 100: '#F3E9CF', 200: '#E7D5A6', 500: '#BC9A4C', 700: '#7D6328', 900: '#4F3E17' },
+        alert: { 50: '#FCEDE8', 100: '#F8DAD1', 500: '#D4492F', 700: '#A3321D' },
+      },
+    },
+  },
+};
+</script>
+<style>
+  body { background: #FAF8F3; color: #191917; -webkit-font-smoothing: antialiased; }
+  .i { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .hl { position: relative; display: inline-block; z-index: 0; }
+  .hl::after { content: ""; position: absolute; left: -0.04em; right: -0.08em; bottom: 0.07em; height: 0.3em;
+    background: #FFCD00; border-radius: 0.1em 0.28em 0.16em 0.3em; transform: rotate(-1.6deg) skewX(-10deg); z-index: -1; }
+  .hl-sm::after { bottom: 0.06em; height: 0.42em; }
+  .serif-tight { letter-spacing: -0.015em; }
+</style>
+</head>
+<body class="font-sans">
+
+<!-- ============ HEADER ============ -->
+<header class="border-b border-line">
+  <div class="max-w-[1312px] mx-auto px-8 h-[72px] flex items-center">
+    <a href="#" class="flex items-center gap-2.5 shrink-0">
+      <img src="../../public/dalsearch.svg" alt="" class="w-[26px] h-[26px]">
+      <span class="text-[19px] tracking-[-0.01em] leading-none"><span class="font-semibold">Dal</span><span class="font-serif italic text-[23px]">Search</span></span>
+    </a>
+    <nav class="ml-12 flex items-center gap-1 text-[14px] font-medium text-stone-500">
+      <a href="#" class="px-3.5 py-2 rounded-full hover:text-ink">Explore</a>
+      <a href="#" class="px-3.5 py-2 rounded-full hover:text-ink">Schedule</a>
+      <a href="#" class="px-3.5 py-2 rounded-full hover:text-ink">Rooms</a>
+      <a href="#" class="px-3.5 py-2 rounded-full hover:text-ink">Instructors</a>
+    </nav>
+    <div class="ml-auto flex items-center gap-2.5">
+      <div class="w-[280px] h-10 rounded-full bg-white border border-line flex items-center pl-4 pr-1.5 gap-2.5 text-[14px] text-stone-400">
+        <svg class="i w-4 h-4 text-stone-500" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+        <span>Search courses</span>
+        <span class="ml-auto text-[11px] font-medium text-stone-500 border border-line rounded-full px-2 py-0.5 bg-paper">⌘K</span>
+      </div>
+      <button class="w-10 h-10 rounded-full border border-line bg-white grid place-items-center text-stone-600" aria-label="Toggle dark mode">
+        <svg class="i w-[17px] h-[17px]" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+      <a href="#" class="h-10 px-5 rounded-full bg-ink text-paper text-[14px] font-medium flex items-center">Sign in</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="relative overflow-hidden">
+  <!-- floating specimen: course -->
+  <div class="absolute left-[72px] top-[218px] w-[236px] -rotate-[5deg] rounded-[18px] bg-white border border-line p-4 text-left">
+    <div class="flex items-center gap-2">
+      <span class="text-[11px] font-semibold tracking-wide rounded-full bg-sage-100 text-sage-700 px-2 py-0.5">CSCI</span>
+      <span class="text-[13px] font-semibold tnum">2122</span>
+      <span class="ml-auto text-[11px] text-stone-400 tnum">3 ch</span>
+    </div>
+    <div class="font-serif text-[23px] leading-tight mt-2">Systems Programming</div>
+    <div class="mt-3 flex items-center gap-1">
+      <span class="w-5 h-5 rounded-full grid place-items-center text-[10px] font-semibold bg-ink text-white">M</span>
+      <span class="w-5 h-5 rounded-full grid place-items-center text-[10px] font-semibold bg-stone-100 text-stone-400">T</span>
+      <span class="w-5 h-5 rounded-full grid place-items-center text-[10px] font-semibold bg-ink text-white">W</span>
+      <span class="w-5 h-5 rounded-full grid place-items-center text-[10px] font-semibold bg-stone-100 text-stone-400">R</span>
+      <span class="w-5 h-5 rounded-full grid place-items-center text-[10px] font-semibold bg-stone-100 text-stone-400">F</span>
+      <span class="ml-auto text-[12px] text-stone-500 tnum">11:35–12:55</span>
+    </div>
+  </div>
+  <!-- floating specimen: schedule ok -->
+  <div class="absolute right-[84px] top-[196px] w-[220px] rotate-[4deg] rounded-[18px] bg-white border border-line p-4 text-left">
+    <div class="flex items-center justify-between">
+      <span class="text-[12px] font-medium text-stone-500">Winter 2026</span>
+      <span class="text-[11px] font-semibold rounded-full bg-gold px-2 py-0.5 tnum">15 ch</span>
+    </div>
+    <div class="mt-3 grid grid-cols-5 gap-1.5 text-[9px] font-semibold text-stone-400 text-center"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span></div>
+    <div class="mt-1 grid grid-cols-5 gap-1.5 h-[76px]">
+      <div class="relative"><div class="absolute inset-x-0 top-[26px] h-[12px] rounded-[4px] bg-clay-200"></div><div class="absolute inset-x-0 top-[47px] h-[8px] rounded-[4px] bg-plum-200"></div><div class="absolute inset-x-0 top-[65px] h-[8px] rounded-[4px] bg-sky-200"></div></div>
+      <div class="relative"><div class="absolute inset-x-0 top-[4px] h-[16px] rounded-[4px] bg-plum-200"></div><div class="absolute inset-x-0 top-[38px] h-[12px] rounded-[4px] bg-sage-200"></div><div class="absolute inset-x-0 top-[52px] h-[12px] rounded-[4px] bg-sand-200"></div></div>
+      <div class="relative"><div class="absolute inset-x-0 top-[4px] h-[11px] rounded-[4px] bg-sky-200"></div><div class="absolute inset-x-0 top-[17px] h-[8px] rounded-[4px] bg-clay-200"></div><div class="absolute inset-x-0 top-[26px] h-[12px] rounded-[4px] bg-clay-200"></div><div class="absolute inset-x-0 top-[47px] h-[8px] rounded-[4px] bg-plum-200"></div><div class="absolute inset-x-0 top-[65px] h-[8px] rounded-[4px] bg-sky-200"></div></div>
+      <div class="relative"><div class="absolute inset-x-0 top-[38px] h-[12px] rounded-[4px] bg-sage-200"></div><div class="absolute inset-x-0 top-[52px] h-[8px] rounded-[4px] bg-plum-200"></div><div class="absolute inset-x-0 top-[65px] h-[8px] rounded-[4px] bg-sky-200"></div></div>
+      <div class="relative"><div class="absolute inset-x-0 top-[47px] h-[8px] rounded-[4px] bg-plum-200"></div><div class="absolute inset-x-0 top-[65px] h-[8px] rounded-[4px] bg-sky-200"></div></div>
+    </div>
+    <div class="mt-3 pt-3 border-t border-line flex items-center gap-1.5 text-[12px] font-medium text-sage-700">
+      <span class="w-4 h-4 rounded-full bg-sage-100 grid place-items-center"><svg class="i w-2.5 h-2.5" viewBox="0 0 24 24" style="stroke-width:3"><path d="M20 6 9 17l-5-5"/></svg></span>
+      Fits your week
+    </div>
+  </div>
+
+  <div class="max-w-[1312px] mx-auto px-8 pt-[88px] pb-[72px] text-center relative">
+    <a href="#" class="inline-flex items-center gap-2.5 rounded-full border border-line bg-white pl-1.5 pr-4 py-1.5 text-[13px] text-stone-600">
+      <span class="rounded-full bg-gold px-2.5 py-0.5 text-[11px] font-semibold text-ink tracking-wide">LIVE</span>
+      Winter 2026 timetable is in · 4,689 courses
+      <svg class="i w-3.5 h-3.5 text-stone-400" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+    <h1 class="mt-8 font-serif text-[132px] leading-[0.9] tracking-[-0.025em]">
+      Find the course<br>that <em class="hl">fits.</em>
+    </h1>
+    <p class="mt-8 mx-auto max-w-[540px] text-[19px] leading-[1.55] text-stone-600">
+      Every Dalhousie course, section and professor in one calm place. Compare, rate, and build a week without the clashes.
+    </p>
+
+    <!-- search -->
+    <div class="mt-11 mx-auto w-[780px] h-[72px] rounded-full bg-white border border-line flex items-center pl-7 pr-2 gap-4 text-left shadow-[0_18px_50px_-24px_rgba(74,58,18,0.28)]">
+      <svg class="i w-[22px] h-[22px] text-ink" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+      <span class="flex-1 text-[18px] text-stone-400">Course code, title, or professor…</span>
+      <button class="flex items-center gap-1.5 text-[14px] font-medium text-stone-600 px-3 py-2 rounded-full hover:bg-paper">
+        <svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+        Winter 2026
+        <svg class="i w-4 h-4 text-stone-400" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <button class="h-14 pl-7 pr-6 rounded-full bg-gold text-ink text-[16px] font-semibold flex items-center gap-2">
+        Search
+        <svg class="i w-[18px] h-[18px]" viewBox="0 0 24 24" style="stroke-width:2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <div class="mt-6 flex items-center justify-center gap-2 text-[14px]">
+      <span class="text-stone-400 mr-1.5">Try</span>
+      <a href="#" class="rounded-full bg-white border border-line px-4 py-2 font-medium tnum">CSCI 2122</a>
+      <a href="#" class="rounded-full bg-white border border-line px-4 py-2 text-stone-700">Intro psychology</a>
+      <a href="#" class="rounded-full bg-white border border-line px-4 py-2 text-stone-700">Evening classes</a>
+      <a href="#" class="rounded-full bg-white border border-line px-4 py-2 text-stone-700">Online sections</a>
+      <a href="#" class="rounded-full bg-white border border-line px-4 py-2 text-stone-700">1000-level electives</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JUMP BACK IN ============ -->
+<section class="max-w-[1312px] mx-auto px-8 pb-24">
+  <div class="flex items-end justify-between mb-5">
+    <h2 class="font-serif text-[34px] leading-none serif-tight">Jump back <em>in</em></h2>
+    <a href="#" class="text-[13px] font-medium text-stone-500 hover:text-ink">Clear history</a>
+  </div>
+  <div class="grid grid-cols-4 gap-4">
+    <a href="#" class="rounded-[18px] bg-white border border-line p-5 hover:border-stone-300">
+      <div class="flex items-center gap-2 text-[12px] text-stone-500">
+        <span class="w-6 h-6 rounded-full bg-sage-100 text-sage-700 grid place-items-center">
+          <svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        Course
+        <span class="ml-auto">2h ago</span>
+      </div>
+      <div class="mt-5 text-[13px] font-semibold tnum">CSCI 2122</div>
+      <div class="font-serif text-[24px] leading-tight mt-0.5">Systems Programming</div>
+    </a>
+    <a href="#" class="rounded-[18px] bg-white border border-line p-5 hover:border-stone-300">
+      <div class="flex items-center gap-2 text-[12px] text-stone-500">
+        <span class="w-6 h-6 rounded-full bg-stone-100 text-stone-600 grid place-items-center">
+          <svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+        </span>
+        Search
+        <span class="ml-auto">Yesterday</span>
+      </div>
+      <div class="mt-5 text-[13px] font-medium text-stone-500">Winter 2026 · 1000-level</div>
+      <div class="font-serif text-[24px] leading-tight mt-0.5">“evening classes”</div>
+    </a>
+    <a href="#" class="rounded-[18px] bg-white border border-line p-5 hover:border-stone-300">
+      <div class="flex items-center gap-2 text-[12px] text-stone-500">
+        <span class="w-6 h-6 rounded-full bg-gold-soft text-ink grid place-items-center">
+          <svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+        </span>
+        Schedule
+        <span class="ml-auto">Mon</span>
+      </div>
+      <div class="mt-5 flex items-center gap-1">
+        <span class="w-3 h-3 rounded-full bg-clay-200 ring-1 ring-clay-500/30"></span>
+        <span class="w-3 h-3 rounded-full bg-sky-200 ring-1 ring-sky-500/30"></span>
+        <span class="w-3 h-3 rounded-full bg-sage-200 ring-1 ring-sage-500/30"></span>
+        <span class="w-3 h-3 rounded-full bg-plum-200 ring-1 ring-plum-500/30"></span>
+        <span class="w-3 h-3 rounded-full bg-sand-200 ring-1 ring-sand-500/30"></span>
+        <span class="ml-1.5 text-[13px] font-medium text-stone-500">5 courses · 15 ch</span>
+      </div>
+      <div class="font-serif text-[24px] leading-tight mt-0.5">Winter 2026 draft</div>
+    </a>
+    <a href="#" class="rounded-[18px] bg-white border border-line p-5 hover:border-stone-300">
+      <div class="flex items-center gap-2 text-[12px] text-stone-500">
+        <span class="w-6 h-6 rounded-full bg-plum-100 text-plum-700 grid place-items-center">
+          <svg class="i w-3.5 h-3.5" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        Course
+        <span class="ml-auto">3 days ago</span>
+      </div>
+      <div class="mt-5 text-[13px] font-semibold tnum">STAT 2060</div>
+      <div class="font-serif text-[24px] leading-tight mt-0.5">Intro Probability &amp; Stats</div>
+    </a>
+  </div>
+</section>
+
+<!-- ============ BENTO ============ -->
+<section class="max-w-[1312px] mx-auto px-8 pb-28">
+  <div class="flex items-end justify-between mb-10">
+    <h2 class="font-serif text-[64px] leading-[0.98] tracking-[-0.02em] max-w-[760px]">Everything you need to plan a <em>semester</em>, in one place.</h2>
+    <p class="max-w-[340px] text-[16px] leading-relaxed text-stone-500 pb-2">4,689 courses across 167 subjects, 680 rated instructors, and every room on campus. Free, open source, made by students.</p>
+  </div>
+
+  <div class="grid grid-cols-12 gap-5">
+    <!-- Explore by subject -->
+    <a href="#" class="col-span-7 rounded-[22px] bg-white border border-line p-9 relative overflow-hidden h-[400px] flex flex-col">
+      <div class="flex items-center gap-2 text-[13px] font-medium text-stone-500">
+        <svg class="i w-4 h-4" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="3" rx="1.5"/><rect width="7" height="7" x="14" y="14" rx="1.5"/><rect width="7" height="7" x="3" y="14" rx="1.5"/></svg>
+        Explore by subject
+      </div>
+      <h3 class="mt-3 font-serif text-[40px] leading-[1.02] tracking-[-0.01em] max-w-[420px]">Wander all 167 subjects, from Actuarial Science to Theatre.</h3>
+      <div class="mt-auto relative">
+        <div class="flex flex-wrap gap-2 text-[14px] w-[760px]">
+          <span class="rounded-full bg-sage-100 text-sage-900 px-4 py-2"><b class="font-semibold">CSCI</b> Computer Science</span>
+          <span class="rounded-full bg-clay-100 text-clay-900 px-4 py-2"><b class="font-semibold">PSYO</b> Psychology</span>
+          <span class="rounded-full bg-sky-100 text-sky-900 px-4 py-2"><b class="font-semibold">MATH</b> Mathematics</span>
+          <span class="rounded-full bg-sand-100 text-sand-900 px-4 py-2"><b class="font-semibold">ECON</b> Economics</span>
+          <span class="rounded-full bg-plum-100 text-plum-900 px-4 py-2"><b class="font-semibold">STAT</b> Statistics</span>
+          <span class="rounded-full bg-sage-100 text-sage-900 px-4 py-2"><b class="font-semibold">BIOL</b> Biology</span>
+          <span class="rounded-full bg-sky-100 text-sky-900 px-4 py-2"><b class="font-semibold">OCEA</b> Oceanography</span>
+          <span class="rounded-full bg-clay-100 text-clay-900 px-4 py-2"><b class="font-semibold">HIST</b> History</span>
+          <span class="rounded-full bg-plum-100 text-plum-900 px-4 py-2"><b class="font-semibold">MUSC</b> Music</span>
+          <span class="rounded-full bg-sand-100 text-sand-900 px-4 py-2"><b class="font-semibold">COMM</b> Commerce</span>
+          <span class="rounded-full bg-sky-100 text-sky-900 px-4 py-2"><b class="font-semibold">PHYC</b> Physics</span>
+          <span class="rounded-full bg-sage-100 text-sage-900 px-4 py-2"><b class="font-semibold">ERTH</b> Earth Sciences</span>
+          <span class="rounded-full bg-clay-100 text-clay-900 px-4 py-2"><b class="font-semibold">PHIL</b> Philosophy</span>
+          <span class="rounded-full bg-sand-100 text-sand-900 px-4 py-2"><b class="font-semibold">CHEM</b> Chemistry</span>
+          <span class="rounded-full bg-plum-100 text-plum-900 px-4 py-2"><b class="font-semibold">THEA</b> Theatre</span>
+        </div>
+        <div class="absolute inset-y-0 -right-9 w-40 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none"></div>
+        <span class="absolute right-0 bottom-0 rounded-full bg-gold text-ink px-4 py-2 text-[14px] font-semibold flex items-center gap-1.5">All 167
+          <svg class="i w-4 h-4" viewBox="0 0 24 24" style="stroke-width:2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Build your schedule -->
+    <a href="#" class="col-span-5 rounded-[22px] bg-white border border-line p-9 h-[400px] flex flex-col">
+      <div class="flex items-center gap-2 text-[13px] font-medium text-stone-500">
+        <svg class="i w-4 h-4" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+        Build your schedule
+      </div>
+      <h3 class="mt-3 font-serif text-[40px] leading-[1.02] tracking-[-0.01em]">A week with <em>zero</em> clashes.</h3>
+      <!-- mini calendar -->
+      <div class="mt-auto rounded-[14px] border border-line bg-paper/60 p-3">
+        <div class="grid grid-cols-[22px_repeat(5,1fr)] gap-x-1.5 text-[10px] font-semibold text-stone-400 mb-1.5">
+          <span></span><span class="text-center">MON</span><span class="text-center">TUE</span><span class="text-center">WED</span><span class="text-center">THU</span><span class="text-center">FRI</span>
+        </div>
+        <div class="grid grid-cols-[22px_repeat(5,1fr)] gap-x-1.5 h-[150px]">
+          <div class="relative text-[9px] text-stone-400 tnum">
+            <span class="absolute top-0">8a</span><span class="absolute top-[45px]">11a</span><span class="absolute top-[90px]">2p</span><span class="absolute top-[135px]">5p</span>
+          </div>
+          <div class="relative border-l border-line/70">
+            <div class="absolute inset-x-0 top-[54px] h-[20px] rounded-md bg-clay-100 border-l-2 border-clay-500"></div>
+            <div class="absolute inset-x-0 top-[99px] h-[13px] rounded-md bg-plum-100 border-l-2 border-plum-500"></div>
+            <div class="absolute inset-x-0 top-[129px] h-[13px] rounded-md bg-sky-100 border-l-2 border-sky-500"></div>
+          </div>
+          <div class="relative border-l border-line/70">
+            <div class="absolute inset-x-0 top-[9px] h-[27px] rounded-md bg-plum-100 border-l-2 border-plum-500"></div>
+            <div class="absolute inset-x-0 top-[76px] h-[20px] rounded-md bg-sage-100 border-l-2 border-sage-500"></div>
+            <div class="absolute inset-x-0 top-[99px] h-[20px] rounded-md bg-sand-100 border-l-2 border-sand-500"></div>
+          </div>
+          <div class="relative border-l border-line/70">
+            <div class="absolute inset-x-0 top-[9px] h-[20px] rounded-md bg-sky-100 border-l-2 border-sky-500"></div>
+            <div class="absolute inset-x-0 top-[31px] h-[20px] rounded-md bg-clay-100 border-l-2 border-clay-500"></div>
+            <div class="absolute inset-x-0 top-[54px] h-[20px] rounded-md bg-clay-100 border-l-2 border-clay-500"></div>
+            <div class="absolute inset-x-0 top-[99px] h-[13px] rounded-md bg-plum-100 border-l-2 border-plum-500"></div>
+            <div class="absolute inset-x-0 top-[129px] h-[13px] rounded-md bg-sky-100 border-l-2 border-sky-500"></div>
+          </div>
+          <div class="relative border-l border-line/70">
+            <div class="absolute inset-x-0 top-[76px] h-[20px] rounded-md bg-sage-100 border-l-2 border-sage-500"></div>
+            <div class="absolute inset-x-0 top-[99px] h-[13px] rounded-md bg-plum-100 border-l-2 border-plum-500"></div>
+            <div class="absolute inset-x-0 top-[129px] h-[13px] rounded-md bg-sky-100 border-l-2 border-sky-500"></div>
+          </div>
+          <div class="relative border-l border-line/70">
+            <div class="absolute inset-x-0 top-[99px] h-[13px] rounded-md bg-plum-100 border-l-2 border-plum-500"></div>
+            <div class="absolute inset-x-0 top-[129px] h-[13px] rounded-md bg-sky-100 border-l-2 border-sky-500"></div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Find an empty room (gold block) -->
+    <a href="#" class="col-span-5 rounded-[22px] bg-gold p-9 h-[360px] flex flex-col relative overflow-hidden">
+      <div class="flex items-center gap-2 text-[13px] font-medium text-ink/70">
+        <svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M13 4h3a2 2 0 0 1 2 2v14"/><path d="M2 20h3"/><path d="M13 20h9"/><path d="M10 12v.01"/><path d="M13 4.562v16.157a1 1 0 0 1-1.242.97L5 20V5.562a2 2 0 0 1 1.515-1.94l4-1A2 2 0 0 1 13 4.561Z"/></svg>
+        Find an empty room
+      </div>
+      <h3 class="mt-3 font-serif text-[40px] leading-[1.02] tracking-[-0.01em]">Somewhere quiet to study, <em>right now</em>.</h3>
+      <div class="mt-auto rounded-[16px] bg-white/85 p-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-[14px] font-semibold">Goldberg CS 134</div>
+            <div class="text-[12px] text-stone-500">Studley campus · Wednesday</div>
+          </div>
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-sage-100 text-sage-700 text-[12px] font-semibold px-2.5 py-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-sage-500"></span>Free until 1:05 PM
+          </span>
+        </div>
+        <div class="mt-3 relative h-[10px] rounded-full bg-stone-100 overflow-hidden">
+          <div class="absolute top-0 bottom-0 left-[20.8%] w-[13.3%] bg-ink/80 rounded-full"></div>
+          <div class="absolute top-0 bottom-0 left-[50.8%] w-[13.3%] bg-ink/80 rounded-full"></div>
+          <div class="absolute top-0 bottom-0 left-[80.8%] w-[13.3%] bg-ink/80 rounded-full"></div>
+        </div>
+        <div class="absolute"></div>
+        <div class="mt-1.5 flex justify-between text-[10px] text-stone-400 tnum"><span>8 AM</span><span>11</span><span>2 PM</span><span>6 PM</span></div>
+      </div>
+    </a>
+
+    <!-- Instructor ratings -->
+    <a href="#" class="col-span-7 rounded-[22px] bg-white border border-line p-9 h-[360px] flex gap-10">
+      <div class="w-[260px] shrink-0 flex flex-col">
+        <div class="flex items-center gap-2 text-[13px] font-medium text-stone-500">
+          <svg class="i w-4 h-4" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Instructor ratings
+        </div>
+        <h3 class="mt-3 font-serif text-[40px] leading-[1.02] tracking-[-0.01em]">Know who’s <em>teaching</em> before you enrol.</h3>
+        <span class="mt-auto inline-flex items-center gap-1.5 text-[14px] font-medium">680 instructors, rated on RMP
+          <svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </div>
+      <div class="flex-1 flex flex-col justify-center gap-3">
+        <div class="rounded-[16px] border border-line p-4">
+          <div class="flex items-center gap-3">
+            <span class="w-10 h-10 rounded-full bg-sky-100 text-sky-700 grid place-items-center text-[13px] font-semibold">NK</span>
+            <div>
+              <div class="text-[14px] font-semibold">Nauzer Kalyaniwalla</div>
+              <div class="text-[12px] text-stone-500">CSCI 2122 · Computer Science</div>
+            </div>
+            <div class="ml-auto text-right">
+              <div class="font-serif text-[30px] leading-none tnum">2.4<span class="text-[16px] text-stone-400">/5</span></div>
+            </div>
+          </div>
+          <div class="mt-4 grid grid-cols-2 gap-4 text-[12px]">
+            <div>
+              <div class="flex justify-between text-stone-500"><span>Would take again</span><span class="font-semibold text-ink tnum">61%</span></div>
+              <div class="mt-1.5 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[61%] rounded-full bg-sage-500"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between text-stone-500"><span>Difficulty</span><span class="font-semibold text-ink tnum">4.1</span></div>
+              <div class="mt-1.5 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[82%] rounded-full bg-clay-500"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="rounded-[16px] border border-line p-4 flex items-center gap-3 opacity-90">
+          <span class="w-10 h-10 rounded-full bg-plum-100 text-plum-700 grid place-items-center text-[13px] font-semibold">OM</span>
+          <div>
+            <div class="text-[14px] font-semibold">Murphy O.</div>
+            <div class="text-[12px] text-stone-500">STAT 2060 · Statistics</div>
+          </div>
+          <div class="ml-auto flex items-center gap-0.5 text-gold">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg class="w-4 h-4 text-stone-200" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span class="ml-2 text-[14px] font-semibold text-ink tnum">4.1</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ============ POPULAR THIS TERM ============ -->
+<section class="max-w-[1312px] mx-auto px-8 pb-28">
+  <div class="grid grid-cols-12 gap-5">
+    <div class="col-span-4 pr-10 flex flex-col">
+      <div class="text-[13px] font-medium text-stone-500">Winter 2026</div>
+      <h2 class="mt-2 font-serif text-[72px] leading-[0.95] tracking-[-0.02em]">Popular this <em class="hl hl-sm">term</em></h2>
+      <p class="mt-5 text-[16px] leading-relaxed text-stone-500">Ranked by students enrolled across every section. Seats are filling quickly, so add the ones you want early.</p>
+      <div class="mt-auto">
+        <div class="text-[11px] font-semibold uppercase tracking-[0.08em] text-stone-400">Filter by level</div>
+        <div class="mt-3 flex flex-wrap gap-2 text-[13px] font-medium">
+          <span class="rounded-full bg-ink text-paper px-3.5 py-1.5">All</span>
+          <span class="rounded-full border border-line bg-white text-stone-600 px-3.5 py-1.5">1000</span>
+          <span class="rounded-full border border-line bg-white text-stone-600 px-3.5 py-1.5">2000</span>
+          <span class="rounded-full border border-line bg-white text-stone-600 px-3.5 py-1.5">3000</span>
+          <span class="rounded-full border border-line bg-white text-stone-600 px-3.5 py-1.5">4000+</span>
+        </div>
+        <a href="#" class="mt-8 inline-flex items-center gap-2 h-11 px-5 rounded-full bg-ink text-paper text-[14px] font-medium">
+          See all in Explore
+          <svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="col-span-8 rounded-[22px] bg-white border border-line px-8 py-2">
+      <!-- row -->
+      <a href="#" class="grid grid-cols-[52px_1fr_150px_180px_20px] items-center gap-5 py-[22px] border-b border-line">
+        <span class="font-serif text-[30px] leading-none text-stone-300 tnum">01</span>
+        <div>
+          <div class="flex items-center gap-2"><span class="text-[11px] font-semibold tracking-wide rounded-full bg-sage-100 text-sage-700 px-2 py-0.5">CSCI</span><span class="text-[13px] font-semibold tnum">3130</span></div>
+          <div class="font-serif text-[25px] leading-tight mt-1">Intro to Software Engineering</div>
+        </div>
+        <div class="text-[13px] text-stone-500 tnum">Tue · Thu<br><span class="text-ink font-medium">1:05–2:25 PM</span></div>
+        <div>
+          <div class="flex justify-between text-[12px] text-stone-500 tnum"><span>136 / 150</span><span class="font-semibold text-ink">91%</span></div>
+          <div class="mt-1.5 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[91%] rounded-full bg-ink"></div></div>
+        </div>
+        <svg class="i w-5 h-5 text-stone-400" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+      <a href="#" class="grid grid-cols-[52px_1fr_150px_180px_20px] items-center gap-5 py-[22px] border-b border-line">
+        <span class="font-serif text-[30px] leading-none text-stone-300 tnum">02</span>
+        <div>
+          <div class="flex items-center gap-2"><span class="text-[11px] font-semibold tracking-wide rounded-full bg-sage-100 text-sage-700 px-2 py-0.5">CSCI</span><span class="text-[13px] font-semibold tnum">3120</span></div>
+          <div class="font-serif text-[25px] leading-tight mt-1">Operating Systems</div>
+        </div>
+        <div class="text-[13px] text-stone-500 tnum">Tue · Thu<br><span class="text-ink font-medium">8:35–9:55 AM</span></div>
+        <div>
+          <div class="flex justify-between text-[12px] text-stone-500 tnum"><span>117 / 150</span><span class="font-semibold text-ink">78%</span></div>
+          <div class="mt-1.5 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[78%] rounded-full bg-ink"></div></div>
+        </div>
+        <svg class="i w-5 h-5 text-stone-400" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+      <a href="#" class="grid grid-cols-[52px_1fr_150px_180px_20px] items-center gap-5 py-[22px] border-b border-line bg-paper/70 -mx-8 px-8">
+        <span class="font-serif text-[30px] leading-none text-ink tnum">03</span>
+        <div>
+          <div class="flex items-center gap-2"><span class="text-[11px] font-semibold tracking-wide rounded-full bg-sage-100 text-sage-700 px-2 py-0.5">CSCI</span><span class="text-[13px] font-semibold tnum">2110</span></div>
+          <div class="font-serif text-[25px] leading-tight mt-1">Data Structures and Algorithms</div>
+        </div>
+        <div class="text-[13px] text-stone-500 tnum">Mon · Wed · Thu · Fri<br><span class="text-ink font-medium">4:35–5:25 PM</span></div>
+        <div>
+          <div class="flex justify-between text-[12px] text-stone-500 tnum"><span>109 / 120</span><span class="font-semibold text-ink">91%</span></div>
+          <div class="mt-1.5 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[91%] rounded-full bg-ink"></div></div>
+        </div>
+        <svg class="i w-5 h-5 text-ink" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+      <a href="#" class="grid grid-cols-[52px_1fr_150px_180px_20px] items-center gap-5 py-[22px] border-b border-line">
+        <span class="font-serif text-[30px] leading-none text-stone-300 tnum">04</span>
+        <div>
+          <div class="flex items-center gap-2"><span class="text-[11px] font-semibold tracking-wide rounded-full bg-plum-100 text-plum-700 px-2 py-0.5">STAT</span><span class="text-[13px] font-semibold tnum">2060</span></div>
+          <div class="font-serif text-[25px] leading-tight mt-1">Intro Probability &amp; Stats</div>
+        </div>
+        <div class="text-[13px] text-stone-500 tnum">Mon · Wed · Thu · Fri<br><span class="text-ink font-medium">2:35–3:25 PM</span></div>
+        <div>
+          <div class="flex justify-between text-[12px] text-stone-500 tnum"><span>104 / 140</span><span class="font-semibold text-ink">74%</span></div>
+          <div class="mt-1.5 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[74%] rounded-full bg-ink"></div></div>
+        </div>
+        <svg class="i w-5 h-5 text-stone-400" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+      <a href="#" class="grid grid-cols-[52px_1fr_150px_180px_20px] items-center gap-5 py-[22px] border-b border-line">
+        <span class="font-serif text-[30px] leading-none text-stone-300 tnum">05</span>
+        <div>
+          <div class="flex items-center gap-2"><span class="text-[11px] font-semibold tracking-wide rounded-full bg-sage-100 text-sage-700 px-2 py-0.5">CSCI</span><span class="text-[13px] font-semibold tnum">2122</span></div>
+          <div class="font-serif text-[25px] leading-tight mt-1">Systems Programming</div>
+        </div>
+        <div class="text-[13px] text-stone-500 tnum">Mon · Wed<br><span class="text-ink font-medium">11:35 AM–12:55 PM</span></div>
+        <div>
+          <div class="flex justify-between text-[12px] text-stone-500 tnum"><span>101 / 120</span><span class="font-semibold text-ink">84%</span></div>
+          <div class="mt-1.5 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[84%] rounded-full bg-ink"></div></div>
+        </div>
+        <svg class="i w-5 h-5 text-stone-400" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+      <a href="#" class="grid grid-cols-[52px_1fr_150px_180px_20px] items-center gap-5 py-[22px]">
+        <span class="font-serif text-[30px] leading-none text-stone-300 tnum">06</span>
+        <div>
+          <div class="flex items-center gap-2"><span class="text-[11px] font-semibold tracking-wide rounded-full bg-sand-100 text-sand-700 px-2 py-0.5">ECON</span><span class="text-[13px] font-semibold tnum">1101</span></div>
+          <div class="font-serif text-[25px] leading-tight mt-1">Principles of Microeconomics</div>
+        </div>
+        <div class="text-[13px] text-stone-500 tnum">Tue · Thu<br><span class="text-ink font-medium">2:35–3:55 PM</span></div>
+        <div>
+          <div class="flex justify-between text-[12px] text-stone-500 tnum"><span>90 / 120</span><span class="font-semibold text-ink">75%</span></div>
+          <div class="mt-1.5 h-1.5 rounded-full bg-stone-100"><div class="h-full w-[75%] rounded-full bg-ink"></div></div>
+        </div>
+        <svg class="i w-5 h-5 text-stone-400" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="max-w-[1312px] mx-auto px-8 pb-20">
+  <div class="rounded-[28px] bg-ink text-paper px-14 py-14 flex items-center gap-12 relative overflow-hidden">
+    <div class="flex-1">
+      <h2 class="font-serif text-[60px] leading-[1] tracking-[-0.02em]">Already registered? Bring your <em class="text-gold">Dal Online</em> schedule with you.</h2>
+      <p class="mt-5 text-[16px] text-stone-400 max-w-[520px] leading-relaxed">Import your sections in one step, see them on a clean weekly calendar, then export a PNG or share a link with friends.</p>
+    </div>
+    <div class="shrink-0 flex flex-col gap-3 w-[280px]">
+      <a href="#" class="h-14 rounded-full bg-gold text-ink text-[16px] font-semibold flex items-center justify-center gap-2">
+        <svg class="i w-[18px] h-[18px]" viewBox="0 0 24 24" style="stroke-width:2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        Import from Dal Online
+      </a>
+      <a href="#" class="h-14 rounded-full border border-white/20 text-paper text-[16px] font-medium flex items-center justify-center">Start from scratch</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t border-line">
+  <div class="max-w-[1312px] mx-auto px-8 pt-14 pb-10">
+    <div class="grid grid-cols-12 gap-5">
+      <div class="col-span-5">
+        <a href="#" class="flex items-center gap-2.5">
+          <img src="../../public/dalsearch.svg" alt="" class="w-[26px] h-[26px]">
+          <span class="text-[19px] tracking-[-0.01em] leading-none"><span class="font-semibold">Dal</span><span class="font-serif italic text-[23px]">Search</span></span>
+        </a>
+        <p class="mt-4 text-[14px] leading-relaxed text-stone-500 max-w-[340px]">An unofficial, open-source course search for Dalhousie students. Built by Théo Bourgeois &amp; Chris Langille.</p>
+        <a href="#" class="mt-6 inline-flex items-center gap-2 h-10 px-4 rounded-full bg-gold-soft text-[13px] font-medium">
+          <svg class="i w-4 h-4" viewBox="0 0 24 24"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg>
+          Buy me a coffee
+        </a>
+      </div>
+      <div class="col-span-2 col-start-8 text-[14px]">
+        <div class="text-[12px] font-semibold text-stone-400 tracking-wide uppercase">Product</div>
+        <ul class="mt-4 space-y-2.5 text-stone-600"><li>Explore</li><li>Schedule</li><li>Rooms</li><li>Instructors</li></ul>
+      </div>
+      <div class="col-span-2 text-[14px]">
+        <div class="text-[12px] font-semibold text-stone-400 tracking-wide uppercase">Terms</div>
+        <ul class="mt-4 space-y-2.5 text-stone-600"><li>Winter 2026</li><li>Summer 2026</li><li>Fall 2026</li><li>Winter 2027</li></ul>
+      </div>
+      <div class="col-span-1 text-[14px]">
+        <div class="text-[12px] font-semibold text-stone-400 tracking-wide uppercase">Project</div>
+        <ul class="mt-4 space-y-2.5 text-stone-600"><li>GitHub</li><li>About</li></ul>
+      </div>
+    </div>
+    <div class="mt-14 pt-6 border-t border-line flex items-center justify-between text-[13px] text-stone-500">
+      <span>Not affiliated with Dalhousie University.</span>
+      <span>© 2026 DalSearch · Open source on GitHub</span>
+    </div>
+  </div>
+  <div class="overflow-hidden h-[190px] select-none" aria-hidden="true">
+    <div class="max-w-[1312px] mx-auto px-6 text-center leading-[0.8] tracking-[-0.04em] text-[#EEE9DB] whitespace-nowrap">
+      <span class="font-sans font-semibold text-[248px]">Dal</span><span class="font-serif italic text-[300px]">Search</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

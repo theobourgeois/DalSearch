@@ -1,24 +1,25 @@
-import { getAllInstructors } from "@/lib/course-utils";
-import { InstructorsPageContent } from "@/components/instructor-page-content";
+import type { Metadata } from "next";
+import { InstructorsView } from "@/components/instructors/instructors-view";
+import { Page, PageHeader } from "@/components/layout/page";
+import { formatNumber } from "@/lib/utils";
+import { getCurrentTerm, getInstructorList, subjects } from "@/lib/data";
+
+export const metadata: Metadata = {
+    title: "Instructors - DalSearch",
+    description: "Compare Dalhousie instructors by RateMyProfessors rating, difficulty and the courses they teach.",
+};
 
 export default function InstructorsPage() {
-    const instructors = getAllInstructors();
+    const instructors = getInstructorList(getCurrentTerm());
+    const rated = instructors.filter((instructor) => instructor.rating !== null).length;
 
     return (
-        <main className="py-8 px-4 dark:bg-gray-900 w-screen">
-            <div className="space-y-4 max-w-7xl mx-auto w-full">
-                <div className="space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight">
-                        Instructors
-                    </h1>
-                    <p className="text-muted-foreground">
-                        Browse and search through all available instructors.
-                        View their ratings and courses.
-                    </p>
-                </div>
-
-                <InstructorsPageContent instructors={instructors} />
-            </div>
-        </main>
+        <Page breadcrumbs={[{ label: "Instructors" }]}>
+            <PageHeader
+                title="Instructors"
+                description={`${formatNumber(instructors.length)} instructors, ${formatNumber(rated)} of them rated on RateMyProfessors.`}
+            />
+            <InstructorsView instructors={instructors} subjects={subjects} />
+        </Page>
     );
 }

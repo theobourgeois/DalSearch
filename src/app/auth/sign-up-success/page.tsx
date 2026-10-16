@@ -76,7 +76,7 @@ export default function Page() {
 
   if (isVerified) {
     return (
-      <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="flex justify-center py-10">
         <div className="w-full max-w-sm">
           <Card>
             <CardHeader>
@@ -84,7 +84,7 @@ export default function Page() {
               <CardDescription>Your account has been verified successfully</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm text-fg-muted">
                 Redirecting you to your account...
               </p>
             </CardContent>
@@ -95,7 +95,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div className="flex justify-center py-10">
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-6">
           <Card>
@@ -118,14 +118,14 @@ export default function Page() {
                     maxLength={6}
                     className="text-center text-2xl tracking-widest"
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-fg-muted">
                     Check your email (including spam folder) for the verification code
                   </p>
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                {error && <p className="text-sm text-danger">{error}</p>}
                 <Button 
                   type="submit" 
-                  className="w-full rounded-xl dark:bg-yellow-400 dark:hover:bg-yellow-300" 
+                  variant="primary" className="w-full" 
                   disabled={isLoading || !code}
                 >
                   {isLoading ? "Verifying..." : "Verify Email"}

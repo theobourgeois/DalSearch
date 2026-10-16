@@ -1,15 +1,33 @@
-import { courses } from "@/lib/course-utils";
-import { ExploreCourses } from "../../components/explore-courses";
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import { ExploreView } from "@/components/explore/explore-view";
+import { Page, PageHeader } from "@/components/layout/page";
+import { formatNumber } from "@/lib/utils";
+import { creditHourOptions, getCourseList, getRatingsByName, subjects } from "@/lib/data";
 
-export default function Home() {
+export const metadata: Metadata = {
+    title: "Explore courses - DalSearch",
+    description:
+        "Browse every Dalhousie course by term, subject, level and credit hours, and see which ones fit your schedule.",
+};
+
+export default function ExplorePage() {
+    const courses = getCourseList();
+
     return (
-        <main className="flex justify-center">
-            <section className="w-full sm:w-10/12 sm:m-8 m-2">
-                <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-white">
-                    Explore Dalhousie&apos;s Courses
-                </h2>
-                <ExploreCourses courses={Object.values(courses)} />
-            </section>
-        </main>
+        <Page breadcrumbs={[{ label: "Explore" }]}>
+            <PageHeader
+                title="Explore"
+                description={`${formatNumber(courses.length)} courses across ${subjects.length} subjects.`}
+            />
+            <Suspense>
+                <ExploreView
+                    courses={courses}
+                    subjects={subjects}
+                    creditHours={creditHourOptions}
+                    ratings={getRatingsByName()}
+                />
+            </Suspense>
+        </Page>
     );
 }

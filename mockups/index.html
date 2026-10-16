@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DalSearch redesign directions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{font-family:Inter,sans-serif}</style>
+</head>
+<body class="bg-zinc-100 text-zinc-900">
+<header class="sticky top-0 z-10 border-b border-zinc-200 bg-white/90 backdrop-blur">
+  <div class="mx-auto flex max-w-7xl items-center gap-6 px-6 py-3 text-sm">
+    <strong>DalSearch redesign</strong>
+    <nav class="flex gap-4 text-zinc-600">
+      <a href="#app" class="font-semibold text-zinc-900">Final direction</a>
+      <a href="#e" class="hover:text-zinc-900">E · Hybrid (C + D)</a>
+      <a href="#a" class="hover:text-zinc-900">A · Precision</a>
+      <a href="#b" class="hover:text-zinc-900">B · Editorial</a>
+      <a href="#c" class="hover:text-zinc-900">C · Workspace</a>
+      <a href="#d" class="hover:text-zinc-900">D · Bento</a>
+    </nav>
+  </div>
+</header>
+<main id="gallery" class="mx-auto max-w-7xl space-y-20 px-6 py-10"></main>
+<script>
+const directions = [
+  { id: "app", dir: "g-app", name: "Final direction (light)", blurb: "Course page v3 style applied to every page.", pages: ["home-light", "explore-light", "course-overview-light", "course-schedule-light", "course-reviews-light", "schedule-light", "rooms-light", "instructors-light"] },
+  { id: "e", dir: "e-hybrid", name: "E · Hybrid (C layout + D look)", blurb: "Workspace app shell with your courses in the sidebar, rendered in Bento's light, rounded, pastel style." },
+  { id: "a", dir: "a-precision", name: "A · Precision", blurb: "Monochrome, keyboard-first, Linear/Vercel feel. Geist + Geist Mono, gold used sparingly." },
+  { id: "b", dir: "b-editorial", name: "B · Editorial", blurb: "Warm paper, Instrument Serif headlines with gold highlighter, earthy subject tints." },
+  { id: "c", dir: "c-workspace", name: "C · Workspace", blurb: "Dark app shell with persistent sidebar, ⌘K search, Notion Calendar–style schedule." },
+  { id: "d", dir: "d-bento", name: "D · Bento", blurb: "Friendly and airy: floating pill nav, rounded bento tiles, pastel subject colors." },
+];
+const pages = ["home", "explore", "course", "schedule"];
+const gallery = document.getElementById("gallery");
+for (const d of directions) {
+  const section = document.createElement("section");
+  section.id = d.id;
+  section.innerHTML = `
+    <h2 class="text-2xl font-semibold tracking-tight">${d.name}</h2>
+    <p class="mt-1 text-zinc-600">${d.blurb}</p>
+    <div class="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+      ${(d.pages || pages).map(p => `
+        <figure class="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+          <figcaption class="flex items-center justify-between border-b border-zinc-200 px-4 py-2 text-xs text-zinc-500">
+            <span class="capitalize">${p}</span>
+            <a class="hover:text-zinc-900" href="${d.dir}/${p}.html">Open HTML ↗</a>
+          </figcaption>
+          <a href="${d.dir}/${p}.png" class="block max-h-[640px] overflow-hidden">
+            <img src="${d.dir}/${p}.png" alt="${d.name} ${p}" class="w-full" loading="lazy">
+          </a>
+        </figure>`).join("")}
+    </div>`;
+  gallery.appendChild(section);
+}
+</script>
+</body>
+</html>
