@@ -4,6 +4,7 @@
  * produces the shapes below, so the database and the app don't need to know where data came from.
  *
  * Needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY, from the environment or the repo's .env.local.
+ * Without the secret key it reads with NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY, enough for a dry run.
  */
 import fs from "fs";
 import path from "path";
@@ -95,11 +96,18 @@ function loadEnv() {
     return { ...env, ...process.env };
 }
 
-export function connect() {
+/** @param {{readOnly?: boolean}} [options] readOnly falls back to the publishable key. */
+export function connect({ readOnly = false } = {}) {
     const env = loadEnv();
     const url = env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = env.SUPABASE_SECRET_KEY;
-    if (!url || !key) throw new Error("Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY");
+    const key = env.SUPABASE_SECRET_KEY || (readOnly ? env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY : undefined);
+    if (!url || !key) {
+        throw new Error(
+            readOnly
+                ? "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
+                : "Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY",
+        );
+    }
 
     const base = `${url.replace(/\/$/, "")}/rest/v1`;
     const headers = { apikey: key, "Content-Type": "application/json" };
@@ -137,6 +145,31 @@ export function connect() {
                 if (page.length === 0) return rows;
                 rows.push(...page);
             }
+        },
+
+        /** Rows of a table or view, at most `limit`. */
+        async select(table, columns, filters = {}, { order, limit } = {}) {
+            const params = new URLSearchParams({ select: columns, ...filters });
+            if (order) params.set("order", order);
+            if (limit) params.set("limit", String(limit));
+            const response = await request(`${table}?${params}`);
+            return response.json();
+        },
+
+        /** Adds a row and returns it. */
+        async insert(table, row) {
+            const response = await request(table, {
+                method: "POST",
+                headers: { Prefer: "return=representation" },
+                body: JSON.stringify(row),
+            });
+            const [inserted] = await response.json();
+            return inserted;
+        },
+
+        async update(table, filters, values) {
+            const params = new URLSearchParams(filters);
+            await request(`${table}?${params}`, { method: "PATCH", body: JSON.stringify(values) });
         },
 
         async count(table, filters = {}) {

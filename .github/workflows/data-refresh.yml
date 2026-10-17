@@ -14,6 +14,15 @@ on:
         description: "Also refresh every course's details and RateMyProfessors"
         type: boolean
         default: false
+      force:
+        description: "Save even if the health checks fail (when a big change on the timetable is real)"
+        type: boolean
+        default: false
+# Never two refreshes at once: they'd write the same universities, and triage reads a run that's
+# still "running" as one that crashed.
+concurrency:
+  group: data-refresh
+  cancel-in-progress: false
 permissions:
   contents: read
 jobs:
@@ -61,10 +70,32 @@ jobs:
           pip install -r src/scripts/py/requirements.txt
       # Timetable first: the RateMyProfessors import matches reviews against the stored courses.
       - name: Refresh the timetable and course details
-        run: node src/scripts/node/refresh.js ${{ matrix.university }} --details ${{ env.FULL == 'true' && 'all' || 'missing' }}
+        run: node src/scripts/node/refresh.js ${{ matrix.university }} --details ${{ env.FULL == 'true' && 'all' || 'missing' }} ${{ inputs.force && '--force' || '' }}
       - name: Import RateMyProfessors professors and reviews
         if: ${{ env.FULL == 'true' }}
         run: python3 src/scripts/py/rmp_reviews.py --university ${{ matrix.university }}
+
+  # Opens an issue and sends an agent (scraper-fix.yml) for each university that failed twice in a
+  # row, and closes the issue once it's healthy again. See src/scripts/node/triage.js.
+  triage:
+    needs: refresh
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Check every university's last two refreshes
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node src/scripts/node/triage.js
 
   # Pages are cached for a day; this shows the new data straight away. Skipped until the
   # REVALIDATE_SECRET and SITE_URL secrets are set.
