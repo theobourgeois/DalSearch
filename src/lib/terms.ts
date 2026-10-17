@@ -22,13 +22,18 @@ export function termLabel(terms: TermInfo[], code: Term): string {
     return terms.find((term) => term.code === code)?.name ?? code;
 }
 
+const length = (term: TermInfo) => Date.parse(term.endsOn) - Date.parse(term.startsOn);
+
 /**
  * The term in progress on `today` ("2026-10-16" in the university's timezone), or else the next one to
  * start, or else the latest. Between terms this is the upcoming one, which is the one students plan.
+ * When several are running, the shortest wins: Fall 2026 over MUN's year-long Medicine term.
  */
 export function currentTermCode(terms: TermInfo[], today: string): Term {
     const listed = terms.filter((term) => term.isListed);
-    const running = listed.find((term) => term.startsOn <= today && today <= term.endsOn);
+    const running = listed
+        .filter((term) => term.startsOn <= today && today <= term.endsOn)
+        .sort((a, b) => length(a) - length(b))[0];
     return (running ?? listed.find((term) => term.startsOn > today) ?? listed.at(-1))?.code ?? "";
 }
 
