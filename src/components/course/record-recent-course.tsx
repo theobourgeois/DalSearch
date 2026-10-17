@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import type { CourseAndSubjectCode } from "@/lib/types";
-import { useLibraryStore } from "@/store/library-store";
+import { useLibraryStore, useLibraryStoreApi } from "@/store/library-store";
 import { useHydrated } from "@/store/storage";
 
 /** Adds the course to "Recently viewed" once saved history has loaded. */
 export function RecordRecentCourse({ code }: { code: CourseAndSubjectCode }) {
-    const ready = useHydrated(useLibraryStore);
+    const ready = useHydrated(useLibraryStoreApi());
     const addRecentCourse = useLibraryStore((state) => state.addRecentCourse);
 
     useEffect(() => {

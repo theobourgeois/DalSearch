@@ -23,6 +23,7 @@ import type { CourseFilter, CourseListItem, CourseOrderByKey, ScheduleBufferMinu
 import { formatNumber, plural } from "@/lib/utils";
 import { useScheduleStore } from "@/store/schedule-store";
 import { CourseRow, courseRowColumns } from "./course-row";
+import { useUniversity } from "@/components/university";
 
 const PAGE_SIZE = 20;
 
@@ -48,6 +49,7 @@ type ExploreViewProps = {
 };
 
 export function ExploreView({ courses, subjects, creditHours, ratings }: ExploreViewProps) {
+    const university = useUniversity();
     const currentTerm = useCurrentTerm();
     const { listed, label: termLabel, options: termOptions } = useTerms();
     const initial = initialState(currentTerm);
@@ -127,7 +129,7 @@ export function ExploreView({ courses, subjects, creditHours, ratings }: Explore
                     summary={(chosen) => chosen.map((option) => option.label).join(", ")}
                 />
                 <MultiSelectFilter
-                    label="Credit hours"
+                    label={university.creditLabel}
                     options={creditHours.map((hours) => ({ value: hours, label: String(hours) }))}
                     selected={filter.creditHours}
                     onChange={(selected) => update({ creditHours: selected })}

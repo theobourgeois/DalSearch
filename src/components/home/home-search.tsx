@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { CourseSearch } from "@/components/search/course-search";
-import { useLibraryStore } from "@/store/library-store";
+import { useLibraryStore, useLibraryStoreApi } from "@/store/library-store";
 import { useHydrated } from "@/store/storage";
 
 /** The big search on the home page, with the student's recent searches underneath. */
@@ -10,7 +10,7 @@ export function HomeSearch() {
     const [query, setQuery] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const recentQueries = useLibraryStore((state) => state.recentQueries);
-    const ready = useHydrated(useLibraryStore);
+    const ready = useHydrated(useLibraryStoreApi());
 
     return (
         <div className="mt-7">

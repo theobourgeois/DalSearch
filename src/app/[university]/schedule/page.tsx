@@ -5,13 +5,13 @@ import { getExamSchedule } from "@/lib/data";
 
 export const metadata: Metadata = {
     title: "Your schedule - DalSearch",
-    description: "Plan your Dalhousie timetable: see your week, catch clashes and export your schedule.",
+    description: "Plan your timetable: see your week, catch clashes and export your schedule.",
 };
 
-export default async function SchedulePage() {
+export default async function SchedulePage({ params }: { params: Promise<{ university: string }> }) {
     return (
         <Page breadcrumbs={[{ label: "Schedule" }]}>
-            <ScheduleView exams={await getExamSchedule()} />
+            <ScheduleView exams={await getExamSchedule((await params).university)} />
         </Page>
     );
 }

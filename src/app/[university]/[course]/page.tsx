@@ -26,22 +26,25 @@ import {
     toListItem,
 } from "@/lib/data";
 import { courseKey, formatCourseCode } from "@/lib/schedule";
+import { getUniversity, universityPath } from "@/lib/university";
 
-type Props = { params: Promise<{ course: string }> };
+type Props = { params: Promise<{ university: string; course: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const course = await getCourse((await params).course);
+    const { university, course: code } = await params;
+    const course = await getCourse(university, code);
+    const name = getUniversity(university)?.name ?? "";
     if (!course) return { title: "Course not found - DalSearch" };
 
     return {
-        title: `${formatCourseCode(courseKey(course))} - ${course.title} - Dalhousie University`,
+        title: `${formatCourseCode(courseKey(course))} - ${course.title} - ${name}`,
         description: course.description,
         keywords: [
             course.subjectCode,
             course.courseCode,
             course.title,
             ...course.prerequisites,
-            "Dalhousie University",
+            name,
             "dalsearch",
             "Halifax",
         ],
@@ -49,19 +52,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CoursePage({ params }: Props) {
-    const course = await getCourse((await params).course);
+    const { university, course: requested } = await params;
+    const course = await getCourse(university, requested);
     if (!course) notFound();
 
     const code = courseKey(course);
     const instructors = getCourseInstructors(course);
     const [rmpReviews, syllabi, listed, currentTerm, subjects, unlocks, ratings] = await Promise.all([
-        getRmpReviews(code),
-        getSyllabi(code),
-        getListedTerms(),
-        getCurrentTerm(),
-        getSubjects(),
-        getUnlockedCourses(code),
-        getRatingSummaries(instructors),
+        getRmpReviews(university, code),
+        getSyllabi(university, code),
+        getListedTerms(university),
+        getCurrentTerm(university),
+        getSubjects(university),
+        getUnlockedCourses(university, code),
+        getRatingSummaries(university, instructors),
     ]);
     const offered = offeredTerms(course, listed);
     const subject = subjects.find((s) => s.code === course.subjectCode);
@@ -78,8 +82,8 @@ export default async function CoursePage({ params }: Props) {
     return (
         <Page
             breadcrumbs={[
-                { label: "Explore", href: "/explore" },
-                ...(subject ? [{ label: subject.name, href: `/explore?subject=${subject.code}` }] : []),
+                { label: "Explore", href: universityPath(university, "/explore") },
+                ...(subject ? [{ label: subject.name, href: universityPath(university, `/explore?subject=${subject.code}`) }] : []),
                 { label: formatCourseCode(code) },
             ]}
         >

@@ -16,8 +16,11 @@ import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
+import { useHref, useUniversity } from "@/components/university";
 
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+    const university = useUniversity();
+    const pagePath = useHref();
   const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -60,7 +63,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
           <CardDescription>
             {needsVerification
               ? "Confirm your email to finish setting up your account"
-              : "Enter your Dalhousie email below to login to your account"}
+              : `Enter your ${university.shortName} email below to sign in`}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -74,7 +77,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                   <Input
                     id="email"
                     type="email"
-                    placeholder="NetID@dal.ca"
+                    placeholder={university.emailExample}
                     required
                     disabled={isLoading}
                     value={email}
@@ -85,7 +88,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
                     <Link
-                      href="/auth/forgot-password"
+                      href={pagePath("/auth/forgot-password")}
                       className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                     >
                       Forgot your password?
@@ -107,7 +110,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
               </div>
               <div className="mt-4 text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <Link href="/auth/sign-up" className="underline underline-offset-4">
+                <Link href={pagePath("/auth/sign-up")} className="underline underline-offset-4">
                   Sign up
                 </Link>
               </div>

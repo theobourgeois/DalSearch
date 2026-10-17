@@ -24,6 +24,7 @@ import { describeRatingCount } from "@/lib/instructors";
 import { formatCourseCode } from "@/lib/schedule";
 import type { InstructorListItem, Subject } from "@/lib/types";
 import { plural } from "@/lib/utils";
+import { useHref } from "@/components/university";
 
 const PAGE_SIZE = 20;
 const MAX_COURSES = 3;
@@ -68,6 +69,7 @@ function TeachingCell({
     currentTerm: Term;
     onPanel: boolean;
 }) {
+    const pagePath = useHref();
     const { label: termLabel } = useTerms();
     const { teaching } = instructor;
     if (!teaching) return <span className="text-fg-subtle">Not teaching this year</span>;
@@ -79,7 +81,7 @@ function TeachingCell({
                 <span className="mr-1 text-[13px] text-fg-subtle">{termLabel(teaching.term)}</span>
             )}
             {teaching.courses.slice(0, MAX_COURSES).map((code) => (
-                <Link key={code} href={`/${code}`}>
+                <Link key={code} href={pagePath(`/${code}`)}>
                     <Badge className={onPanel ? "bg-panel" : "hover:bg-block"}>{formatCourseCode(code)}</Badge>
                 </Link>
             ))}

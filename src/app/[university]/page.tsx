@@ -5,8 +5,8 @@ import { Page, PageHeader } from "@/components/layout/page";
 import { formatNumber } from "@/lib/utils";
 import { getCourseIndex } from "@/lib/data";
 
-export default async function HomePage() {
-    const courses = await getCourseIndex();
+export default async function HomePage({ params }: { params: Promise<{ university: string }> }) {
+    const courses = await getCourseIndex((await params).university);
     return (
         <Page breadcrumbs={[{ label: "Home" }]}>
             <PageHeader

@@ -6,11 +6,15 @@ import { getCurrentTerm, getInstructorList, getSubjects } from "@/lib/data";
 
 export const metadata: Metadata = {
     title: "Instructors - DalSearch",
-    description: "Compare Dalhousie instructors by RateMyProfessors rating, difficulty and the courses they teach.",
+    description: "Compare instructors by RateMyProfessors rating, difficulty and the courses they teach.",
 };
 
-export default async function InstructorsPage() {
-    const [instructors, subjects] = await Promise.all([getInstructorList(await getCurrentTerm()), getSubjects()]);
+export default async function InstructorsPage({ params }: { params: Promise<{ university: string }> }) {
+    const { university } = await params;
+    const [instructors, subjects] = await Promise.all([
+        getInstructorList(university, await getCurrentTerm(university)),
+        getSubjects(university),
+    ]);
     const rated = instructors.filter((instructor) => instructor.rating !== null).length;
 
     return (

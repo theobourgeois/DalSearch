@@ -6,11 +6,13 @@ import { Combobox } from "@/components/ui/combobox";
 import type { Term } from "@/lib/constants";
 import type { Room } from "@/lib/types";
 import { roomHref } from "./room-links";
+import { useHref } from "@/components/university";
 
 const MAX_RESULTS = 8;
 
 /** Finds a room by building or number and opens its schedule. */
 export function RoomSearch({ rooms, term, size = "md" }: { rooms: Room[]; term: Term; size?: "md" | "lg" }) {
+    const pagePath = useHref();
     const router = useRouter();
     const [query, setQuery] = useState("");
     const matches = useMemo(() => {
@@ -31,7 +33,7 @@ export function RoomSearch({ rooms, term, size = "md" }: { rooms: Room[]; term: 
             getKey={(match) => match.id}
             onSelect={(match) => {
                 setQuery("");
-                router.push(roomHref(match.id, term));
+                router.push(pagePath(roomHref(match.id, term)));
             }}
             label="Search rooms"
             placeholder="Search a building or room, like Goldberg 127"

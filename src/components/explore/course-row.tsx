@@ -6,6 +6,7 @@ import type { Term } from "@/lib/constants";
 import { courseKey, formatCourseCode, type CourseFit } from "@/lib/schedule";
 import { formatDays, formatTimeRange, isTimed } from "@/lib/time";
 import type { CourseListItem } from "@/lib/types";
+import { useHref } from "@/components/university";
 
 export const courseRowColumns = "minmax(0,1.8fr) minmax(0,1.2fr) minmax(0,1.3fr) 4.5rem minmax(0,2fr) 2rem";
 
@@ -26,6 +27,7 @@ function seats(course: CourseListItem, term: Term) {
 
 /** One course in the Explore list: who teaches it, when the lecture is, seats, and whether it fits. */
 export function CourseRow({ course, fit, term, color, ratings }: CourseRowProps) {
+    const pagePath = useHref();
     const code = courseKey(course);
     const [instructor] = course.instructorsByTerm[term] ?? [];
     const rating = instructor ? ratings[instructor] : undefined;
@@ -37,7 +39,7 @@ export function CourseRow({ course, fit, term, color, ratings }: CourseRowProps)
         <DataListRow className="relative">
             <CellText
                 primary={
-                    <Link href={`/${code}`} className="after:absolute after:inset-0 after:rounded-row">
+                    <Link href={pagePath(`/${code}`)} className="after:absolute after:inset-0 after:rounded-row">
                         {formatCourseCode(code)}
                     </Link>
                 }

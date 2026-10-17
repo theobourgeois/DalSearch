@@ -1,7 +1,9 @@
 import { getCourse } from "@/lib/data";
+import { requestedUniversity } from "@/lib/university";
 
-export async function GET(_request: Request, { params }: { params: Promise<{ course: string }> }) {
-  const course = await getCourse((await params).course);
+export async function GET(request: Request, { params }: { params: Promise<{ course: string }> }) {
+  const university = requestedUniversity(request);
+  const course = university ? await getCourse(university, (await params).course) : undefined;
 
   if (!course) {
     return new Response('Course not found', { status: 404 });

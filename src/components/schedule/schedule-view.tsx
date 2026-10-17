@@ -31,6 +31,7 @@ import { plural } from "@/lib/utils";
 import { useScheduleStore } from "@/store/schedule-store";
 import { ConflictNotice } from "./conflict-notice";
 import { ScheduleAside } from "./schedule-aside";
+import { useHref, useUniversity } from "@/components/university";
 
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
@@ -59,7 +60,9 @@ function TermSwitcher({ term }: { term: Term }) {
 
 /** The schedule for the term being planned: week calendar or list, clashes, and course details. */
 export function ScheduleView({ exams }: { exams: ExamSchedule }) {
-    const { label: termLabel } = useTerms();
+    const pagePath = useHref();
+    const { label: termLabel, terms } = useTerms();
+    const { timezone, creditLabel } = useUniversity();
     const schedule = useTermSchedule();
     const { term, sessions, codes, colors, conflicts, credits, ready } = schedule;
     const currentTerm = useCurrentTerm();
@@ -77,7 +80,7 @@ export function ScheduleView({ exams }: { exams: ExamSchedule }) {
             variant: "tinted",
             color: colors[session.course],
             conflict: conflicted.has(id),
-            href: `/${session.course}`,
+            href: pagePath(`/${session.course}`),
         })),
     );
 
@@ -88,7 +91,7 @@ export function ScheduleView({ exams }: { exams: ExamSchedule }) {
                 setView("week");
                 await nextFrame();
             }
-            await exportSchedule(format, calendarRef.current, sessions);
+            await exportSchedule(format, calendarRef.current, sessions, terms, timezone);
         } catch {
             toast("Couldn't export your schedule. Try another format.");
         }
@@ -100,7 +103,7 @@ export function ScheduleView({ exams }: { exams: ExamSchedule }) {
                 title={termLabel(term)}
                 titleAddon={<TermSwitcher term={term} />}
                 subtitle={
-                    ready && codes.length > 0 ? `${plural(codes.length, "course")}, ${credits} credit hours` : undefined
+                    ready && codes.length > 0 ? `${plural(codes.length, "course")}, ${credits} ${creditLabel.toLowerCase()}` : undefined
                 }
             />
             <PageActions
@@ -164,7 +167,7 @@ export function ScheduleView({ exams }: { exams: ExamSchedule }) {
                     description="Find a course, pick its sections and add it. It will show up here on your week."
                     action={
                         <Button asChild variant="outline">
-                            <Link href="/explore">Explore courses</Link>
+                            <Link href={pagePath("/explore")}>Explore courses</Link>
                         </Button>
                     }
                 />
@@ -190,7 +193,7 @@ export function ScheduleView({ exams }: { exams: ExamSchedule }) {
                             conflicts={conflicts}
                             action={
                                 <Button asChild size="sm" variant="outline">
-                                    <Link href={`/${firstConflict.second.course}`}>Change sections</Link>
+                                    <Link href={pagePath(`/${firstConflict.second.course}`)}>Change sections</Link>
                                 </Button>
                             }
                         />

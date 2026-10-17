@@ -11,17 +11,19 @@ import { CellText } from "@/components/ui/data-list";
 import { useCourseDetails } from "@/hooks/use-course-details";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
 import { formatCourseCode, getCourseFit } from "@/lib/schedule";
-import { useLibraryStore } from "@/store/library-store";
+import { useLibraryStore, useLibraryStoreApi } from "@/store/library-store";
 import { useHydrated } from "@/store/storage";
+import { useHref } from "@/components/university";
 
 const COLLAPSED = 5;
 
 /** The last courses opened, with whether each fits the schedule being planned. */
 export function RecentlyViewed() {
+    const pagePath = useHref();
     const recentCourses = useLibraryStore((state) => state.recentCourses);
     const removeRecentCourse = useLibraryStore((state) => state.removeRecentCourse);
     const clearRecent = useLibraryStore((state) => state.clearRecent);
-    const ready = useHydrated(useLibraryStore);
+    const ready = useHydrated(useLibraryStoreApi());
     const [expanded, setExpanded] = useState(false);
     const { byCode } = useCourseIndex();
     const { term, sessions, colors } = useTermSchedule();
@@ -48,7 +50,7 @@ export function RecentlyViewed() {
                             <CellText
                                 className="flex-1"
                                 primary={
-                                    <Link href={`/${code}`} className="after:absolute after:inset-0">
+                                    <Link href={pagePath(`/${code}`)} className="after:absolute after:inset-0">
                                         {formatCourseCode(code)}
                                     </Link>
                                 }

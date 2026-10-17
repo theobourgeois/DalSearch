@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { create } from "zustand";
+import { create, type StoreApi, type UseBoundStore } from "zustand";
 import { persist } from "zustand/middleware";
+import { useUniversity } from "@/components/university";
+import { DEFAULT_UNIVERSITY } from "@/lib/university";
 import type { Term } from "@/lib/constants";
 import type { ClassSession, CourseAndSubjectCode } from "@/lib/types";
 import { localStorageWithLegacy, readLegacy } from "./storage";
@@ -39,42 +41,78 @@ function migrateTimeSlots(): PersistedSchedule | null {
 const withoutCourse = (sessions: ClassSession[], course: CourseAndSubjectCode, term: Term) =>
     sessions.filter((session) => session.course !== course || session.term !== term);
 
-export const useScheduleStore = create<ScheduleState>()(
-    persist(
-        (set) => ({
-            sessions: [],
-            term: null,
-            setTerm: (term) => set({ term }),
-            setCourseSessions: (course, term, sessions) =>
-                set((state) => ({ sessions: [...withoutCourse(state.sessions, course, term), ...sessions] })),
-            removeCourse: (course, term) => set((state) => ({ sessions: withoutCourse(state.sessions, course, term) })),
-            clearTerm: (term) =>
-                set((state) => ({ sessions: state.sessions.filter((session) => session.term !== term) })),
-            upgradeLegacySessions: (fresh) =>
-                set((state) => {
-                    const key = (session: ClassSession) => `${session.term} ${session.crn}`;
-                    const freshByKey = new Map<string, ClassSession[]>();
-                    fresh.forEach((session) => freshByKey.set(key(session), [...(freshByKey.get(key(session)) ?? []), session]));
-                    const replaced = new Set<string>();
-                    // A section that's gone from the timetable keeps its saved copy.
-                    const sessions = state.sessions.flatMap((session) => {
-                        const replacement = isLegacySession(session) ? freshByKey.get(key(session)) : undefined;
-                        if (!replacement) return [session];
-                        if (replaced.has(key(session))) return [];
-                        replaced.add(key(session));
-                        return replacement;
-                    });
-                    return { sessions };
-                }),
-        }),
-        {
-            name: "dalsearch:schedule",
-            storage: localStorageWithLegacy(migrateTimeSlots),
-            partialize: ({ sessions, term }) => ({ sessions, term }),
-            skipHydration: true,
-        },
-    ),
-);
+function createScheduleStore(university: string) {
+    return create<ScheduleState>()(
+        persist(
+            (set) => ({
+                sessions: [],
+                term: null,
+                setTerm: (term) => set({ term }),
+                setCourseSessions: (course, term, sessions) =>
+                    set((state) => ({
+                        sessions: [...withoutCourse(state.sessions, course, term), ...sessions],
+                    })),
+                removeCourse: (course, term) =>
+                    set((state) => ({
+                        sessions: withoutCourse(state.sessions, course, term),
+                    })),
+                clearTerm: (term) =>
+                    set((state) => ({
+                        sessions: state.sessions.filter((session) => session.term !== term),
+                    })),
+                upgradeLegacySessions: (fresh) =>
+                    set((state) => {
+                        const key = (session: ClassSession) => `${session.term} ${session.crn}`;
+                        const freshByKey = new Map<string, ClassSession[]>();
+                        fresh.forEach((session) =>
+                            freshByKey.set(key(session), [...(freshByKey.get(key(session)) ?? []), session]),
+                        );
+                        const replaced = new Set<string>();
+                        // A section that's gone from the timetable keeps its saved copy.
+                        const sessions = state.sessions.flatMap((session) => {
+                            const replacement = isLegacySession(session) ? freshByKey.get(key(session)) : undefined;
+                            if (!replacement) return [session];
+                            if (replaced.has(key(session))) return [];
+                            replaced.add(key(session));
+                            return replacement;
+                        });
+                        return { sessions };
+                    }),
+            }),
+            {
+                // Dal keeps the key it had before other universities, so saved schedules carry over.
+                name: university === DEFAULT_UNIVERSITY ? "dalsearch:schedule" : `dalsearch:schedule:${university}`,
+                storage: localStorageWithLegacy(university === DEFAULT_UNIVERSITY ? migrateTimeSlots : undefined),
+                partialize: ({ sessions, term }) => ({ sessions, term }),
+                skipHydration: true,
+            },
+        ),
+    );
+}
+
+type ScheduleStore = UseBoundStore<StoreApi<ScheduleState>> & ReturnType<typeof createScheduleStore>;
+
+const stores = new Map<string, ScheduleStore>();
+
+/** Each university has its own schedule: course and term codes can repeat between universities. */
+export function scheduleStoreFor(university: string): ScheduleStore {
+    let store = stores.get(university);
+    if (!store) {
+        store = createScheduleStore(university);
+        stores.set(university, store);
+    }
+    return store;
+}
+
+/** The current university's schedule store, for getState() and persistence. */
+export function useScheduleStoreApi(): ScheduleStore {
+    return scheduleStoreFor(useUniversity().id);
+}
+
+/** Reads the current university's schedule. */
+export function useScheduleStore<T>(selector: (state: ScheduleState) => T): T {
+    return useScheduleStoreApi()(selector);
+}
 
 /** Sessions scheduled in the given term. */
 export function useTermSessions(term: Term): ClassSession[] {

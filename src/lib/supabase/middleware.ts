@@ -1,12 +1,14 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
+import { splitUniversityPath, universityPath } from "@/lib/university"
 
-export async function updateSession(request: NextRequest) {
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return NextResponse.next({ request })
+/** Refreshes the Supabase session. `rewriteTo` serves the request from another route, keeping the URL. */
+export async function updateSession(request: NextRequest, rewriteTo?: URL) {
+  const pass = () =>
+    rewriteTo ? NextResponse.rewrite(rewriteTo, { request }) : NextResponse.next({ request })
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return pass()
 
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+  let supabaseResponse = pass()
 
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.
@@ -20,9 +22,7 @@ export async function updateSession(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
+          supabaseResponse = pass()
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -41,9 +41,10 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims
 
   const privatePaths = ["/protected", "/reviews", "/panel"]
-  if (!user && privatePaths.some((path) => request.nextUrl.pathname.startsWith(path))) {
+  const { university, path } = splitUniversityPath(request.nextUrl.pathname)
+  if (!user && privatePaths.some((page) => path.startsWith(page))) {
     const url = request.nextUrl.clone()
-    url.pathname = "/auth/login"
+    url.pathname = universityPath(university, "/auth/login")
     return NextResponse.redirect(url)
   }
 

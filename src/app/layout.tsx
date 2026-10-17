@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { AppShell } from "@/components/layout/app-shell";
 import { Providers } from "@/components/providers";
-import { getCourseIndex, getCurrentTerm, getTerms } from "@/lib/data";
 import "./globals.css";
 
 const satoshi = localFont({
@@ -82,14 +80,11 @@ export const metadata: Metadata = {
     manifest: "/manifest.json",
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-    const [courseIndex, terms, currentTerm] = await Promise.all([getCourseIndex(), getTerms(), getCurrentTerm()]);
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className={satoshi.variable} suppressHydrationWarning>
             <body>
-                <Providers courseIndex={courseIndex} terms={terms} currentTerm={currentTerm}>
-                    <AppShell>{children}</AppShell>
-                </Providers>
+                <Providers>{children}</Providers>
             </body>
         </html>
     );

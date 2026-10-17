@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 jobs:
-  dal:
+  refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
@@ -29,6 +29,13 @@ jobs:
         run: node src/scripts/node/refresh.js dal
       - name: Import RateMyProfessors professors and reviews
         run: python3 src/scripts/py/rmp_reviews.py --university dal
+      # A failure at one university shouldn't stop the others, so later steps run regardless.
+      - name: Refresh MSVU's timetable and course details
+        if: ${{ always() }}
+        run: node src/scripts/node/refresh.js msvu
+      - name: Import MSVU RateMyProfessors professors and reviews
+        if: ${{ always() }}
+        run: python3 src/scripts/py/rmp_reviews.py --university msvu
       # Pages are cached for a day; this shows the new data straight away. Skipped until the
       # REVALIDATE_SECRET and SITE_URL secrets are set.
       - name: Refresh the site

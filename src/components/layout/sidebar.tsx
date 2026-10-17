@@ -15,6 +15,7 @@ import {
 import { usePlannedTerm, useTerms } from "@/components/current-term";
 import { useCourseIndex } from "@/components/search/course-index";
 import { useSearchDialog } from "@/components/search/search-dialog";
+import { useHref, useUniversity } from "@/components/university";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
@@ -24,14 +25,17 @@ import { displayName, useUser } from "@/hooks/use-user";
 import { type Term } from "@/lib/constants";
 import { formatCourseCode, totalCredits } from "@/lib/schedule";
 import type { CourseAndSubjectCode } from "@/lib/types";
+import { splitUniversityPath } from "@/lib/university";
 import { cn } from "@/lib/utils";
-import { useLibraryStore } from "@/store/library-store";
-import { useScheduleStore } from "@/store/schedule-store";
+import { useLibraryStore, useLibraryStoreApi } from "@/store/library-store";
+import { useScheduleStore, useScheduleStoreApi } from "@/store/schedule-store";
 import { useHydrated } from "@/store/storage";
 import { Logo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
+import { UniversitySwitcher } from "./university-switcher";
 
-const isCoursePath = (path: string) => /^\/[A-Z]{4}\d{4}$/i.test(path);
+/** "/CSCI2110": letters then a code with a digit, unlike any page name. */
+const isCoursePath = (path: string) => /^\/[A-Z]+\d[A-Z0-9]*$/i.test(path);
 
 const navItems: { href: string; label: string; icon: Icon; isActive: (path: string) => boolean }[] = [
     { href: "/", label: "Home", icon: HouseIcon, isActive: (path) => path === "/" },
@@ -74,8 +78,9 @@ function CourseLink({
     onNavigate?: () => void;
 }) {
     const { byCode } = useCourseIndex();
+    const pagePath = useHref();
     return (
-        <Link href={`/${code}`} onClick={onNavigate} className={rowClass}>
+        <Link href={pagePath(`/${code}`)} onClick={onNavigate} className={rowClass}>
             <Dot color={color} />
             <span className="shrink-0 font-bold">{formatCourseCode(code)}</span>
             <span className="min-w-0 truncate font-medium text-fg-subtle">{byCode.get(code)?.title}</span>
@@ -92,12 +97,13 @@ function CourseLink({
 
 function ScheduleSection({ onNavigate }: { onNavigate?: () => void }) {
     const { label: termLabel } = useTerms();
+    const { creditLabel } = useUniversity();
     const { ready, term, codes, colors, conflicted, credits } = useTermSchedule();
     if (!ready) return null;
 
     return (
         <>
-            <SectionHeading aside={codes.length > 0 && `${credits} credits`}>{termLabel(term)}</SectionHeading>
+            <SectionHeading aside={codes.length > 0 && `${credits} ${creditLabel.toLowerCase()}`}>{termLabel(term)}</SectionHeading>
             {codes.length === 0 ? (
                 <p className="mx-3.5 text-[13px] text-fg-subtle">Courses you add will show up here.</p>
             ) : (
@@ -117,7 +123,7 @@ function ScheduleSection({ onNavigate }: { onNavigate?: () => void }) {
 
 function SavedSection({ onNavigate }: { onNavigate?: () => void }) {
     const saved = useLibraryStore((state) => state.saved);
-    const ready = useHydrated(useLibraryStore);
+    const ready = useHydrated(useLibraryStoreApi());
     if (!ready || saved.length === 0) return null;
 
     return (
@@ -132,12 +138,14 @@ function SavedSection({ onNavigate }: { onNavigate?: () => void }) {
 
 function OtherTermsSection({ onNavigate }: { onNavigate?: () => void }) {
     const { label: termLabel, listed: termCodes } = useTerms();
+    const { creditLabel } = useUniversity();
+    const pagePath = useHref();
     const router = useRouter();
     const { byCode } = useCourseIndex();
     const plannedTerm = usePlannedTerm();
     const sessions = useScheduleStore((state) => state.sessions);
     const setTerm = useScheduleStore((state) => state.setTerm);
-    const ready = useHydrated(useScheduleStore);
+    const ready = useHydrated(useScheduleStoreApi());
     if (!ready) return null;
 
     const creditsIn = (term: Term) =>
@@ -149,7 +157,7 @@ function OtherTermsSection({ onNavigate }: { onNavigate?: () => void }) {
     const openTerm = (term: Term) => {
         setTerm(term);
         onNavigate?.();
-        router.push("/schedule");
+        router.push(pagePath("/schedule"));
     };
 
     return (
@@ -168,7 +176,7 @@ function OtherTermsSection({ onNavigate }: { onNavigate?: () => void }) {
                         >
                             <span className="font-medium">{termLabel(term)}</span>
                             <span className="text-[13px] text-fg-subtle">
-                                {credits > 0 ? `${credits} credits` : "Empty"}
+                                {credits > 0 ? `${credits} ${creditLabel.toLowerCase()}` : "Empty"}
                             </span>
                         </button>
                     );
@@ -179,19 +187,20 @@ function OtherTermsSection({ onNavigate }: { onNavigate?: () => void }) {
 
 function Account() {
     const user = useUser();
+    const pagePath = useHref();
     if (user === undefined) return <div className="h-9" />;
 
     if (!user) {
         return (
             <Button asChild variant="outline" size="sm">
-                <Link href="/auth/login">Sign in</Link>
+                <Link href={pagePath("/auth/login")}>Sign in</Link>
             </Button>
         );
     }
 
     const name = displayName(user);
     return (
-        <Link href="/protected" className="flex min-w-0 items-center gap-2.5 rounded-full">
+        <Link href={pagePath("/protected")} className="flex min-w-0 items-center gap-2.5 rounded-full">
             <Avatar name={name} className="size-8" />
             <span className="min-w-0 leading-tight">
                 <span className="block truncate text-sm font-bold">{name}</span>
@@ -203,12 +212,14 @@ function Account() {
 
 /** Sidebar contents, shared by the desktop sidebar and the mobile menu. */
 export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
-    const pathname = usePathname();
+    const { path } = splitUniversityPath(usePathname());
+    const pagePath = useHref();
     const { openSearch } = useSearchDialog();
 
     return (
         <div className="flex h-full flex-col px-3 pb-3 pt-4">
             <Logo className="mx-2 self-start" />
+            <UniversitySwitcher onNavigate={onNavigate} />
 
             <button
                 type="button"
@@ -225,11 +236,11 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
             <nav className="flex flex-col gap-0.5" aria-label="Main">
                 {navItems.map(({ href, label, icon: NavIcon, isActive }) => {
-                    const active = isActive(pathname);
+                    const active = isActive(path);
                     return (
                         <Link
                             key={href}
-                            href={href}
+                            href={pagePath(href)}
                             onClick={onNavigate}
                             aria-current={active ? "page" : undefined}
                             className={cn(

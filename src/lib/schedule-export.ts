@@ -1,4 +1,5 @@
 import { formatCourseCode, sessionName } from "./schedule";
+import type { TermInfo } from "./terms";
 import { isTimed, type TimedSession } from "./time";
 import type { ClassSession, Day } from "./types";
 
@@ -27,33 +28,28 @@ async function renderElement(element: HTMLElement) {
 const rruleDays: Record<Day, string> = { M: "MO", T: "TU", W: "WE", R: "TH", F: "FR", S: "SA" };
 const weekdayIndex: Record<Day, number> = { M: 1, T: 2, W: 3, R: 4, F: 5, S: 6 };
 
-/** Approximate first day of classes for a term code such as "202620". */
-function termStart(term: string): Date {
-    const year = Number(term.slice(0, 4));
-    switch (term.slice(4)) {
-        case "10":
-            return new Date(year - 1, 8, 1);
-        case "30":
-            return new Date(year, 4, 1);
-        default:
-            return new Date(year, 0, 6);
-    }
+/** The first day of classes in `term`: its start date, or today for a term the site doesn't know. */
+function termStart(term: string, terms: TermInfo[]): Date {
+    const startsOn = terms.find((info) => info.code === term)?.startsOn;
+    if (!startsOn) return new Date();
+    const [year, month, day] = startsOn.split("-").map(Number);
+    return new Date(year, month - 1, day);
 }
 
-function firstMeeting(session: TimedSession): string {
-    const date = termStart(session.term);
+function firstMeeting(session: TimedSession, terms: TermInfo[]): string {
+    const date = termStart(session.term, terms);
     const offset = (weekdayIndex[session.days[0]] - date.getDay() + 7) % 7;
     date.setDate(date.getDate() + offset);
     return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getDate()).padStart(2, "0")}`;
 }
 
-function toIcs(sessions: ClassSession[]): string {
+function toIcs(sessions: ClassSession[], terms: TermInfo[], timezone: string): string {
     const events = sessions.filter(isTimed).map((session) => {
-        const day = firstMeeting(session);
+        const day = firstMeeting(session, terms);
         return [
             "BEGIN:VEVENT",
-            `DTSTART;TZID=America/Halifax:${day}T${session.time.start}00`,
-            `DTEND;TZID=America/Halifax:${day}T${session.time.end}00`,
+            `DTSTART;TZID=${timezone}:${day}T${session.time.start}00`,
+            `DTEND;TZID=${timezone}:${day}T${session.time.end}00`,
             `RRULE:FREQ=WEEKLY;BYDAY=${session.days.map((d) => rruleDays[d]).join(",")}`,
             `LOCATION:${session.location}`,
             `SUMMARY:${formatCourseCode(session.course)} ${sessionName(session)}`,
@@ -70,10 +66,19 @@ function toIcs(sessions: ClassSession[]): string {
     ].join("\n");
 }
 
-/** Downloads a schedule as an image or PDF of `element`, or as a calendar file of `sessions`. */
-export async function exportSchedule(format: ExportFormat, element: HTMLElement | null, sessions: ClassSession[]) {
+/**
+ * Downloads a schedule as an image or PDF of `element`, or as a calendar file of `sessions` that starts
+ * on each term's first day, in the university's `timezone`.
+ */
+export async function exportSchedule(
+    format: ExportFormat,
+    element: HTMLElement | null,
+    sessions: ClassSession[],
+    terms: TermInfo[],
+    timezone: string,
+) {
     if (format === "ics") {
-        download(`data:text/calendar;charset=utf-8,${encodeURIComponent(toIcs(sessions))}`, "schedule.ics");
+        download(`data:text/calendar;charset=utf-8,${encodeURIComponent(toIcs(sessions, terms, timezone))}`, "schedule.ics");
         return;
     }
     if (!element) return;

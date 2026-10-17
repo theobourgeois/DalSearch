@@ -1,7 +1,9 @@
 "use client";
 
-import { create } from "zustand";
+import { create, type StoreApi, type UseBoundStore } from "zustand";
 import { persist } from "zustand/middleware";
+import { useUniversity } from "@/components/university";
+import { DEFAULT_UNIVERSITY } from "@/lib/university";
 import type { CourseAndSubjectCode } from "@/lib/types";
 import { localStorageWithLegacy, readLegacy } from "./storage";
 
@@ -36,31 +38,68 @@ const pushUnique = <T>(list: T[], item: T, max: number) =>
     [item, ...list.filter((entry) => entry !== item)].slice(0, max);
 
 /** Saved courses and recently viewed courses and searches. */
-export const useLibraryStore = create<LibraryState>()(
-    persist(
-        (set) => ({
-            saved: [],
-            recentCourses: [],
-            recentQueries: [],
-            toggleSaved: (course) =>
-                set((state) => ({
-                    saved: state.saved.includes(course)
-                        ? state.saved.filter((code) => code !== course)
-                        : [...state.saved, course],
-                })),
-            addRecentCourse: (course) =>
-                set((state) => ({ recentCourses: pushUnique(state.recentCourses, course, MAX_RECENT_COURSES) })),
-            removeRecentCourse: (course) =>
-                set((state) => ({ recentCourses: state.recentCourses.filter((code) => code !== course) })),
-            addRecentQuery: (query) =>
-                set((state) => ({ recentQueries: pushUnique(state.recentQueries, query.trim(), MAX_RECENT_QUERIES) })),
-            clearRecent: () => set({ recentCourses: [], recentQueries: [] }),
-        }),
-        {
-            name: "dalsearch:library",
-            storage: localStorageWithLegacy(migrateRecentSearches),
-            partialize: ({ saved, recentCourses, recentQueries }) => ({ saved, recentCourses, recentQueries }),
-            skipHydration: true,
-        },
-    ),
-);
+function createLibraryStore(university: string) {
+    return create<LibraryState>()(
+        persist(
+            (set) => ({
+                saved: [],
+                recentCourses: [],
+                recentQueries: [],
+                toggleSaved: (course) =>
+                    set((state) => ({
+                        saved: state.saved.includes(course)
+                            ? state.saved.filter((code) => code !== course)
+                            : [...state.saved, course],
+                    })),
+                addRecentCourse: (course) =>
+                    set((state) => ({
+                        recentCourses: pushUnique(state.recentCourses, course, MAX_RECENT_COURSES),
+                    })),
+                removeRecentCourse: (course) =>
+                    set((state) => ({
+                        recentCourses: state.recentCourses.filter((code) => code !== course),
+                    })),
+                addRecentQuery: (query) =>
+                    set((state) => ({
+                        recentQueries: pushUnique(state.recentQueries, query.trim(), MAX_RECENT_QUERIES),
+                    })),
+                clearRecent: () => set({ recentCourses: [], recentQueries: [] }),
+            }),
+            {
+                // Dal keeps the key it had before other universities, so saved courses carry over.
+                name: university === DEFAULT_UNIVERSITY ? "dalsearch:library" : `dalsearch:library:${university}`,
+                storage: localStorageWithLegacy(university === DEFAULT_UNIVERSITY ? migrateRecentSearches : undefined),
+                partialize: ({ saved, recentCourses, recentQueries }) => ({
+                    saved,
+                    recentCourses,
+                    recentQueries,
+                }),
+                skipHydration: true,
+            },
+        ),
+    );
+}
+
+type LibraryStore = UseBoundStore<StoreApi<LibraryState>> & ReturnType<typeof createLibraryStore>;
+
+const stores = new Map<string, LibraryStore>();
+
+/** Each university has its own saved and recent courses. */
+export function libraryStoreFor(university: string): LibraryStore {
+    let store = stores.get(university);
+    if (!store) {
+        store = createLibraryStore(university);
+        stores.set(university, store);
+    }
+    return store;
+}
+
+/** The current university's library store, for getState() and persistence. */
+export function useLibraryStoreApi(): LibraryStore {
+    return libraryStoreFor(useUniversity().id);
+}
+
+/** Reads the current university's saved and recent courses. */
+export function useLibraryStore<T>(selector: (state: LibraryState) => T): T {
+    return useLibraryStoreApi()(selector);
+}

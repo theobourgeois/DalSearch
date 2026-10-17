@@ -1,4 +1,5 @@
 import { revalidatePath } from "next/cache";
+import { universityPath } from "@/lib/university";
 import { NextResponse } from "next/server";
 import { getSession, isModerator } from "@/lib/auth";
 
@@ -20,7 +21,7 @@ export async function POST(req: Request) {
     .from("external_reviews")
     .update({ hidden_at: new Date().toISOString() })
     .eq("id", external_review_id)
-    .select("course_code");
+    .select("university_id, course_code");
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -33,7 +34,10 @@ export async function POST(req: Request) {
   await session.supabase.from("external_review_flags").delete().eq("external_review_id", external_review_id);
 
   // Course pages are cached for a day; drop this one so the review goes away now.
-  revalidatePath(`/${data[0].course_code}`);
+  // The page is rendered at /<university>/<code>; Dal's is also served at /<code>.
+  const { university_id, course_code } = data[0];
+  revalidatePath(`/${university_id}/${course_code}`);
+  revalidatePath(universityPath(university_id, `/${course_code}`));
 
   return NextResponse.json({ message: "Review hidden" }, { status: 200 });
 }

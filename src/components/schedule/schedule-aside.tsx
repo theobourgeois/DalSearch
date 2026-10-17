@@ -14,6 +14,7 @@ import { findExam, formatExam, type ExamSchedule } from "@/lib/exams";
 import { formatCourseCode, listSessions, weekShape } from "@/lib/schedule";
 import { formatDays, formatDuration, formatMinutes, weeklyMinutes } from "@/lib/time";
 import { useScheduleStore } from "@/store/schedule-store";
+import { useHref, useUniversity } from "@/components/university";
 
 type ScheduleAsideProps = {
     schedule: TermSchedule;
@@ -22,7 +23,9 @@ type ScheduleAsideProps = {
 
 /** The details column on the schedule page: courses, CRNs, the shape of the week and final exams. */
 export function ScheduleAside({ schedule, exams }: ScheduleAsideProps) {
+    const pagePath = useHref();
     const { byCode } = useCourseIndex();
+    const { timezone } = useUniversity();
     const removeCourse = useScheduleStore((state) => state.removeCourse);
     const { term, codes, colors, sessions, conflicts } = schedule;
     const shape = weekShape(sessions);
@@ -48,7 +51,7 @@ export function ScheduleAside({ schedule, exams }: ScheduleAsideProps) {
                             <Dot color={colors[code]} className="mt-[7px]" />
                             <div className="min-w-0">
                                 <Link
-                                    href={`/${code}`}
+                                    href={pagePath(`/${code}`)}
                                     className="flex justify-between text-[14.5px] font-bold hover:underline"
                                 >
                                     {formatCourseCode(code)}
@@ -111,7 +114,7 @@ export function ScheduleAside({ schedule, exams }: ScheduleAsideProps) {
                         {examRows.map(({ code, exam }) => (
                             <li key={code} className="flex justify-between gap-3">
                                 <span className="font-bold">{formatCourseCode(code)}</span>
-                                <span className="font-medium text-fg-muted">{formatExam(exam)}</span>
+                                <span className="font-medium text-fg-muted">{formatExam(exam, timezone)}</span>
                             </li>
                         ))}
                     </ul>

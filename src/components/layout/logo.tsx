@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useHref } from "@/components/university";
 
 /** The DalSearch mark: a gold magnifying glass around the Dalhousie gargoyle. */
 export function LogoMark({ className }: { className?: string }) {
@@ -18,8 +19,9 @@ export function LogoMark({ className }: { className?: string }) {
 }
 
 export function Logo({ className }: { className?: string }) {
+    const pagePath = useHref();
     return (
-        <Link href="/" className={cn("flex items-center gap-2.5 rounded-full", className)}>
+        <Link href={pagePath("/")} className={cn("flex items-center gap-2.5 rounded-full", className)}>
             <LogoMark />
             <span className="text-[17px] font-black tracking-tight">DalSearch</span>
         </Link>

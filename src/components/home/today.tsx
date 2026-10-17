@@ -13,6 +13,7 @@ import { dayNames } from "@/lib/constants";
 import { formatCourseCode, sessionName } from "@/lib/schedule";
 import { formatDuration, formatMinutes, isTimed, toMinutes, type TimedSession } from "@/lib/time";
 import { cn } from "@/lib/utils";
+import { useHref } from "@/components/university";
 
 const MIN_GAP = 30;
 
@@ -67,6 +68,7 @@ function Row({
 
 /** Today's classes from the current term, with the class in progress or the free gap you're in. */
 export function Today() {
+    const pagePath = useHref();
     const { label: termLabel } = useTerms();
     const currentTerm = useCurrentTerm();
     const { ready, sessions, colors, conflicts } = useTermSchedule(currentTerm);
@@ -105,7 +107,7 @@ export function Today() {
                                     state="now"
                                     aside={
                                         <Button asChild size="sm" variant="outline">
-                                            <Link href="/rooms">Find a free room</Link>
+                                            <Link href={pagePath("/rooms")}>Find a free room</Link>
                                         </Button>
                                     }
                                 >
@@ -132,7 +134,7 @@ export function Today() {
                                 }
                             >
                                 <Link
-                                    href={`/${session.course}`}
+                                    href={pagePath(`/${session.course}`)}
                                     className="flex items-center gap-2 text-[14.5px] font-bold hover:underline"
                                 >
                                     <Dot color={colors[session.course]} />
@@ -152,7 +154,7 @@ export function Today() {
                     conflicts={conflicts}
                     action={
                         <Button asChild size="sm" variant="outline">
-                            <Link href="/schedule">Review</Link>
+                            <Link href={pagePath("/schedule")}>Review</Link>
                         </Button>
                     }
                 />

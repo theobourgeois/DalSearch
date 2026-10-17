@@ -3,10 +3,12 @@ import { Page, PageHeader } from "@/components/layout/page";
 import { AdminList } from "@/components/moderation/admin-list";
 import { FlaggedReviews } from "@/components/moderation/flagged-reviews";
 import { isModerator, requireUser } from "@/lib/auth";
+import { universityPath } from "@/lib/university";
 
-export default async function PanelPage() {
-    const { supabase, role } = await requireUser();
-    if (!isModerator(role)) redirect("/protected");
+export default async function PanelPage({ params }: { params: Promise<{ university: string }> }) {
+    const { university } = await params;
+    const { supabase, role } = await requireUser(university);
+    if (!isModerator(role)) redirect(universityPath(university, "/protected"));
 
     let admins: { email: string; role: string }[] = [];
     if (role === "owner") {
@@ -16,7 +18,7 @@ export default async function PanelPage() {
     }
 
     return (
-        <Page breadcrumbs={[{ label: "Account", href: "/protected" }, { label: "Moderation" }]}>
+        <Page breadcrumbs={[{ label: "Account", href: universityPath(university, "/protected") }, { label: "Moderation" }]}>
             <PageHeader
                 title="Moderation"
                 description={

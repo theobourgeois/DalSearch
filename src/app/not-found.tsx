@@ -1,22 +1,14 @@
 import Link from "next/link";
-import { Page, PageHeader } from "@/components/layout/page";
-import { Button } from "@/components/ui/button";
 
+/** Only reached for addresses outside every university; pages inside one use [university]/not-found. */
 export default function NotFound() {
     return (
-        <Page breadcrumbs={[{ label: "Not found" }]}>
-            <PageHeader
-                title="Nothing here"
-                description="That course or page doesn't exist. Check the code and try again."
-            />
-            <div className="mt-6 flex gap-2">
-                <Button asChild variant="primary">
-                    <Link href="/explore">Explore courses</Link>
-                </Button>
-                <Button asChild variant="outline">
-                    <Link href="/">Go home</Link>
-                </Button>
-            </div>
-        </Page>
+        <main className="mx-auto max-w-md px-6 py-24">
+            <h1 className="text-3xl font-black">Nothing here</h1>
+            <p className="mt-3 text-fg-muted">That page doesn&apos;t exist.</p>
+            <Link href="/" className="mt-6 inline-block font-bold underline underline-offset-4">
+                Go home
+            </Link>
+        </main>
     );
 }

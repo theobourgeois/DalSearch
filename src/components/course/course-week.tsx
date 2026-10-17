@@ -9,6 +9,7 @@ import { formatDuration, formatMinutes, formatTimeRange, isTimed, toMinutes, wee
 import type { ClassSession, Day } from "@/lib/types";
 import { useCourse } from "./course-context";
 import { CourseTermSwitch } from "./term-switch";
+import { useHref } from "@/components/university";
 
 function Legend() {
     const swatch = "inline-block size-2.5 rounded-full";
@@ -52,6 +53,7 @@ function Fact({ value, label }: { value: string; label: string }) {
 
 /** The student's week with this course's picked sections placed in it. */
 export function CourseWeek() {
+    const pagePath = useHref();
     const { code, selected, isSelected, select, otherSessions, schedule, groups } = useCourse();
     const picked = new Set(selected.map((session) => session.crn));
     const newClashes = findConflicts([...otherSessions, ...selected]).filter(
@@ -68,7 +70,7 @@ export function CourseWeek() {
                 variant: "neutral",
                 color: schedule.colors[session.course],
                 conflict: clashing.has(id),
-                href: `/${session.course}`,
+                href: pagePath(`/${session.course}`),
             })),
         ),
         ...alternatives.flatMap((session) =>

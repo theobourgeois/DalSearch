@@ -13,8 +13,9 @@ import { SimpleTooltip } from "@/components/ui/tooltip";
 import type { ReviewContent } from "@/lib/reviews";
 import type { RmpReview } from "@/lib/rmp-reviews";
 import { formatCourseCode } from "@/lib/schedule";
+import { universityPath } from "@/lib/university";
 
-type ReportedRmpReview = RmpReview & { course_code: string };
+type ReportedRmpReview = RmpReview & { university_id: string; course_code: string };
 
 async function post(url: string, body: Record<string, string>) {
     const response = await fetch(url, {
@@ -25,8 +26,8 @@ async function post(url: string, body: Record<string, string>) {
     return response.ok;
 }
 
-const CourseLink = ({ code }: { code: string }) => (
-    <Link href={`/${code}#reviews`} className="hover:underline">
+const CourseLink = ({ university, code }: { university: string; code: string }) => (
+    <Link href={universityPath(university, `/${code}#reviews`)} className="hover:underline">
         {formatCourseCode(code)}
     </Link>
 );
@@ -79,7 +80,7 @@ export function FlaggedReviews() {
                     <ReviewItem
                         key={review.id}
                         review={review}
-                        context={<CourseLink code={review.course_code} />}
+                        context={<CourseLink university={review.university_id} code={review.course_code} />}
                         actions={
                             <>
                                 <SimpleTooltip label="Dismiss flags">
@@ -114,7 +115,7 @@ export function FlaggedReviews() {
                         <RmpReviewItem
                             key={review.id}
                             review={review}
-                            context={<CourseLink code={review.course_code} />}
+                            context={<CourseLink university={review.university_id} code={review.course_code} />}
                             actions={
                                 <>
                                     <SimpleTooltip label="Dismiss reports">

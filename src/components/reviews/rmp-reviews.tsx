@@ -17,6 +17,7 @@ import { formatReviewDate } from "@/lib/reviews";
 import { rmpAverages, type RmpReview } from "@/lib/rmp-reviews";
 import { isSameInstructor } from "@/lib/syllabi";
 import { useReviews } from "./reviews-context";
+import { useHref } from "@/components/university";
 
 const PAGE_SIZE = 8;
 const ALL = "__all";
@@ -68,12 +69,13 @@ type RmpReviewActionsProps = {
 
 /** Report for students, Hide for moderators. */
 function RmpReviewActions({ review, signedIn, isModerator, onHidden }: RmpReviewActionsProps) {
+    const pagePath = useHref();
     const router = useRouter();
 
     const report = async () => {
         if (!signedIn) {
             toast("Sign in to report reviews", {
-                action: { label: "Sign in", onClick: () => router.push("/auth/login") },
+                action: { label: "Sign in", onClick: () => router.push(pagePath("/auth/login")) },
             });
             return;
         }

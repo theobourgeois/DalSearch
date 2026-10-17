@@ -21,7 +21,6 @@ export const courseLevels = ["1000", "2000", "3000", "4000", "5000", "6000", "70
 export const scheduleBufferOptions = [0, 5, 10, 15, 30] as const;
 
 export const links = {
-    timetable: "https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable",
     source: "https://github.com/theobourgeois/DalSearch",
     coffee: "https://buymeacoffee.com/theobourgeois",
     theo: "https://theobourgeois.com",

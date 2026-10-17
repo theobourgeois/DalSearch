@@ -8,15 +8,16 @@ import { getCourseList, getCreditHourOptions, getRatingsByName, getSubjects } fr
 export const metadata: Metadata = {
     title: "Explore courses - DalSearch",
     description:
-        "Browse every Dalhousie course by term, subject, level and credit hours, and see which ones fit your schedule.",
+        "Browse every course by term, subject, level and credits, and see which ones fit your schedule.",
 };
 
-export default async function ExplorePage() {
+export default async function ExplorePage({ params }: { params: Promise<{ university: string }> }) {
+    const { university } = await params;
     const [courses, subjects, creditHours, ratings] = await Promise.all([
-        getCourseList(),
-        getSubjects(),
-        getCreditHourOptions(),
-        getRatingsByName(),
+        getCourseList(university),
+        getSubjects(university),
+        getCreditHourOptions(university),
+        getRatingsByName(university),
     ]);
 
     return (

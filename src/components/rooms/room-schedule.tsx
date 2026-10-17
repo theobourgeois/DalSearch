@@ -15,6 +15,7 @@ import { formatCourseCode, sessionName, weekShape } from "@/lib/schedule";
 import { formatMinutes } from "@/lib/time";
 import type { ClassSession, Room } from "@/lib/types";
 import { FreeRoomList, roomHref } from "./room-links";
+import { useHref } from "@/components/university";
 
 type RoomScheduleProps = {
     room: Room;
@@ -57,6 +58,7 @@ function StatusLine({ status, windows }: { status: RoomStatus; windows: [number,
 
 /** A room's week: who books it, which of your classes meet there, and nearby free rooms. */
 export function RoomSchedule({ room, sessions, term, status, freeWindows, freeRooms }: RoomScheduleProps) {
+    const pagePath = useHref();
     const { label: termLabel, options: termOptions } = useTerms();
     const router = useRouter();
     const [view, setView] = useState<CalendarView>("week");
@@ -82,7 +84,7 @@ export function RoomSchedule({ room, sessions, term, status, freeWindows, freeRo
             ],
             variant: own ? "tinted" : "neutral",
             color: own ? colors[own.course] : undefined,
-            href: `/${own?.course ?? first}`,
+            href: pagePath(`/${own?.course ?? first}`),
         };
     });
 
@@ -102,7 +104,7 @@ export function RoomSchedule({ room, sessions, term, status, freeWindows, freeRo
                     <SegmentedControl<Term>
                         aria-label="Term"
                         value={term}
-                        onValueChange={(next) => router.push(roomHref(room.id, next))}
+                        onValueChange={(next) => router.push(pagePath(roomHref(room.id, next)))}
                         options={termOptions()}
                     />
                 </SectionHeader>

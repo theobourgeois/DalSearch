@@ -1,29 +1,26 @@
 import { getCourses } from "@/lib/data";
+import { universities, universityPath } from "@/lib/university";
 
 const STATIC_PAGES = ["/", "/explore", "/schedule", "/rooms", "/instructors"];
 
+const entry = (path: string, changefreq: string, priority: number) => `
+        <url>
+          <loc>https://www.dalsearch.com${path}</loc>
+          <changefreq>${changefreq}</changefreq>
+          <priority>${priority}</priority>
+        </url>
+      `;
+
 export async function GET() {
-  const courses = await getCourses();
-  const urls = [
-    ...STATIC_PAGES.map(
-      (page) => `
-        <url>
-          <loc>https://www.dalsearch.com${page}</loc>
-          <changefreq>weekly</changefreq>
-          <priority>0.8</priority>
-        </url>
-      `
-    ),
-    ...courses.map(
-      (course) => `
-        <url>
-          <loc>https://www.dalsearch.com/${course.subjectCode + course.courseCode}</loc>
-          <changefreq>monthly</changefreq>
-          <priority>0.6</priority>
-        </url>
-      `
-    ),
-  ];
+  const pages = await Promise.all(
+    universities.map(async ({ id }) => [
+      ...STATIC_PAGES.map((page) => entry(universityPath(id, page), "weekly", 0.8)),
+      ...(await getCourses(id)).map((course) =>
+        entry(universityPath(id, `/${course.subjectCode + course.courseCode}`), "monthly", 0.6),
+      ),
+    ]),
+  );
+  const urls = pages.flat();
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
