@@ -3,7 +3,7 @@
 import { create, type StoreApi, type UseBoundStore } from "zustand";
 import { persist } from "zustand/middleware";
 import { useUniversity } from "@/components/university";
-import { DEFAULT_UNIVERSITY } from "@/lib/university";
+import { DEFAULT_UNIVERSITY, storageKey } from "@/lib/university";
 import type { CourseAndSubjectCode } from "@/lib/types";
 import { localStorageWithLegacy, readLegacy } from "./storage";
 
@@ -67,7 +67,7 @@ function createLibraryStore(university: string) {
             }),
             {
                 // Dal keeps the key it had before other universities, so saved courses carry over.
-                name: university === DEFAULT_UNIVERSITY ? "dalsearch:library" : `dalsearch:library:${university}`,
+                name: storageKey(university, "library"),
                 storage: localStorageWithLegacy(university === DEFAULT_UNIVERSITY ? migrateRecentSearches : undefined),
                 partialize: ({ saved, recentCourses, recentQueries }) => ({
                     saved,

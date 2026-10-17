@@ -13,7 +13,7 @@ function LoginFormFallback() {
     <Card>
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>Enter your Dalhousie email below to login to your account</CardDescription>
+        <CardDescription>Enter your school email below to sign in</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-6">

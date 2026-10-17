@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { create, type StoreApi, type UseBoundStore } from "zustand";
 import { persist } from "zustand/middleware";
 import { useUniversity } from "@/components/university";
-import { DEFAULT_UNIVERSITY } from "@/lib/university";
+import { DEFAULT_UNIVERSITY, storageKey } from "@/lib/university";
 import type { Term } from "@/lib/constants";
 import type { ClassSession, CourseAndSubjectCode } from "@/lib/types";
 import { localStorageWithLegacy, readLegacy } from "./storage";
@@ -81,7 +81,7 @@ function createScheduleStore(university: string) {
             }),
             {
                 // Dal keeps the key it had before other universities, so saved schedules carry over.
-                name: university === DEFAULT_UNIVERSITY ? "dalsearch:schedule" : `dalsearch:schedule:${university}`,
+                name: storageKey(university, "schedule"),
                 storage: localStorageWithLegacy(university === DEFAULT_UNIVERSITY ? migrateTimeSlots : undefined),
                 partialize: ({ sessions, term }) => ({ sessions, term }),
                 skipHydration: true,

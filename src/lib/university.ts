@@ -199,6 +199,11 @@ export function requestedUniversity(request: Request): string | null {
     return getUniversity(id) ? id : null;
 }
 
+/** A browser storage key for one university's saved state; Dal's keep the names they had before. */
+export function storageKey(university: string, name: string): string {
+    return university === DEFAULT_UNIVERSITY ? `dalsearch:${name}` : `dalsearch:${name}:${university}`;
+}
+
 /** The university a path belongs to and the path within it: "/msvu/explore" -> msvu, "/explore". */
 export function splitUniversityPath(pathname: string): { university: string; path: string } {
     const [, first = "", ...rest] = pathname.split("/");

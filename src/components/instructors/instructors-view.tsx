@@ -16,7 +16,9 @@ import { SearchField } from "@/components/ui/search-field";
 import { ShowMore } from "@/components/ui/show-more";
 import { Dot } from "@/components/ui/status";
 import { Switch } from "@/components/ui/switch";
+import { useUniversity } from "@/components/university";
 import { usePaged } from "@/hooks/use-paged";
+import { storageKey } from "@/lib/university";
 import { useStoredState } from "@/hooks/use-stored-state";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
 import { type Term } from "@/lib/constants";
@@ -136,7 +138,8 @@ function InstructorRow({ instructor, currentTerm, sharedCourse, color }: Instruc
 export function InstructorsView({ instructors, subjects }: { instructors: InstructorListItem[]; subjects: Subject[] }) {
     const { label: termLabel } = useTerms();
     const currentTerm = useCurrentTerm();
-    const [filter, setFilter] = useStoredState<InstructorFilter>(initialFilter, "dalsearch:instructors");
+    const { id: university } = useUniversity();
+    const [filter, setFilter] = useStoredState<InstructorFilter>(initialFilter, storageKey(university, "instructors"));
     const deferred = useDeferredValue(filter);
     const { codes, colors } = useTermSchedule(currentTerm);
 

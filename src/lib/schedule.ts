@@ -8,6 +8,11 @@ const sessionTypeLabels: Record<string, string> = {
     Lec: "Lecture",
     Lab: "Lab",
     Tut: "Tutorial",
+    Sem: "Seminar",
+    Prac: "Practicum",
+    Std: "Studio",
+    Ind: "Independent study",
+    Fld: "Field work",
     Ths: "Thesis",
     WkT: "Work term",
     WkS: "Workshop",
@@ -21,13 +26,25 @@ export function sessionTypeLabel(type: SessionType): string {
     return sessionTypeLabels[type] ?? type;
 }
 
+/**
+ * A course number's level, from its first digit and how many digits it has: "2110" -> "2000" at Dal,
+ * "270" -> "200" at USask, "1105EL" -> "1000".
+ */
+export function courseLevel(number: string): string | null {
+    const digits = number.match(/^\d+/)?.[0];
+    // Numbers starting with 0 ("060L") are upgrading or non-credit courses, below any level.
+    return digits && digits.length >= 3 && digits[0] !== "0" ? digits[0] + "0".repeat(digits.length - 1) : null;
+}
+
 export function courseKey(course: Pick<CourseListItem, "subjectCode" | "courseCode">): CourseAndSubjectCode {
     return `${course.subjectCode}${course.courseCode}` as CourseAndSubjectCode;
 }
 
 /** "CSCI2122" -> "CSCI 2122". */
 export function formatCourseCode(code: string): string {
-    return `${code.slice(0, 4)} ${code.slice(4)}`;
+    // The subject is the letters before the number: "CSCI2110" -> "CSCI 2110", "ENG110" -> "ENG 110",
+    // and Yukon's "2DS101" -> "2DS 101". Codes without a number are left as they are.
+    return code.replace(/^(\d*[A-Z]+)(?=\d)/, "$1 ");
 }
 
 /** "Lec 01", "Lab B03". */
@@ -99,7 +116,9 @@ export function getCourseFit(
         const options = [...new Set(sessions.map((session) => session.crn))].map((crn) =>
             sessions.filter((session) => session.crn === crn),
         );
-        const fitting = options.filter((option) => option.every((session) => sessionFits(session, taken, bufferMinutes)));
+        const fitting = options.filter((option) =>
+            option.every((session) => sessionFits(session, taken, bufferMinutes)),
+        );
         const pick = fitting.find((option) => option.some(isTimed)) ?? fitting[0];
         if (!pick) {
             const [clash] = sessions.flatMap((session) => findClashes(session, taken, bufferMinutes));

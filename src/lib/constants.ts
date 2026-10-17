@@ -21,8 +21,6 @@ export const dayNames = {
     S: { short: "Sat", long: "Saturday" },
 } as const;
 
-export const courseLevels = ["1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000", "9000"];
-
 export const scheduleBufferOptions = [0, 5, 10, 15, 30] as const;
 
 export const links = {
