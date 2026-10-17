@@ -29,9 +29,23 @@ export type ClassSession = {
     location: string;
     crn: string;
     course: CourseAndSubjectCode;
+    /** Primary instructor first. Missing from schedules saved before instructors were stored per section. */
+    instructors?: string[];
+    /** The campus of its main room. Missing from schedules saved before rooms were stored. */
+    campus?: string | null;
 };
 
-type Enrollment = {
+/** A physical room classes are held in. */
+export type Room = {
+    id: string;
+    campus: string | null;
+    /** "Goldberg Computer Science Bldg" */
+    building: string;
+    /** "Goldberg Computer Science Bldg 127" */
+    name: string;
+};
+
+export type Enrollment = {
     enrolled: number;
     capacity: number;
 };
@@ -42,20 +56,21 @@ type InstructorsByTerm = {
 
 export type Subject = {
     code: string;
-    description: string;
+    /** "Computer Science" */
+    name: string;
 };
 
 export type Course = {
     prerequisites: CourseAndSubjectCode[];
-    equivalent: string | null;
     subjectCode: SubjectCode;
     courseCode: CourseCode;
     title: string;
     creditHours: number;
+    /** Plain text. */
     description: string;
     termClasses: ClassSession[];
-    location: string;
-    enrollement: Enrollment;
+    /** Seats in the course's lectures (or its main kind of section) per term. */
+    enrollmentByTerm: Record<Term, Enrollment>;
     instructorsByTerm: InstructorsByTerm;
 };
 
@@ -71,28 +86,20 @@ export type CourseSummary = {
 /** The subset of a course needed to list it and work out whether it fits a schedule. */
 export type CourseListItem = Pick<
     Course,
-    "subjectCode" | "courseCode" | "title" | "creditHours" | "termClasses" | "enrollement" | "instructorsByTerm"
+    "subjectCode" | "courseCode" | "title" | "creditHours" | "termClasses" | "enrollmentByTerm" | "instructorsByTerm"
 >;
 
-export type RateMyProfInstructorData = {
+/** An instructor's RateMyProfessors profile, from the instructor_rating_by_name view. */
+export type InstructorRating = {
     firstName: string;
     lastName: string;
-    rateMyProfLink: string;
-    overallRating: `${number}` | null;
-    takeAgainRating: string;
-    difficultyLevel: number;
-    numberOfRatings: number;
-};
-
-export type RateMyProfInstructorsByName = Record<string, RateMyProfInstructorData>;
-
-export type InstructorData = {
-    name: string;
-    rateMyProfData: RateMyProfInstructorData | null;
-    courseAndTerms: {
-        term: Term;
-        course: CourseAndSubjectCode;
-    }[];
+    profileUrl: string | null;
+    /** 1-5, null when nobody has rated them. */
+    rating: number | null;
+    difficulty: number | null;
+    /** Percent, null when nobody answered. */
+    wouldTakeAgain: number | null;
+    ratingCount: number;
 };
 
 /** An instructor as listed on the Instructors page. */
@@ -126,7 +133,8 @@ export type CourseOrderBy = {
 };
 
 export type ExamData = {
+    /** As the exam schedule writes it: "1" for Lec 01 at Dal. */
     section: string;
-    date: string;
-    time: string;
+    /** ISO timestamp. */
+    startsAt: string;
 };

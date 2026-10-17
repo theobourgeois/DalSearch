@@ -4,23 +4,22 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Combobox } from "@/components/ui/combobox";
 import type { Term } from "@/lib/constants";
-import { parseLocation } from "@/lib/location";
+import type { Room } from "@/lib/types";
 import { roomHref } from "./room-links";
 
 const MAX_RESULTS = 8;
 
 /** Finds a room by building or number and opens its schedule. */
-export function RoomSearch({ rooms, term, size = "md" }: { rooms: string[]; term: Term; size?: "md" | "lg" }) {
+export function RoomSearch({ rooms, term, size = "md" }: { rooms: Room[]; term: Term; size?: "md" | "lg" }) {
     const router = useRouter();
     const [query, setQuery] = useState("");
-    const named = useMemo(() => rooms.map((location) => ({ location, ...parseLocation(location) })), [rooms]);
     const matches = useMemo(() => {
         const words = query.toLowerCase().split(/\s+/).filter(Boolean);
         if (words.length === 0) return [];
-        return named
+        return rooms
             .filter(({ name }) => words.every((word) => name.toLowerCase().includes(word)))
             .slice(0, MAX_RESULTS);
-    }, [named, query]);
+    }, [rooms, query]);
 
     return (
         <Combobox
@@ -29,10 +28,10 @@ export function RoomSearch({ rooms, term, size = "md" }: { rooms: string[]; term
             query={query}
             onQueryChange={setQuery}
             items={matches}
-            getKey={(match) => match.location}
+            getKey={(match) => match.id}
             onSelect={(match) => {
                 setQuery("");
-                router.push(roomHref(match.location, term));
+                router.push(roomHref(match.id, term));
             }}
             label="Search rooms"
             placeholder="Search a building or room, like Goldberg 127"

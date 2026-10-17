@@ -1,4 +1,4 @@
-import type { RateMyProfInstructorData } from "./types";
+import type { InstructorRating } from "./types";
 
 /** Below this many ratings, a score is flagged as based on few ratings. */
 export const FEW_RATINGS = 10;
@@ -20,17 +20,16 @@ export type RatingSummary = {
     profileUrl: string | null;
 };
 
-export function summarizeRating(name: string, rmp: RateMyProfInstructorData | null | undefined): RatingSummary {
-    const rating = Number(rmp?.overallRating);
-    const rated = rating > 0;
+export function summarizeRating(name: string, rmp: InstructorRating | null | undefined): RatingSummary {
+    const rated = rmp?.rating != null && rmp.rating > 0;
     return {
         name,
-        displayName: rmp ? `${rmp.firstName} ${rmp.lastName}` : name,
-        rating: rated ? rating : null,
-        takeAgain: rated && rmp?.takeAgainRating && rmp.takeAgainRating !== "N/A" ? rmp.takeAgainRating : null,
-        difficulty: rated ? Number(rmp?.difficultyLevel) : null,
-        ratingCount: rated ? Number(rmp?.numberOfRatings ?? 0) : 0,
-        profileUrl: rmp?.rateMyProfLink ?? null,
+        displayName: rmp ? `${rmp.firstName} ${rmp.lastName}`.trim() || name : name,
+        rating: rated ? rmp.rating : null,
+        takeAgain: rated && rmp.wouldTakeAgain !== null ? `${Math.round(rmp.wouldTakeAgain)}%` : null,
+        difficulty: rated ? rmp.difficulty : null,
+        ratingCount: rated ? rmp.ratingCount : 0,
+        profileUrl: rmp?.profileUrl ?? null,
     };
 }
 

@@ -1,6 +1,6 @@
 import { offeredTerms } from "./course";
 import { courseKey, getCourseFit } from "./schedule";
-import type { ClassSession, CourseFilter, CourseListItem, CourseOrderBy } from "./types";
+import type { ClassSession, CourseFilter, CourseListItem, CourseOrderBy, Term } from "./types";
 
 /** Empty lists mean "no restriction", so the default filter matches every course. */
 export const defaultFilter: CourseFilter = {
@@ -27,13 +27,15 @@ export function matchesSearch(course: Pick<CourseListItem, "subjectCode" | "cour
     );
 }
 
+/** `listed` is the terms on the timetable, oldest first. */
 export function filterCourses<T extends CourseListItem>(
     courses: T[],
     filter: CourseFilter,
+    listed: readonly Term[],
     scheduled: ClassSession[] = [],
 ): T[] {
     return courses.filter((course) => {
-        const terms = offeredTerms(course).filter((term) => allows(filter.terms, term));
+        const terms = offeredTerms(course, listed).filter((term) => allows(filter.terms, term));
         if (terms.length === 0) return false;
         if (!allows(filter.courseLevels, `${course.courseCode[0]}000`)) return false;
         if (!allows(filter.subjectCodes, course.subjectCode)) return false;
@@ -66,7 +68,8 @@ export function getFilteredCourses<T extends CourseListItem>(
     filter: CourseFilter,
     orderBy: CourseOrderBy,
     limit: number,
+    listed: readonly Term[],
     scheduled: ClassSession[] = [],
 ): T[] {
-    return sortCourses(filterCourses(courses, filter, scheduled), orderBy).slice(0, limit);
+    return sortCourses(filterCourses(courses, filter, listed, scheduled), orderBy).slice(0, limit);
 }

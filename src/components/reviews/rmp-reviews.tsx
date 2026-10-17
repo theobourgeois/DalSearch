@@ -1,5 +1,6 @@
 "use client";
 
+import { useTerms } from "@/components/current-term";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { EyeSlashIcon, FlagIcon } from "@phosphor-icons/react";
@@ -12,7 +13,6 @@ import { ShowMore } from "@/components/ui/show-more";
 import { SimpleTooltip } from "@/components/ui/tooltip";
 import { usePaged } from "@/hooks/use-paged";
 import { useIsModerator, useUser } from "@/hooks/use-user";
-import { termLabel } from "@/lib/constants";
 import { formatReviewDate } from "@/lib/reviews";
 import { rmpAverages, type RmpReview } from "@/lib/rmp-reviews";
 import { isSameInstructor } from "@/lib/syllabi";
@@ -161,6 +161,7 @@ export function RmpReviewItem({ review, context, actions }: RmpReviewItemProps) 
 
 /** RateMyProfessors reviews that mention this course, below the DalSearch reviews on the Reviews tab. */
 export function RmpReviews() {
+    const { label: termLabel } = useTerms();
     const { rmpReviews: loaded } = useReviews();
     const { course, term } = useCourse();
     const [instructor, setInstructor] = useState(ALL);

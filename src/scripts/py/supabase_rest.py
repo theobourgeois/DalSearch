@@ -1,4 +1,4 @@
-"""Settings from the repo's .env.local, and writes to a Supabase table with the secret key."""
+"""Settings from the repo's .env.local, and reads and writes Supabase tables with the secret key."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parents[3]
 UPSERT_BATCH = 500
+PAGE_SIZE = 1000
 
 
 def load_env() -> dict[str, str]:
@@ -45,6 +46,23 @@ class Table:
             )
             if not response.ok:
                 sys.exit(f"Upsert failed: HTTP {response.status_code} {response.text}")
+
+    def select_all(self, columns: str, filters: dict[str, str], order: str) -> list[dict]:
+        """Every matching row, a page at a time, advancing by what came back."""
+        rows: list[dict] = []
+        while True:
+            response = requests.get(
+                self.endpoint,
+                params={**filters, "select": columns, "order": order},
+                headers={**self.headers, "Range": f"{len(rows)}-{len(rows) + PAGE_SIZE - 1}"},
+                timeout=60,
+            )
+            if not response.ok:
+                sys.exit(f"Select failed: HTTP {response.status_code} {response.text}")
+            page = response.json()
+            if not page:
+                return rows
+            rows += page
 
     def count(self, filters: dict[str, str]) -> int:
         response = requests.head(

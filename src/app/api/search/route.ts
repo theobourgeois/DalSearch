@@ -1,10 +1,16 @@
-import { courses } from "@/lib/data";
+import { getCourses } from "@/lib/data";
+import type { Course } from "@/lib/types";
 import Fuse from "fuse.js";
 
-const fuse = new Fuse(Object.values(courses), {
-  includeScore: true,
-  keys: ['courseCode', 'subjectCode', 'title'],
-});
+// Rebuilt when the catalog reloads (getCourses returns a new list then).
+let index: { courses: Course[]; fuse: Fuse<Course> } | undefined;
+async function getFuse() {
+  const courses = await getCourses();
+  if (index?.courses !== courses) {
+    index = { courses, fuse: new Fuse(courses, { includeScore: true, keys: ['courseCode', 'subjectCode', 'title'] }) };
+  }
+  return index.fuse;
+}
 
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
@@ -16,7 +22,7 @@ export async function GET(request: Request) {
     return new Response('Search term not provided', { status: 404 });
   }
 
-  let results = fuse.search(searchTerm);
+  let results = (await getFuse()).search(searchTerm);
   if (limit) {
     const o = parseInt(offset ?? "0", 10);
     const l = parseInt(limit, 10);

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTerms } from "@/components/current-term";
 import { useState } from "react";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { SectionHeader } from "@/components/layout/page";
@@ -7,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Property, PropertyList } from "@/components/ui/property-list";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { termLabel } from "@/lib/constants";
 import { cleanInstructorName } from "@/lib/instructors";
 import {
     formatWeight,
@@ -130,6 +130,7 @@ const syllabusName = (syllabus: Syllabus) =>
  * preferring one by someone who teaches the term on the page.
  */
 export function CourseSyllabus({ syllabi }: { syllabi: Syllabus[] }) {
+    const { label: termLabel } = useTerms();
     const { course, term } = useCourse();
     const teaching = [
         ...new Set(

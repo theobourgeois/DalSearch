@@ -5,7 +5,8 @@ import type { CourseListItem } from "@/lib/types";
 
 const requests = new Map<string, Promise<CourseListItem | null>>();
 
-function fetchCourse(code: string): Promise<CourseListItem | null> {
+/** A course with its sections, fetched once per visit. */
+export function fetchCourse(code: string): Promise<CourseListItem | null> {
     let request = requests.get(code);
     if (!request) {
         request = fetch(`/api/course/${code}`)

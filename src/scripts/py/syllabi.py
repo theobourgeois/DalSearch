@@ -3,17 +3,18 @@
 Departments post syllabus PDFs on cdn.dal.ca and link them from their pages on www.dal.ca.
 Candidates come from two places: the Wayback Machine's index of Dal files (older uploads)
 and a crawl of the live faculty pages (current ones). A PDF is kept when its file name has
-a course from database/search.json and a year on or after --since. Each one is downloaded,
+one of Dal's courses in Supabase and a year on or after --since. Each one is downloaded,
 its text is sent to the model, and what comes back (grading, assessments, textbooks,
-policies, weekly topics) is written to --out. The PDF text itself isn't kept.
+policies, weekly topics) is recorded in the syllabus_documents table. The PDF text itself
+isn't kept.
 
-    python3 syllabi.py --out ../../../database/syllabi_cache.json          # find and extract new ones
-    python3 syllabi.py --out ../../../database/syllabi_cache.json --save   # then save to Supabase
+    python3 syllabi.py          # find and extract new ones
+    python3 syllabi.py --save   # then publish them to the syllabi table the site reads
 
 Run it at the start of each term, when departments post new syllabi.
 
---out doubles as a cache: documents already in it aren't downloaded or sent again.
-Needs OPENAI_API_KEY, and for --save NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY, from
+syllabus_documents doubles as a cache: documents already in it aren't downloaded or sent again.
+Needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY, and OPENAI_API_KEY unless saving, from
 the environment or the repo's .env.local.
 """
 
@@ -30,14 +31,14 @@ import time
 import urllib.parse
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
 
 import requests
 from pypdf import PdfReader
 
-from supabase_rest import ROOT, Table, load_env
+from supabase_rest import Table, load_env
 
 MODEL = "gpt-6-luna"
+UNIVERSITY = "dal"
 USER_AGENT = "Mozilla/5.0 (compatible; DalSearch syllabus indexer; +https://dalsearch.com)"
 CDX_URL = "http://web.archive.org/cdx/search/cdx"
 MAX_TEXT = 120_000
@@ -350,33 +351,39 @@ def to_row(url: str, row: dict, known: set[str]) -> dict:
         "weekly_topics": details["weekly_topics"],
         "class_meetings": details["class_meetings"],
         "model": MODEL,
+        "university_id": UNIVERSITY,
     }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--out", required=True, help="JSON file of results; also the cache")
     parser.add_argument("--since", type=int, default=2023, help="oldest year to keep (default 2023)")
     parser.add_argument("--limit", type=int, help="only process this many new documents")
     parser.add_argument("--max-pages", type=int, default=8000, help="dal.ca pages to crawl")
-    parser.add_argument("--save", action="store_true", help="save the syllabi in --out to Supabase and stop")
+    parser.add_argument("--save", action="store_true", help="publish the recorded syllabi to the syllabi table and stop")
     args = parser.parse_args()
 
+    env = load_env()
+    courses = Table(env, "courses").select_all("code", {"university_id": f"eq.{UNIVERSITY}"}, "code")
+    known = {course["code"] for course in courses}
+    if not known:
+        sys.exit("No Dal courses stored; refresh the timetable first")
+    documents = Table(env, "syllabus_documents")
+    results = {
+        row["url"]: row["data"]
+        for row in documents.select_all("url,data", {"university_id": f"eq.{UNIVERSITY}"}, "url")
+    }
+
     if args.save:
-        results = json.loads(Path(args.out).read_text())
-        known = set(json.loads((ROOT / "database" / "search.json").read_text()))
         rows = [
             to_row(url, row, known) for url, row in results.items()
             if row["status"] == "syllabus" and row["year"] >= args.since
         ]
-        Table(load_env(), "syllabi").upsert(rows, on_conflict="source_url")
+        Table(env, "syllabi").upsert(rows, on_conflict="source_url")
         print(f"Saved {len(rows)} syllabi to Supabase", file=sys.stderr)
         return
 
-    key = load_env().get("OPENAI_API_KEY") or sys.exit("Set OPENAI_API_KEY")
-    known = set(json.loads((ROOT / "database" / "search.json").read_text()))
-    out = Path(args.out)
-    results = json.loads(out.read_text()) if out.exists() else {}
+    key = env.get("OPENAI_API_KEY") or sys.exit("Set OPENAI_API_KEY")
 
     print("Finding syllabi", file=sys.stderr)
     found = candidates(known, args.since, args.max_pages)
@@ -389,6 +396,15 @@ def main() -> None:
     print(f"{len(found)} candidates since {args.since}, {len(todo)} new to process", file=sys.stderr)
 
     lock = threading.Lock()
+    unsaved: dict[str, dict] = {}
+
+    def flush() -> None:
+        rows = [
+            {"url": url, "university_id": UNIVERSITY, "status": row["status"], "data": row}
+            for url, row in unsaved.items()
+        ]
+        documents.upsert(rows, on_conflict="url")
+        unsaved.clear()
     session = requests.Session()
     session.headers["User-Agent"] = USER_AGENT
     usage = Counter()
@@ -421,15 +437,15 @@ def main() -> None:
                 with lock:
                     usage.update(input=used["input_tokens"], output=used["output_tokens"])
         with lock:
-            results[url] = row
+            results[url] = unsaved[url] = row
             done = len(results)
             if done % 25 == 0:
-                out.write_text(json.dumps(results, indent=1, ensure_ascii=False))
+                flush()
                 print(f"  {done} processed, {usage['input']:,} in / {usage['output']:,} out tokens", file=sys.stderr)
 
     with ThreadPoolExecutor(8) as pool:
         list(pool.map(process, todo))
-    out.write_text(json.dumps(results, indent=1, ensure_ascii=False))
+    flush()
 
     statuses = Counter(row["status"] for row in results.values())
     syllabi = [row for row in results.values() if row["status"] == "syllabus" and row["year"] >= args.since]

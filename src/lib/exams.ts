@@ -1,7 +1,8 @@
-import type { ClassSession, ExamData } from "./types";
+import type { ClassSession, ExamData, Term } from "./types";
+import { UNIVERSITY_TIMEZONE } from "./university";
 
-/** Final exams by course code, with the term code the exam dates fall in. */
-export type ExamSchedule = { term: string; exams: Record<string, ExamData[]> };
+/** Final exams by term, then course code. */
+export type ExamSchedule = Record<Term, Record<string, ExamData[]>>;
 
 /** The final exam for a scheduled course. Exams are listed per lecture section ("1" for Lec 01). */
 export function findExam(exams: ExamData[] | undefined, sessions: ClassSession[]): ExamData | undefined {
@@ -11,13 +12,12 @@ export function findExam(exams: ExamData[] | undefined, sessions: ClassSession[]
     return exams.find((exam) => exam.section === section);
 }
 
-/** { date: "2025-04-09", time: "3:30:00 PM" } -> "Apr 9, 15:30"; falls back to the raw text if it doesn't parse. */
+/** "Apr 9, 15:30" on campus, wherever the code runs. */
 export function formatExam(exam: ExamData): string {
-    const date = new Date(`${exam.date}T00:00:00`);
-    const time = exam.time.match(/^(\d{1,2}):(\d{2})(?::\d{1,2})?\s*(AM|PM)$/i);
-    if (Number.isNaN(date.getTime()) || !time) return [exam.date, exam.time].filter(Boolean).join(" ");
-
-    const [, hours, minutes, period] = time;
-    const hours24 = (Number(hours) % 12) + (period.toUpperCase() === "PM" ? 12 : 0);
-    return `${date.toLocaleDateString("en-CA", { month: "short", day: "numeric" })}, ${hours24}:${minutes}`;
+    const date = new Date(exam.startsAt);
+    if (Number.isNaN(date.getTime())) return "";
+    const zone = { timeZone: UNIVERSITY_TIMEZONE } as const;
+    const day = date.toLocaleDateString("en-CA", { ...zone, month: "short", day: "numeric" });
+    const time = date.toLocaleTimeString("en-CA", { ...zone, hour: "numeric", minute: "2-digit", hourCycle: "h23" });
+    return `${day}, ${time.replace(/^0/, "")}`;
 }

@@ -5,6 +5,7 @@ import type { ReviewContent } from "@/lib/reviews";
 import { formatCourseCode } from "@/lib/schedule";
 import { createClient } from "@/lib/supabase/server";
 import { ReviewItem } from "./review-item";
+import { UNIVERSITY_ID } from "@/lib/university";
 
 /** Every review the signed-in student has posted. */
 export async function MyReviews({ userId }: { userId: string }) {
@@ -13,6 +14,7 @@ export async function MyReviews({ userId }: { userId: string }) {
         .from("reviews")
         .select("id, course_code, instructor, review_text, rating, difficulty, workload, created_at")
         .eq("user_id", userId)
+        .eq("university_id", UNIVERSITY_ID)
         .order("created_at", { ascending: false });
     const reviews = (data ?? []) as ReviewContent[];
 

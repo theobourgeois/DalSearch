@@ -1,6 +1,5 @@
-import { parseLocation } from "./location";
 import { formatMinutes, isTimed, toMinutes, type CampusNow, type TimedSession } from "./time";
-import type { ClassSession, CourseAndSubjectCode, Day } from "./types";
+import type { ClassSession, CourseAndSubjectCode, Day, Room } from "./types";
 
 const DAY_START = 7 * 60;
 const DAY_END = 22 * 60;
@@ -49,22 +48,30 @@ export function freeWindows(sessions: ClassSession[], day: Day, from: number): [
     return windows;
 }
 
-export type FreeRoom = { room: string; until: number | null };
+export type FreeRoom = { room: Room; until: number | null };
 
-/** Rooms that are empty right now, preferring the same building and the longest free stretch. */
+/**
+ * Rooms that are empty right now, preferring the same building as `nearRoom` and the longest free
+ * stretch. `sessionsByRoom` is keyed by room id.
+ */
 export function findFreeRooms(
-    rooms: Map<string, ClassSession[]>,
+    sessionsByRoom: Map<string, ClassSession[]>,
+    rooms: Map<string, Room>,
     now: CampusNow,
-    nearRoom?: string,
+    nearRoom?: Room,
     limit = 5,
 ): FreeRoom[] {
-    const building = nearRoom ? parseLocation(nearRoom).building : null;
     const free: (FreeRoom & { sameBuilding: boolean })[] = [];
-    rooms.forEach((sessions, room) => {
-        if (room === nearRoom) return;
+    sessionsByRoom.forEach((sessions, id) => {
+        const room = rooms.get(id);
+        if (!room || id === nearRoom?.id) return;
         const status = roomStatus(sessions, now);
         if (status?.state !== "free") return;
-        free.push({ room, until: status.until, sameBuilding: parseLocation(room).building === building });
+        free.push({
+            room,
+            until: status.until,
+            sameBuilding: nearRoom !== undefined && room.campus === nearRoom.campus && room.building === nearRoom.building,
+        });
     });
     return free
         .sort((a, b) => Number(b.sameBuilding) - Number(a.sameBuilding) || (b.until ?? DAY_END) - (a.until ?? DAY_END))

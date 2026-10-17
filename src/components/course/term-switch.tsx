@@ -1,12 +1,14 @@
 "use client";
 
+import { useTerms } from "@/components/current-term";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { termOptions, type Term } from "@/lib/constants";
+import type { Term } from "@/lib/constants";
 import { useCourse } from "./course-context";
 
 /** Switches the course page between the terms it's offered in. */
 export function CourseTermSwitch() {
     const { term, setTerm, offered } = useCourse();
+    const { options } = useTerms();
     if (offered.length === 0) return null;
 
     return (
@@ -14,7 +16,7 @@ export function CourseTermSwitch() {
             aria-label="Term"
             value={term}
             onValueChange={setTerm}
-            options={termOptions((term) => !offered.includes(term))}
+            options={options((term) => !offered.includes(term))}
         />
     );
 }

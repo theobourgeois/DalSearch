@@ -4,11 +4,14 @@ on:
     - cron: "0 8 * * 1"
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
-  build:
+  dal:
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -17,26 +20,25 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - name: Install Python dependencies
-        run: pip install -r src/scripts/py/requirements.txt
-      - name: Run the script
-        run: ./src/scripts/run.sh
-      - name: Commit and push changes
+      - name: Install dependencies
         run: |
-          git config --global user.email "${{ secrets.GH_USER_EMAIL }}"
-          git config --global user.name "${{ secrets.GH_USER_NAME }}"
-          git add database/*.json
-          if git diff --cached --quiet; then
-            echo "No data changes"
+          npm ci --prefix src/scripts/node
+          pip install -r src/scripts/py/requirements.txt
+      # Timetable first: the RateMyProfessors import matches reviews against the stored courses.
+      - name: Refresh the timetable and course details
+        run: node src/scripts/node/refresh.js dal
+      - name: Import RateMyProfessors professors and reviews
+        run: python3 src/scripts/py/rmp_reviews.py --university dal
+      # Pages are cached for a day; this shows the new data straight away. Skipped until the
+      # REVALIDATE_SECRET and SITE_URL secrets are set.
+      - name: Refresh the site
+        if: ${{ always() }}
+        env:
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          if [ -z "$REVALIDATE_SECRET" ] || [ -z "$SITE_URL" ]; then
+            echo "REVALIDATE_SECRET or SITE_URL isn't set; pages refresh within a day"
             exit 0
           fi
-          git commit -m "Data refresh update"
-          # The scrape takes about an hour, so pick up anything pushed in the meantime
-          git pull --rebase --autostash origin ${{ github.ref_name }}
-          git push origin HEAD:${{ github.ref_name }}
-      # After the commit so a RateMyProfessors failure can't hold up the timetable data.
-      - name: Import RateMyProfessors reviews
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-        run: python3 src/scripts/py/rmp_reviews.py
+          curl --fail --silent --show-error -X POST "$SITE_URL/api/revalidate" -H "Authorization: Bearer $REVALIDATE_SECRET"

@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useMemo } from "react";
 import Link from "next/link";
-import { useCurrentTerm } from "@/components/current-term";
+import { useCurrentTerm, useTerms } from "@/components/current-term";
 import { SingleSelectFilter } from "@/components/filters/filter-pill";
 import { SortMenu, type SortState } from "@/components/filters/sort-menu";
 import { SubjectFilter } from "@/components/filters/subject-filter";
@@ -19,7 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { usePaged } from "@/hooks/use-paged";
 import { useStoredState } from "@/hooks/use-stored-state";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
-import { termLabel, type Term } from "@/lib/constants";
+import { type Term } from "@/lib/constants";
 import { describeRatingCount } from "@/lib/instructors";
 import { formatCourseCode } from "@/lib/schedule";
 import type { InstructorListItem, Subject } from "@/lib/types";
@@ -68,6 +68,7 @@ function TeachingCell({
     currentTerm: Term;
     onPanel: boolean;
 }) {
+    const { label: termLabel } = useTerms();
     const { teaching } = instructor;
     if (!teaching) return <span className="text-fg-subtle">Not teaching this year</span>;
 
@@ -131,6 +132,7 @@ function InstructorRow({ instructor, currentTerm, sharedCourse, color }: Instruc
 
 /** Instructors with their RateMyProfessors scores, filterable by subject, rating and current teaching. */
 export function InstructorsView({ instructors, subjects }: { instructors: InstructorListItem[]; subjects: Subject[] }) {
+    const { label: termLabel } = useTerms();
     const currentTerm = useCurrentTerm();
     const [filter, setFilter] = useStoredState<InstructorFilter>(initialFilter, "dalsearch:instructors");
     const deferred = useDeferredValue(filter);

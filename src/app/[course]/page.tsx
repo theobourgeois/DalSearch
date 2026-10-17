@@ -14,14 +14,15 @@ import { CourseReviews } from "@/components/reviews/course-reviews";
 import { ReviewsProvider } from "@/components/reviews/reviews-context";
 import { RmpReviews } from "@/components/reviews/rmp-reviews";
 import { getRmpReviews, getSyllabi } from "@/lib/course-content";
-import { defaultCourseTerm, offeredTerms, plainText, subjectName } from "@/lib/course";
+import { defaultCourseTerm, offeredTerms } from "@/lib/course";
 import {
     getCourse,
     getCourseInstructors,
     getCurrentTerm,
-    getRatingSummary,
+    getListedTerms,
+    getRatingSummaries,
+    getSubjects,
     getUnlockedCourses,
-    subjects,
     toListItem,
 } from "@/lib/data";
 import { courseKey, formatCourseCode } from "@/lib/schedule";
@@ -29,12 +30,12 @@ import { courseKey, formatCourseCode } from "@/lib/schedule";
 type Props = { params: Promise<{ course: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const course = getCourse((await params).course);
+    const course = await getCourse((await params).course);
     if (!course) return { title: "Course not found - DalSearch" };
 
     return {
         title: `${formatCourseCode(courseKey(course))} - ${course.title} - Dalhousie University`,
-        description: plainText(course.description),
+        description: course.description,
         keywords: [
             course.subjectCode,
             course.courseCode,
@@ -48,15 +49,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CoursePage({ params }: Props) {
-    const course = getCourse((await params).course);
+    const course = await getCourse((await params).course);
     if (!course) notFound();
 
     const code = courseKey(course);
-    const [rmpReviews, syllabi] = await Promise.all([getRmpReviews(code), getSyllabi(code)]);
-    const offered = offeredTerms(course);
     const instructors = getCourseInstructors(course);
+    const [rmpReviews, syllabi, listed, currentTerm, subjects, unlocks, ratings] = await Promise.all([
+        getRmpReviews(code),
+        getSyllabi(code),
+        getListedTerms(),
+        getCurrentTerm(),
+        getSubjects(),
+        getUnlockedCourses(code),
+        getRatingSummaries(instructors),
+    ]);
+    const offered = offeredTerms(course, listed);
     const subject = subjects.find((s) => s.code === course.subjectCode);
-    const description = plainText(course.description);
+    const description = course.description;
 
     const structuredData = {
         "@context": "https://schema.org",
@@ -70,7 +79,7 @@ export default async function CoursePage({ params }: Props) {
         <Page
             breadcrumbs={[
                 { label: "Explore", href: "/explore" },
-                ...(subject ? [{ label: subjectName(subject), href: `/explore?subject=${subject.code}` }] : []),
+                ...(subject ? [{ label: subject.name, href: `/explore?subject=${subject.code}` }] : []),
                 { label: formatCourseCode(code) },
             ]}
         >
@@ -80,7 +89,7 @@ export default async function CoursePage({ params }: Props) {
             <CourseProvider
                 course={toListItem(course)}
                 offered={offered}
-                initialTerm={defaultCourseTerm(offered, getCurrentTerm())}
+                initialTerm={defaultCourseTerm(offered, currentTerm, listed)}
             >
                 <ReviewsProvider courseId={code} instructors={instructors} rmpReviews={rmpReviews}>
                     <PageHeader title={formatCourseCode(code)} subtitle={course.title} />
@@ -108,8 +117,8 @@ export default async function CoursePage({ params }: Props) {
                         aside={
                             <CourseDetails
                                 prerequisites={course.prerequisites}
-                                unlocks={getUnlockedCourses(code).map((summary) => summary.code)}
-                                ratings={Object.fromEntries(instructors.map((name) => [name, getRatingSummary(name)]))}
+                                unlocks={unlocks.map((summary) => summary.code)}
+                                ratings={ratings}
                             />
                         }
                     />

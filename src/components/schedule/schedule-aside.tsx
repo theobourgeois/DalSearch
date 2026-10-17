@@ -33,7 +33,7 @@ export function ScheduleAside({ schedule, exams }: ScheduleAsideProps) {
         return conflict.first.course === code ? conflict.second.course : conflict.first.course;
     };
     const examRows = codes.flatMap((code) => {
-        const exam = exams.term === term ? findExam(exams.exams[code], sessionsOf(code)) : undefined;
+        const exam = findExam(exams[term]?.[code], sessionsOf(code));
         return exam ? [{ code, exam }] : [];
     });
 

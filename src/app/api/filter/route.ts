@@ -1,4 +1,4 @@
-import { courses } from "@/lib/data";
+import { getCourses, getListedTerms } from "@/lib/data";
 import { defaultFilter, defaultOrderBy, getFilteredCourses } from "@/lib/filter";
 import { CourseFilter, CourseOrderBy } from "@/lib/types";
 
@@ -15,8 +15,6 @@ function applyDefaults(payload: Payload): Payload {
 
   return { filter, orderBy };
 }
-
-const courseList = Object.values(courses);
 
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
@@ -41,7 +39,8 @@ export async function GET(request: Request) {
   }
 
 
-  const results = getFilteredCourses(courseList, filter, orderBy, limit);
+  const [courses, listed] = await Promise.all([getCourses(), getListedTerms()]);
+  const results = getFilteredCourses(courses, filter, orderBy, limit, listed);
 
   return new Response(JSON.stringify(results), {
     headers: {

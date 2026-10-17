@@ -24,8 +24,11 @@ export type CalendarEvent = {
 
 type EventDetails = Omit<CalendarEvent, "id" | "day" | "start" | "end">;
 
-/** The id of a session's meeting on one day; conflicts are tracked per meeting, not per section. */
-export const meetingId = (crn: string, day: Day) => `${crn}-${day}`;
+/**
+ * The id of a session's meeting on one day; conflicts are tracked per meeting, not per section. A
+ * section can meet twice a day, so the start time is part of it.
+ */
+export const meetingId = (session: TimedSession, day: Day) => `${session.crn}-${day}-${session.time.start}`;
 
 /** One calendar event per meeting day of a session; sessions without a set time produce none. */
 export function sessionEvents(
@@ -34,7 +37,7 @@ export function sessionEvents(
 ): CalendarEvent[] {
     if (!isTimed(session)) return [];
     return session.days.map((day) => {
-        const id = meetingId(session.crn, day);
+        const id = meetingId(session, day);
         return {
             id,
             day,
@@ -49,7 +52,7 @@ export function sessionEvents(
 export function conflictingMeetings(conflicts: ScheduleConflict[]): Set<string> {
     return new Set(
         conflicts.flatMap(({ first, second, days }) =>
-            days.flatMap((day) => [meetingId(first.crn, day), meetingId(second.crn, day)]),
+            days.flatMap((day) => [meetingId(first, day), meetingId(second, day)]),
         ),
     );
 }

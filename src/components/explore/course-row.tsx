@@ -17,8 +17,8 @@ type CourseRowProps = {
     ratings: Record<string, number>;
 };
 
-function seats(course: CourseListItem) {
-    const { enrolled, capacity } = course.enrollement ?? {};
+function seats(course: CourseListItem, term: Term) {
+    const { enrolled, capacity } = course.enrollmentByTerm[term] ?? {};
     if (!capacity) return <span className="text-fg-subtle">-</span>;
     if (enrolled >= capacity) return <span className="font-bold text-danger">Full</span>;
     return <span className="text-fg">{`${enrolled}/${capacity}`}</span>;
@@ -57,7 +57,7 @@ export function CourseRow({ course, fit, term, color, ratings }: CourseRowProps)
                 }
                 secondary={lecture && isTimed(lecture) ? formatTimeRange(lecture) : undefined}
             />
-            <span className="hidden md:block">{seats(course)}</span>
+            <span className="hidden md:block">{seats(course, term)}</span>
             <CourseFitStatus course={course} fit={fit} term={term} color={color} />
             <SaveButton
                 code={code}

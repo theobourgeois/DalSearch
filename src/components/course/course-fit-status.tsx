@@ -1,5 +1,6 @@
+import { useTerms } from "@/components/current-term";
 import { Status, type StatusTone } from "@/components/ui/status";
-import { termLabel, type Term } from "@/lib/constants";
+import type { Term } from "@/lib/constants";
 import { nextOfferedTerm } from "@/lib/course";
 import { formatCourseCode, listSessions, sessionTypeLabel, type CourseFit } from "@/lib/schedule";
 import { isTimed } from "@/lib/time";
@@ -18,7 +19,8 @@ type CourseFitStatusProps = {
 
 /** Explains in one line whether a course fits the student's schedule, and why not. */
 export function CourseFitStatus({ course, fit, term, color, compact, className }: CourseFitStatusProps) {
-    const status = describeFit(course, fit, term);
+    const terms = useTerms();
+    const status = describeFit(course, fit, term, terms);
     return (
         <Status
             {...status}
@@ -33,6 +35,7 @@ function describeFit(
     course: CourseListItem,
     fit: CourseFit,
     term: Term,
+    terms: Pick<ReturnType<typeof useTerms>, "listed" | "label">,
 ): { tone?: StatusTone; label: string; detail?: string } {
     switch (fit.status) {
         case "scheduled":
@@ -53,8 +56,8 @@ function describeFit(
             };
         }
         case "unavailable": {
-            const next = nextOfferedTerm(course, term);
-            return { label: next ? `Next offered ${termLabel(next)}` : `Not offered in ${termLabel(term)}` };
+            const next = nextOfferedTerm(course, term, terms.listed);
+            return { label: next ? `Next offered ${terms.label(next)}` : `Not offered in ${terms.label(term)}` };
         }
     }
 }

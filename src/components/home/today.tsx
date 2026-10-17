@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { SectionHeader } from "@/components/layout/page";
-import { useCurrentTerm } from "@/components/current-term";
+import { useCurrentTerm, useTerms } from "@/components/current-term";
 import { ConflictNotice } from "@/components/schedule/conflict-notice";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Dot } from "@/components/ui/status";
 import { useCampusNow } from "@/hooks/use-campus-now";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
-import { dayNames, termLabel } from "@/lib/constants";
-import { formatLocation } from "@/lib/location";
+import { dayNames } from "@/lib/constants";
 import { formatCourseCode, sessionName } from "@/lib/schedule";
 import { formatDuration, formatMinutes, isTimed, toMinutes, type TimedSession } from "@/lib/time";
 import { cn } from "@/lib/utils";
@@ -68,6 +67,7 @@ function Row({
 
 /** Today's classes from the current term, with the class in progress or the free gap you're in. */
 export function Today() {
+    const { label: termLabel } = useTerms();
     const currentTerm = useCurrentTerm();
     const { ready, sessions, colors, conflicts } = useTermSchedule(currentTerm);
     const now = useCampusNow();
@@ -120,7 +120,7 @@ export function Today() {
                         const state = now.minutes >= item.end ? "past" : now.minutes >= item.start ? "now" : undefined;
                         return (
                             <Row
-                                key={session.crn}
+                                key={`${session.crn}-${item.start}`}
                                 time={formatMinutes(item.start)}
                                 state={state}
                                 aside={
@@ -139,7 +139,7 @@ export function Today() {
                                     {formatCourseCode(session.course)}
                                     <span className="font-medium text-fg-muted">{sessionName(session)}</span>
                                 </Link>
-                                <p className="pl-4 text-[13px] text-fg-subtle">{formatLocation(session.location)}</p>
+                                <p className="pl-4 text-[13px] text-fg-subtle">{session.location}</p>
                             </Row>
                         );
                     })}
