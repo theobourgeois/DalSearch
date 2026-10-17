@@ -30,9 +30,16 @@ function contrast(a: Rgb, b: Rgb): number {
 const mix = (from: Rgb, to: Rgb, amount: number): Rgb =>
     from.map((channel, i) => Math.round(channel + (to[i] - channel) * amount)) as Rgb;
 
+const inkOn = (rgb: Rgb): Rgb => (contrast(rgb, white) >= contrast(rgb, ink) ? white : ink);
+
+/** White or dark text, whichever reads better on a colour. */
+export function textOn(hex: string): string {
+    return `rgb(${inkOn(parse(hex)).join(" ")})`;
+}
+
 /** The accent's channels and whichever of white or dark text reads better on it. */
 function tokens(rgb: Rgb): string {
-    const fg = contrast(rgb, white) >= contrast(rgb, ink) ? white : ink;
+    const fg = inkOn(rgb);
     return `--accent:${rgb.join(" ")};--accent-fg:${fg.join(" ")}`;
 }
 
