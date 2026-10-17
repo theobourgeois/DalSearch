@@ -224,9 +224,15 @@ def clean_comment(raw: str | None) -> str | None:
     return None if not text or text.lower() == "no comments" else text
 
 
-def match_name(teacher: dict) -> str:
-    """The name a Banner timetable would list them under: "Sarhan A." """
+# Universities whose timetables print full names ("Paul Muir") rather than "Muir P.".
+FULL_NAMES = {"smu"}
+
+
+def match_name(teacher: dict, university: str) -> str:
+    """The name the university's timetable lists them under: "Sarhan A." at Dal, "Paul Muir" at SMU."""
     first, last = teacher["firstName"].strip(), teacher["lastName"].strip()
+    if university in FULL_NAMES:
+        return f"{first} {last}".strip()
     return f"{last} {first[:1]}." if first else last
 
 
@@ -240,7 +246,7 @@ def to_rating_row(teacher: dict, university: str, seen_at: str) -> dict:
         "university_id": university,
         "source": "rmp",
         "source_id": str(teacher["legacyId"]),
-        "match_name": match_name(teacher),
+        "match_name": match_name(teacher, university),
         "first_name": teacher["firstName"].strip(),
         "last_name": teacher["lastName"].strip(),
         "profile_url": PROFESSOR_URL.format(teacher["legacyId"]),

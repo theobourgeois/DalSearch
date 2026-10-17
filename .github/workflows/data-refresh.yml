@@ -36,6 +36,12 @@ jobs:
       - name: Import MSVU RateMyProfessors professors and reviews
         if: ${{ always() }}
         run: python3 src/scripts/py/rmp_reviews.py --university msvu
+      - name: Refresh SMU's timetable and course details
+        if: ${{ always() }}
+        run: node src/scripts/node/refresh.js smu
+      - name: Import SMU RateMyProfessors professors and reviews
+        if: ${{ always() }}
+        run: python3 src/scripts/py/rmp_reviews.py --university smu
       # Pages are cached for a day; this shows the new data straight away. Skipped until the
       # REVALIDATE_SECRET and SITE_URL secrets are set.
       - name: Refresh the site

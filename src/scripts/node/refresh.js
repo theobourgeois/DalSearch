@@ -8,7 +8,7 @@
  * Each university has a scraper in universities/<id>.js exporting scrapeTimetable() and, if its
  * calendar can be read, scrapeCourseDetails(). See lib/import.js for what they return.
  */
-import { chunk, connect, log } from "./lib/import.js";
+import { chunk, connect, log, zonedToUtc } from "./lib/import.js";
 
 const SUBJECTS_PER_IMPORT = 20;
 // Refuse to save a scrape with much less than what's stored: the university probably blocked us or
@@ -69,6 +69,20 @@ async function importTimetable(db, university, timetable) {
     log(`Timetable saved: ${totals.sections} sections, ${totals.deleted} removed; listed ${listedCodes.join(", ")}`);
 }
 
+/** Replaces each scraped term's final exams, converting their campus times to UTC. */
+async function importExams(db, university, timetable) {
+    if (!timetable.exams?.length) return;
+    const [{ timezone }] = await db.selectAll("universities", "timezone", { id: `eq.${university}` });
+    const utc = (local) => (local ? zonedToUtc(local, timezone) : null);
+    for (const { code } of timetable.terms) {
+        const exams = timetable.exams
+            .filter((exam) => exam.term === code)
+            .map((exam) => ({ ...exam, starts_at: utc(exam.starts_at), ends_at: utc(exam.ends_at) }));
+        const saved = await db.rpc("import_exams", { p_university: university, p_term: code, p_exams: exams });
+        log(`Saved ${saved} exams for ${code}`);
+    }
+}
+
 async function importDetails(db, university, scraper, timetable, mode) {
     if (mode === "none") return;
     if (!scraper.scrapeCourseDetails) {
@@ -96,6 +110,7 @@ async function main() {
 
     const timetable = await scraper.scrapeTimetable();
     await importTimetable(db, university, timetable);
+    await importExams(db, university, timetable);
     await importDetails(db, university, scraper, timetable, details);
 }
 

@@ -36,6 +36,15 @@ export const universities: University[] = [
         timetableUrl: "https://colssprod.msvu.ca/student/courses/",
         emailExample: "name@msvu.ca",
     },
+    {
+        id: "smu",
+        name: "Saint Mary's University",
+        shortName: "SMU",
+        timezone: "America/Halifax",
+        creditLabel: "Credit hours",
+        timetableUrl: "https://reg-prod.ec.smu.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
+        emailExample: "name@smu.ca",
+    },
 ];
 
 /** Dal was the only university for years, so its pages keep their addresses at the root of the site. */
