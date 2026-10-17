@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import { SITE_URL } from "@/lib/constants";
+import { snippet, universityPageMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { CourseActions } from "@/components/course/course-actions";
 import { CourseProvider } from "@/components/course/course-context";
@@ -34,14 +35,18 @@ type Props = { params: Promise<{ university: string; course: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { university, course: code } = await params;
     const course = await getCourse(university, code);
-    const name = getUniversity(university)?.name ?? "";
-    if (!course) return { title: `Course not found - ${SITE_NAME}` };
+    if (!course) return { title: "Course not found", robots: { index: false } };
+    const { name, shortName } = getUniversity(university)!;
+    const label = `${formatCourseCode(courseKey(course))} ${course.title}`;
 
-    return {
-        title: `${formatCourseCode(courseKey(course))} - ${course.title} - ${name}`,
-        description: course.description,
-        keywords: [course.subjectCode, course.courseCode, course.title, ...course.prerequisites, name, SITE_NAME],
-    };
+    return universityPageMetadata(university, `/${courseKey(course)}`, {
+        title: `${label} - ${name}`,
+        description: snippet(
+            course.description
+                ? `${label} at ${shortName}: ${course.description}`
+                : `${label} at ${name}: sections, open seats, instructors and their ratings, and when it's offered.`,
+        ),
+    });
 }
 
 export default async function CoursePage({ params }: Props) {
@@ -64,13 +69,35 @@ export default async function CoursePage({ params }: Props) {
     const subject = subjects.find((s) => s.code === course.subjectCode);
     const description = course.description;
 
-    const structuredData = {
-        "@context": "https://schema.org",
-        "@type": "Course",
-        name: `${formatCourseCode(code)} ${course.title}`,
-        description,
-        provider: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
-    };
+    const school = getUniversity(university)!;
+    const structuredData = [
+        {
+            "@context": "https://schema.org",
+            "@type": "Course",
+            name: `${formatCourseCode(code)} ${course.title}`,
+            courseCode: formatCourseCode(code),
+            description: description || undefined,
+            url: `${SITE_URL}${universityPath(university, `/${code}`)}`,
+            provider: { "@type": "CollegeOrUniversity", name: school.name },
+            ...(course.prerequisites.length > 0 && {
+                coursePrerequisites: course.prerequisites.map(formatCourseCode).join(", "),
+            }),
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+                { name: school.name, path: "/" },
+                { name: "Explore", path: "/explore" },
+                { name: formatCourseCode(code), path: `/${code}` },
+            ].map((crumb, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name: crumb.name,
+                item: `${SITE_URL}${universityPath(university, crumb.path)}`,
+            })),
+        },
+    ];
 
     return (
         <Page
@@ -82,7 +109,10 @@ export default async function CoursePage({ params }: Props) {
                 { label: formatCourseCode(code) },
             ]}
         >
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+            />
             <RecordRecentCourse code={code} />
 
             <CourseProvider

@@ -10,8 +10,8 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const [, first = ""] = pathname.split("/")
 
-  // API routes and files (/manifest.json, /robots.txt) aren't pages.
-  const isPage = first !== "api" && !/\.[a-z0-9]+$/i.test(pathname)
+  // API routes, files (/manifest.json, /robots.txt) and the landing page's social image aren't pages.
+  const isPage = !["api", "opengraph-image"].includes(first) && !/\.[a-z0-9]+$/i.test(pathname)
   if (!isPage || pathname === "/" || getUniversity(first)) return updateSession(request)
 
   const url = request.nextUrl.clone()

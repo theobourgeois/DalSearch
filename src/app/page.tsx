@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { UniversityLogo } from "@/components/layout/university-logo";
 import { sessionEvents } from "@/lib/calendar";
 import { courseColors } from "@/lib/colors";
-import { links, SITE_NAME } from "@/lib/constants";
+import { links, SITE_NAME, SITE_URL } from "@/lib/constants";
 import { getCourse, getCourseCounts, getCurrentTerm, getTerms } from "@/lib/data";
 import { findClashes, formatCourseCode } from "@/lib/schedule";
 import { termLabel } from "@/lib/terms";
@@ -14,8 +14,17 @@ import { universities, universityPath } from "@/lib/university";
 import { formatNumber } from "@/lib/utils";
 
 export const metadata: Metadata = {
-    title: `${SITE_NAME} - Course search and timetable planning`,
+    title: { absolute: `${SITE_NAME} - Course search and timetable planning for Canadian universities` },
+    description: `Search courses at ${universities.length} Canadian universities, see open seats, instructors and their ratings, and plan a timetable that doesn't clash. Free, no account needed.`,
     alternates: { canonical: "/" },
+};
+
+const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: "Course search and timetable planning for Canadian university students.",
 };
 
 /** First-year courses Dal runs most terms; the sample week takes the ones on this term's timetable. */
@@ -103,6 +112,7 @@ export default async function LandingPage() {
 
     return (
         <div className="min-h-screen bg-canvas">
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
             <header className="mx-auto flex max-w-[76rem] items-center justify-between px-5 py-5 sm:px-8">
                 <span className="text-[19px] font-black tracking-tight">{SITE_NAME}</span>
                 <ThemeToggle />

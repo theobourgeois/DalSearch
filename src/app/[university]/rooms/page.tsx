@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SITE_NAME } from "@/lib/constants";
 import { Page, PageActions, PageHeader, SectionHeader } from "@/components/layout/page";
 import { FreeRoomList } from "@/components/rooms/room-links";
 import { RoomSchedule } from "@/components/rooms/room-schedule";
@@ -8,11 +7,16 @@ import { getCurrentTerm, getListedTerms, getRooms, getRoomSessions } from "@/lib
 import { findFreeRooms, freeWindows, isCampusHours, roomStatus } from "@/lib/rooms";
 import { campusNow } from "@/lib/time";
 import { getUniversity, universityPath } from "@/lib/university";
+import { universityPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-    title: `Rooms - ${SITE_NAME}`,
-    description: "See when any room on campus is booked, or find one that's free right now.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ university: string }> }): Promise<Metadata> {
+    const { university } = await params;
+    const { name } = getUniversity(university)!;
+    return universityPageMetadata(university, "/rooms", {
+        title: `Empty classrooms at ${name}`,
+        description: `Find a ${name} classroom that's free right now, or see when any room is booked this term, from the class timetable.`,
+    });
+}
 
 type Props = {
     params: Promise<{ university: string }>;

@@ -5,6 +5,10 @@ import { FlaggedReviews } from "@/components/moderation/flagged-reviews";
 import { SyllabusUploads } from "@/components/moderation/syllabus-uploads";
 import { isModerator, requireUser } from "@/lib/auth";
 import { universityPath } from "@/lib/university";
+import { privatePage } from "@/lib/seo";
+
+
+export const metadata = privatePage;
 
 export default async function PanelPage({ params }: { params: Promise<{ university: string }> }) {
     const { university } = await params;

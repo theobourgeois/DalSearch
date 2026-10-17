@@ -4,6 +4,10 @@ import { LogoutButton } from "@/components/logout-button";
 import { Button } from "@/components/ui/button";
 import { isModerator, requireUser } from "@/lib/auth";
 import { universityPath } from "@/lib/university";
+import { privatePage } from "@/lib/seo";
+
+
+export const metadata = privatePage;
 
 export default async function AccountPage({ params }: { params: Promise<{ university: string }> }) {
     const { university } = await params;

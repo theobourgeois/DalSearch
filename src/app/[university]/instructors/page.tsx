@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
-import { SITE_NAME } from "@/lib/constants";
 import { InstructorsView } from "@/components/instructors/instructors-view";
 import { Page, PageHeader } from "@/components/layout/page";
 import { formatNumber } from "@/lib/utils";
 import { getCurrentTerm, getInstructorList, getSubjects } from "@/lib/data";
+import { universityPageMetadata } from "@/lib/seo";
+import { getUniversity } from "@/lib/university";
 
-export const metadata: Metadata = {
-    title: `Instructors - ${SITE_NAME}`,
-    description: "Compare instructors by RateMyProfessors rating, difficulty and the courses they teach.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ university: string }> }): Promise<Metadata> {
+    const { university } = await params;
+    const { name } = getUniversity(university)!;
+    return universityPageMetadata(university, "/instructors", {
+        title: `${name} instructors and ratings`,
+        description: `Compare ${name} instructors by RateMyProfessors rating and difficulty, and see the courses each one teaches this term.`,
+    });
+}
 
 export default async function InstructorsPage({ params }: { params: Promise<{ university: string }> }) {
     const { university } = await params;

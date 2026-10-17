@@ -23,7 +23,7 @@ const description =
 
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
-    title: `${SITE_NAME} - Course search and timetable planning`,
+    title: { default: `${SITE_NAME} - Course search and timetable planning`, template: `%s | ${SITE_NAME}` },
     description,
     authors: [{ name: "Théo Bourgeois" }, { name: "Chris Langille" }],
     applicationName: SITE_NAME,
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={satoshi.variable} suppressHydrationWarning>
+        <html lang="en-CA" className={satoshi.variable} suppressHydrationWarning>
             <body>
                 <Providers>{children}</Providers>
             </body>

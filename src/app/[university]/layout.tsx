@@ -21,13 +21,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const university = getUniversity((await params).university);
     if (!university) return {};
-    const title = `${SITE_NAME} - ${university.name} Course Search`;
-    const description = `Search ${university.name} courses, see their sections, prerequisites and instructors, and plan your timetable.`;
-    return {
-        title,
-        description,
-        openGraph: { title, description },
-    };
+    // Each page sets its own title and canonical address; this covers the ones that don't (sign-in pages).
+    return { title: { default: `${university.name} course search`, template: `%s | ${SITE_NAME}` } };
 }
 
 export default async function UniversityLayout({ children, params }: Props) {

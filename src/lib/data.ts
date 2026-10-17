@@ -516,6 +516,12 @@ export async function getCourseCounts(): Promise<Record<string, number>> {
     return Object.fromEntries(counts);
 }
 
+/** The codes of a university's courses on its timetable, without loading its catalog (for the sitemap). */
+export async function getCourseCodes(university: string): Promise<string[]> {
+    const rows = await readAll<{ code: string }>(publicClient(), "catalog_courses", "code", university, ["code"]);
+    return rows.map((row) => row.code);
+}
+
 /** Every term the database knows, oldest first; `isListed` marks the ones on the timetable. */
 export async function getTerms(university: string): Promise<TermInfo[]> {
     return (await getCatalog(university)).terms;

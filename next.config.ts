@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
     // per worker; several at a time overload the database and it cancels reads.
     cpus: 1,
   },
+  // Social images read the font and the university's logo from disk.
+  outputFileTracingIncludes: {
+    "/**/opengraph-image": ["./src/app/fonts/og/**", "./public/universities/**"],
+  },
+  async redirects() {
+    return [{ source: "/api/sitemap", destination: "/sitemap.xml", permanent: true }];
+  },
 };
 
 export default nextConfig;

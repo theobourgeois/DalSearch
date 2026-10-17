@@ -1,15 +1,20 @@
 import { Suspense } from "react";
-import { SITE_NAME } from "@/lib/constants";
 import type { Metadata } from "next";
 import { ExploreView } from "@/components/explore/explore-view";
 import { Page, PageHeader } from "@/components/layout/page";
 import { formatNumber } from "@/lib/utils";
 import { getCourseList, getCreditHourOptions, getRatingsByName, getSubjects } from "@/lib/data";
+import { universityPageMetadata } from "@/lib/seo";
+import { getUniversity } from "@/lib/university";
 
-export const metadata: Metadata = {
-    title: `Explore courses - ${SITE_NAME}`,
-    description: "Browse every course by term, subject, level and credits, and see which ones fit your schedule.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ university: string }> }): Promise<Metadata> {
+    const { university } = await params;
+    const { name } = getUniversity(university)!;
+    return universityPageMetadata(university, "/explore", {
+        title: `${name} courses by subject and term`,
+        description: `Browse every ${name} course by term, subject, level and credits, with seats and instructor ratings, and see which ones fit your schedule.`,
+    });
+}
 
 export default async function ExplorePage({ params }: { params: Promise<{ university: string }> }) {
     const { university } = await params;
