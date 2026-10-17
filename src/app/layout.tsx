@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <html lang="en-CA" className={satoshi.variable} suppressHydrationWarning>
             <body>
                 <Providers>{children}</Providers>
+                <Analytics />
             </body>
         </html>
     );
