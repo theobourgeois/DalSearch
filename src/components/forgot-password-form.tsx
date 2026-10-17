@@ -16,8 +16,11 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
+import { useHref, useUniversity } from "@/components/university";
 
 export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+    const university = useUniversity();
+    const pagePath = useHref();
   const [email, setEmail] = useState("")
   const [code, setCode] = useState("")
   const [password, setPassword] = useState("")
@@ -76,7 +79,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
       return
     }
 
-    router.replace("/protected")
+    router.replace(pagePath("/protected"))
     router.refresh()
   }
 
@@ -103,7 +106,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
           <CardDescription>
             {codeSent 
               ? "Enter the verification code from your email and your new password"
-              : "Type in your Dalhousie email and we'll send you a verification code"
+              : `Type in your ${university.shortName} email and we'll send you a verification code`
             }
           </CardDescription>
         </CardHeader>
@@ -183,7 +186,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                   <Input
                     id="email"
                     type="email"
-                    placeholder="NetID@dal.ca"
+                    placeholder={university.emailExample}
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -201,7 +204,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
               </div>
               <div className="mt-4 text-center text-sm">
                 Already have an account?{" "}
-                <Link href="/auth/login" className="underline underline-offset-4">
+                <Link href={pagePath("/auth/login")} className="underline underline-offset-4">
                   Login
                 </Link>
               </div>

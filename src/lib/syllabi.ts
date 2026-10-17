@@ -15,7 +15,9 @@ export type Textbook = { title: string; authors: string | null; required: boolea
 /** What a public syllabus says, pulled out of the PDF by src/scripts/py/syllabi.py. */
 export type Syllabus = {
     id: string;
-    source_url: string;
+    /** Null for a syllabus a student uploaded, whose file isn't public. */
+    source_url: string | null;
+    upload_id: string | null;
     /** The PDF is gone from dal.ca and only the Wayback Machine has it. */
     archived: boolean;
     course_codes: string[];
@@ -30,7 +32,7 @@ export type Syllabus = {
 };
 
 export const SYLLABUS_COLUMNS =
-    "id, source_url, archived, course_codes, term_season, term_year, instructors, grading_schemes, weights_add_up, textbooks, policies, weekly_topics";
+    "id, source_url, upload_id, archived, course_codes, term_season, term_year, instructors, grading_schemes, weights_add_up, textbooks, policies, weekly_topics";
 
 const seasonOrder = { Winter: 1, Summer: 2, Fall: 3, "Full year": 3 } as const;
 
@@ -45,7 +47,8 @@ export function syllabusTerm(syllabus: Syllabus): string {
 }
 
 /** The PDF itself, or the Wayback Machine's copy once dal.ca has removed it. */
-export function syllabusUrl(syllabus: Syllabus): string {
+export function syllabusUrl(syllabus: Syllabus): string | null {
+    if (!syllabus.source_url) return null;
     return syllabus.archived ? `https://web.archive.org/web/2026/${syllabus.source_url}` : syllabus.source_url;
 }
 

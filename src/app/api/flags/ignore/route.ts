@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession, isModerator } from "@/lib/auth";
 
-/** Dismisses the flags on a DalSearch review ({ review_id }) or a RateMyProfessors one ({ external_review_id }). */
+/** Dismisses the flags on one of the site's reviews ({ review_id }) or a RateMyProfessors one ({ external_review_id }). */
 export async function POST(req: Request) {
   const session = await getSession();
 

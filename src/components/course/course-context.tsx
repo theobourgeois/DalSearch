@@ -10,6 +10,7 @@ import { termSessions } from "@/lib/course";
 import { courseKey, findClashes, formatCourseCode, getCourseFit, groupByType } from "@/lib/schedule";
 import type { ClassSession, CourseAndSubjectCode, CourseListItem, SessionType } from "@/lib/types";
 import { useScheduleStore } from "@/store/schedule-store";
+import { useHref } from "@/components/university";
 
 export type CourseTab = "overview" | "schedule" | "reviews";
 
@@ -58,6 +59,7 @@ type CourseProviderProps = {
  * scheduled, or to the first sections that fit around their other courses.
  */
 export function CourseProvider({ course, offered, initialTerm, children }: CourseProviderProps) {
+    const pagePath = useHref();
     const { label: termLabel } = useTerms();
     const router = useRouter();
     const code = courseKey(course);
@@ -91,7 +93,7 @@ export function CourseProvider({ course, offered, initialTerm, children }: Cours
             (own.length !== selected.length || selected.some((session) => !ownCrns.has(session.crn)));
 
         const resetChoice = () => setChoices((current) => ({ ...current, [term]: undefined }));
-        const viewSchedule = { label: "View schedule", onClick: () => router.push("/schedule") };
+        const viewSchedule = { label: "View schedule", onClick: () => router.push(pagePath("/schedule")) };
 
         return {
             code,
@@ -126,7 +128,7 @@ export function CourseProvider({ course, offered, initialTerm, children }: Cours
             },
             schedule,
         };
-    }, [choices, code, course, offered, removeCourse, router, schedule, setCourseSessions, tab, term, termLabel]);
+    }, [choices, code, course, offered, pagePath, removeCourse, router, schedule, setCourseSessions, tab, term, termLabel]);
 
     return <CourseContext.Provider value={value}>{children}</CourseContext.Provider>;
 }

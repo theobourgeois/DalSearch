@@ -6,22 +6,23 @@ import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { AsideDivider, AsideHeading } from "@/components/layout/page";
 import { Avatar } from "@/components/ui/avatar";
 import { Property, PropertyList } from "@/components/ui/property-list";
-import { links } from "@/lib/constants";
 import { describeFormat, primaryCampus, termSessions } from "@/lib/course";
 import type { RatingSummary } from "@/lib/instructors";
 import { formatCourseCode } from "@/lib/schedule";
 import type { CourseAndSubjectCode } from "@/lib/types";
 import { useCourse } from "./course-context";
+import { useHref, useUniversity } from "@/components/university";
 
 const MAX_UNLOCKS = 4;
 
 function CourseLinks({ codes }: { codes: string[] }) {
+    const pagePath = useHref();
     return (
         <span className="flex flex-col">
             {codes.map((code) => (
                 <Link
                     key={code}
-                    href={`/${code}`}
+                    href={pagePath(`/${code}`)}
                     className="w-fit underline decoration-fg-subtle underline-offset-[3px] hover:decoration-fg"
                 >
                     {formatCourseCode(code)}
@@ -68,6 +69,7 @@ type CourseDetailsProps = {
 
 /** The details column on the course page; term-specific facts follow the term picked on the page. */
 export function CourseDetails({ prerequisites, unlocks, ratings }: CourseDetailsProps) {
+    const university = useUniversity();
     const { label: termLabel } = useTerms();
     const { course, term, offered } = useCourse();
     const sessions = termSessions(course, term);
@@ -79,7 +81,7 @@ export function CourseDetails({ prerequisites, unlocks, ratings }: CourseDetails
     return (
         <>
             <PropertyList>
-                <Property label="Credit hours">{course.creditHours}</Property>
+                <Property label={university.creditLabel}>{course.creditHours}</Property>
                 <Property label="Level">{course.courseCode[0]}000</Property>
                 {sessions.length > 0 && <Property label="Format">{describeFormat(sessions)}</Property>}
                 {campus && <Property label="Campus">{campus}</Property>}
@@ -127,12 +129,12 @@ export function CourseDetails({ prerequisites, unlocks, ratings }: CourseDetails
 
             <AsideDivider />
             <a
-                href={links.timetable}
+                href={university.timetableUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-1.5 text-sm font-bold text-fg-muted hover:text-fg"
             >
-                Open in Dal timetable
+                Open in the {university.shortName} timetable
                 <ArrowUpRightIcon className="size-4" />
             </a>
         </>

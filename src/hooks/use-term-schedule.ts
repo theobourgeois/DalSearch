@@ -7,7 +7,7 @@ import { courseColors } from "@/lib/colors";
 import type { Term } from "@/lib/constants";
 import { findConflicts, scheduledCourses, totalCredits } from "@/lib/schedule";
 import { useHydrated } from "@/store/storage";
-import { useScheduleStore, useTermSessions } from "@/store/schedule-store";
+import { useScheduleStoreApi, useTermSessions } from "@/store/schedule-store";
 
 /**
  * Everything derived from the student's schedule for one term (defaults to the term being planned):
@@ -18,7 +18,7 @@ export function useTermSchedule(term?: Term) {
     const plannedTerm = usePlannedTerm();
     const activeTerm = term ?? plannedTerm;
     const sessions = useTermSessions(activeTerm);
-    const ready = useHydrated(useScheduleStore);
+    const ready = useHydrated(useScheduleStoreApi());
     const { byCode } = useCourseIndex();
 
     return useMemo(() => {

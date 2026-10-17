@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 
-/** Flags a DalSearch review ({ review_id }) or reports a RateMyProfessors one ({ external_review_id }). */
+/** Flags one of the site's reviews ({ review_id }) or reports a RateMyProfessors one ({ external_review_id }). */
 export async function POST(req: Request) {
   const session = await getSession();
 

@@ -9,6 +9,7 @@ import { formatCourseCode } from "@/lib/schedule";
 import type { CourseSummary } from "@/lib/types";
 import { useLibraryStore } from "@/store/library-store";
 import { useCourseIndex } from "./course-index";
+import { useHref } from "@/components/university";
 
 const MAX_RESULTS = 8;
 const MAX_RECENT_COURSES = 5;
@@ -83,6 +84,7 @@ export const CourseSearch = forwardRef<HTMLInputElement, CourseSearchProps>(func
     const setQuery = onQueryChange ?? setLocalQuery;
     const matches = useCourseMatches(query);
     const recent = useRecentItems();
+    const pagePath = useHref();
 
     const items: SearchItem[] =
         query.trim() || !showRecent ? matches.map((course) => ({ kind: "course", course })) : recent;
@@ -96,7 +98,7 @@ export const CourseSearch = forwardRef<HTMLInputElement, CourseSearchProps>(func
         if (trimmed && trimmed.replace(/\s+/g, "").toUpperCase() !== item.course.code) addRecentQuery(trimmed);
         setQuery("");
         onSelect?.(item.course);
-        router.push(`/${item.course.code}`);
+        router.push(pagePath(`/${item.course.code}`));
     };
 
     return (

@@ -1,6 +1,7 @@
 import { getCourses, getListedTerms } from "@/lib/data";
 import { defaultFilter, defaultOrderBy, getFilteredCourses } from "@/lib/filter";
 import { CourseFilter, CourseOrderBy } from "@/lib/types";
+import { requestedUniversity } from "@/lib/university";
 
 type Payload = {
   filter: CourseFilter;
@@ -39,7 +40,9 @@ export async function GET(request: Request) {
   }
 
 
-  const [courses, listed] = await Promise.all([getCourses(), getListedTerms()]);
+  const university = requestedUniversity(request);
+  if (!university) return new Response("Unknown university", { status: 404 });
+  const [courses, listed] = await Promise.all([getCourses(university), getListedTerms(university)]);
   const results = getFilteredCourses(courses, filter, orderBy, limit, listed);
 
   return new Response(JSON.stringify(results), {

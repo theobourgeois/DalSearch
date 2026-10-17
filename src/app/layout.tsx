@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import localFont from "next/font/local";
-import { AppShell } from "@/components/layout/app-shell";
 import { Providers } from "@/components/providers";
-import { getCourseIndex, getCurrentTerm, getTerms } from "@/lib/data";
 import "./globals.css";
 
 const satoshi = localFont({
@@ -19,43 +18,17 @@ const satoshi = localFont({
 /** Re-render static pages daily so the current term and live room data stay fresh. */
 export const revalidate = 86400;
 
-const title = "DalSearch - Dalhousie University Course Search Tool";
 const description =
-    "Easily search and discover classes offered at Dalhousie University. Find course details, schedules, and more with our comprehensive search tool.";
+    "Search courses at Canadian universities, see open seats and who's teaching, and plan a timetable that doesn't clash.";
 
 export const metadata: Metadata = {
-    title,
+    metadataBase: new URL(SITE_URL),
+    title: { default: `${SITE_NAME} - Course search and timetable planning`, template: `%s | ${SITE_NAME}` },
     description,
-    keywords: [
-        "dalhousie",
-        "university",
-        "course",
-        "search",
-        "schedule",
-        "catalog",
-        "classes",
-        "academic",
-        "timetable",
-        "dalhousie university timetable",
-        "dal search",
-        "dalhousie university",
-        "course search",
-        "dalsearch",
-        "dal",
-        "halifax",
-    ],
     authors: [{ name: "Théo Bourgeois" }, { name: "Chris Langille" }],
-    applicationName: "Dalhousie University Course Search Tool",
+    applicationName: SITE_NAME,
     referrer: "origin-when-cross-origin",
-    openGraph: {
-        type: "website",
-        locale: "en_CA",
-        url: "https://dalsearch.com",
-        title,
-        description,
-        siteName: "DalSearch",
-        images: [{ url: "/og-image.png", width: 1200, height: 630, alt: title }],
-    },
+    openGraph: { type: "website", locale: "en_CA", siteName: SITE_NAME },
     icons: {
         icon: "/favicon.ico",
         shortcut: "/favicon-16x16.png",
@@ -74,22 +47,15 @@ export const metadata: Metadata = {
         },
     },
     verification: { google: process.env.GOOGLE_VERIFICATION },
-    alternates: {
-        canonical: "https://dalsearch.com",
-        languages: { "en-US": "https://dalsearch.com/en-US", "fr-CA": "https://dalsearch.com/fr-CA" },
-    },
     category: "technology",
     manifest: "/manifest.json",
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-    const [courseIndex, terms, currentTerm] = await Promise.all([getCourseIndex(), getTerms(), getCurrentTerm()]);
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={satoshi.variable} suppressHydrationWarning>
+        <html lang="en-CA" className={satoshi.variable} suppressHydrationWarning>
             <body>
-                <Providers courseIndex={courseIndex} terms={terms} currentTerm={currentTerm}>
-                    <AppShell>{children}</AppShell>
-                </Providers>
+                <Providers>{children}</Providers>
             </body>
         </html>
     );

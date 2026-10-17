@@ -55,10 +55,10 @@ export function weeklyMinutes(sessions: ClassSession[]): number {
 
 export type CampusNow = { day: Day | null; minutes: number };
 
-/** The current weekday and time of day on campus (Halifax), regardless of where the code runs. */
-export function campusNow(date = new Date()): CampusNow {
+/** The current weekday and time of day on campus, in its `timeZone`, regardless of where the code runs. */
+export function campusNow(timeZone: string, date = new Date()): CampusNow {
     const parts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "America/Halifax",
+        timeZone,
         weekday: "short",
         hour: "2-digit",
         minute: "2-digit",

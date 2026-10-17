@@ -1,4 +1,6 @@
-"""Find public Dal syllabi and pull the useful parts out of them with GPT-6 Luna.
+"""Find a university's public syllabi and pull the useful parts out of them with GPT-6 Luna.
+
+At Dal:
 
 Departments post syllabus PDFs on cdn.dal.ca and link them from their pages on www.dal.ca.
 Candidates come from two places: the Wayback Machine's index of Dal files (older uploads)
@@ -8,8 +10,11 @@ its text is sent to the model, and what comes back (grading, assessments, textbo
 policies, weekly topics) is recorded in the syllabus_documents table. The PDF text itself
 isn't kept.
 
-    python3 syllabi.py          # find and extract new ones
-    python3 syllabi.py --save   # then publish them to the syllabi table the site reads
+At MSVU, the few public course outlines are uploads on msvu.ca, found through the Wayback index.
+
+    python3 syllabi.py                          # find and extract new ones at Dal
+    python3 syllabi.py --save                   # then publish them to the syllabi table the site reads
+    python3 syllabi.py --university msvu        # the same at MSVU
 
 Run it at the start of each term, when departments post new syllabi.
 
@@ -31,6 +36,7 @@ import sys
 import threading
 import time
 import urllib.parse
+from pathlib import Path
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
@@ -40,8 +46,8 @@ from pypdf import PdfReader
 from supabase_rest import Table, load_env
 
 MODEL = "gpt-6-luna"
-UNIVERSITY = "dal"
-USER_AGENT = "Mozilla/5.0 (compatible; DalSearch syllabus indexer; +https://dalsearch.com)"
+UNIVERSITY_NAMES = {"dal": "Dalhousie University", "msvu": "Mount Saint Vincent University"}
+USER_AGENT = "Mozilla/5.0 (compatible; Termly syllabus indexer; +https://termly.ca)"
 CDX_URL = "http://web.archive.org/cdx/search/cdx"
 MAX_TEXT = 120_000
 logging.getLogger("pypdf").setLevel(logging.ERROR)  # it warns on most Dal PDFs
@@ -70,102 +76,10 @@ COURSE_IN_NAME = re.compile(r"(?<![A-Za-z])([A-Za-z]{3,5})[\s_\-.]*([1-9]\d{3})(
 SUBJECT_ALIASES = {"BIO": "BIOL", "PSYC": "PSYO", "PHYS": "PHYC", "CHEMISTRY": "CHEM"}
 LOOKS_LIKE_SYLLABUS = re.compile(r"(?i)(grad(e|ing)|assessment|evaluation|marks|weight)")
 
-SCHEMA = {
-    "type": "object",
-    "additionalProperties": False,
-    "required": [
-        "is_syllabus", "course_codes", "term_season", "term_year", "instructors",
-        "grading_schemes", "textbooks", "policies", "weekly_topics", "class_meetings",
-    ],
-    "properties": {
-        "is_syllabus": {
-            "type": "boolean",
-            "description": "True only for a syllabus or course outline for a specific offering of a course.",
-        },
-        "course_codes": {
-            "type": "array",
-            "items": {"type": "string"},
-            "description": "Codes this syllabus is for, written like CSCI2110. Include cross-listings, not prerequisites or exclusions.",
-        },
-        "term_season": {"type": ["string", "null"], "enum": ["Fall", "Winter", "Summer", "Full year", None]},
-        "term_year": {
-            "type": ["integer", "null"],
-            "description": "Calendar year the term starts in. Winter terms start in January, so 'Winter 2025-2026' is 2026.",
-        },
-        "instructors": {"type": "array", "items": {"type": "string"}, "description": "Full names, no titles."},
-        "grading_schemes": {
-            "type": "array",
-            "description": "Usually one. More than one only when the syllabus offers alternative schemes.",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": ["label", "components"],
-                "properties": {
-                    "label": {"type": ["string", "null"], "description": "e.g. 'Scheme II: if it helps you', or null."},
-                    "components": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "required": ["name", "weight", "count", "note"],
-                            "properties": {
-                                "name": {"type": "string", "description": "Short: 'Final exam', 'Labs', 'Online assignments'."},
-                                "weight": {"type": ["number", "null"], "description": "Percent of the final grade."},
-                                "count": {"type": ["integer", "null"], "description": "How many, if stated."},
-                                "note": {"type": ["string", "null"], "description": "Under 15 words: 'best 8 of 10', 'cumulative', 'Feb 28'."},
-                            },
-                        },
-                    },
-                },
-            },
-        },
-        "textbooks": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": ["title", "authors", "required", "free"],
-                "properties": {
-                    "title": {"type": "string"},
-                    "authors": {"type": ["string", "null"]},
-                    "required": {"type": ["boolean", "null"]},
-                    "free": {"type": ["boolean", "null"], "description": "Open textbook or provided at no cost."},
-                },
-            },
-        },
-        "policies": {
-            "type": "array",
-            "description": "Course-specific rules a student would want to know: late work, missed tests, calculators, attendance. Skip standard university statements.",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": ["topic", "summary"],
-                "properties": {
-                    "topic": {"type": "string", "description": "One or two words: 'Late work', 'Missed midterm'."},
-                    "summary": {"type": "string", "description": "One plain sentence, under 25 words."},
-                },
-            },
-        },
-        "weekly_topics": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "required": ["when", "topic"],
-                "properties": {"when": {"type": "string"}, "topic": {"type": "string"}},
-            },
-        },
-        "class_meetings": {
-            "type": ["string", "null"],
-            "description": "How the class meets each week, under 15 words, e.g. '3 lectures and 1 lab a week' or 'online, asynchronous'. Null if the syllabus doesn't say.",
-        },
-    },
-}
-INSTRUCTIONS = (
-    "You read Dalhousie University course syllabi and extract facts for students choosing courses. "
-    "Use only what the document says; use null or an empty list when something isn't stated. "
-    "Keep wording short and plain."
-)
+# What to pull out of a syllabus, shared with the upload flow in src/lib/syllabus-extraction.ts.
+EXTRACTION = json.loads((Path(__file__).resolve().parents[2] / "lib" / "syllabus-extraction.json").read_text())
+SCHEMA = EXTRACTION["schema"]
+INSTRUCTIONS = EXTRACTION["instructions"]
 
 
 def normalize(url: str) -> str:
@@ -203,9 +117,9 @@ def year_in(url: str) -> int | None:
     return max(years) if years else None
 
 
-def from_wayback() -> set[str]:
+def from_wayback(queries: list[tuple[str, str]] = CDX_QUERIES) -> set[str]:
     urls = set()
-    for prefix, pattern in CDX_QUERIES:
+    for prefix, pattern in queries:
         params = {
             "url": prefix, "matchType": "prefix", "filter": f"original:{pattern}",
             "collapse": "urlkey", "fl": "original", "limit": 200_000,
@@ -402,6 +316,43 @@ def candidates(known: set[str], since: int, max_pages: int) -> dict[str, dict]:
     return found
 
 
+# MSVU names outlines "1188-Outline-W26-Moniz.pdf" or "PBRL-2299-01-Course-Outline-Shaffner-F24.pdf": the
+# subject can be missing and the term is a season letter and two digits.
+MSVU_CDX_QUERIES = [("msvu.ca/wp-content/uploads/", r"(?i).*(syllab|outline).*\.pdf.*")]
+SEASON_YEAR = re.compile(r"(?i)(?<![a-z0-9])(?:S|F|W|SU|FA|WI)(\d{2})(?![0-9])")
+BARE_NUMBER = re.compile(r"(?<![A-Za-z0-9])([1-9]\d{3})(?![0-9])")
+
+
+def msvu_candidates(known: set[str], since: int, max_pages: int) -> dict[str, dict]:
+    """MSVU's public course outlines: uploads on msvu.ca named with "outline" or "syllabus". A bare
+    course number names the course when only one MSVU course has it; when several do (co-op terms are
+    BUSI, PBRL and THMT 1188), the model reads the course from the outline instead."""
+    by_number: dict[str, set[str]] = {}
+    for code in known:
+        by_number.setdefault(re.sub(r"^[A-Z]+", "", code), set()).add(code)
+    found = {}
+    for url in from_wayback(MSVU_CDX_QUERIES):
+        key = normalize(url)
+        name = key.rsplit("/", 1)[-1]
+        if NOISE.search(name) or not name.lower().endswith(".pdf"):
+            continue
+        codes = courses_in(key, known)
+        numbers = [number for number in BARE_NUMBER.findall(name) if number in by_number]
+        if not codes:
+            codes = {next(iter(by_number[number])) for number in numbers if len(by_number[number]) == 1}
+        # The upload folder's year is when the slot was made, not the term, so only the file name counts.
+        years = [int(year) for year in re.findall(r"(?<!\d)(20[0-3]\d)(?!\d)", name)]
+        years += [2000 + int(year) for year in SEASON_YEAR.findall(name)]
+        year = max(years) if years else None
+        if (codes or numbers) and year and year >= since:
+            found[key] = {"url": key, "live": False, "courses": sorted(codes), "year": year}
+    print(f"  {len(found)} MSVU outlines since {since}", file=sys.stderr)
+    return found
+
+
+SOURCES = {"dal": candidates, "msvu": msvu_candidates}
+
+
 def download(session: requests.Session, url: str) -> tuple[bytes | None, str | None]:
     for source, target in (("dal.ca", url), ("wayback", f"https://web.archive.org/web/2026id_/{url}")):
         try:
@@ -436,10 +387,10 @@ def pdf_text(data: bytes) -> str:
     return "\n".join(page.extract_text() or "" for page in reader.pages)
 
 
-def extract(session: requests.Session, key: str, text: str) -> tuple[dict, dict]:
+def extract(session: requests.Session, key: str, text: str, university: str) -> tuple[dict, dict]:
     body = {
         "model": MODEL,
-        "instructions": INSTRUCTIONS,
+        "instructions": INSTRUCTIONS.format(university=UNIVERSITY_NAMES[university]),
         "input": text,
         "reasoning": {"effort": "low"},
         "text": {"format": {"type": "json_schema", "name": "syllabus", "strict": True, "schema": SCHEMA}},
@@ -480,7 +431,7 @@ def weights_add_up(details: dict) -> bool:
     )
 
 
-def to_row(url: str, row: dict, known: set[str]) -> dict:
+def to_row(url: str, row: dict, known: set[str], university: str) -> dict:
     details = row["details"]
     return {
         "source_url": row["url"],
@@ -496,12 +447,13 @@ def to_row(url: str, row: dict, known: set[str]) -> dict:
         "weekly_topics": details["weekly_topics"],
         "class_meetings": details["class_meetings"],
         "model": MODEL,
-        "university_id": UNIVERSITY,
+        "university_id": university,
     }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--university", default="dal", choices=sorted(SOURCES), help="university id (default dal)")
     parser.add_argument("--since", type=int, default=2023, help="oldest year to keep (default 2023)")
     parser.add_argument("--limit", type=int, help="only process this many new documents")
     parser.add_argument("--max-pages", type=int, default=8000, help="dal.ca pages to crawl")
@@ -509,21 +461,23 @@ def main() -> None:
     args = parser.parse_args()
 
     env = load_env()
-    courses = Table(env, "courses").select_all("code", {"university_id": f"eq.{UNIVERSITY}"}, "code")
+    courses = Table(env, "courses").select_all("code", {"university_id": f"eq.{args.university}"}, "code")
     known = {course["code"] for course in courses}
     if not known:
-        sys.exit("No Dal courses stored; refresh the timetable first")
+        sys.exit(f"No {args.university} courses stored; refresh the timetable first")
     documents = Table(env, "syllabus_documents")
     results = {
         row["url"]: row["data"]
-        for row in documents.select_all("url,data", {"university_id": f"eq.{UNIVERSITY}"}, "url")
+        for row in documents.select_all("url,data", {"university_id": f"eq.{args.university}"}, "url")
     }
 
     if args.save:
         rows = [
-            to_row(url, row, known) for url, row in results.items()
+            to_row(url, row, known, args.university) for url, row in results.items()
             if row["status"] == "syllabus" and (row["year"] or 0) >= args.since
         ]
+        # Outlines the model couldn't tie to a course can't be shown on any course page.
+        rows = [row for row in rows if row["course_codes"]]
         Table(env, "syllabi").upsert(rows, on_conflict="source_url")
         print(f"Saved {len(rows)} syllabi to Supabase", file=sys.stderr)
         return
@@ -531,7 +485,7 @@ def main() -> None:
     key = env.get("OPENAI_API_KEY") or sys.exit("Set OPENAI_API_KEY")
 
     print("Finding syllabi", file=sys.stderr)
-    found = candidates(known, args.since, args.max_pages)
+    found = SOURCES[args.university](known, args.since, args.max_pages)
     todo = [
         (url, info) for url, info in sorted(found.items())
         if url not in results or results[url]["status"] == "error"
@@ -545,7 +499,7 @@ def main() -> None:
 
     def flush() -> None:
         rows = [
-            {"url": url, "university_id": UNIVERSITY, "status": row["status"], "data": row}
+            {"url": url, "university_id": args.university, "status": row["status"], "data": row}
             for url, row in unsaved.items()
         ]
         documents.upsert(rows, on_conflict="url")
@@ -572,7 +526,7 @@ def main() -> None:
                 row["status"] = "not a syllabus (no text or no grading words)"
             else:
                 try:
-                    details, used = extract(session, key, text[:MAX_TEXT])
+                    details, used = extract(session, key, text[:MAX_TEXT], args.university)
                 except Exception as error:  # left as an error and retried on the next run
                     row["status"], row["error"] = "error", str(error)[:300]
             if details:

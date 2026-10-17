@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession, isModerator } from "@/lib/auth";
 import { RMP_REVIEW_COLUMNS } from "@/lib/rmp-reviews";
-import { UNIVERSITY_ID } from "@/lib/university";
 
 export async function GET() {
   const session = await getSession();
@@ -28,15 +27,13 @@ export async function GET() {
     reviewIds.length
       ? supabase
           .from("reviews")
-          .select("id, course_code, instructor, review_text, rating, difficulty, workload, created_at")
-          .eq("university_id", UNIVERSITY_ID)
+          .select("id, university_id, course_code, instructor, review_text, rating, difficulty, workload, created_at")
           .in("id", reviewIds)
       : { data: [], error: null },
     externalIds.length
       ? supabase
           .from("external_reviews")
-          .select(`course_code, ${RMP_REVIEW_COLUMNS}`)
-          .eq("university_id", UNIVERSITY_ID)
+          .select(`university_id, course_code, ${RMP_REVIEW_COLUMNS}`)
           .in("id", externalIds)
       : { data: [], error: null },
   ]);

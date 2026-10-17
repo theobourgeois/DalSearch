@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SITE_NAME } from "@/lib/constants";
 import Link from "next/link";
 import { EyeSlashIcon, ShieldCheckIcon, TrashIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
@@ -13,8 +14,9 @@ import { SimpleTooltip } from "@/components/ui/tooltip";
 import type { ReviewContent } from "@/lib/reviews";
 import type { RmpReview } from "@/lib/rmp-reviews";
 import { formatCourseCode } from "@/lib/schedule";
+import { universityPath } from "@/lib/university";
 
-type ReportedRmpReview = RmpReview & { course_code: string };
+type ReportedRmpReview = RmpReview & { university_id: string; course_code: string };
 
 async function post(url: string, body: Record<string, string>) {
     const response = await fetch(url, {
@@ -25,8 +27,8 @@ async function post(url: string, body: Record<string, string>) {
     return response.ok;
 }
 
-const CourseLink = ({ code }: { code: string }) => (
-    <Link href={`/${code}#reviews`} className="hover:underline">
+const CourseLink = ({ university, code }: { university: string; code: string }) => (
+    <Link href={universityPath(university, `/${code}#reviews`)} className="hover:underline">
         {formatCourseCode(code)}
     </Link>
 );
@@ -49,7 +51,8 @@ export function FlaggedReviews() {
             .catch(() => setReviews([]));
     }, []);
 
-    const removeRmp = (review: RmpReview) => setRmpReviews((current) => current.filter((item) => item.id !== review.id));
+    const removeRmp = (review: RmpReview) =>
+        setRmpReviews((current) => current.filter((item) => item.id !== review.id));
 
     const dismissRmp = async (review: RmpReview) => {
         if (!window.confirm("Dismiss every report on this review?")) return;
@@ -79,7 +82,7 @@ export function FlaggedReviews() {
                     <ReviewItem
                         key={review.id}
                         review={review}
-                        context={<CourseLink code={review.course_code} />}
+                        context={<CourseLink university={review.university_id} code={review.course_code} />}
                         actions={
                             <>
                                 <SimpleTooltip label="Dismiss flags">
@@ -114,7 +117,7 @@ export function FlaggedReviews() {
                         <RmpReviewItem
                             key={review.id}
                             review={review}
-                            context={<CourseLink code={review.course_code} />}
+                            context={<CourseLink university={review.university_id} code={review.course_code} />}
                             actions={
                                 <>
                                     <SimpleTooltip label="Dismiss reports">
@@ -127,7 +130,7 @@ export function FlaggedReviews() {
                                             <ShieldCheckIcon />
                                         </Button>
                                     </SimpleTooltip>
-                                    <SimpleTooltip label="Hide on DalSearch">
+                                    <SimpleTooltip label={`Hide on ${SITE_NAME}`}>
                                         <Button
                                             variant="ghost"
                                             size="icon-sm"

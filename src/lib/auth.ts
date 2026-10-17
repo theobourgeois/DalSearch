@@ -1,6 +1,7 @@
 import "server-only";
 
 import { redirect } from "next/navigation";
+import { DEFAULT_UNIVERSITY, universityPath } from "./university";
 import { createClient } from "@/lib/supabase/server";
 
 /** Lowest to highest, matching the user_role enum in the database. */
@@ -18,10 +19,10 @@ export async function getSession() {
     return { supabase, user, role: (profile?.role ?? "user") as Role };
 }
 
-/** The session for account pages; anyone signed out is sent to the login page. */
-export async function requireUser() {
+/** The session for account pages; anyone signed out is sent to the university's login page. */
+export async function requireUser(university: string = DEFAULT_UNIVERSITY) {
     const session = await getSession();
-    if (!session) redirect("/auth/login");
+    if (!session) redirect(universityPath(university, "/auth/login"));
     return session;
 }
 

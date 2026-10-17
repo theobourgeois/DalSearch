@@ -1,5 +1,5 @@
 import { offeredTerms } from "./course";
-import { courseKey, getCourseFit } from "./schedule";
+import { courseKey, courseLevel, getCourseFit } from "./schedule";
 import type { ClassSession, CourseFilter, CourseListItem, CourseOrderBy, Term } from "./types";
 
 /** Empty lists mean "no restriction", so the default filter matches every course. */
@@ -37,7 +37,7 @@ export function filterCourses<T extends CourseListItem>(
     return courses.filter((course) => {
         const terms = offeredTerms(course, listed).filter((term) => allows(filter.terms, term));
         if (terms.length === 0) return false;
-        if (!allows(filter.courseLevels, `${course.courseCode[0]}000`)) return false;
+        if (!allows(filter.courseLevels, courseLevel(course.courseCode) ?? "")) return false;
         if (!allows(filter.subjectCodes, course.subjectCode)) return false;
         if (!allows(filter.creditHours, course.creditHours)) return false;
         if (!matchesSearch(course, filter.searchTerm)) return false;

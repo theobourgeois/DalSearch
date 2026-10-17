@@ -7,34 +7,7 @@
  * tables copied from its exam schedule page.
  */
 import fs from "fs";
-import { connect, log } from "./lib/import.js";
-
-/** "2025-04-12T15:30" in `timeZone` as a UTC ISO timestamp. */
-function zonedToUtc(local, timeZone) {
-    const [date, time] = local.split("T");
-    const [year, month, day] = date.split("-").map(Number);
-    const [hours, minutes] = time.split(":").map(Number);
-    const asUtc = Date.UTC(year, month - 1, day, hours, minutes);
-    // The zone's offset at that moment, found by formatting it there and comparing.
-    const offsetAt = (instant) => {
-        const parts = Object.fromEntries(
-            new Intl.DateTimeFormat("en-US", {
-                timeZone,
-                hourCycle: "h23",
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-            })
-                .formatToParts(new Date(instant))
-                .map(({ type, value }) => [type, value]),
-        );
-        return Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute) - instant;
-    };
-    const guess = asUtc - offsetAt(asUtc);
-    return new Date(asUtc - offsetAt(guess)).toISOString();
-}
+import { connect, log, zonedToUtc } from "./lib/import.js";
 
 async function main() {
     const [university, term, file] = process.argv.slice(2);

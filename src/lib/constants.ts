@@ -3,6 +3,13 @@
 /** A term code as the university writes it, e.g. Dal's "202710" for Fall 2026. Never compare or sort codes. */
 export type Term = string;
 
+export const SITE_NAME = "Termly";
+
+export const SITE_URL = "https://termly.ca";
+
+/** The site's old addresses; every page on them redirects to its place on SITE_URL. */
+export const OLD_HOSTS = ["dalsearch.com", "www.dalsearch.com"];
+
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 
 export const weekdays = ["M", "T", "W", "R", "F"] as const;
@@ -16,12 +23,9 @@ export const dayNames = {
     S: { short: "Sat", long: "Saturday" },
 } as const;
 
-export const courseLevels = ["1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000", "9000"];
-
 export const scheduleBufferOptions = [0, 5, 10, 15, 30] as const;
 
 export const links = {
-    timetable: "https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable",
     source: "https://github.com/theobourgeois/DalSearch",
     coffee: "https://buymeacoffee.com/theobourgeois",
     theo: "https://theobourgeois.com",

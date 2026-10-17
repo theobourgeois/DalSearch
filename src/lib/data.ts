@@ -7,7 +7,7 @@ import { summarizeRating, type RatingSummary } from "./instructors";
 import { courseKey, sessionTypeOrder } from "./schedule";
 import { publicClient } from "./supabase/public";
 import { currentTermCode, dateIn, listedCodes, termIndex, type TermInfo } from "./terms";
-import { UNIVERSITY_ID, UNIVERSITY_TIMEZONE } from "./university";
+import { getUniversity, universities } from "./university";
 import type {
     ClassSession,
     Course,
@@ -32,6 +32,7 @@ import type {
  */
 
 const PAGE_SIZE = 1000;
+const READ_ATTEMPTS = 3;
 const FRESH_FOR_MS = 10 * 60 * 1000;
 const RETRY_AFTER_FAILURE_MS = 60 * 1000;
 /** A meeting this short is a one-off (a makeup class, a room change for a day), not the weekly pattern. */
@@ -88,20 +89,105 @@ type Catalog = {
 /** A session and the rooms it's held in. */
 type PlacedSession = { session: ClassSession; rooms: Set<string> };
 
+type Db = ReturnType<typeof publicClient>;
+
 /**
- * Every row of a query, a page at a time. `query` gets the range to read. Pages advance by what came
- * back, so a project whose API returns fewer rows per request than asked still reads everything.
+ * Every row of one university's table or view. The first page also returns the row count, then the
+ * rest are read in parallel. Pages are as big as the API actually returned, so a project that caps
+ * rows per request lower than asked still reads everything.
  */
 async function readAll<T>(
-    query: (from: number, to: number) => PromiseLike<{ data: unknown[] | null; error: { message: string } | null }>,
+    db: Db,
+    source: string,
+    columns: string,
+    university: string,
+    order: string[],
+    filters: Record<string, string> = {},
 ): Promise<T[]> {
-    const rows: T[] = [];
-    for (;;) {
-        const { data, error } = await query(rows.length, rows.length + PAGE_SIZE - 1);
-        if (error) throw new Error(error.message);
-        if (!data || data.length === 0) return rows;
-        rows.push(...(data as T[]));
+    const page = async (from: number, to: number, count: boolean) => {
+        // A busy database cancels slow reads (a statement timeout), so each page gets a few tries.
+        for (let attempt = 1; ; attempt++) {
+            let query = db
+                .from(source)
+                .select(columns, count ? { count: "exact" } : undefined)
+                .eq("university_id", university);
+            for (const [column, value] of Object.entries(filters)) query = query.eq(column, value);
+            for (const column of order) query = query.order(column);
+            const result = await query.range(from, to);
+            if (!result.error || attempt >= READ_ATTEMPTS) return result;
+            await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+        }
+    };
+    const first = await page(0, PAGE_SIZE - 1, true);
+    if (first.error) throw new Error(`${source}: ${first.error.message}`);
+    const rows = (first.data ?? []) as T[];
+    const size = rows.length;
+    const total = first.count ?? size;
+    if (size === 0 || total <= size) return rows;
+
+    const starts = Array.from({ length: Math.ceil((total - size) / size) }, (_, index) => size * (index + 1));
+    const pages = await Promise.all(starts.map((from) => page(from, from + size - 1, false)));
+    for (const { data, error } of pages) {
+        if (error) throw new Error(`${source}: ${error.message}`);
+        rows.push(...((data ?? []) as T[]));
     }
+    return rows;
+}
+
+/** Runs a Supabase read, trying again when it fails: a busy database cancels slow reads. */
+async function retried<T>(source: string, read: () => PromiseLike<{ data: T; error: { message: string } | null }>) {
+    for (let attempt = 1; ; attempt++) {
+        const { data, error } = await read();
+        if (!error) return data;
+        if (attempt >= READ_ATTEMPTS) throw new Error(`${source}: ${error.message || "read failed"}`);
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+    }
+}
+
+/**
+ * Like readAll, for a view that builds JSON per row (catalog_sections). Paging it with offsets builds
+ * every skipped row again, so later pages get slower until the database cancels them. Instead the
+ * ids where each page starts are found first (cheap: no JSON), then the pages are read by id range.
+ */
+async function readAllById<T>(db: Db, source: string, columns: string, university: string): Promise<T[]> {
+    const { count } = await retried(source, async () => {
+        const { count, error } = await db
+            .from(source)
+            .select("id", { count: "exact", head: true })
+            .eq("university_id", university);
+        return { data: { count }, error };
+    });
+    // Pages a little under the API's 1,000-row cap, so rows added between these reads still fit.
+    const size = PAGE_SIZE - 100;
+    const pages = Math.ceil((count ?? 0) / size);
+    if (pages === 0) return [];
+
+    const starts = await Promise.all(
+        Array.from({ length: pages - 1 }, async (_, index) => {
+            const at = (index + 1) * size;
+            const row = await retried(source, () =>
+                db
+                    .from(source)
+                    .select("id")
+                    .eq("university_id", university)
+                    .order("id")
+                    .range(at, at)
+                    .single<{ id: string }>(),
+            );
+            return (row as { id: string }).id;
+        }),
+    );
+    const results = await Promise.all(
+        [null, ...starts].map((from, index) =>
+            retried(source, () => {
+                let query = db.from(source).select(columns).eq("university_id", university);
+                if (from) query = query.gte("id", from);
+                if (index < starts.length) query = query.lt("id", starts[index]);
+                return query.order("id").returns<T[]>();
+            }),
+        ),
+    );
+    return results.flatMap((rows) => rows ?? []);
 }
 
 /** "08:35:00" -> "0835". */
@@ -258,48 +344,34 @@ function buildCourses(
     return { courses, roomSessions };
 }
 
-async function loadCatalog(): Promise<Catalog> {
+async function loadCatalog(university: string): Promise<Catalog> {
     const db = publicClient();
-    const university = UNIVERSITY_ID;
 
     const [termRows, subjectRows, courseRows, sectionRows, requisiteRows, ratingRows, examRows, roomRows] = await Promise.all([
-        readAll<{ code: string; name: string; starts_on: string; ends_on: string; is_listed: boolean }>((from, to) =>
-            db
-                .from("terms")
-                .select("code, name, starts_on, ends_on, is_listed")
-                .eq("university_id", university)
-                .order("starts_on")
-                .order("code")
-                .range(from, to),
+        readAll<{ code: string; name: string; starts_on: string; ends_on: string; is_listed: boolean }>(
+            db,
+            "terms",
+            "code, name, starts_on, ends_on, is_listed",
+            university,
+            ["starts_on", "code"],
         ),
-        readAll<Subject>((from, to) =>
-            db.from("subjects").select("code, name").eq("university_id", university).order("code").range(from, to),
+        readAll<Subject>(db, "subjects", "code, name", university, ["code"]),
+        readAll<CourseRow>(db, "catalog_courses", "code, subject_code, number, title, credits, description", university, [
+            "code",
+        ]),
+        readAllById<SectionRow>(
+            db,
+            "catalog_sections",
+            "term, course, crn, section, type, kind, capacity, enrolled, meetings, instructors",
+            university,
         ),
-        readAll<CourseRow>((from, to) =>
-            db
-                .from("catalog_courses")
-                .select("code, subject_code, number, title, credits, description")
-                .eq("university_id", university)
-                .order("code")
-                .range(from, to),
-        ),
-        readAll<SectionRow>((from, to) =>
-            db
-                .from("catalog_sections")
-                .select("term, course, crn, section, type, kind, capacity, enrolled, meetings, instructors")
-                .eq("university_id", university)
-                .order("id")
-                .range(from, to),
-        ),
-        readAll<{ course: string; required: string }>((from, to) =>
-            db
-                .from("course_requisite_codes")
-                .select("course, required")
-                .eq("university_id", university)
-                .eq("kind", "prerequisite")
-                .order("course")
-                .order("required")
-                .range(from, to),
+        readAll<{ course: string; required: string }>(
+            db,
+            "course_requisite_codes",
+            "course, required",
+            university,
+            ["course", "required"],
+            { kind: "prerequisite" },
         ),
         readAll<{
             match_name: string;
@@ -310,31 +382,26 @@ async function loadCatalog(): Promise<Catalog> {
             difficulty: number | null;
             would_take_again: number | null;
             rating_count: number;
-        }>((from, to) =>
-            db
-                .from("instructor_rating_by_name")
-                .select("match_name, first_name, last_name, profile_url, rating, difficulty, would_take_again, rating_count")
-                .eq("university_id", university)
-                .order("match_name")
-                .range(from, to),
+        }>(
+            db,
+            "instructor_rating_by_name",
+            "match_name, first_name, last_name, profile_url, rating, difficulty, would_take_again, rating_count",
+            university,
+            ["match_name"],
         ),
-        readAll<{ term: Term; course: string; section: string; starts_at: string }>((from, to) =>
-            db
-                .from("exam_schedule")
-                .select("term, course, section, starts_at")
-                .eq("university_id", university)
-                .order("term")
-                .order("course")
-                .order("section")
-                .range(from, to),
+        readAll<{ term: Term; course: string; section: string; starts_at: string }>(
+            db,
+            "exam_schedule",
+            "term, course, section, starts_at",
+            university,
+            ["term", "course", "section"],
         ),
-        readAll<{ id: string; campus: string | null; building: string; name: string }>((from, to) =>
-            db
-                .from("rooms")
-                .select("id, campus, building, name")
-                .eq("university_id", university)
-                .order("id")
-                .range(from, to),
+        readAll<{ id: string; campus: string | null; building: string; name: string }>(
+            db,
+            "rooms",
+            "id, campus, building, name",
+            university,
+            ["id"],
         ),
     ]);
 
@@ -390,37 +457,41 @@ async function loadCatalog(): Promise<Catalog> {
     };
 }
 
-let snapshot: { catalog: Catalog; expiresAt: number } | null = null;
-let loading: Promise<Catalog> | null = null;
+const snapshots = new Map<string, { catalog: Catalog; expiresAt: number }>();
+const loading = new Map<string, Promise<Catalog>>();
 
 /**
- * The catalog, reloaded every few minutes. If a reload fails the last good catalog keeps being served,
- * so a Supabase hiccup doesn't take the site down.
+ * A university's catalog, reloaded every few minutes. If a reload fails the last good catalog keeps
+ * being served, so a Supabase hiccup doesn't take the site down.
  */
-function currentCatalog(): Promise<Catalog> {
+function currentCatalog(university: string): Promise<Catalog> {
+    const snapshot = snapshots.get(university);
     if (snapshot && Date.now() < snapshot.expiresAt) return Promise.resolve(snapshot.catalog);
-    loading ??= loadCatalog()
-        .then((catalog) => {
-            snapshot = { catalog, expiresAt: Date.now() + FRESH_FOR_MS };
-            return catalog;
-        })
-        .catch((error) => {
-            if (!snapshot) throw error;
-            console.error("Couldn't reload the catalog; serving the previous one", error);
-            snapshot.expiresAt = Date.now() + RETRY_AFTER_FAILURE_MS;
-            return snapshot.catalog;
-        })
-        .finally(() => {
-            loading = null;
-        });
-    return loading;
+    let pending = loading.get(university);
+    if (!pending) {
+        pending = loadCatalog(university)
+            .then((catalog) => {
+                snapshots.set(university, { catalog, expiresAt: Date.now() + FRESH_FOR_MS });
+                return catalog;
+            })
+            .catch((error) => {
+                const previous = snapshots.get(university);
+                if (!previous) throw error;
+                console.error(`Couldn't reload the ${university} catalog; serving the previous one`, error);
+                previous.expiresAt = Date.now() + RETRY_AFTER_FAILURE_MS;
+                return previous.catalog;
+            })
+            .finally(() => loading.delete(university));
+        loading.set(university, pending);
+    }
+    return pending;
 }
 
 const getCatalog = cache(currentCatalog);
 
-/** Forgets the in-memory catalog so the next request reads Supabase again (after a data refresh). */
+/** Forgets the in-memory catalogs so the next request reads Supabase again (after a data refresh). */
 export function clearCatalog() {
-    snapshot = null;
+    snapshots.clear();
 }
 
 /** Computes something from the catalog once per catalog load. */
@@ -429,38 +500,60 @@ function derive<T>(catalog: Catalog, key: string, compute: () => T): T {
     return catalog.derived.get(key) as T;
 }
 
+/** How many courses each university has on its timetable, counted without loading their catalogs. */
+export async function getCourseCounts(): Promise<Record<string, number>> {
+    const db = publicClient();
+    const counts = await Promise.all(
+        universities.map(async ({ id }) => {
+            const { count, error } = await db
+                .from("catalog_courses")
+                .select("code", { count: "exact", head: true })
+                .eq("university_id", id);
+            if (error) throw error;
+            return [id, count ?? 0] as const;
+        }),
+    );
+    return Object.fromEntries(counts);
+}
+
+/** The codes of a university's courses on its timetable, without loading its catalog (for the sitemap). */
+export async function getCourseCodes(university: string): Promise<string[]> {
+    const rows = await readAll<{ code: string }>(publicClient(), "catalog_courses", "code", university, ["code"]);
+    return rows.map((row) => row.code);
+}
+
 /** Every term the database knows, oldest first; `isListed` marks the ones on the timetable. */
-export async function getTerms(): Promise<TermInfo[]> {
-    return (await getCatalog()).terms;
+export async function getTerms(university: string): Promise<TermInfo[]> {
+    return (await getCatalog(university)).terms;
 }
 
 /** The term running today (or the next one), decided on the server. */
-export async function getCurrentTerm(): Promise<Term> {
-    return currentTermCode(await getTerms(), dateIn(UNIVERSITY_TIMEZONE));
+export async function getCurrentTerm(university: string): Promise<Term> {
+    return currentTermCode(await getTerms(university), dateIn(getUniversity(university)?.timezone ?? "UTC"));
 }
 
-export async function getListedTerms(): Promise<Term[]> {
-    return (await getCatalog()).listed;
+export async function getListedTerms(university: string): Promise<Term[]> {
+    return (await getCatalog(university)).listed;
 }
 
-export async function getSubjects(): Promise<Subject[]> {
-    return (await getCatalog()).subjects;
+export async function getSubjects(university: string): Promise<Subject[]> {
+    return (await getCatalog(university)).subjects;
 }
 
 /** Every course on the timetable. */
-export async function getCourses(): Promise<Course[]> {
-    return (await getCatalog()).courses;
+export async function getCourses(university: string): Promise<Course[]> {
+    return (await getCatalog(university)).courses;
 }
 
-export async function getCreditHourOptions(): Promise<number[]> {
-    const catalog = await getCatalog();
+export async function getCreditHourOptions(university: string): Promise<number[]> {
+    const catalog = await getCatalog(university);
     return derive(catalog, "creditHours", () =>
         [...new Set(catalog.courses.map((course) => course.creditHours))].sort((a, b) => a - b),
     );
 }
 
-export async function getCourse(code: string): Promise<Course | undefined> {
-    return (await getCatalog()).byCode.get(code.toUpperCase());
+export async function getCourse(university: string, code: string): Promise<Course | undefined> {
+    return (await getCatalog(university)).byCode.get(code.toUpperCase());
 }
 
 function toSummary(course: Course): CourseSummary {
@@ -479,19 +572,19 @@ export function toListItem({
     return { subjectCode, courseCode, title, creditHours, termClasses, enrollmentByTerm, instructorsByTerm };
 }
 
-export async function getCourseIndex(): Promise<CourseSummary[]> {
-    const catalog = await getCatalog();
+export async function getCourseIndex(university: string): Promise<CourseSummary[]> {
+    const catalog = await getCatalog(university);
     return derive(catalog, "index", () => catalog.courses.map(toSummary));
 }
 
-export async function getCourseList(): Promise<CourseListItem[]> {
-    const catalog = await getCatalog();
+export async function getCourseList(university: string): Promise<CourseListItem[]> {
+    const catalog = await getCatalog(university);
     return derive(catalog, "list", () => catalog.courses.map(toListItem));
 }
 
 /** Courses that list the given course as a prerequisite. */
-export async function getUnlockedCourses(code: CourseAndSubjectCode): Promise<CourseSummary[]> {
-    const catalog = await getCatalog();
+export async function getUnlockedCourses(university: string, code: CourseAndSubjectCode): Promise<CourseSummary[]> {
+    const catalog = await getCatalog(university);
     const unlocks = derive(catalog, "unlocks", () => {
         const map = new Map<string, CourseSummary[]>();
         for (const course of catalog.courses) {
@@ -505,14 +598,14 @@ export async function getUnlockedCourses(code: CourseAndSubjectCode): Promise<Co
 }
 
 /** RateMyProfessors summaries for the given timetable names. */
-export async function getRatingSummaries(names: string[]): Promise<Record<string, RatingSummary>> {
-    const { ratings } = await getCatalog();
+export async function getRatingSummaries(university: string, names: string[]): Promise<Record<string, RatingSummary>> {
+    const { ratings } = await getCatalog(university);
     return Object.fromEntries(names.map((name) => [name, summarizeRating(name, ratings.get(name))]));
 }
 
 /** Overall RateMyProfessors rating by instructor name, for instructors who have one. */
-export async function getRatingsByName(): Promise<Record<string, number>> {
-    const catalog = await getCatalog();
+export async function getRatingsByName(university: string): Promise<Record<string, number>> {
+    const catalog = await getCatalog(university);
     return derive(catalog, "ratingsByName", () =>
         Object.fromEntries(
             [...catalog.ratings]
@@ -527,8 +620,8 @@ export function getCourseInstructors(course: Course): string[] {
     return [...new Set(Object.values(course.instructorsByTerm).flat())];
 }
 
-export async function getInstructorList(currentTerm: Term): Promise<InstructorListItem[]> {
-    const catalog = await getCatalog();
+export async function getInstructorList(university: string, currentTerm: Term): Promise<InstructorListItem[]> {
+    const catalog = await getCatalog(university);
     const coursesByName = new Map<string, Map<Term, Set<CourseAndSubjectCode>>>();
     for (const course of catalog.courses) {
         for (const [term, names] of Object.entries(course.instructorsByTerm)) {
@@ -555,13 +648,13 @@ export async function getInstructorList(currentTerm: Term): Promise<InstructorLi
 }
 
 /** Final exams by term and course. */
-export async function getExamSchedule(): Promise<ExamSchedule> {
-    return (await getCatalog()).exams;
+export async function getExamSchedule(university: string): Promise<ExamSchedule> {
+    return (await getCatalog(university)).exams;
 }
 
 /** The rooms with timed classes in a term, each with those sessions. */
-export async function getRoomSessions(term: Term): Promise<Map<string, ClassSession[]>> {
-    const catalog = await getCatalog();
+export async function getRoomSessions(university: string, term: Term): Promise<Map<string, ClassSession[]>> {
+    const catalog = await getCatalog(university);
     return derive(catalog, `rooms:${term}`, () => {
         const rooms = new Map<string, ClassSession[]>();
         for (const [id, sessions] of catalog.roomSessions.get(term) ?? []) {
@@ -572,6 +665,6 @@ export async function getRoomSessions(term: Term): Promise<Map<string, ClassSess
     });
 }
 
-export async function getRooms(): Promise<Map<string, Room>> {
-    return (await getCatalog()).rooms;
+export async function getRooms(university: string): Promise<Map<string, Room>> {
+    return (await getCatalog(university)).rooms;
 }

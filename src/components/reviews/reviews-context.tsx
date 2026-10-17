@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { Review } from "@/lib/reviews";
 import type { RmpReview } from "@/lib/rmp-reviews";
 import { createClient, hasSupabase } from "@/lib/supabase/client";
-import { UNIVERSITY_ID } from "@/lib/university";
+import { useUniversity } from "@/components/university";
 
 type ReviewsState = {
     courseId: string;
@@ -30,6 +30,7 @@ export function ReviewsProvider({
     rmpReviews: RmpReview[];
     children: React.ReactNode;
 }) {
+    const { id: university } = useUniversity();
     const [reviews, setReviews] = useState<Review[]>([]);
     const [status, setStatus] = useState<ReviewsState["status"]>(hasSupabase ? "loading" : "unavailable");
 
@@ -38,12 +39,12 @@ export function ReviewsProvider({
         const { data, error } = await createClient()
             .from("reviews")
             .select("*")
-            .eq("university_id", UNIVERSITY_ID)
+            .eq("university_id", university)
             .eq("course_code", courseId)
             .order("created_at", { ascending: false });
         setReviews(error ? [] : (data as Review[]));
         setStatus(error ? "unavailable" : "ready");
-    }, [courseId]);
+    }, [courseId, university]);
 
     useEffect(() => {
         void refresh();

@@ -63,6 +63,15 @@ import { fileURLToPath } from "url";
  * @property {Course[]} courses
  * @property {Section[]} sections
  * @property {string[]} failedSubjects Subjects that couldn't be downloaded; their stored sections are kept.
+ * @property {Exam[]} [exams] Final exams, when the timetable lists them; each term's replace what's stored.
+ *
+ * @typedef {Object} Exam
+ * @property {string} term
+ * @property {string} course
+ * @property {string} section As the timetable writes it.
+ * @property {string} starts_at Local time on campus: "2026-12-18T10:00".
+ * @property {string|null} [ends_at]
+ * @property {string|null} [location]
  *
  * @typedef {Object} CourseDetails What a university's calendar says about a course.
  * @property {string} code
@@ -150,4 +159,31 @@ export function chunk(items, size) {
 
 export function log(...args) {
     console.log(`[${new Date().toISOString()}]`, ...args);
+}
+
+/** "2025-04-12T15:30" in `timeZone` as a UTC ISO timestamp. */
+export function zonedToUtc(local, timeZone) {
+    const [date, time] = local.split("T");
+    const [year, month, day] = date.split("-").map(Number);
+    const [hours, minutes] = time.split(":").map(Number);
+    const asUtc = Date.UTC(year, month - 1, day, hours, minutes);
+    // The zone's offset at that moment, found by formatting it there and comparing.
+    const offsetAt = (instant) => {
+        const parts = Object.fromEntries(
+            new Intl.DateTimeFormat("en-US", {
+                timeZone,
+                hourCycle: "h23",
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+            })
+                .formatToParts(new Date(instant))
+                .map(({ type, value }) => [type, value]),
+        );
+        return Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute) - instant;
+    };
+    const guess = asUtc - offsetAt(asUtc);
+    return new Date(asUtc - offsetAt(guess)).toISOString();
 }

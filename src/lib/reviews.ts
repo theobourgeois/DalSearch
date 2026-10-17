@@ -1,5 +1,6 @@
 export type Review = {
     id: string;
+    university_id: string;
     course_code: string;
     user_id: string;
     instructor: string;
@@ -14,7 +15,7 @@ export type ReviewScores = Pick<Review, "rating" | "difficulty" | "workload">;
 
 /** What's shown for a review, without who posted it. */
 export type ReviewContent = ReviewScores &
-    Pick<Review, "id" | "course_code" | "instructor" | "review_text" | "created_at">;
+    Pick<Review, "id" | "university_id" | "course_code" | "instructor" | "review_text" | "created_at">;
 
 export const scoreLabels: Record<keyof ReviewScores, string> = {
     rating: "Overall",

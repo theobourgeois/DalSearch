@@ -5,16 +5,16 @@ import type { ReviewContent } from "@/lib/reviews";
 import { formatCourseCode } from "@/lib/schedule";
 import { createClient } from "@/lib/supabase/server";
 import { ReviewItem } from "./review-item";
-import { UNIVERSITY_ID } from "@/lib/university";
+import { universityPath } from "@/lib/university";
 
 /** Every review the signed-in student has posted. */
-export async function MyReviews({ userId }: { userId: string }) {
+export async function MyReviews({ userId, university }: { userId: string; university: string }) {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("reviews")
-        .select("id, course_code, instructor, review_text, rating, difficulty, workload, created_at")
+        .select("id, university_id, course_code, instructor, review_text, rating, difficulty, workload, created_at")
         .eq("user_id", userId)
-        .eq("university_id", UNIVERSITY_ID)
+        .eq("university_id", university)
         .order("created_at", { ascending: false });
     const reviews = (data ?? []) as ReviewContent[];
 
@@ -28,7 +28,7 @@ export async function MyReviews({ userId }: { userId: string }) {
                 description="Open a course you've taken and share how it went."
                 action={
                     <Button asChild variant="outline">
-                        <Link href="/explore">Find a course</Link>
+                        <Link href={universityPath(university, "/explore")}>Find a course</Link>
                     </Button>
                 }
             />
@@ -42,7 +42,7 @@ export async function MyReviews({ userId }: { userId: string }) {
                     key={review.id}
                     review={review}
                     context={
-                        <Link href={`/${review.course_code}#reviews`} className="hover:underline">
+                        <Link href={universityPath(university, `/${review.course_code}#reviews`)} className="hover:underline">
                             {formatCourseCode(review.course_code)}
                         </Link>
                     }

@@ -1,13 +1,16 @@
 import { getCourses } from "@/lib/data";
 import type { Course } from "@/lib/types";
 import Fuse from "fuse.js";
+import { requestedUniversity } from "@/lib/university";
 
-// Rebuilt when the catalog reloads (getCourses returns a new list then).
-let index: { courses: Course[]; fuse: Fuse<Course> } | undefined;
-async function getFuse() {
-  const courses = await getCourses();
+// Per university, rebuilt when its catalog reloads (getCourses returns a new list then).
+const indexes = new Map<string, { courses: Course[]; fuse: Fuse<Course> }>();
+async function getFuse(university: string) {
+  const courses = await getCourses(university);
+  let index = indexes.get(university);
   if (index?.courses !== courses) {
     index = { courses, fuse: new Fuse(courses, { includeScore: true, keys: ['courseCode', 'subjectCode', 'title'] }) };
+    indexes.set(university, index);
   }
   return index.fuse;
 }
@@ -22,7 +25,12 @@ export async function GET(request: Request) {
     return new Response('Search term not provided', { status: 404 });
   }
 
-  let results = (await getFuse()).search(searchTerm);
+  const university = requestedUniversity(request);
+  if (!university) {
+    return new Response('Unknown university', { status: 404 });
+  }
+
+  let results = (await getFuse(university)).search(searchTerm);
   if (limit) {
     const o = parseInt(offset ?? "0", 10);
     const l = parseInt(limit, 10);

@@ -16,22 +16,18 @@ import { Switch } from "@/components/ui/switch";
 import { usePaged } from "@/hooks/use-paged";
 import { useStoredState } from "@/hooks/use-stored-state";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
-import { courseLevels, scheduleBufferOptions, type Term } from "@/lib/constants";
+import { scheduleBufferOptions, type Term } from "@/lib/constants";
 import { defaultFilter, filterCourses, sortCourses } from "@/lib/filter";
 import { courseKey, getCourseFit } from "@/lib/schedule";
 import type { CourseFilter, CourseListItem, CourseOrderByKey, ScheduleBufferMinutes, Subject } from "@/lib/types";
 import { formatNumber, plural } from "@/lib/utils";
 import { useScheduleStore } from "@/store/schedule-store";
 import { CourseRow, courseRowColumns } from "./course-row";
+import { useUniversity } from "@/components/university";
+import { courseLevel } from "@/lib/schedule";
+import { storageKey } from "@/lib/university";
 
 const PAGE_SIZE = 20;
-
-const sortOptions: { value: CourseOrderByKey; label: string }[] = [
-    { value: "courseCode", label: "Course code" },
-    { value: "title", label: "Title" },
-    { value: "creditHours", label: "Credit hours" },
-    { value: "numClasses", label: "Number of sections" },
-];
 
 type ExploreState = { filter: CourseFilter; sort: SortState<CourseOrderByKey> };
 
@@ -48,13 +44,32 @@ type ExploreViewProps = {
 };
 
 export function ExploreView({ courses, subjects, creditHours, ratings }: ExploreViewProps) {
+    const university = useUniversity();
+    // Levels from the course numbers: 1000, 2000... at Dal, 100, 200... at USask.
+    const levels = useMemo(
+        () =>
+            [
+                ...new Set(courses.map((course) => courseLevel(course.courseCode)).filter((level) => level !== null)),
+            ].sort((a, b) => Number(a) - Number(b)),
+        [courses],
+    );
+    const sortOptions: { value: CourseOrderByKey; label: string }[] = [
+        { value: "courseCode", label: "Course code" },
+        { value: "title", label: "Title" },
+        { value: "creditHours", label: university.creditLabel },
+        { value: "numClasses", label: "Number of sections" },
+    ];
     const currentTerm = useCurrentTerm();
     const { listed, label: termLabel, options: termOptions } = useTerms();
     const initial = initialState(currentTerm);
-    const [{ filter, sort }, setState] = useStoredState<ExploreState>(initial, "dalsearch:explore", (stored) => ({
-        filter: { ...initial.filter, ...stored.filter },
-        sort: { ...initial.sort, ...stored.sort },
-    }));
+    const [{ filter, sort }, setState] = useStoredState<ExploreState>(
+        initial,
+        storageKey(university.id, "explore"),
+        (stored) => ({
+            filter: { ...initial.filter, ...stored.filter },
+            sort: { ...initial.sort, ...stored.sort },
+        }),
+    );
     const subjectParam = useSearchParams().get("subject");
     const deferredFilter = useDeferredValue(filter);
     const sessions = useScheduleStore((state) => state.sessions);
@@ -121,13 +136,13 @@ export function ExploreView({ courses, subjects, creditHours, ratings }: Explore
                 />
                 <MultiSelectFilter
                     label="Level"
-                    options={courseLevels.map((level) => ({ value: level, label: level }))}
+                    options={levels.map((level) => ({ value: level, label: level }))}
                     selected={filter.courseLevels}
                     onChange={(selected) => update({ courseLevels: selected })}
                     summary={(chosen) => chosen.map((option) => option.label).join(", ")}
                 />
                 <MultiSelectFilter
-                    label="Credit hours"
+                    label={university.creditLabel}
                     options={creditHours.map((hours) => ({ value: hours, label: String(hours) }))}
                     selected={filter.creditHours}
                     onChange={(selected) => update({ creditHours: selected })}

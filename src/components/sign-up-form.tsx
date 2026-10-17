@@ -16,8 +16,11 @@ import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { useHref, useUniversity } from "@/components/university";
 
 export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<"div">) {
+    const university = useUniversity();
+    const pagePath = useHref();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [repeatPassword, setRepeatPassword] = useState("")
@@ -53,7 +56,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     }
 
     if (data.session) {
-      router.replace("/protected")
+      router.replace(pagePath("/protected"))
       router.refresh()
       return
     }
@@ -69,7 +72,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
           <CardDescription>
             {needsVerification
               ? "Enter the code we emailed you to finish signing up"
-              : "Create a new account using your Dalhousie email"}
+              : `Create an account with your ${university.shortName} email`}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -83,7 +86,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
                   <Input
                     id="email"
                     type="email"
-                    placeholder="NetID@dal.ca"
+                    placeholder={university.emailExample}
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -120,7 +123,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
               </div>
               <div className="mt-4 text-center text-sm">
                 Already have an account?{" "}
-                <Link href="/auth/login" className="underline underline-offset-4">
+                <Link href={pagePath("/auth/login")} className="underline underline-offset-4">
                   Login
                 </Link>
               </div>

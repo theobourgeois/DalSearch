@@ -16,7 +16,9 @@ import { SearchField } from "@/components/ui/search-field";
 import { ShowMore } from "@/components/ui/show-more";
 import { Dot } from "@/components/ui/status";
 import { Switch } from "@/components/ui/switch";
+import { useUniversity } from "@/components/university";
 import { usePaged } from "@/hooks/use-paged";
+import { storageKey } from "@/lib/university";
 import { useStoredState } from "@/hooks/use-stored-state";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
 import { type Term } from "@/lib/constants";
@@ -24,6 +26,7 @@ import { describeRatingCount } from "@/lib/instructors";
 import { formatCourseCode } from "@/lib/schedule";
 import type { InstructorListItem, Subject } from "@/lib/types";
 import { plural } from "@/lib/utils";
+import { useHref } from "@/components/university";
 
 const PAGE_SIZE = 20;
 const MAX_COURSES = 3;
@@ -68,6 +71,7 @@ function TeachingCell({
     currentTerm: Term;
     onPanel: boolean;
 }) {
+    const pagePath = useHref();
     const { label: termLabel } = useTerms();
     const { teaching } = instructor;
     if (!teaching) return <span className="text-fg-subtle">Not teaching this year</span>;
@@ -79,7 +83,7 @@ function TeachingCell({
                 <span className="mr-1 text-[13px] text-fg-subtle">{termLabel(teaching.term)}</span>
             )}
             {teaching.courses.slice(0, MAX_COURSES).map((code) => (
-                <Link key={code} href={`/${code}`}>
+                <Link key={code} href={pagePath(`/${code}`)}>
                     <Badge className={onPanel ? "bg-panel" : "hover:bg-block"}>{formatCourseCode(code)}</Badge>
                 </Link>
             ))}
@@ -134,7 +138,8 @@ function InstructorRow({ instructor, currentTerm, sharedCourse, color }: Instruc
 export function InstructorsView({ instructors, subjects }: { instructors: InstructorListItem[]; subjects: Subject[] }) {
     const { label: termLabel } = useTerms();
     const currentTerm = useCurrentTerm();
-    const [filter, setFilter] = useStoredState<InstructorFilter>(initialFilter, "dalsearch:instructors");
+    const { id: university } = useUniversity();
+    const [filter, setFilter] = useStoredState<InstructorFilter>(initialFilter, storageKey(university, "instructors"));
     const deferred = useDeferredValue(filter);
     const { codes, colors } = useTermSchedule(currentTerm);
 

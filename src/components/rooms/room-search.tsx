@@ -6,13 +6,17 @@ import { Combobox } from "@/components/ui/combobox";
 import type { Term } from "@/lib/constants";
 import type { Room } from "@/lib/types";
 import { roomHref } from "./room-links";
+import { useHref } from "@/components/university";
 
 const MAX_RESULTS = 8;
 
 /** Finds a room by building or number and opens its schedule. */
 export function RoomSearch({ rooms, term, size = "md" }: { rooms: Room[]; term: Term; size?: "md" | "lg" }) {
+    const pagePath = useHref();
     const router = useRouter();
     const [query, setQuery] = useState("");
+    // A real room from this university, to show how its rooms are named.
+    const example = rooms[Math.floor(rooms.length / 2)]?.name;
     const matches = useMemo(() => {
         const words = query.toLowerCase().split(/\s+/).filter(Boolean);
         if (words.length === 0) return [];
@@ -31,10 +35,10 @@ export function RoomSearch({ rooms, term, size = "md" }: { rooms: Room[]; term: 
             getKey={(match) => match.id}
             onSelect={(match) => {
                 setQuery("");
-                router.push(roomHref(match.id, term));
+                router.push(pagePath(roomHref(match.id, term)));
             }}
             label="Search rooms"
-            placeholder="Search a building or room, like Goldberg 127"
+            placeholder={example ? `Search a building or room, like ${example}` : "Search a building or room"}
             renderItem={(match) => (
                 <>
                     <span className="min-w-0 flex-1 truncate font-bold">{match.name}</span>
