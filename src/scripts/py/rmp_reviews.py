@@ -162,8 +162,15 @@ class CourseMatcher:
         self.subjects = set(self.subject_of.values())
         self.aliases = aliases
         self.by_number: dict[str, set[str]] = defaultdict(set)
-        for course in courses:
+        # Without a letter suffix, e.g. Laurentian's "PSYC1105" -> "PSYC1105EL" (English) and "PSYC1105FL"
+        # (French). Sorted, so the English section, which RMP reviews are almost always about, comes first.
+        self.unsuffixed: dict[str, list[str]] = defaultdict(list)
+        for course in sorted(courses, key=lambda course: course["code"]):
             self.by_number[course["number"]].add(course["code"])
+            base = re.sub(r"(?<=\d)[A-Z]+$", "", course["code"])
+            if base != course["code"]:
+                self.unsuffixed[base].append(course["code"])
+                self.by_number[re.sub(r"(?<=\d)[A-Z]+$", "", course["number"])].add(course["code"])
 
     def split(self, raw: str) -> tuple[str, str] | None:
         """ "csci 2110" -> ("CSCI", "2110"): leading letters, then a number that starts with a digit."""
@@ -176,7 +183,9 @@ class CourseMatcher:
             return None
         subject = self.aliases.get(parts[0], parts[0])
         code = subject + parts[1]
-        return code if code in self.known else None
+        if code in self.known:
+            return code
+        return self.unsuffixed[code][0] if code in self.unsuffixed else None
 
     def teacher_subjects(self, raw_codes: list[str]) -> set[str]:
         return {self.subject_of[code] for code in (self.exact(raw) for raw in raw_codes) if code}
