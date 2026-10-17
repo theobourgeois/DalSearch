@@ -20,6 +20,7 @@ import {
     type Textbook,
 } from "@/lib/syllabi";
 import { useCourse } from "./course-context";
+import { ShareSyllabus } from "./share-syllabus";
 
 function Subheading({ children }: { children: React.ReactNode }) {
     return <h3 className="mb-2 mt-7 text-[13px] font-bold text-fg-subtle">{children}</h3>;
@@ -141,11 +142,19 @@ export function CourseSyllabus({ syllabi }: { syllabi: Syllabus[] }) {
     ];
     const [picked, setPicked] = useState<string | null>(null);
 
-    if (syllabi.length === 0) return null;
+    if (syllabi.length === 0) {
+        return (
+            <section className="mt-11">
+                <SectionHeader title="Syllabus" />
+                <ShareSyllabus prominent />
+            </section>
+        );
+    }
 
     const syllabus = syllabi.find((option) => option.id === picked) ?? preferredSyllabus(syllabi, teaching)!;
     const schemes = syllabus.grading_schemes.filter((scheme) => scheme.components.length > 0);
     const otherInstructor = teaching.length > 0 && !teachesFrom(syllabus, teaching);
+    const source = syllabusUrl(syllabus);
 
     return (
         <section className="mt-11">
@@ -169,15 +178,19 @@ export function CourseSyllabus({ syllabi }: { syllabi: Syllabus[] }) {
                 From the {syllabusTerm(syllabus)} syllabus
                 {syllabus.instructors.length > 0 && ` by ${listNames(syllabus.instructors)}`}.
                 {otherInstructor && ` ${termLabel(term)} is taught by ${listNames(teaching)}, so details may differ.`}{" "}
-                <a
-                    href={syllabusUrl(syllabus)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-0.5 font-bold text-fg-muted hover:text-fg"
-                >
-                    {/\.pdf$/i.test(syllabus.source_url) ? "Open the PDF" : "Open the course page"}
-                    <ArrowUpRightIcon className="size-3.5" />
-                </a>
+                {source ? (
+                    <a
+                        href={source}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-0.5 font-bold text-fg-muted hover:text-fg"
+                    >
+                        {/\.pdf$/i.test(source) ? "Open the PDF" : "Open the course page"}
+                        <ArrowUpRightIcon className="size-3.5" />
+                    </a>
+                ) : (
+                    "Shared by a student."
+                )}
             </p>
 
             {schemes.length > 0 && <Grading key={`grading-${syllabus.id}`} schemes={schemes} />}
@@ -195,6 +208,7 @@ export function CourseSyllabus({ syllabi }: { syllabi: Syllabus[] }) {
                 </>
             )}
             {syllabus.weekly_topics.length > 0 && <WeeklyTopics key={`topics-${syllabus.id}`} topics={syllabus.weekly_topics} />}
+            <ShareSyllabus prominent={false} />
         </section>
     );
 }

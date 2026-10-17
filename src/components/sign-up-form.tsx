@@ -56,7 +56,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     }
 
     if (data.session) {
-      router.replace("/protected")
+      router.replace(pagePath("/protected"))
       router.refresh()
       return
     }

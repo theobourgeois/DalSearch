@@ -7,9 +7,11 @@ import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
+import { useHref } from "@/components/university";
 
 /** The last step of signing up: the code from the confirmation email. */
 export function VerifyEmailForm({ email, onBack }: { email: string; onBack: () => void }) {
+    const pagePath = useHref();
   const [code, setCode] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -27,7 +29,7 @@ export function VerifyEmailForm({ email, onBack }: { email: string; onBack: () =
       return
     }
 
-    router.replace("/protected")
+    router.replace(pagePath("/protected"))
     router.refresh()
   }
 

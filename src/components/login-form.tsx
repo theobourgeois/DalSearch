@@ -51,7 +51,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       return
     }
 
-    router.replace("/protected")
+    router.replace(pagePath("/protected"))
     router.refresh()
   }
 

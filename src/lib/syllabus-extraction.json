@@ -1,0 +1,205 @@
+{
+  "instructions": "You read {university} course syllabi and extract facts for students choosing courses. Use only what the document says; use null or an empty list when something isn't stated. Keep wording short and plain.",
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "is_syllabus",
+      "course_codes",
+      "term_season",
+      "term_year",
+      "instructors",
+      "grading_schemes",
+      "textbooks",
+      "policies",
+      "weekly_topics",
+      "class_meetings"
+    ],
+    "properties": {
+      "is_syllabus": {
+        "type": "boolean",
+        "description": "True only for a syllabus or course outline for a specific offering of a course."
+      },
+      "course_codes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Codes this syllabus is for, written like CSCI2110. Include cross-listings, not prerequisites or exclusions."
+      },
+      "term_season": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "enum": [
+          "Fall",
+          "Winter",
+          "Summer",
+          "Full year",
+          null
+        ]
+      },
+      "term_year": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "description": "Calendar year the term starts in. Winter terms start in January, so 'Winter 2025-2026' is 2026."
+      },
+      "instructors": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Full names, no titles."
+      },
+      "grading_schemes": {
+        "type": "array",
+        "description": "Usually one. More than one only when the syllabus offers alternative schemes.",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "label",
+            "components"
+          ],
+          "properties": {
+            "label": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "e.g. 'Scheme II: if it helps you', or null."
+            },
+            "components": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "weight",
+                  "count",
+                  "note"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Short: 'Final exam', 'Labs', 'Online assignments'."
+                  },
+                  "weight": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "description": "Percent of the final grade."
+                  },
+                  "count": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "How many, if stated."
+                  },
+                  "note": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "description": "Under 15 words: 'best 8 of 10', 'cumulative', 'Feb 28'."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "textbooks": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "authors",
+            "required",
+            "free"
+          ],
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "authors": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "required": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "free": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Open textbook or provided at no cost."
+            }
+          }
+        }
+      },
+      "policies": {
+        "type": "array",
+        "description": "Course-specific rules a student would want to know: late work, missed tests, calculators, attendance. Skip standard university statements.",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "topic",
+            "summary"
+          ],
+          "properties": {
+            "topic": {
+              "type": "string",
+              "description": "One or two words: 'Late work', 'Missed midterm'."
+            },
+            "summary": {
+              "type": "string",
+              "description": "One plain sentence, under 25 words."
+            }
+          }
+        }
+      },
+      "weekly_topics": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "when",
+            "topic"
+          ],
+          "properties": {
+            "when": {
+              "type": "string"
+            },
+            "topic": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "class_meetings": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "How the class meets each week, under 15 words, e.g. '3 lectures and 1 lab a week' or 'online, asynchronous'. Null if the syllabus doesn't say."
+      }
+    }
+  }
+}

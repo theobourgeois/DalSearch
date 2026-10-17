@@ -79,7 +79,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
       return
     }
 
-    router.replace("/protected")
+    router.replace(pagePath("/protected"))
     router.refresh()
   }
 

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { Page, PageHeader } from "@/components/layout/page";
 import { AdminList } from "@/components/moderation/admin-list";
 import { FlaggedReviews } from "@/components/moderation/flagged-reviews";
+import { SyllabusUploads } from "@/components/moderation/syllabus-uploads";
 import { isModerator, requireUser } from "@/lib/auth";
 import { universityPath } from "@/lib/university";
 
@@ -22,11 +23,12 @@ export default async function PanelPage({ params }: { params: Promise<{ universi
             <PageHeader
                 title="Moderation"
                 description={
-                    role === "owner" ? "Manage admins and flagged reviews." : "Review what students have flagged."
+                    role === "owner" ? "Manage admins, flagged reviews and shared syllabi." : "Review what students have flagged and shared."
                 }
             />
             {role === "owner" && <AdminList admins={admins} />}
             <FlaggedReviews />
+            <SyllabusUploads />
         </Page>
     );
 }
