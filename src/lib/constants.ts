@@ -26,8 +26,6 @@ export const dayNames = {
 export const scheduleBufferOptions = [0, 5, 10, 15, 30] as const;
 
 export const links = {
-    source: "https://github.com/theobourgeois/termly",
+    requestSchool: "mailto:theoobourgeois@gmail.com?subject=Add%20my%20school%20to%20Termly",
     coffee: "https://buymeacoffee.com/theobourgeois",
-    theo: "https://theobourgeois.com",
-    chris: "https://chrislangille.github.io/portfolio",
 } as const;

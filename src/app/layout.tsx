@@ -26,7 +26,6 @@ export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
     title: { default: `${SITE_NAME} - Course search and timetable planning`, template: `%s | ${SITE_NAME}` },
     description,
-    authors: [{ name: "Théo Bourgeois" }, { name: "Chris Langille" }],
     applicationName: SITE_NAME,
     referrer: "origin-when-cross-origin",
     openGraph: { type: "website", locale: "en_CA", siteName: SITE_NAME },

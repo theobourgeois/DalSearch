@@ -14,4 +14,4 @@ Picking courses usually means flipping between your school's timetable, RateMyPr
 
 ![Memorial's instructors, rated on RateMyProfessors](docs/screenshots/mun-instructors.png)
 
-<sub>Not affiliated with any of these universities. Made by Théo Bourgeois and Chris Langille.</sub>
+<sub>Not affiliated with any of these universities.</sub>

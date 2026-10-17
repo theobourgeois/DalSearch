@@ -36,20 +36,9 @@ function PageFooter() {
     return (
         <footer className="mt-14 flex flex-wrap gap-x-4 gap-y-2 border-t border-line pt-5 text-[13px] text-fg-subtle">
             <span>
-                {SITE_NAME} is not affiliated with <UniversityName />. Made by{" "}
-                <a href={links.theo} className={link}>
-                    Théo Bourgeois
-                </a>{" "}
-                and{" "}
-                <a href={links.chris} className={link}>
-                    Chris Langille
-                </a>
-                .
+                {SITE_NAME} is not affiliated with <UniversityName />.
             </span>
             <span className="flex gap-4 sm:ml-auto">
-                <a href={links.source} className={link}>
-                    Open source
-                </a>
                 <a href={links.coffee} className={link}>
                     Buy me a coffee
                 </a>

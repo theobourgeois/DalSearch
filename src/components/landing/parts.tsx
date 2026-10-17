@@ -91,7 +91,7 @@ export function RequestSchool({ className }: { className?: string }) {
             <p className="mt-2 max-w-xl leading-relaxed text-fg-muted">
                 Most schools publish their timetable in a way we can read. Tell us which one you go to and we&apos;ll
                 see if we can add it.{" "}
-                <a href={`${links.source}/issues/new`} className="font-bold text-fg underline underline-offset-4">
+                <a href={links.requestSchool} className="font-bold text-fg underline underline-offset-4">
                     Request a school
                 </a>
             </p>
@@ -104,20 +104,9 @@ export function LandingFooter() {
     return (
         <footer className="mx-auto flex max-w-[76rem] flex-wrap gap-x-4 gap-y-2 border-t border-line px-5 py-6 text-[13px] text-fg-subtle sm:px-8">
             <span>
-                {SITE_NAME} isn&apos;t affiliated with any of these universities. Made by{" "}
-                <a href={links.theo} className={link}>
-                    Théo Bourgeois
-                </a>{" "}
-                and{" "}
-                <a href={links.chris} className={link}>
-                    Chris Langille
-                </a>
-                .
+                {SITE_NAME} isn&apos;t affiliated with any of these universities.
             </span>
             <span className="flex gap-4 sm:ml-auto">
-                <a href={links.source} className={link}>
-                    Open source
-                </a>
                 <a href={links.coffee} className={link}>
                     Buy me a coffee
                 </a>
