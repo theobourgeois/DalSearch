@@ -5,27 +5,28 @@ import { accentCss } from "@/lib/accent";
 import { AppShell } from "@/components/layout/app-shell";
 import { UniversityProviders } from "@/components/providers";
 import { getCourseIndex, getCurrentTerm, getTerms } from "@/lib/data";
-import { DEFAULT_UNIVERSITY, getUniversity, universities, universityPath } from "@/lib/university";
+import { DEFAULT_UNIVERSITY, getUniversity } from "@/lib/university";
 
 type Props = { children: React.ReactNode; params: Promise<{ university: string }> };
 
-/** Every university's pages are built ahead; an id that isn't a university is a 404. */
+/**
+ * Only Dal's pages are built ahead: building every university's at once loads all their catalogs
+ * together and the database starts refusing reads. The others render on their first visit and are
+ * cached from then on. An id that isn't a university is a 404 (below).
+ */
 export function generateStaticParams() {
-    return universities.map(({ id }) => ({ university: id }));
+    return [{ university: DEFAULT_UNIVERSITY }];
 }
-
-export const dynamicParams = false;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const university = getUniversity((await params).university);
-    if (!university || university.id === DEFAULT_UNIVERSITY) return {};
+    if (!university) return {};
     const title = `${SITE_NAME} - ${university.name} Course Search`;
     const description = `Search ${university.name} courses, see their sections, prerequisites and instructors, and plan your timetable.`;
     return {
         title,
         description,
-        openGraph: { title, description, url: `https://dalsearch.com${universityPath(university.id, "/")}` },
-        alternates: { canonical: `https://dalsearch.com${universityPath(university.id, "/")}` },
+        openGraph: { title, description },
     };
 }
 

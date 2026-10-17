@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    // Pages are built in one worker so each university's catalog is read from Supabase once, not once
+    // per worker; several at a time overload the database and it cancels reads.
+    cpus: 1,
+  },
 };
 
 export default nextConfig;

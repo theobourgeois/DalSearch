@@ -7,7 +7,7 @@ import { summarizeRating, type RatingSummary } from "./instructors";
 import { courseKey, sessionTypeOrder } from "./schedule";
 import { publicClient } from "./supabase/public";
 import { currentTermCode, dateIn, listedCodes, termIndex, type TermInfo } from "./terms";
-import { getUniversity } from "./university";
+import { getUniversity, universities } from "./university";
 import type {
     ClassSession,
     Course,
@@ -32,6 +32,7 @@ import type {
  */
 
 const PAGE_SIZE = 1000;
+const READ_ATTEMPTS = 3;
 const FRESH_FOR_MS = 10 * 60 * 1000;
 const RETRY_AFTER_FAILURE_MS = 60 * 1000;
 /** A meeting this short is a one-off (a makeup class, a room change for a day), not the weekly pattern. */
@@ -103,11 +104,19 @@ async function readAll<T>(
     order: string[],
     filters: Record<string, string> = {},
 ): Promise<T[]> {
-    const page = (from: number, to: number, count: boolean) => {
-        let query = db.from(source).select(columns, count ? { count: "exact" } : undefined).eq("university_id", university);
-        for (const [column, value] of Object.entries(filters)) query = query.eq(column, value);
-        for (const column of order) query = query.order(column);
-        return query.range(from, to);
+    const page = async (from: number, to: number, count: boolean) => {
+        // A busy database cancels slow reads (a statement timeout), so each page gets a few tries.
+        for (let attempt = 1; ; attempt++) {
+            let query = db
+                .from(source)
+                .select(columns, count ? { count: "exact" } : undefined)
+                .eq("university_id", university);
+            for (const [column, value] of Object.entries(filters)) query = query.eq(column, value);
+            for (const column of order) query = query.order(column);
+            const result = await query.range(from, to);
+            if (!result.error || attempt >= READ_ATTEMPTS) return result;
+            await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+        }
     };
     const first = await page(0, PAGE_SIZE - 1, true);
     if (first.error) throw new Error(`${source}: ${first.error.message}`);
@@ -123,6 +132,62 @@ async function readAll<T>(
         rows.push(...((data ?? []) as T[]));
     }
     return rows;
+}
+
+/** Runs a Supabase read, trying again when it fails: a busy database cancels slow reads. */
+async function retried<T>(source: string, read: () => PromiseLike<{ data: T; error: { message: string } | null }>) {
+    for (let attempt = 1; ; attempt++) {
+        const { data, error } = await read();
+        if (!error) return data;
+        if (attempt >= READ_ATTEMPTS) throw new Error(`${source}: ${error.message || "read failed"}`);
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
+    }
+}
+
+/**
+ * Like readAll, for a view that builds JSON per row (catalog_sections). Paging it with offsets builds
+ * every skipped row again, so later pages get slower until the database cancels them. Instead the
+ * ids where each page starts are found first (cheap: no JSON), then the pages are read by id range.
+ */
+async function readAllById<T>(db: Db, source: string, columns: string, university: string): Promise<T[]> {
+    const { count } = await retried(source, async () => {
+        const { count, error } = await db
+            .from(source)
+            .select("id", { count: "exact", head: true })
+            .eq("university_id", university);
+        return { data: { count }, error };
+    });
+    // Pages a little under the API's 1,000-row cap, so rows added between these reads still fit.
+    const size = PAGE_SIZE - 100;
+    const pages = Math.ceil((count ?? 0) / size);
+    if (pages === 0) return [];
+
+    const starts = await Promise.all(
+        Array.from({ length: pages - 1 }, async (_, index) => {
+            const at = (index + 1) * size;
+            const row = await retried(source, () =>
+                db
+                    .from(source)
+                    .select("id")
+                    .eq("university_id", university)
+                    .order("id")
+                    .range(at, at)
+                    .single<{ id: string }>(),
+            );
+            return (row as { id: string }).id;
+        }),
+    );
+    const results = await Promise.all(
+        [null, ...starts].map((from, index) =>
+            retried(source, () => {
+                let query = db.from(source).select(columns).eq("university_id", university);
+                if (from) query = query.gte("id", from);
+                if (index < starts.length) query = query.lt("id", starts[index]);
+                return query.order("id").returns<T[]>();
+            }),
+        ),
+    );
+    return results.flatMap((rows) => rows ?? []);
 }
 
 /** "08:35:00" -> "0835". */
@@ -294,12 +359,11 @@ async function loadCatalog(university: string): Promise<Catalog> {
         readAll<CourseRow>(db, "catalog_courses", "code, subject_code, number, title, credits, description", university, [
             "code",
         ]),
-        readAll<SectionRow>(
+        readAllById<SectionRow>(
             db,
             "catalog_sections",
             "term, course, crn, section, type, kind, capacity, enrolled, meetings, instructors",
             university,
-            ["id"],
         ),
         readAll<{ course: string; required: string }>(
             db,
@@ -434,6 +498,22 @@ export function clearCatalog() {
 function derive<T>(catalog: Catalog, key: string, compute: () => T): T {
     if (!catalog.derived.has(key)) catalog.derived.set(key, compute());
     return catalog.derived.get(key) as T;
+}
+
+/** How many courses each university has on its timetable, counted without loading their catalogs. */
+export async function getCourseCounts(): Promise<Record<string, number>> {
+    const db = publicClient();
+    const counts = await Promise.all(
+        universities.map(async ({ id }) => {
+            const { count, error } = await db
+                .from("catalog_courses")
+                .select("code", { count: "exact", head: true })
+                .eq("university_id", id);
+            if (error) throw error;
+            return [id, count ?? 0] as const;
+        }),
+    );
+    return Object.fromEntries(counts);
 }
 
 /** Every term the database knows, oldest first; `isListed` marks the ones on the timetable. */

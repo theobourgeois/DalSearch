@@ -103,7 +103,9 @@ function ScheduleSection({ onNavigate }: { onNavigate?: () => void }) {
 
     return (
         <>
-            <SectionHeading aside={codes.length > 0 && `${credits} ${creditLabel.toLowerCase()}`}>{termLabel(term)}</SectionHeading>
+            <SectionHeading aside={codes.length > 0 && `${credits} ${creditLabel.toLowerCase()}`}>
+                {termLabel(term)}
+            </SectionHeading>
             {codes.length === 0 ? (
                 <p className="mx-3.5 text-[13px] text-fg-subtle">Courses you add will show up here.</p>
             ) : (
@@ -172,10 +174,14 @@ function OtherTermsSection({ onNavigate }: { onNavigate?: () => void }) {
                             key={term}
                             type="button"
                             onClick={() => openTerm(term)}
-                            className={cn(rowClass, "justify-between text-fg-muted")}
+                            // Some names are long ("Summer 2026 (May-August, graduate)"), so the row grows to fit them.
+                            className={cn(
+                                rowClass,
+                                "h-auto min-h-[34px] w-full justify-between gap-3 py-1.5 text-left text-fg-muted",
+                            )}
                         >
-                            <span className="font-medium">{termLabel(term)}</span>
-                            <span className="text-[13px] text-fg-subtle">
+                            <span className="min-w-0 font-medium leading-snug">{termLabel(term)}</span>
+                            <span className="shrink-0 text-[13px] text-fg-subtle">
                                 {credits > 0 ? `${credits} ${creditLabel.toLowerCase()}` : "Empty"}
                             </span>
                         </button>

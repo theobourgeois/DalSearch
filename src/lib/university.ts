@@ -177,17 +177,19 @@ export const universities: University[] = [
     },
 ];
 
-/** Dal was the only university for years, so its pages keep their addresses at the root of the site. */
+/**
+ * Dal was the only university for years, when its pages lived at the root of the site. Old addresses
+ * (/explore, /CSCI2110) redirect to its pages, and its browser storage keeps the old keys.
+ */
 export const DEFAULT_UNIVERSITY = "dal";
 
 export function getUniversity(id: string): University | undefined {
     return universities.find((university) => university.id === id);
 }
 
-/** Where a page lives: "/explore" at Dal, "/msvu/explore" elsewhere. */
+/** Where a university's page lives: "/explore" -> "/msvu/explore". */
 export function universityPath(id: string, path: string): string {
     const page = path.startsWith("/") ? path : `/${path}`;
-    if (id === DEFAULT_UNIVERSITY) return page;
     return page === "/" ? `/${id}` : `/${id}${page}`;
 }
 
@@ -200,7 +202,7 @@ export function requestedUniversity(request: Request): string | null {
 /** The university a path belongs to and the path within it: "/msvu/explore" -> msvu, "/explore". */
 export function splitUniversityPath(pathname: string): { university: string; path: string } {
     const [, first = "", ...rest] = pathname.split("/");
-    if (first !== DEFAULT_UNIVERSITY && getUniversity(first)) {
+    if (getUniversity(first)) {
         return { university: first, path: `/${rest.join("/")}` };
     }
     return { university: DEFAULT_UNIVERSITY, path: pathname || "/" };

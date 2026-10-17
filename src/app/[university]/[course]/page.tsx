@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import { notFound } from "next/navigation";
 import { CourseActions } from "@/components/course/course-actions";
 import { CourseProvider } from "@/components/course/course-context";
@@ -69,7 +69,7 @@ export default async function CoursePage({ params }: Props) {
         "@type": "Course",
         name: `${formatCourseCode(code)} ${course.title}`,
         description,
-        provider: { "@type": "Organization", name: SITE_NAME, url: "https://dalsearch.com" },
+        provider: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     };
 
     return (

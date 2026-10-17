@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { Page, PageHeader } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
+import { useHref } from "@/components/university";
 
 export default function NotFound() {
+    const pagePath = useHref();
     return (
         <Page breadcrumbs={[{ label: "Not found" }]}>
             <PageHeader
@@ -11,10 +15,10 @@ export default function NotFound() {
             />
             <div className="mt-6 flex gap-2">
                 <Button asChild variant="primary">
-                    <Link href="/explore">Explore courses</Link>
+                    <Link href={pagePath("/explore")}>Explore courses</Link>
                 </Button>
                 <Button asChild variant="outline">
-                    <Link href="/">Go home</Link>
+                    <Link href={pagePath("/")}>Go home</Link>
                 </Button>
             </div>
         </Page>

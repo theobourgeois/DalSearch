@@ -1,11 +1,12 @@
 import { getCourses } from "@/lib/data";
+import { SITE_URL } from "@/lib/constants";
 import { universities, universityPath } from "@/lib/university";
 
 const STATIC_PAGES = ["/", "/explore", "/schedule", "/rooms", "/instructors"];
 
 const entry = (path: string, changefreq: string, priority: number) => `
         <url>
-          <loc>https://www.dalsearch.com${path}</loc>
+          <loc>${SITE_URL}${path}</loc>
           <changefreq>${changefreq}</changefreq>
           <priority>${priority}</priority>
         </url>
@@ -20,7 +21,7 @@ export async function GET() {
       ),
     ]),
   );
-  const urls = pages.flat();
+  const urls = [entry("/", "weekly", 1), ...pages.flat()];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

@@ -1,6 +1,6 @@
 {
-  "name": "CourseSearch",
-  "short_name": "CourseSearch",
+  "name": "Termly",
+  "short_name": "Termly",
   "description": "Search courses, compare instructors and plan your timetable.",
   "start_url": "/",
   "display": "standalone",
