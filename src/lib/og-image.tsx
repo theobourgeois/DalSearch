@@ -3,6 +3,7 @@ import "server-only";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { TERMLY_MARK_PATH } from "@/components/brand/termly-mark";
 import { SITE_NAME } from "./constants";
 import type { University } from "./university";
 
@@ -78,7 +79,21 @@ export async function ogImage({ title, subtitle, university }: Props) {
                     <div style={{ fontSize: 40, fontWeight: 500, color: "#3A3A40", lineHeight: 1.25 }}>{subtitle}</div>
                 )}
             </div>
-            <div style={{ fontSize: 30, fontWeight: 900, letterSpacing: "-0.02em" }}>{SITE_NAME}</div>
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    fontSize: 32,
+                    fontWeight: 900,
+                    letterSpacing: "-0.04em",
+                }}
+            >
+                <svg viewBox="3 3 26 26" width={30} height={30} fill="#121214">
+                    <path fillRule="evenodd" d={TERMLY_MARK_PATH} />
+                </svg>
+                {SITE_NAME}
+            </div>
         </div>,
         { ...ogSize, fonts: await fonts() },
     );

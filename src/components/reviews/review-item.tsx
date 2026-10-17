@@ -1,4 +1,4 @@
-import { LogoMark } from "@/components/layout/logo";
+import { TermlyMark } from "@/components/brand/termly-mark";
 import { formatReviewDate, scoreLabels, type ReviewContent, scoreKeys } from "@/lib/reviews";
 
 type ReviewItemProps = {
@@ -13,7 +13,7 @@ export function ReviewItem({ review, context, actions }: ReviewItemProps) {
     return (
         <article className="grid grid-cols-[2.25rem_1fr] gap-3.5 border-b border-line py-5 last:border-b-0">
             <span className="grid size-9 place-items-center rounded-full bg-raised" aria-hidden>
-                <LogoMark className="size-[18px] [&_path:first-child]:fill-fg-subtle" />
+                <TermlyMark className="size-4 text-fg-subtle" />
             </span>
             <div className="min-w-0">
                 <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">

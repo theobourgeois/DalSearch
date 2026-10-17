@@ -29,11 +29,13 @@ export const metadata: Metadata = {
     applicationName: SITE_NAME,
     referrer: "origin-when-cross-origin",
     openGraph: { type: "website", locale: "en_CA", siteName: SITE_NAME },
+    // The SVG follows the browser's light or dark theme; the .ico is for browsers without SVG icons.
     icons: {
-        icon: "/favicon.ico",
-        shortcut: "/favicon-16x16.png",
+        icon: [
+            { url: "/icon.svg", type: "image/svg+xml" },
+            { url: "/favicon.ico", sizes: "16x16 32x32 48x48" },
+        ],
         apple: "/apple-touch-icon.png",
-        other: [{ rel: "icon", type: "image/png", sizes: "32x32", url: "/favicon-32x32.png" }],
     },
     robots: {
         index: true,

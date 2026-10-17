@@ -1,3 +1,4 @@
+import { TermlyLogo } from "@/components/brand/termly-mark";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { sessionEvents, type CalendarEvent } from "@/lib/calendar";
 import { courseColors } from "@/lib/colors";
@@ -12,7 +13,7 @@ export const schools = [...universities].sort((a, b) => a.name.localeCompare(b.n
 export function LandingHeader({ className }: { className?: string }) {
     return (
         <header className={cn("mx-auto flex max-w-[76rem] items-center justify-between px-5 py-5 sm:px-8", className)}>
-            <span className="text-[19px] font-black tracking-tight">{SITE_NAME}</span>
+            <TermlyLogo />
             <ThemeToggle />
         </header>
     );
