@@ -1,0 +1,134 @@
+name: Scraper Fix
+# Started by the Data Refresh triage job when a university's refresh fails twice in a row, or by hand.
+# A Claude Code agent finds out why and fixes the scraper, a dry run checks the fix, and a pull request
+# is opened for review. The agent can't write to the database or the repo: it reads Supabase with the
+# publishable key, and the job that pushes runs after it, separately.
+on:
+  workflow_dispatch:
+    inputs:
+      university:
+        description: "University id, as in src/scripts/node/universities (e.g. dal)"
+        required: true
+      issue:
+        description: "Issue number to report back on (optional)"
+        required: false
+concurrency:
+  group: scraper-fix-${{ inputs.university }}
+permissions:
+  contents: read
+jobs:
+  investigate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      UNIVERSITY: ${{ inputs.university }}
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+    outputs:
+      changed: ${{ steps.verify.outputs.changed }}
+      verified: ${{ steps.verify.outputs.verified }}
+      rejected: ${{ steps.verify.outputs.rejected }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Check the university exists
+        run: |
+          if [[ ! "$UNIVERSITY" =~ ^[a-z0-9-]+$ ]] || [ ! -f "src/scripts/node/universities/$UNIVERSITY.js" ]; then
+            echo "No scraper called $UNIVERSITY"
+            exit 1
+          fi
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Install dependencies and Claude Code
+        run: |
+          npm ci --prefix src/scripts/node
+          npm install -g @anthropic-ai/claude-code
+      - name: Investigate and fix
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/fix"
+          {
+            sed "s/{{UNIVERSITY}}/$UNIVERSITY/g" .github/scraper-fix/prompt.md
+            printf '\n## Its recent refreshes\n\n'
+            node src/scripts/node/runs.js "$UNIVERSITY" 5
+          } > "$RUNNER_TEMP/fix/prompt.md"
+          # The final message is the report. A budget stops a run that goes in circles.
+          claude -p --model claude-opus-5-5 --max-budget-usd 15 \
+            --allowedTools Read Edit Write Glob Grep WebFetch "Bash(node:*)" "Bash(curl:*)" "Bash(jq:*)" \
+              "Bash(ls:*)" "Bash(git diff:*)" "Bash(git status:*)" "Bash(git log:*)" \
+            < "$RUNNER_TEMP/fix/prompt.md" > "$RUNNER_TEMP/fix/report.md" \
+            || echo "The agent stopped before finishing (exit $?)." >> "$RUNNER_TEMP/fix/report.md"
+      # Don't take the agent's word for it: check the change independently.
+      - name: Check the fix with a dry run
+        id: verify
+        if: ${{ always() }}
+        run: |
+          dir="$RUNNER_TEMP/fix"
+          mkdir -p "$dir"
+          git add --intent-to-add .
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          git diff > "$dir/fix.patch"
+
+          rejected=$(git diff --name-only | grep -vE '^src/scripts/node/(universities|lib)/' || true)
+          rejected="$rejected $(git diff --name-only | grep -E '^src/scripts/node/lib/health\.js$' || true)"
+          rejected=$(echo $rejected)
+          if [ -n "$rejected" ]; then
+            echo "rejected=$rejected" >> "$GITHUB_OUTPUT"
+            echo "verified=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # This university with a sample of course details, then every other one on a shared file it changed.
+          others=""
+          for lib in $(git diff --name-only -- src/scripts/node/lib); do
+            others="$others $(grep -l "lib/$(basename "$lib")" src/scripts/node/universities/*.js | xargs -n1 basename | sed 's/\.js$//' || true)"
+          done
+          others=$(echo $others | tr ' ' '\n' | grep -vx "$UNIVERSITY" | sort -u || true)
+
+          verified=true
+          node src/scripts/node/refresh.js "$UNIVERSITY" --dry-run > "$dir/dry-run.log" 2>&1 || verified=false
+          for other in $others; do
+            echo "--- $other (shares a file this fix changed) ---" >> "$dir/dry-run.log"
+            node src/scripts/node/refresh.js "$other" --dry-run --details none >> "$dir/dry-run.log" 2>&1 || verified=false
+          done
+          echo "verified=$verified" >> "$GITHUB_OUTPUT"
+          tail -n 40 "$dir/dry-run.log"
+      - uses: actions/upload-artifact@v7
+        if: ${{ always() }}
+        with:
+          name: scraper-fix
+          path: ${{ runner.temp }}/fix
+          if-no-files-found: ignore
+
+  report:
+    needs: investigate
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    env:
+      UNIVERSITY: ${{ inputs.university }}
+      ISSUE: ${{ inputs.issue }}
+      CHANGED: ${{ needs.investigate.outputs.changed }}
+      VERIFIED: ${{ needs.investigate.outputs.verified }}
+      REJECTED: ${{ needs.investigate.outputs.rejected }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        continue-on-error: true
+        with:
+          name: scraper-fix
+          path: ${{ runner.temp }}/fix
+      - name: Open a pull request, or report back on the issue
+        run: .github/scraper-fix/report.sh
