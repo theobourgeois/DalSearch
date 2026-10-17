@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FlagIcon, PencilSimpleIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ import { displayName, useUser } from "@/hooks/use-user";
 import { formatCourseCode } from "@/lib/schedule";
 import { createClient } from "@/lib/supabase/client";
 import type { Review } from "@/lib/reviews";
+import { ConfirmUniversity } from "./confirm-university";
 import { ReviewForm, type ReviewDraft } from "./review-form";
 import { ReviewItem } from "./review-item";
 import { ReviewScoresSummary } from "./review-summary";
@@ -32,8 +33,38 @@ function Composer() {
     const isSignedIn = Boolean(user);
     const [open, setOpen] = useState(false);
     const alreadyReviewed = reviews.some((review) => review.user_id === user?.id);
+    // Whether this student may review this university's courses: it's their school, or they've
+    // confirmed an email there. Undefined until checked.
+    const [canReview, setCanReview] = useState<boolean>();
+    const userId = user?.id;
+
+    useEffect(() => {
+        if (!userId) return;
+        let current = true;
+        createClient()
+            .rpc("can_review", { p_university: university })
+            .then(({ data, error }) => {
+                // On an error (say, before the database has this check) the posting rules still apply.
+                if (current && !error) setCanReview(data === true);
+            });
+        return () => {
+            current = false;
+        };
+    }, [userId, university]);
 
     if (alreadyReviewed) return null;
+
+    if (isSignedIn && canReview === false) {
+        return (
+            <ConfirmUniversity
+                onConfirmed={() => {
+                    setCanReview(true);
+                    setOpen(true);
+                    toast("Confirmed. You can review these courses now.");
+                }}
+            />
+        );
+    }
 
     const post = async (draft: ReviewDraft) => {
         const { error } = await createClient()

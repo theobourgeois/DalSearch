@@ -26,7 +26,7 @@ export const dayNames = {
 export const scheduleBufferOptions = [0, 5, 10, 15, 30] as const;
 
 export const links = {
-    source: "https://github.com/theobourgeois/DalSearch",
+    source: "https://github.com/theobourgeois/termly",
     coffee: "https://buymeacoffee.com/theobourgeois",
     theo: "https://theobourgeois.com",
     chris: "https://chrislangille.github.io/portfolio",
