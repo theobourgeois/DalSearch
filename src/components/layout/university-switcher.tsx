@@ -40,14 +40,16 @@ export function UniversitySwitcher({ onNavigate }: { onNavigate?: () => void }) 
                     <CaretUpDownIcon className="size-3.5 shrink-0" />
                 </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
+            <DropdownMenuContent align="start" className="max-h-[70vh] overflow-y-auto">
                 <DropdownMenuLabel>University</DropdownMenuLabel>
                 <DropdownMenuRadioGroup value={current.id} onValueChange={switchTo}>
-                    {universities.map((university) => (
-                        <DropdownMenuRadioItem key={university.id} value={university.id}>
-                            {university.name}
-                        </DropdownMenuRadioItem>
-                    ))}
+                    {[...universities]
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map((university) => (
+                            <DropdownMenuRadioItem key={university.id} value={university.id}>
+                                {university.name}
+                            </DropdownMenuRadioItem>
+                        ))}
                 </DropdownMenuRadioGroup>
             </DropdownMenuContent>
         </DropdownMenu>

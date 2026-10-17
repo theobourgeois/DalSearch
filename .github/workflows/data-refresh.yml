@@ -1,17 +1,52 @@
 name: Data Refresh
 on:
   schedule:
-    - cron: "0 8 * * 1"
+    # Every day: timetables (sections, seats, rooms, exams), plus details for new courses.
+    - cron: "0 8 * * *"
+    # Mondays, an hour later: every course's description and requisites, and RateMyProfessors.
+    - cron: "0 9 * * 1"
   workflow_dispatch:
+    inputs:
+      universities:
+        description: "Universities to refresh, comma-separated (default: all)"
+        required: false
+      full:
+        description: "Also refresh every course's details and RateMyProfessors"
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
+  # One job per scraper in src/scripts/node/universities, so adding a university needs no change here.
+  list:
+    runs-on: ubuntu-latest
+    outputs:
+      universities: ${{ steps.list.outputs.universities }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: list
+        env:
+          WANTED: ${{ inputs.universities }}
+        run: |
+          all=$(ls src/scripts/node/universities/*.js | xargs -n1 basename | sed 's/\.js$//')
+          if [ -n "$WANTED" ]; then all=$(echo "$WANTED" | tr ',' '\n' | tr -d ' '); fi
+          echo "universities=$(echo "$all" | jq -R . | jq -cs .)" >> "$GITHUB_OUTPUT"
+
   refresh:
+    needs: list
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    strategy:
+      # Each university is its own server and its own job: they run side by side, and one failing
+      # leaves the others (and its own last good data) alone.
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        university: ${{ fromJSON(needs.list.outputs.universities) }}
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      FULL: ${{ github.event.schedule == '0 9 * * 1' || inputs.full == true }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -26,26 +61,19 @@ jobs:
           pip install -r src/scripts/py/requirements.txt
       # Timetable first: the RateMyProfessors import matches reviews against the stored courses.
       - name: Refresh the timetable and course details
-        run: node src/scripts/node/refresh.js dal
+        run: node src/scripts/node/refresh.js ${{ matrix.university }} --details ${{ env.FULL == 'true' && 'all' || 'missing' }}
       - name: Import RateMyProfessors professors and reviews
-        run: python3 src/scripts/py/rmp_reviews.py --university dal
-      # A failure at one university shouldn't stop the others, so later steps run regardless.
-      - name: Refresh MSVU's timetable and course details
-        if: ${{ always() }}
-        run: node src/scripts/node/refresh.js msvu
-      - name: Import MSVU RateMyProfessors professors and reviews
-        if: ${{ always() }}
-        run: python3 src/scripts/py/rmp_reviews.py --university msvu
-      - name: Refresh SMU's timetable and course details
-        if: ${{ always() }}
-        run: node src/scripts/node/refresh.js smu
-      - name: Import SMU RateMyProfessors professors and reviews
-        if: ${{ always() }}
-        run: python3 src/scripts/py/rmp_reviews.py --university smu
-      # Pages are cached for a day; this shows the new data straight away. Skipped until the
-      # REVALIDATE_SECRET and SITE_URL secrets are set.
+        if: ${{ env.FULL == 'true' }}
+        run: python3 src/scripts/py/rmp_reviews.py --university ${{ matrix.university }}
+
+  # Pages are cached for a day; this shows the new data straight away. Skipped until the
+  # REVALIDATE_SECRET and SITE_URL secrets are set.
+  revalidate:
+    needs: refresh
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Refresh the site
-        if: ${{ always() }}
         env:
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
           SITE_URL: ${{ secrets.SITE_URL }}

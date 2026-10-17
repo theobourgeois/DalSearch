@@ -8,7 +8,20 @@ import { log } from "../lib/import.js";
 const CATALOG = "https://smu-ca-public.courseleaf.com/course-search/api/?page=fose";
 const CONCURRENCY = 4;
 
-const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+const months = [
+    "january",
+    "february",
+    "march",
+    "april",
+    "may",
+    "june",
+    "july",
+    "august",
+    "september",
+    "october",
+    "november",
+    "december",
+];
 
 /** "September - December 2026" -> the months it spans and the year. */
 function monthRange(description) {
@@ -43,11 +56,13 @@ function roughEnd({ description }) {
     return last.toISOString().slice(0, 10);
 }
 
-export const scrapeTimetable = banner9({
+// SMU's CourseLeaf catalog has fuller descriptions than Banner's, so its own scrapeCourseDetails below is used.
+export const { scrapeTimetable } = banner9({
     baseUrl: "https://reg-prod.ec.smu.ca/StudentRegistrationSsb/ssb",
     describeTerm,
     roughEnd,
-    isOnline: (meeting, section) => !meeting.building || /online|asynchronous/i.test(section.instructionalMethodDescription ?? ""),
+    isOnline: (meeting, section) =>
+        !meeting.building || /online|asynchronous/i.test(section.instructionalMethodDescription ?? ""),
 });
 
 async function catalog(route, body) {
@@ -68,7 +83,11 @@ async function catalog(route, body) {
 }
 
 const plain = (html) =>
-    decode(String(html ?? "").replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, " "))
+    decode(
+        String(html ?? "")
+            .replace(/<br\s*\/?>/gi, " ")
+            .replace(/<[^>]+>/g, " "),
+    )
         .replace(/\s+([.,;:])/g, "$1")
         .trim();
 
@@ -79,7 +98,8 @@ const plain = (html) =>
  */
 export async function* scrapeCourseDetails(courses, knownCodes, batchSize = 100) {
     const bySubject = new Map();
-    for (const course of courses) bySubject.set(course.subject_code, [...(bySubject.get(course.subject_code) ?? []), course]);
+    for (const course of courses)
+        bySubject.set(course.subject_code, [...(bySubject.get(course.subject_code) ?? []), course]);
 
     let batch = [];
     let missing = 0;
@@ -93,7 +113,9 @@ export async function* scrapeCourseDetails(courses, knownCodes, batchSize = 100)
             missing += wanted.length;
             continue;
         }
-        const keys = new Map((found.results ?? []).map((result) => [result.code.replace(/\s+/g, "").toUpperCase(), result]));
+        const keys = new Map(
+            (found.results ?? []).map((result) => [result.code.replace(/\s+/g, "").toUpperCase(), result]),
+        );
 
         for (let start = 0; start < wanted.length; start += CONCURRENCY) {
             const details = await Promise.all(
@@ -116,7 +138,9 @@ export async function* scrapeCourseDetails(courses, knownCodes, batchSize = 100)
                             code: course.code,
                             description: plain(detail.description) || null,
                             requisites_text: requisitesText ? `Prerequisites: ${requisitesText}` : null,
-                            requisites: [...new Map(requisites.map((requisite) => [requisite.code, requisite])).values()],
+                            requisites: [
+                                ...new Map(requisites.map((requisite) => [requisite.code, requisite])).values(),
+                            ],
                         };
                     } catch (error) {
                         log(`${course.code}: ${error.message}`);

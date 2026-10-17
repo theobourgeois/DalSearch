@@ -224,14 +224,14 @@ def clean_comment(raw: str | None) -> str | None:
     return None if not text or text.lower() == "no comments" else text
 
 
-# Universities whose timetables print full names ("Paul Muir") rather than "Muir P.".
-FULL_NAMES = {"smu"}
+# Universities whose timetables list "Sarhan A."; the rest (the Banner 9 ones) list full names ("Paul Muir").
+LAST_NAME_INITIAL = {"dal", "msvu", "upei", "laurentian"}
 
 
 def match_name(teacher: dict, university: str) -> str:
     """The name the university's timetable lists them under: "Sarhan A." at Dal, "Paul Muir" at SMU."""
     first, last = teacher["firstName"].strip(), teacher["lastName"].strip()
-    if university in FULL_NAMES:
+    if university not in LAST_NAME_INITIAL:
         return f"{first} {last}".strip()
     return f"{last} {first[:1]}." if first else last
 
