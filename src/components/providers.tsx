@@ -14,6 +14,7 @@ import type { TermInfo } from "@/lib/terms";
 import type { CourseSummary } from "@/lib/types";
 import { useLibraryStoreApi } from "@/store/library-store";
 import { isLegacySession, useScheduleStoreApi } from "@/store/schedule-store";
+import { ScheduleSync } from "@/store/schedule-sync";
 import { useHydrated } from "@/store/storage";
 
 /** Loads the university's persisted stores after the first render so server and client markup match. */
@@ -76,6 +77,7 @@ export function UniversityProviders({ university, courseIndex, terms, currentTer
                     <SearchDialogProvider>
                         <StoreHydration />
                         <UpgradeSavedSchedule />
+                        <ScheduleSync />
                         {children}
                     </SearchDialogProvider>
                 </CourseIndexProvider>

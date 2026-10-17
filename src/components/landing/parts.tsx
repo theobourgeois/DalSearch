@@ -78,8 +78,8 @@ export function Questions({ className }: { className?: string }) {
 export function AccountNote({ className }: { className?: string }) {
     return (
         <p className={cn("max-w-xl leading-relaxed text-fg-muted", className)}>
-            You don&apos;t need an account to plan. Your schedule is saved in your browser. Signing in with your school
-            email lets you review courses you&apos;ve taken.
+            You don&apos;t need an account to plan: your schedule is saved in your browser. Sign in with your school
+            email to keep it on every device and to review courses you&apos;ve taken.
         </p>
     );
 }
