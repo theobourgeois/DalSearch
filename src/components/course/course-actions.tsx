@@ -1,11 +1,11 @@
 "use client";
 
+import { useTerms } from "@/components/current-term";
 import { PlusIcon, ShareNetworkIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { PageActions } from "@/components/layout/page";
 import { Button } from "@/components/ui/button";
 import { SimpleTooltip } from "@/components/ui/tooltip";
-import { termLabel } from "@/lib/constants";
 import { listSessions } from "@/lib/schedule";
 import { useCourse } from "./course-context";
 import { SaveButton } from "./save-button";
@@ -22,6 +22,7 @@ async function share(title: string) {
 
 /** "Add to schedule", plus save and share. */
 export function CourseActions({ title }: { title: string }) {
+    const { label: termLabel } = useTerms();
     const { code, term, offered, selected, inSchedule, changed, saveToSchedule, removeFromSchedule, schedule } =
         useCourse();
     const ready = schedule.ready;

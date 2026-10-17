@@ -1,11 +1,12 @@
 "use client";
 
+import { useTerms } from "@/components/current-term";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { AsideDivider, AsideHeading } from "@/components/layout/page";
 import { Avatar } from "@/components/ui/avatar";
 import { Property, PropertyList } from "@/components/ui/property-list";
-import { links, termLabel } from "@/lib/constants";
+import { links } from "@/lib/constants";
 import { describeFormat, primaryCampus, termSessions } from "@/lib/course";
 import type { RatingSummary } from "@/lib/instructors";
 import { formatCourseCode } from "@/lib/schedule";
@@ -67,11 +68,12 @@ type CourseDetailsProps = {
 
 /** The details column on the course page; term-specific facts follow the term picked on the page. */
 export function CourseDetails({ prerequisites, unlocks, ratings }: CourseDetailsProps) {
+    const { label: termLabel } = useTerms();
     const { course, term, offered } = useCourse();
     const sessions = termSessions(course, term);
     const campus = primaryCampus(sessions);
     const instructors = course.instructorsByTerm[term] ?? [];
-    const { enrolled, capacity } = course.enrollement ?? {};
+    const { enrolled, capacity } = course.enrollmentByTerm[term] ?? { enrolled: 0, capacity: 0 };
     const extraUnlocks = unlocks.length - MAX_UNLOCKS;
 
     return (

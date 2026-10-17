@@ -1,15 +1,20 @@
-"""Pull every Dal RateMyProfessors review, match it to a course and save it to Supabase.
+"""Pull a university's RateMyProfessors professors and reviews and save them to Supabase.
+
+Every professor's overall numbers go to instructor_ratings, keyed by the name the timetable
+would use for them ("Sarhan A."), which is how the app finds an instructor's rating.
 
 RMP reviews belong to a teacher and carry the course code the student typed, so codes come in
-as "CSCI2110", "csci 2110", "BIO2030" or just "2110". Each one is matched to a course in
-database/search.json, using the teacher's other courses to fill in a missing or misspelled
-subject. Reviews that can't be matched are skipped.
+as "CSCI2110", "csci 2110", "BIO2030" or just "2110". Each one is matched to one of the
+university's courses in Supabase, using the teacher's other courses to fill in a missing or
+misspelled subject. Reviews that can't be matched are skipped. They go to external_reviews.
 
     python3 rmp_reviews.py --courses CSCI2110,MATH1000 --dry-run out.json   # try a few courses
-    python3 rmp_reviews.py                                                  # everything
+    python3 rmp_reviews.py                                                  # everything at Dal
+    python3 rmp_reviews.py --university smu
 
-Writing needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY, from the environment or the
-repo's .env.local. A full run also deletes reviews RMP no longer has.
+Needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY, from the environment or the repo's
+.env.local; the university's courses and RMP school id are read from Supabase. A full run also
+deletes reviews and professors RMP no longer has.
 """
 
 from __future__ import annotations
@@ -27,10 +32,9 @@ from pathlib import Path
 
 import requests
 
-from supabase_rest import ROOT, Table, load_env
+from supabase_rest import Table, load_env
 
 GRAPHQL_URL = "https://www.ratemyprofessors.com/graphql"
-SCHOOL_ID = base64.b64encode(b"School-1423").decode()
 PROFESSOR_URL = "https://www.ratemyprofessors.com/professor/{}"
 HEADERS = {
     "Authorization": "Basic dGVzdDp0ZXN0",
@@ -43,8 +47,8 @@ REQUEST_DELAY = 0.3
 # probably returned a partial list, so nothing is deleted.
 MIN_SEEN_TO_PRUNE = 0.8
 
-# Subjects students commonly write wrong on RMP.
-SUBJECT_ALIASES = {
+# Subjects students commonly write wrong on RMP, per university.
+SUBJECT_ALIASES = {"dal": {
     "BIO": "BIOL",
     "STATS": "STAT",
     "PSYC": "PSYO",
@@ -60,7 +64,7 @@ SUBJECT_ALIASES = {
     "MATHS": "MATH",
     "CALC": "MATH",
     "CAL": "MATH",
-}
+}}
 
 # RMP's tags, keyed by lowercase because older reviews have them in capitals.
 TAGS = {
@@ -81,7 +85,7 @@ query ($cursor: String, $school: ID!) {
     teachers(query: {text: "", schoolID: $school}, first: 100, after: $cursor) {
       pageInfo { hasNextPage endCursor }
       edges { node {
-        id legacyId firstName lastName department numRatings
+        id legacyId firstName lastName department numRatings avgRating avgDifficulty wouldTakeAgainPercent
         courseCodes { courseName courseCount }
       } }
     }
@@ -126,10 +130,11 @@ def graphql(session: requests.Session, query: str, variables: dict) -> dict:
     raise AssertionError("unreachable")
 
 
-def fetch_teachers(session: requests.Session) -> list[dict]:
+def fetch_teachers(session: requests.Session, school_id: str) -> list[dict]:
     teachers, cursor = [], None
+    school = base64.b64encode(school_id.encode()).decode()
     while True:
-        page = graphql(session, TEACHERS_QUERY, {"cursor": cursor, "school": SCHOOL_ID})["newSearch"]["teachers"]
+        page = graphql(session, TEACHERS_QUERY, {"cursor": cursor, "school": school})["newSearch"]["teachers"]
         teachers += [edge["node"] for edge in page["edges"]]
         if not page["pageInfo"]["hasNextPage"]:
             return teachers
@@ -148,29 +153,33 @@ def fetch_ratings(session: requests.Session, teacher_id: str, course: str | None
 
 
 class CourseMatcher:
-    """Turns what a student typed into a course code from search.json, or None."""
+    """Turns what a student typed into one of the university's course codes, or None."""
 
-    def __init__(self, known: set[str]):
-        self.known = known
-        self.subjects = {code[:4] for code in known}
+    def __init__(self, courses: list[dict], aliases: dict[str, str]):
+        # code -> subject code, e.g. "CSCI2110" -> "CSCI"
+        self.subject_of = {course["code"]: course["subject_code"] for course in courses}
+        self.known = set(self.subject_of)
+        self.subjects = set(self.subject_of.values())
+        self.aliases = aliases
         self.by_number: dict[str, set[str]] = defaultdict(set)
-        for code in known:
-            self.by_number[code[4:]].add(code)
+        for course in courses:
+            self.by_number[course["number"]].add(course["code"])
 
     def split(self, raw: str) -> tuple[str, str] | None:
-        match = re.fullmatch(r"([A-Z]*)(\d{4})", re.sub(r"[^A-Z0-9]", "", raw.upper()))
+        """ "csci 2110" -> ("CSCI", "2110"): leading letters, then a number that starts with a digit."""
+        match = re.fullmatch(r"([A-Z]*)(\d[A-Z0-9]*)", re.sub(r"[^A-Z0-9]", "", raw.upper()))
         return (match.group(1), match.group(2)) if match else None
 
     def exact(self, raw: str) -> str | None:
         parts = self.split(raw)
         if not parts:
             return None
-        subject = SUBJECT_ALIASES.get(parts[0], parts[0])
+        subject = self.aliases.get(parts[0], parts[0])
         code = subject + parts[1]
         return code if code in self.known else None
 
     def teacher_subjects(self, raw_codes: list[str]) -> set[str]:
-        return {code[:4] for code in (self.exact(raw) for raw in raw_codes) if code}
+        return {self.subject_of[code] for code in (self.exact(raw) for raw in raw_codes) if code}
 
     def match(self, raw: str, subjects: set[str]) -> str | None:
         """Exact or aliased code first, then the number under one of the teacher's subjects.
@@ -188,7 +197,8 @@ class CourseMatcher:
         candidates = {
             code
             for code in self.by_number.get(parts[1], ())
-            if code[:4] in subjects and (not parts[0] or edit_distance(parts[0], code[:4]) <= 2)
+            if self.subject_of[code] in subjects
+            and (not parts[0] or edit_distance(parts[0], self.subject_of[code]) <= 2)
         }
         return candidates.pop() if len(candidates) == 1 else None
 
@@ -214,12 +224,41 @@ def clean_comment(raw: str | None) -> str | None:
     return None if not text or text.lower() == "no comments" else text
 
 
-def to_row(rating: dict, teacher: dict, course: str, seen_at: str) -> dict:
+def match_name(teacher: dict) -> str:
+    """The name a Banner timetable would list them under: "Sarhan A." """
+    first, last = teacher["firstName"].strip(), teacher["lastName"].strip()
+    return f"{last} {first[:1]}." if first else last
+
+
+def to_rating_row(teacher: dict, university: str, seen_at: str) -> dict:
+    """A professor's overall numbers. RMP sends 0 for "no ratings" and -1 for "nobody answered"."""
+    def score(value):
+        return value if isinstance(value, (int, float)) and value > 0 else None
+
+    take_again = teacher.get("wouldTakeAgainPercent")
+    return {
+        "university_id": university,
+        "source": "rmp",
+        "source_id": str(teacher["legacyId"]),
+        "match_name": match_name(teacher),
+        "first_name": teacher["firstName"].strip(),
+        "last_name": teacher["lastName"].strip(),
+        "profile_url": PROFESSOR_URL.format(teacher["legacyId"]),
+        "rating": score(teacher.get("avgRating")),
+        "difficulty": score(teacher.get("avgDifficulty")),
+        "would_take_again": round(take_again, 2) if isinstance(take_again, (int, float)) and take_again >= 0 else None,
+        "rating_count": teacher.get("numRatings") or 0,
+        "last_seen_at": seen_at,
+    }
+
+
+def to_row(rating: dict, teacher: dict, course: str, university: str, seen_at: str) -> dict:
     take_again = rating.get("wouldTakeAgain")
     grade = (rating.get("grade") or "").strip().upper()
     attendance = (rating.get("attendanceMandatory") or "").lower()
     reviewed_at = datetime.strptime(rating["date"][:19], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
     return {
+        "university_id": university,
         "source": "rmp",
         "source_id": str(rating["legacyId"]),
         "course_code": course,
@@ -241,25 +280,44 @@ def to_row(rating: dict, teacher: dict, course: str, seen_at: str) -> dict:
     }
 
 
+def prune(table: Table, university: str, saw: int, seen_at: str, what: str) -> None:
+    """Deletes rows a full run didn't see, unless it saw much less than what's stored."""
+    filters = {"university_id": f"eq.{university}", "source": "eq.rmp"}
+    stored = table.count(filters)
+    if saw < stored * MIN_SEEN_TO_PRUNE:
+        print(f"Only saw {saw} of {stored} stored {what}; not deleting any", file=sys.stderr)
+    else:
+        table.delete({**filters, "last_seen_at": f"lt.{seen_at}"})
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--university", default="dal", help="university id in Supabase (default dal)")
     parser.add_argument("--courses", help="comma-separated course codes to fetch, e.g. CSCI2110,MATH1000")
     parser.add_argument("--dry-run", metavar="FILE", help="write rows to FILE instead of Supabase")
     args = parser.parse_args()
 
-    known = set(json.loads((ROOT / "database" / "search.json").read_text()))
-    only = {code.strip().upper() for code in args.courses.split(",")} if args.courses else None
-    if only and only - known:
-        sys.exit(f"Not in search.json: {', '.join(sorted(only - known))}")
+    env = load_env()
+    university = args.university
+    universities = Table(env, "universities").select_all("rmp_school_id", {"id": f"eq.{university}"}, "id")
+    if not universities or not universities[0]["rmp_school_id"]:
+        sys.exit(f"No RateMyProfessors school id for {university}")
+    courses = Table(env, "courses").select_all("code,subject_code,number", {"university_id": f"eq.{university}"}, "code")
+    if not courses:
+        sys.exit(f"No courses stored for {university}; refresh the timetable first")
 
-    table = None if args.dry_run else Table(load_env(), "external_reviews")
-    matcher = CourseMatcher(known)
+    matcher = CourseMatcher(courses, SUBJECT_ALIASES.get(university, {}))
+    only = {code.strip().upper() for code in args.courses.split(",")} if args.courses else None
+    if only and only - matcher.known:
+        sys.exit(f"Not a {university} course: {', '.join(sorted(only - matcher.known))}")
+
     session = requests.Session()
     session.headers.update(HEADERS)
     seen_at = datetime.now(timezone.utc).isoformat()
 
-    teachers = fetch_teachers(session)
+    teachers = fetch_teachers(session, universities[0]["rmp_school_id"])
     print(f"{len(teachers)} teachers on RMP", file=sys.stderr)
+    ratings_rows = list({row["source_id"]: row for row in (to_rating_row(t, university, seen_at) for t in teachers)}.values())
 
     rows, unmatched = {}, Counter()
     rated = [teacher for teacher in teachers if teacher["numRatings"]]
@@ -278,7 +336,7 @@ def main() -> None:
                 continue
             course = matcher.match(rating.get("class") or "", subjects)
             if course and (not only or course in only):
-                row = to_row(rating, teacher, course, seen_at)
+                row = to_row(rating, teacher, course, university, seen_at)
                 rows[row["source_id"]] = row
             elif not course:
                 unmatched[rating.get("class") or "(blank)"] += 1
@@ -294,18 +352,19 @@ def main() -> None:
         print(f"{skipped} reviews skipped with no course match, most common: {unmatched.most_common(15)}", file=sys.stderr)
 
     if args.dry_run:
-        Path(args.dry_run).write_text(json.dumps(rows, indent=2, ensure_ascii=False))
+        Path(args.dry_run).write_text(json.dumps({"ratings": ratings_rows, "reviews": rows}, indent=2, ensure_ascii=False))
         print(f"Wrote {args.dry_run}; per course: {by_course.most_common(20)}", file=sys.stderr)
         return
 
-    stored = table.count({"source": "eq.rmp"})
-    table.upsert(rows, on_conflict="source,source_id")
+    # The teacher list is always complete, so professors are saved and pruned on every run.
+    ratings_table = Table(env, "instructor_ratings")
+    ratings_table.upsert(ratings_rows, on_conflict="source,source_id")
+    prune(ratings_table, university, len(ratings_rows), seen_at, "professors")
+
+    reviews_table = Table(env, "external_reviews")
+    reviews_table.upsert(rows, on_conflict="source,source_id")
     if not only:
-        if len(rows) < stored * MIN_SEEN_TO_PRUNE:
-            print(f"Only saw {len(rows)} of {stored} stored reviews; not deleting any", file=sys.stderr)
-        else:
-            # Reviews RMP no longer has weren't seen this run.
-            table.delete({"source": "eq.rmp", "last_seen_at": f"lt.{seen_at}"})
+        prune(reviews_table, university, len(rows), seen_at, "reviews")
     print("Saved to Supabase", file=sys.stderr)
 
 

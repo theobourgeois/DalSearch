@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { useCurrentTerm, usePlannedTerm } from "@/components/current-term";
+import { useCurrentTerm, usePlannedTerm, useTerms } from "@/components/current-term";
 import { MultiSelectFilter, SingleSelectFilter } from "@/components/filters/filter-pill";
 import { SortMenu, type SortState } from "@/components/filters/sort-menu";
 import { SubjectFilter } from "@/components/filters/subject-filter";
@@ -16,7 +16,7 @@ import { Switch } from "@/components/ui/switch";
 import { usePaged } from "@/hooks/use-paged";
 import { useStoredState } from "@/hooks/use-stored-state";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
-import { courseLevels, scheduleBufferOptions, termLabel, termOptions, type Term } from "@/lib/constants";
+import { courseLevels, scheduleBufferOptions, type Term } from "@/lib/constants";
 import { defaultFilter, filterCourses, sortCourses } from "@/lib/filter";
 import { courseKey, getCourseFit } from "@/lib/schedule";
 import type { CourseFilter, CourseListItem, CourseOrderByKey, ScheduleBufferMinutes, Subject } from "@/lib/types";
@@ -49,6 +49,7 @@ type ExploreViewProps = {
 
 export function ExploreView({ courses, subjects, creditHours, ratings }: ExploreViewProps) {
     const currentTerm = useCurrentTerm();
+    const { listed, label: termLabel, options: termOptions } = useTerms();
     const initial = initialState(currentTerm);
     const [{ filter, sort }, setState] = useStoredState<ExploreState>(initial, "dalsearch:explore", (stored) => ({
         filter: { ...initial.filter, ...stored.filter },
@@ -58,7 +59,9 @@ export function ExploreView({ courses, subjects, creditHours, ratings }: Explore
     const deferredFilter = useDeferredValue(filter);
     const sessions = useScheduleStore((state) => state.sessions);
     const plannedTerm = usePlannedTerm();
-    const statusTerm = filter.terms.length === 1 ? filter.terms[0] : plannedTerm;
+    // A saved filter can name a term that has since left the timetable.
+    const pickedTerms = filter.terms.filter((term) => listed.includes(term));
+    const statusTerm = pickedTerms.length === 1 ? pickedTerms[0] : plannedTerm;
     const { colors } = useTermSchedule(statusTerm);
 
     useEffect(() => {
@@ -73,7 +76,8 @@ export function ExploreView({ courses, subjects, creditHours, ratings }: Explore
 
     // Status and the "fits" filter come from the same calculation, so they always agree.
     const results = useMemo(() => {
-        const matching = filterCourses(courses, { ...deferredFilter, scheduleFitOnly: false });
+        const terms = deferredFilter.terms.filter((term) => listed.includes(term));
+        const matching = filterCourses(courses, { ...deferredFilter, terms, scheduleFitOnly: false }, listed);
         const buffer = deferredFilter.scheduleFitOnly ? deferredFilter.scheduleBufferMinutes : 0;
         const withFit = sortCourses(matching, sort).map((course) => ({
             course,
@@ -82,7 +86,7 @@ export function ExploreView({ courses, subjects, creditHours, ratings }: Explore
         return deferredFilter.scheduleFitOnly
             ? withFit.filter(({ fit }) => fit.status === "fits" || fit.status === "scheduled")
             : withFit;
-    }, [courses, deferredFilter, sessions, sort, statusTerm]);
+    }, [courses, deferredFilter, listed, sessions, sort, statusTerm]);
     const fitCount = results.filter(({ fit }) => fit.status === "fits").length;
     const page = usePaged(results, PAGE_SIZE);
 
@@ -106,7 +110,7 @@ export function ExploreView({ courses, subjects, creditHours, ratings }: Explore
                 <MultiSelectFilter
                     label="Term"
                     options={termOptions()}
-                    selected={filter.terms}
+                    selected={pickedTerms}
                     onChange={(terms) => update({ terms })}
                     summary={(chosen) => (chosen.length === 1 ? chosen[0].label : `${chosen.length} terms`)}
                 />

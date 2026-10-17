@@ -39,7 +39,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     const { data, error } = await createClient().auth.signUp({ email: email.trim(), password })
     setIsLoading(false)
 
-    // The database decides who may sign up (@dal.ca addresses plus anyone in allowed_emails)
+    // The database decides who may sign up (university email domains plus anyone in allowed_emails)
     // and its refusal comes back as the error message.
     if (error) {
       setError(error.message)

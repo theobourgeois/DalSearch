@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
 import { CellText, DataList, DataListHeader, DataListRow } from "@/components/ui/data-list";
 import { EmptyState } from "@/components/ui/empty-state";
-import { formatLocation } from "@/lib/location";
 import { formatCourseCode, sessionName, sessionTypeLabel } from "@/lib/schedule";
 import { formatDays, formatTimeRange, isTimed } from "@/lib/time";
 import type { ClassSession } from "@/lib/types";
@@ -62,7 +61,7 @@ function SectionRow({ session }: { session: ClassSession }) {
             />
             <span className="hidden md:block">{timed ? formatDays(session.days) : "Online"}</span>
             <span className="hidden md:block">{timed ? formatTimeRange(session) : "Self-paced"}</span>
-            <span className="hidden truncate md:block">{formatLocation(session.location) || "To be announced"}</span>
+            <span className="hidden truncate md:block">{session.location || "To be announced"}</span>
             <span className="text-[13px] text-fg-subtle">{session.crn}</span>
         </DataListRow>
     );
@@ -145,7 +144,7 @@ export function SectionsTable() {
                                         {sessions.length > 1 && ", pick one"}
                                     </div>
                                     {sessions.map((session) => (
-                                        <SectionRow key={session.crn} session={session} />
+                                        <SectionRow key={`${session.crn}-${session.days.join("")}-${session.time.start}`} session={session} />
                                     ))}
                                 </div>
                             );

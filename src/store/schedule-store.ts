@@ -16,7 +16,12 @@ type ScheduleState = {
     setCourseSessions: (course: CourseAndSubjectCode, term: Term, sessions: ClassSession[]) => void;
     removeCourse: (course: CourseAndSubjectCode, term: Term) => void;
     clearTerm: (term: Term) => void;
+    /** Swaps sessions saved before rooms were stored for `fresh` sessions of the same sections. */
+    upgradeLegacySessions: (fresh: ClassSession[]) => void;
 };
+
+/** Sessions saved before rooms were stored have the timetable's raw location text and no campus. */
+export const isLegacySession = (session: ClassSession) => !("campus" in session);
 
 type PersistedSchedule = Pick<ScheduleState, "sessions" | "term">;
 
@@ -45,6 +50,22 @@ export const useScheduleStore = create<ScheduleState>()(
             removeCourse: (course, term) => set((state) => ({ sessions: withoutCourse(state.sessions, course, term) })),
             clearTerm: (term) =>
                 set((state) => ({ sessions: state.sessions.filter((session) => session.term !== term) })),
+            upgradeLegacySessions: (fresh) =>
+                set((state) => {
+                    const key = (session: ClassSession) => `${session.term} ${session.crn}`;
+                    const freshByKey = new Map<string, ClassSession[]>();
+                    fresh.forEach((session) => freshByKey.set(key(session), [...(freshByKey.get(key(session)) ?? []), session]));
+                    const replaced = new Set<string>();
+                    // A section that's gone from the timetable keeps its saved copy.
+                    const sessions = state.sessions.flatMap((session) => {
+                        const replacement = isLegacySession(session) ? freshByKey.get(key(session)) : undefined;
+                        if (!replacement) return [session];
+                        if (replaced.has(key(session))) return [];
+                        replaced.add(key(session));
+                        return replacement;
+                    });
+                    return { sessions };
+                }),
         }),
         {
             name: "dalsearch:schedule",

@@ -8,10 +8,10 @@ export const metadata: Metadata = {
     description: "Plan your Dalhousie timetable: see your week, catch clashes and export your schedule.",
 };
 
-export default function SchedulePage() {
+export default async function SchedulePage() {
     return (
         <Page breadcrumbs={[{ label: "Schedule" }]}>
-            <ScheduleView exams={getExamSchedule()} />
+            <ScheduleView exams={await getExamSchedule()} />
         </Page>
     );
 }

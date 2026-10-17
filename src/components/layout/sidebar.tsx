@@ -12,7 +12,7 @@ import {
     WarningCircleIcon,
     type Icon,
 } from "@phosphor-icons/react";
-import { usePlannedTerm } from "@/components/current-term";
+import { usePlannedTerm, useTerms } from "@/components/current-term";
 import { useCourseIndex } from "@/components/search/course-index";
 import { useSearchDialog } from "@/components/search/search-dialog";
 import { Avatar } from "@/components/ui/avatar";
@@ -21,7 +21,7 @@ import { Kbd } from "@/components/ui/kbd";
 import { Dot } from "@/components/ui/status";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
 import { displayName, useUser } from "@/hooks/use-user";
-import { termCodes, termLabel, type Term } from "@/lib/constants";
+import { type Term } from "@/lib/constants";
 import { formatCourseCode, totalCredits } from "@/lib/schedule";
 import type { CourseAndSubjectCode } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -91,6 +91,7 @@ function CourseLink({
 }
 
 function ScheduleSection({ onNavigate }: { onNavigate?: () => void }) {
+    const { label: termLabel } = useTerms();
     const { ready, term, codes, colors, conflicted, credits } = useTermSchedule();
     if (!ready) return null;
 
@@ -130,6 +131,7 @@ function SavedSection({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 function OtherTermsSection({ onNavigate }: { onNavigate?: () => void }) {
+    const { label: termLabel, listed: termCodes } = useTerms();
     const router = useRouter();
     const { byCode } = useCourseIndex();
     const plannedTerm = usePlannedTerm();

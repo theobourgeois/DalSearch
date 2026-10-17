@@ -2,7 +2,7 @@ import { isTimed, toMinutes, type TimedSession } from "./time";
 import { joinWords } from "./utils";
 import type { ClassSession, CourseAndSubjectCode, CourseListItem, Day, SessionType, Term } from "./types";
 
-const sessionTypeOrder = ["Lec", "Lab", "Tut"];
+export const sessionTypeOrder = ["Lec", "Lab", "Tut"];
 
 const sessionTypeLabels: Record<string, string> = {
     Lec: "Lecture",
@@ -91,16 +91,21 @@ export function getCourseFit(
     const offered = course.termClasses.filter((session) => session.term === term);
     if (offered.length === 0) return { status: "unavailable" };
 
+    // A section can meet at more than one weekly time, so the options are sections (CRNs): one fits
+    // only if all of its sessions do, and picking it adds all of them.
     const picks: ClassSession[] = [];
-    for (const [type, options] of groupByType(offered)) {
+    for (const [type, sessions] of groupByType(offered)) {
         const taken = [...inTerm, ...picks];
-        const fitting = options.filter((option) => sessionFits(option, taken, bufferMinutes));
-        const pick = fitting.find(isTimed) ?? fitting[0];
+        const options = [...new Set(sessions.map((session) => session.crn))].map((crn) =>
+            sessions.filter((session) => session.crn === crn),
+        );
+        const fitting = options.filter((option) => option.every((session) => sessionFits(session, taken, bufferMinutes)));
+        const pick = fitting.find((option) => option.some(isTimed)) ?? fitting[0];
         if (!pick) {
-            const [clash] = options.flatMap((option) => findClashes(option, taken, bufferMinutes));
+            const [clash] = sessions.flatMap((session) => findClashes(session, taken, bufferMinutes));
             return { status: "clash", type, clashesWith: clash.course, onlyOption: options.length === 1 };
         }
-        picks.push(pick);
+        picks.push(...pick);
     }
     return { status: "fits", picks };
 }

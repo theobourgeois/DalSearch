@@ -1,22 +1,29 @@
-import { termCodes, type Term } from "./constants";
-import { parseLocation } from "./location";
+import type { Term } from "./constants";
 import { groupByType, sessionTypeLabel } from "./schedule";
-import type { ClassSession, CourseListItem, Subject } from "./types";
+import { termIndex } from "./terms";
+import type { ClassSession, CourseListItem } from "./types";
 import { joinWords } from "./utils";
 
-export function offeredTerms(course: Pick<CourseListItem, "termClasses">): Term[] {
+/** The listed terms (`listed`, oldest first) the course runs in. */
+export function offeredTerms(course: Pick<CourseListItem, "termClasses">, listed: readonly Term[]): Term[] {
     const offered = new Set(course.termClasses.map((session) => session.term));
-    return termCodes.filter((term) => offered.has(term));
+    return listed.filter((term) => offered.has(term));
 }
 
 /** The term a course page opens on: the current term if offered, else the next one, else the latest. */
-export function defaultCourseTerm(offered: Term[], current: Term): Term {
-    return offered.find((term) => term >= current) ?? offered.at(-1) ?? current;
+export function defaultCourseTerm(offered: Term[], current: Term, listed: readonly Term[]): Term {
+    const now = termIndex(listed, current);
+    return offered.find((term) => termIndex(listed, term) >= now) ?? offered.at(-1) ?? current;
 }
 
 /** The first term after `term` the course runs in. */
-export function nextOfferedTerm(course: Pick<CourseListItem, "termClasses">, term: Term): Term | undefined {
-    return offeredTerms(course).find((offered) => offered > term);
+export function nextOfferedTerm(
+    course: Pick<CourseListItem, "termClasses">,
+    term: Term,
+    listed: readonly Term[],
+): Term | undefined {
+    const after = termIndex(listed, term);
+    return offeredTerms(course, listed).find((offered) => termIndex(listed, offered) > after);
 }
 
 export function termSessions(course: Pick<CourseListItem, "termClasses">, term: Term): ClassSession[] {
@@ -32,30 +39,7 @@ export function describeFormat(sessions: ClassSession[]): string {
     );
 }
 
-/** The campus most of a term's sessions are on. */
+/** The campus of a term's first session that has one. */
 export function primaryCampus(sessions: ClassSession[]): string | null {
-    return sessions.map((session) => parseLocation(session.location).campus).find(Boolean) ?? null;
-}
-
-const entities: Record<string, string> = {
-    "&amp;": "&",
-    "&lt;": "<",
-    "&gt;": ">",
-    "&quot;": '"',
-    "&#39;": "'",
-    "&nbsp;": " ",
-};
-
-/** Course descriptions come from the Dal catalog as HTML with catalog-relative links; keep only the text. */
-export function plainText(html: string): string {
-    return html
-        .replace(/<[^>]+>/g, "")
-        .replace(/&[a-z#0-9]+;/gi, (entity) => entities[entity] ?? entity)
-        .replace(/\s+/g, " ")
-        .trim();
-}
-
-/** "(CSCI) Computer Science" -> "Computer Science". */
-export function subjectName(subject: Subject): string {
-    return subject.description.replace(/^\([A-Z]+\)\s*/, "");
+    return sessions.map((session) => session.campus).find(Boolean) ?? null;
 }

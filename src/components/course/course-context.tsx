@@ -1,10 +1,11 @@
 "use client";
 
+import { useTerms } from "@/components/current-term";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useTermSchedule, type TermSchedule } from "@/hooks/use-term-schedule";
-import { termLabel, type Term } from "@/lib/constants";
+import { type Term } from "@/lib/constants";
 import { termSessions } from "@/lib/course";
 import { courseKey, findClashes, formatCourseCode, getCourseFit, groupByType } from "@/lib/schedule";
 import type { ClassSession, CourseAndSubjectCode, CourseListItem, SessionType } from "@/lib/types";
@@ -57,6 +58,7 @@ type CourseProviderProps = {
  * scheduled, or to the first sections that fit around their other courses.
  */
 export function CourseProvider({ course, offered, initialTerm, children }: CourseProviderProps) {
+    const { label: termLabel } = useTerms();
     const router = useRouter();
     const code = courseKey(course);
     const [term, setTerm] = useState(initialTerm);
@@ -124,7 +126,7 @@ export function CourseProvider({ course, offered, initialTerm, children }: Cours
             },
             schedule,
         };
-    }, [choices, code, course, offered, removeCourse, router, schedule, setCourseSessions, tab, term]);
+    }, [choices, code, course, offered, removeCourse, router, schedule, setCourseSessions, tab, term, termLabel]);
 
     return <CourseContext.Provider value={value}>{children}</CourseContext.Provider>;
 }

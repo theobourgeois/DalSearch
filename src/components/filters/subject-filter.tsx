@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { subjectName } from "@/lib/course";
 import type { Subject } from "@/lib/types";
 import { MultiSelectFilter } from "./filter-pill";
 
@@ -14,10 +13,10 @@ type SubjectFilterProps = {
 /** A searchable subject checklist: "Subject Computer Science ▾". */
 export function SubjectFilter({ subjects, selected, onChange }: SubjectFilterProps) {
     const options = useMemo(
-        () => subjects.map((subject) => ({ value: subject.code, label: `${subjectName(subject)} (${subject.code})` })),
+        () => subjects.map((subject) => ({ value: subject.code, label: `${subject.name} (${subject.code})` })),
         [subjects],
     );
-    const names = useMemo(() => new Map(subjects.map((subject) => [subject.code, subjectName(subject)])), [subjects]);
+    const names = useMemo(() => new Map(subjects.map((subject) => [subject.code, subject.name])), [subjects]);
 
     return (
         <MultiSelectFilter

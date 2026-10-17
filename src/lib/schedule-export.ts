@@ -1,4 +1,3 @@
-import { formatLocation } from "./location";
 import { formatCourseCode, sessionName } from "./schedule";
 import { isTimed, type TimedSession } from "./time";
 import type { ClassSession, Day } from "./types";
@@ -56,7 +55,7 @@ function toIcs(sessions: ClassSession[]): string {
             `DTSTART;TZID=America/Halifax:${day}T${session.time.start}00`,
             `DTEND;TZID=America/Halifax:${day}T${session.time.end}00`,
             `RRULE:FREQ=WEEKLY;BYDAY=${session.days.map((d) => rruleDays[d]).join(",")}`,
-            `LOCATION:${formatLocation(session.location)}`,
+            `LOCATION:${session.location}`,
             `SUMMARY:${formatCourseCode(session.course)} ${sessionName(session)}`,
             `DESCRIPTION:CRN ${session.crn}`,
             "END:VEVENT",

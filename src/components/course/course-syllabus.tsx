@@ -1,5 +1,6 @@
 "use client";
 
+import { useTerms } from "@/components/current-term";
 import { useState } from "react";
 import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { SectionHeader } from "@/components/layout/page";
@@ -7,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Property, PropertyList } from "@/components/ui/property-list";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { termLabel } from "@/lib/constants";
 import { cleanInstructorName } from "@/lib/instructors";
 import {
     formatWeight,
@@ -130,6 +130,7 @@ const syllabusName = (syllabus: Syllabus) =>
  * preferring one by someone who teaches the term on the page.
  */
 export function CourseSyllabus({ syllabi }: { syllabi: Syllabus[] }) {
+    const { label: termLabel } = useTerms();
     const { course, term } = useCourse();
     const teaching = [
         ...new Set(
@@ -174,7 +175,7 @@ export function CourseSyllabus({ syllabi }: { syllabi: Syllabus[] }) {
                     rel="noreferrer"
                     className="inline-flex items-center gap-0.5 font-bold text-fg-muted hover:text-fg"
                 >
-                    Open the PDF
+                    {/\.pdf$/i.test(syllabus.source_url) ? "Open the PDF" : "Open the course page"}
                     <ArrowUpRightIcon className="size-3.5" />
                 </a>
             </p>

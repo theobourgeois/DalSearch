@@ -5,7 +5,7 @@ import Link from "next/link";
 import { CaretDownIcon, DotsThreeIcon, ExportIcon, PlusIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { CalendarTabs, type CalendarView } from "@/components/calendar/calendar-tabs";
-import { useCurrentTerm } from "@/components/current-term";
+import { useCurrentTerm, useTerms } from "@/components/current-term";
 import { PageActions, PageHeader } from "@/components/layout/page";
 import { useSearchDialog } from "@/components/search/search-dialog";
 import { Button } from "@/components/ui/button";
@@ -22,9 +22,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { useCampusNow } from "@/hooks/use-campus-now";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
 import { conflictingMeetings, sessionEvents } from "@/lib/calendar";
-import { termLabel, termOptions, type Term } from "@/lib/constants";
+import { type Term } from "@/lib/constants";
 import type { ExamSchedule } from "@/lib/exams";
-import { formatLocation } from "@/lib/location";
 import { formatCourseCode, sessionName } from "@/lib/schedule";
 import { exportFormatLabels, exportFormats, exportSchedule, type ExportFormat } from "@/lib/schedule-export";
 import { formatTimeRange } from "@/lib/time";
@@ -36,6 +35,7 @@ import { ScheduleAside } from "./schedule-aside";
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
 function TermSwitcher({ term }: { term: Term }) {
+    const { options: termOptions } = useTerms();
     const setTerm = useScheduleStore((state) => state.setTerm);
     return (
         <DropdownMenu>
@@ -59,6 +59,7 @@ function TermSwitcher({ term }: { term: Term }) {
 
 /** The schedule for the term being planned: week calendar or list, clashes, and course details. */
 export function ScheduleView({ exams }: { exams: ExamSchedule }) {
+    const { label: termLabel } = useTerms();
     const schedule = useTermSchedule();
     const { term, sessions, codes, colors, conflicts, credits, ready } = schedule;
     const currentTerm = useCurrentTerm();
@@ -72,7 +73,7 @@ export function ScheduleView({ exams }: { exams: ExamSchedule }) {
     const events = sessions.flatMap((session) =>
         sessionEvents(session, (timed, id) => ({
             title: formatCourseCode(session.course),
-            lines: [sessionName(session), formatTimeRange(timed), formatLocation(session.location)],
+            lines: [sessionName(session), formatTimeRange(timed), session.location],
             variant: "tinted",
             color: colors[session.course],
             conflict: conflicted.has(id),

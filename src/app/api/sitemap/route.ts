@@ -1,8 +1,9 @@
-import { courses } from "@/lib/data";
+import { getCourses } from "@/lib/data";
 
 const STATIC_PAGES = ["/", "/explore", "/schedule", "/rooms", "/instructors"];
 
 export async function GET() {
+  const courses = await getCourses();
   const urls = [
     ...STATIC_PAGES.map(
       (page) => `
@@ -13,7 +14,7 @@ export async function GET() {
         </url>
       `
     ),
-    ...Object.values(courses).map(
+    ...courses.map(
       (course) => `
         <url>
           <loc>https://www.dalsearch.com/${course.subjectCode + course.courseCode}</loc>

@@ -4,7 +4,6 @@ import { WeekCalendar } from "@/components/calendar/week-calendar";
 import { SectionHeader } from "@/components/layout/page";
 import { conflictingMeetings, sessionEvents, type CalendarEvent } from "@/lib/calendar";
 import { dayNames } from "@/lib/constants";
-import { formatLocation } from "@/lib/location";
 import { findConflicts, formatCourseCode, listSessions, sessionName } from "@/lib/schedule";
 import { formatDuration, formatMinutes, formatTimeRange, isTimed, toMinutes, weeklyMinutes } from "@/lib/time";
 import type { ClassSession, Day } from "@/lib/types";
@@ -84,7 +83,7 @@ export function CourseWeek() {
         ...selected.flatMap((session) =>
             sessionEvents(session, (timed, id) => ({
                 title: sessionName(session),
-                lines: [formatTimeRange(timed), formatLocation(session.location)],
+                lines: [formatTimeRange(timed), session.location],
                 variant: "accent",
                 conflict: clashing.has(id),
             })),

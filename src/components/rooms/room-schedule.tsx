@@ -1,5 +1,6 @@
 "use client";
 
+import { useTerms } from "@/components/current-term";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarTabs, type CalendarView } from "@/components/calendar/calendar-tabs";
@@ -8,16 +9,15 @@ import { Property, PropertyList } from "@/components/ui/property-list";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { useTermSchedule } from "@/hooks/use-term-schedule";
 import type { CalendarEvent } from "@/lib/calendar";
-import { dayNames, termLabel, termOptions, type Term } from "@/lib/constants";
-import { parseLocation } from "@/lib/location";
+import { dayNames, type Term } from "@/lib/constants";
 import { describeFreeUntil, roomBookings, type FreeRoom, type RoomStatus } from "@/lib/rooms";
 import { formatCourseCode, sessionName, weekShape } from "@/lib/schedule";
 import { formatMinutes } from "@/lib/time";
-import type { ClassSession } from "@/lib/types";
+import type { ClassSession, Room } from "@/lib/types";
 import { FreeRoomList, roomHref } from "./room-links";
 
 type RoomScheduleProps = {
-    room: string;
+    room: Room;
     sessions: ClassSession[];
     term: Term;
     status: RoomStatus | null;
@@ -57,12 +57,12 @@ function StatusLine({ status, windows }: { status: RoomStatus; windows: [number,
 
 /** A room's week: who books it, which of your classes meet there, and nearby free rooms. */
 export function RoomSchedule({ room, sessions, term, status, freeWindows, freeRooms }: RoomScheduleProps) {
+    const { label: termLabel, options: termOptions } = useTerms();
     const router = useRouter();
     const [view, setView] = useState<CalendarView>("week");
     const { colors, sessions: mine } = useTermSchedule(term);
     const myCrns = new Set(mine.map((session) => session.crn));
     const shape = weekShape(sessions);
-    const campus = parseLocation(room).campus;
 
     const events: CalendarEvent[] = roomBookings(sessions).map((booking) => {
         const own = booking.sessions.find((session) => myCrns.has(session.crn));
@@ -102,7 +102,7 @@ export function RoomSchedule({ room, sessions, term, status, freeWindows, freeRo
                     <SegmentedControl<Term>
                         aria-label="Term"
                         value={term}
-                        onValueChange={(next) => router.push(roomHref(room, next))}
+                        onValueChange={(next) => router.push(roomHref(room.id, next))}
                         options={termOptions()}
                     />
                 </SectionHeader>
@@ -122,7 +122,7 @@ export function RoomSchedule({ room, sessions, term, status, freeWindows, freeRo
                     <PropertyList>
                         <Property label="Classes">{`${new Set(sessions.map((session) => session.crn)).size} this term`}</Property>
                         {busiest.length > 0 && <Property label="Busiest days">{busiest.join(", ")}</Property>}
-                        {campus && <Property label="Campus">{campus}</Property>}
+                        {room.campus && <Property label="Campus">{room.campus}</Property>}
                     </PropertyList>
                 </>
             }

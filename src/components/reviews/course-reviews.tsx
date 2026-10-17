@@ -19,6 +19,7 @@ import { ReviewForm, type ReviewDraft } from "./review-form";
 import { ReviewItem } from "./review-item";
 import { ReviewScoresSummary } from "./review-summary";
 import { useReviews } from "./reviews-context";
+import { UNIVERSITY_ID } from "@/lib/university";
 
 const PAGE_SIZE = 6;
 const ALL = "__all";
@@ -35,7 +36,7 @@ function Composer() {
     const post = async (draft: ReviewDraft) => {
         const { error } = await createClient()
             .from("reviews")
-            .insert({ ...draft, course_code: courseId });
+            .insert({ ...draft, university_id: UNIVERSITY_ID, course_code: courseId });
         if (error) return error.code === "23505" ? "You've already reviewed this course." : error.message;
         setOpen(false);
         toast("Thanks, your review is posted");

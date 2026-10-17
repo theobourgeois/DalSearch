@@ -1,7 +1,7 @@
 import { getCourse } from "@/lib/data";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ course: string }> }) {
-  const course = getCourse((await params).course);
+  const course = await getCourse((await params).course);
 
   if (!course) {
     return new Response('Course not found', { status: 404 });
