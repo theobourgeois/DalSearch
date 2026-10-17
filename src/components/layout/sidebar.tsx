@@ -30,7 +30,6 @@ import { cn } from "@/lib/utils";
 import { useLibraryStore, useLibraryStoreApi } from "@/store/library-store";
 import { useScheduleStore, useScheduleStoreApi } from "@/store/schedule-store";
 import { useHydrated } from "@/store/storage";
-import { Logo } from "./logo";
 import { ThemeToggle } from "./theme-toggle";
 import { UniversitySwitcher } from "./university-switcher";
 
@@ -224,8 +223,7 @@ export function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
     return (
         <div className="flex h-full flex-col px-3 pb-3 pt-4">
-            <Logo className="mx-2 self-start" />
-            <UniversitySwitcher onNavigate={onNavigate} />
+            <UniversitySwitcher onNavigate={onNavigate} className="self-start" />
 
             <button
                 type="button"

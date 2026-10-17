@@ -5,7 +5,7 @@ import { ListIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { useSearchDialog } from "@/components/search/search-dialog";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Logo } from "./logo";
+import { UniversitySwitcher } from "./university-switcher";
 import { SidebarContent } from "./sidebar";
 
 /** Top bar for small screens, with the sidebar in a slide-out menu. */
@@ -26,7 +26,7 @@ export function MobileNav() {
                     <SidebarContent onNavigate={() => setOpen(false)} />
                 </SheetContent>
             </Sheet>
-            <Logo />
+            <UniversitySwitcher className="min-w-0" />
             <Button variant="ghost" size="icon" className="ml-auto" aria-label="Search courses" onClick={openSearch}>
                 <MagnifyingGlassIcon />
             </Button>
