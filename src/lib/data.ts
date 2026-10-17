@@ -389,10 +389,17 @@ async function loadCatalog(university: string): Promise<Catalog> {
             university,
             ["match_name"],
         ),
-        readAll<{ term: Term; course: string; section: string; starts_at: string }>(
+        readAll<{
+            term: Term;
+            course: string;
+            section: string;
+            starts_at: string;
+            ends_at: string | null;
+            location: string | null;
+        }>(
             db,
             "exam_schedule",
-            "term, course, section, starts_at",
+            "term, course, section, starts_at, ends_at, location",
             university,
             ["term", "course", "section"],
         ),
@@ -427,7 +434,12 @@ async function loadCatalog(university: string): Promise<Catalog> {
     const exams: ExamSchedule = {};
     for (const row of examRows) {
         const byCourse = (exams[row.term] ??= {});
-        (byCourse[row.course] ??= []).push({ section: row.section, startsAt: row.starts_at });
+        (byCourse[row.course] ??= []).push({
+            section: row.section,
+            startsAt: row.starts_at,
+            endsAt: row.ends_at,
+            location: row.location,
+        });
     }
 
     return {

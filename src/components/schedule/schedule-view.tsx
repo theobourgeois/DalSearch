@@ -6,6 +6,7 @@ import { CaretDownIcon, DotsThreeIcon, ExportIcon, PlusIcon } from "@phosphor-ic
 import { toast } from "sonner";
 import { CalendarTabs, type CalendarView } from "@/components/calendar/calendar-tabs";
 import { useCurrentTerm, useTerms } from "@/components/current-term";
+import { useCourseIndex } from "@/components/search/course-index";
 import { PageActions, PageHeader } from "@/components/layout/page";
 import { useSearchDialog } from "@/components/search/search-dialog";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ import { exportFormatLabels, exportFormats, exportSchedule, type ExportFormat } 
 import { formatTimeRange } from "@/lib/time";
 import { plural } from "@/lib/utils";
 import { useScheduleStore } from "@/store/schedule-store";
+import { CalendarSync } from "./calendar-sync";
 import { ConflictNotice } from "./conflict-notice";
 import { ScheduleAside } from "./schedule-aside";
 import { useHref, useUniversity } from "@/components/university";
@@ -62,7 +64,9 @@ function TermSwitcher({ term }: { term: Term }) {
 export function ScheduleView({ exams }: { exams: ExamSchedule }) {
     const pagePath = useHref();
     const { label: termLabel, terms } = useTerms();
-    const { timezone, creditLabel } = useUniversity();
+    const university = useUniversity();
+    const { creditLabel } = university;
+    const { byCode } = useCourseIndex();
     const schedule = useTermSchedule();
     const { term, sessions, codes, colors, conflicts, credits, ready } = schedule;
     const currentTerm = useCurrentTerm();
@@ -91,7 +95,14 @@ export function ScheduleView({ exams }: { exams: ExamSchedule }) {
                 setView("week");
                 await nextFrame();
             }
-            await exportSchedule(format, calendarRef.current, sessions, terms, timezone);
+            await exportSchedule(format, calendarRef.current, {
+                university,
+                sessions,
+                terms,
+                exams,
+                titleOf: (code) => byCode.get(code)?.title,
+                origin: window.location.origin,
+            });
         } catch {
             toast("Couldn't export your schedule. Try another format.");
         }
@@ -108,43 +119,46 @@ export function ScheduleView({ exams }: { exams: ExamSchedule }) {
             />
             <PageActions
                 trailing={
-                    codes.length > 0 && (
-                        <>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" aria-label="Export schedule">
-                                        <ExportIcon />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuLabel>Export as</DropdownMenuLabel>
-                                    {exportFormats.map((format) => (
-                                        <DropdownMenuItem key={format} onSelect={() => exportAs(format)}>
-                                            {exportFormatLabels[format]}
+                    <>
+                        <CalendarSync />
+                        {codes.length > 0 && (
+                            <>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" aria-label="Export schedule">
+                                            <ExportIcon />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuLabel>Export as</DropdownMenuLabel>
+                                        {exportFormats.map((format) => (
+                                            <DropdownMenuItem key={format} onSelect={() => exportAs(format)}>
+                                                {exportFormatLabels[format]}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" aria-label="More">
+                                            <DotsThreeIcon />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem
+                                            className="text-danger"
+                                            onSelect={() =>
+                                                window.confirm(`Remove every course from ${termLabel(term)}?`) &&
+                                                clearTerm(term)
+                                            }
+                                        >
+                                            Clear {termLabel(term)}
                                         </DropdownMenuItem>
-                                    ))}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon" aria-label="More">
-                                        <DotsThreeIcon />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem
-                                        className="text-danger"
-                                        onSelect={() =>
-                                            window.confirm(`Remove every course from ${termLabel(term)}?`) &&
-                                            clearTerm(term)
-                                        }
-                                    >
-                                        Clear {termLabel(term)}
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </>
-                    )
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </>
+                        )}
+                    </>
                 }
             >
                 <Button variant="primary" size="lg" onClick={openSearch}>

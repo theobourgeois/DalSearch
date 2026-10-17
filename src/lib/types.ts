@@ -137,4 +137,7 @@ export type ExamData = {
     section: string;
     /** ISO timestamp. */
     startsAt: string;
+    /** Missing where the exam schedule only gives a start. */
+    endsAt?: string | null;
+    location?: string | null;
 };
