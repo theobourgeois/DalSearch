@@ -5,8 +5,10 @@ export type Term = string;
 
 export const SITE_NAME = "Termly";
 
-/** Where the site is served; the termly.ca domain isn't set up yet. */
-export const SITE_URL = "https://dalsearch.com";
+export const SITE_URL = "https://termly.ca";
+
+/** The site's old addresses; every page on them redirects to its place on SITE_URL. */
+export const OLD_HOSTS = ["dalsearch.com", "www.dalsearch.com"];
 
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 

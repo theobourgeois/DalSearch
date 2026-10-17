@@ -47,7 +47,7 @@ from supabase_rest import Table, load_env
 
 MODEL = "gpt-6-luna"
 UNIVERSITY_NAMES = {"dal": "Dalhousie University", "msvu": "Mount Saint Vincent University"}
-USER_AGENT = "Mozilla/5.0 (compatible; DalSearch syllabus indexer; +https://dalsearch.com)"
+USER_AGENT = "Mozilla/5.0 (compatible; Termly syllabus indexer; +https://termly.ca)"
 CDX_URL = "http://web.archive.org/cdx/search/cdx"
 MAX_TEXT = 120_000
 logging.getLogger("pypdf").setLevel(logging.ERROR)  # it warns on most Dal PDFs
