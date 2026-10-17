@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_NAME } from "@/lib/constants";
 import { Page, PageActions, PageHeader, SectionHeader } from "@/components/layout/page";
 import { FreeRoomList } from "@/components/rooms/room-links";
 import { RoomSchedule } from "@/components/rooms/room-schedule";
@@ -9,7 +10,7 @@ import { campusNow } from "@/lib/time";
 import { getUniversity, universityPath } from "@/lib/university";
 
 export const metadata: Metadata = {
-    title: "Rooms - DalSearch",
+    title: `Rooms - ${SITE_NAME}`,
     description: "See when any room on campus is booked, or find one that's free right now.",
 };
 

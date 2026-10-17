@@ -1,4 +1,5 @@
 import { formatCourseCode, sessionName } from "./schedule";
+import { SITE_NAME } from "@/lib/constants";
 import type { TermInfo } from "./terms";
 import { isTimed, type TimedSession } from "./time";
 import type { ClassSession, Day } from "./types";
@@ -60,7 +61,7 @@ function toIcs(sessions: ClassSession[], terms: TermInfo[], timezone: string): s
     return [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
-        "PRODID:-//DalSearch//Schedule Export//EN",
+        `PRODID:-//${SITE_NAME}//Schedule Export//EN`,
         ...events,
         "END:VCALENDAR",
     ].join("\n");
@@ -78,7 +79,10 @@ export async function exportSchedule(
     timezone: string,
 ) {
     if (format === "ics") {
-        download(`data:text/calendar;charset=utf-8,${encodeURIComponent(toIcs(sessions, terms, timezone))}`, "schedule.ics");
+        download(
+            `data:text/calendar;charset=utf-8,${encodeURIComponent(toIcs(sessions, terms, timezone))}`,
+            "schedule.ics",
+        );
         return;
     }
     if (!element) return;

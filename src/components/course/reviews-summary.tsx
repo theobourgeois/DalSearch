@@ -18,7 +18,7 @@ function LatestReview({ text, caption }: { text: string; caption: string }) {
 }
 
 /**
- * "What students say" on the Overview tab: DalSearch reviews when there are some, otherwise what
+ * "What students say" on the Overview tab: the site's own reviews when there are some, otherwise what
  * students said on RateMyProfessors.
  */
 export function ReviewsSummary() {

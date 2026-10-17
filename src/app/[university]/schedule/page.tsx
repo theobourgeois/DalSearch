@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { SITE_NAME } from "@/lib/constants";
 import { Page } from "@/components/layout/page";
 import { ScheduleView } from "@/components/schedule/schedule-view";
 import { getExamSchedule } from "@/lib/data";
 
 export const metadata: Metadata = {
-    title: "Your schedule - DalSearch",
+    title: `Your schedule - ${SITE_NAME}`,
     description: "Plan your timetable: see your week, catch clashes and export your schedule.",
 };
 

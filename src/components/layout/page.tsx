@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CaretRightIcon } from "@phosphor-icons/react/dist/ssr";
-import { links } from "@/lib/constants";
+import { links, SITE_NAME } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { UniversityName } from "./university-name";
 
@@ -36,7 +36,7 @@ function PageFooter() {
     return (
         <footer className="mt-14 flex flex-wrap gap-x-4 gap-y-2 border-t border-line pt-5 text-[13px] text-fg-subtle">
             <span>
-                DalSearch is not affiliated with <UniversityName />. Made by{" "}
+                {SITE_NAME} is not affiliated with <UniversityName />. Made by{" "}
                 <a href={links.theo} className={link}>
                     Théo Bourgeois
                 </a>{" "}

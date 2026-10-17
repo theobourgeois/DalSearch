@@ -11,6 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUniversity } from "@/components/university";
+import { UniversityLogo } from "./university-logo";
 import { splitUniversityPath, universities, universityPath } from "@/lib/university";
 
 /** Pages every university has; anything else (a course, a room, an account page) opens the other's home. */
@@ -34,8 +35,9 @@ export function UniversitySwitcher({ onNavigate }: { onNavigate?: () => void }) 
             <DropdownMenuTrigger asChild>
                 <button
                     type="button"
-                    className="mx-2 mt-3 flex max-w-full items-center gap-1 self-start rounded-full text-[13px] font-bold text-fg-subtle transition-colors hover:text-fg-muted"
+                    className="mx-2 mt-3 flex max-w-full items-center gap-2 self-start rounded-full text-[13px] font-bold text-fg-muted transition-colors hover:text-fg"
                 >
+                    <UniversityLogo university={current} />
                     <span className="truncate">{current.name}</span>
                     <CaretUpDownIcon className="size-3.5 shrink-0" />
                 </button>
@@ -46,7 +48,8 @@ export function UniversitySwitcher({ onNavigate }: { onNavigate?: () => void }) 
                     {[...universities]
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map((university) => (
-                            <DropdownMenuRadioItem key={university.id} value={university.id}>
+                            <DropdownMenuRadioItem key={university.id} value={university.id} className="gap-2.5">
+                                <UniversityLogo university={university} />
                                 {university.name}
                             </DropdownMenuRadioItem>
                         ))}

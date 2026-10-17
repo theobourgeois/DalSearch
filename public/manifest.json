@@ -1,7 +1,7 @@
 {
-  "name": "DalSearch",
-  "short_name": "DalSearch",
-  "description": "DalSearch is a search engine for Dalhousie University students.",
+  "name": "CourseSearch",
+  "short_name": "CourseSearch",
+  "description": "Search courses, compare instructors and plan your timetable.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

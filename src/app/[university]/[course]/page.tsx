@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_NAME } from "@/lib/constants";
 import { notFound } from "next/navigation";
 import { CourseActions } from "@/components/course/course-actions";
 import { CourseProvider } from "@/components/course/course-context";
@@ -34,20 +35,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { university, course: code } = await params;
     const course = await getCourse(university, code);
     const name = getUniversity(university)?.name ?? "";
-    if (!course) return { title: "Course not found - DalSearch" };
+    if (!course) return { title: `Course not found - ${SITE_NAME}` };
 
     return {
         title: `${formatCourseCode(courseKey(course))} - ${course.title} - ${name}`,
         description: course.description,
-        keywords: [
-            course.subjectCode,
-            course.courseCode,
-            course.title,
-            ...course.prerequisites,
-            name,
-            "dalsearch",
-            "Halifax",
-        ],
+        keywords: [course.subjectCode, course.courseCode, course.title, ...course.prerequisites, name, SITE_NAME],
     };
 }
 
@@ -76,14 +69,16 @@ export default async function CoursePage({ params }: Props) {
         "@type": "Course",
         name: `${formatCourseCode(code)} ${course.title}`,
         description,
-        provider: { "@type": "Organization", name: "DalSearch", url: "https://dalsearch.com" },
+        provider: { "@type": "Organization", name: SITE_NAME, url: "https://dalsearch.com" },
     };
 
     return (
         <Page
             breadcrumbs={[
                 { label: "Explore", href: universityPath(university, "/explore") },
-                ...(subject ? [{ label: subject.name, href: universityPath(university, `/explore?subject=${subject.code}`) }] : []),
+                ...(subject
+                    ? [{ label: subject.name, href: universityPath(university, `/explore?subject=${subject.code}`) }]
+                    : []),
                 { label: formatCourseCode(code) },
             ]}
         >

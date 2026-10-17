@@ -3,6 +3,9 @@
 /** A term code as the university writes it, e.g. Dal's "202710" for Fall 2026. Never compare or sort codes. */
 export type Term = string;
 
+/** The site's name. A placeholder until there's a real one, so it's only written here. */
+export const SITE_NAME = "CourseSearch";
+
 export const days = ["M", "T", "W", "R", "F", "S"] as const;
 
 export const weekdays = ["M", "T", "W", "R", "F"] as const;

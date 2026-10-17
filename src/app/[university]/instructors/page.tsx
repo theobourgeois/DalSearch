@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { SITE_NAME } from "@/lib/constants";
 import { InstructorsView } from "@/components/instructors/instructors-view";
 import { Page, PageHeader } from "@/components/layout/page";
 import { formatNumber } from "@/lib/utils";
 import { getCurrentTerm, getInstructorList, getSubjects } from "@/lib/data";
 
 export const metadata: Metadata = {
-    title: "Instructors - DalSearch",
+    title: `Instructors - ${SITE_NAME}`,
     description: "Compare instructors by RateMyProfessors rating, difficulty and the courses they teach.",
 };
 

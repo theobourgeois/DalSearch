@@ -15,6 +15,12 @@ export type University = {
     timetableUrl: string;
     /** Shown in email fields: "NetID@dal.ca". */
     emailExample: string;
+    /** Its primary brand colour, the accent on its pages (see accent.ts). */
+    accent: string;
+    /** Its crest or symbol, under public/universities. */
+    logo: string;
+    /** A version of the logo for the dark theme, when the usual one is too dark to see. */
+    logoDark?: string;
 };
 
 export const universities: University[] = [
@@ -26,6 +32,9 @@ export const universities: University[] = [
         creditLabel: "Credit hours",
         timetableUrl: "https://self-service.dal.ca/BannerExtensibility/customPage/page/dal.stuweb_academicTimetable",
         emailExample: "NetID@dal.ca",
+        accent: "#FFD400",
+        logo: "/universities/dal.svg",
+        logoDark: "/universities/dal-dark.svg",
     },
     {
         id: "msvu",
@@ -35,6 +44,8 @@ export const universities: University[] = [
         creditLabel: "Units",
         timetableUrl: "https://colssprod.msvu.ca/student/courses/",
         emailExample: "name@msvu.ca",
+        accent: "#00529B",
+        logo: "/universities/msvu.svg",
     },
     {
         id: "smu",
@@ -44,6 +55,9 @@ export const universities: University[] = [
         creditLabel: "Credit hours",
         timetableUrl: "https://reg-prod.ec.smu.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "name@smu.ca",
+        accent: "#612141",
+        logo: "/universities/smu.svg",
+        logoDark: "/universities/smu-dark.svg",
     },
     {
         id: "mun",
@@ -53,6 +67,8 @@ export const universities: University[] = [
         creditLabel: "Credit hours",
         timetableUrl: "https://self-service.mun.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "name@mun.ca",
+        accent: "#862633",
+        logo: "/universities/mun.svg",
     },
     {
         id: "uvic",
@@ -62,6 +78,9 @@ export const universities: University[] = [
         creditLabel: "Units",
         timetableUrl: "https://banner.uvic.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "name@uvic.ca",
+        accent: "#005493",
+        logo: "/universities/uvic.svg",
+        logoDark: "/universities/uvic-dark.svg",
     },
     {
         id: "usask",
@@ -71,6 +90,8 @@ export const universities: University[] = [
         creditLabel: "Credit units",
         timetableUrl: "https://banner.usask.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "abc123@usask.ca",
+        accent: "#0B6A41",
+        logo: "/universities/usask.svg",
     },
     {
         id: "kpu",
@@ -80,6 +101,9 @@ export const universities: University[] = [
         creditLabel: "Credits",
         timetableUrl: "https://reg-prod.ec.kpu.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "name@student.kpu.ca",
+        accent: "#8C2332",
+        logo: "/universities/kpu.svg",
+        logoDark: "/universities/kpu-dark.svg",
     },
     {
         id: "tru",
@@ -89,6 +113,9 @@ export const universities: University[] = [
         creditLabel: "Credits",
         timetableUrl: "https://reg-prod.ec.tru.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "T00123456@mytru.ca",
+        accent: "#003E51",
+        logo: "/universities/tru.svg",
+        logoDark: "/universities/tru-dark.svg",
     },
     {
         id: "unbc",
@@ -98,6 +125,9 @@ export const universities: University[] = [
         creditLabel: "Credit hours",
         timetableUrl: "https://selfservice.unbc.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "name@unbc.ca",
+        accent: "#035642",
+        logo: "/universities/unbc.svg",
+        logoDark: "/universities/unbc-dark.svg",
     },
     {
         id: "yukonu",
@@ -107,6 +137,9 @@ export const universities: University[] = [
         creditLabel: "Credits",
         timetableUrl: "https://banner.yukonu.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "name@yukonu.ca",
+        accent: "#503B80",
+        logo: "/universities/yukonu.svg",
+        logoDark: "/universities/yukonu-dark.svg",
     },
     {
         id: "stfx",
@@ -116,6 +149,9 @@ export const universities: University[] = [
         creditLabel: "Credits",
         timetableUrl: "https://bannerss.stfx.ca/StudentRegistrationSsb/ssb/term/termSelection?mode=search",
         emailExample: "x2026abc@stfx.ca",
+        // StFX Blue (#001B40) is nearly black, so its lighter secondary blue.
+        accent: "#425F8E",
+        logo: "/universities/stfx.svg",
     },
     {
         id: "upei",
@@ -125,6 +161,8 @@ export const universities: University[] = [
         creditLabel: "Credits",
         timetableUrl: "https://selfservice.upei.ca/Student/Courses",
         emailExample: "name@upei.ca",
+        accent: "#8C2004",
+        logo: "/universities/upei.svg",
     },
     {
         id: "laurentian",
@@ -134,6 +172,8 @@ export const universities: University[] = [
         creditLabel: "Credits",
         timetableUrl: "https://selfservice.laurentian.ca/Student/Courses",
         emailExample: "name@laurentian.ca",
+        accent: "#003E7E",
+        logo: "/universities/laurentian.svg",
     },
 ];
 

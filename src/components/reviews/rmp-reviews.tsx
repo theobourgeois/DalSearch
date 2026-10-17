@@ -1,6 +1,7 @@
 "use client";
 
 import { useTerms } from "@/components/current-term";
+import { SITE_NAME } from "@/lib/constants";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { EyeSlashIcon, FlagIcon } from "@phosphor-icons/react";
@@ -54,7 +55,7 @@ async function postReview(url: string, review: RmpReview) {
 
 /** Hides a RateMyProfessors review for everyone; moderators only. */
 export async function hideRmpReview(review: RmpReview): Promise<boolean> {
-    if (!window.confirm("Hide this review on DalSearch for everyone?")) return false;
+    if (!window.confirm(`Hide this review on ${SITE_NAME} for everyone?`)) return false;
     const ok = await postReview("/api/reviews/hide-external", review);
     toast(ok ? "Review hidden" : "Couldn't hide this review. Try again later.");
     return ok;
@@ -85,7 +86,7 @@ function RmpReviewActions({ review, signedIn, isModerator, onHidden }: RmpReview
     };
 
     return isModerator ? (
-        <SimpleTooltip label="Hide on DalSearch">
+        <SimpleTooltip label={`Hide on ${SITE_NAME}`}>
             <Button
                 variant="ghost"
                 size="icon-sm"
@@ -161,7 +162,7 @@ export function RmpReviewItem({ review, context, actions }: RmpReviewItemProps) 
     );
 }
 
-/** RateMyProfessors reviews that mention this course, below the DalSearch reviews on the Reviews tab. */
+/** RateMyProfessors reviews that mention this course, below the site's own reviews on the Reviews tab. */
 export function RmpReviews() {
     const { label: termLabel } = useTerms();
     const { rmpReviews: loaded } = useReviews();
@@ -214,8 +215,8 @@ export function RmpReviews() {
             </SectionHeader>
             <p className="mt-1.5 max-w-[42rem] text-[13px] text-fg-subtle">
                 {rmpReviews.length} {rmpReviews.length === 1 ? "review" : "reviews"}
-                {oldest === newest ? ` from ${newest}` : ` from ${oldest} to ${newest}`} that name this course.
-                Quality rates the professor, not the course.
+                {oldest === newest ? ` from ${newest}` : ` from ${oldest} to ${newest}`} that name this course. Quality
+                rates the professor, not the course.
             </p>
             <div className="mt-5">
                 <RmpScoresSummary reviews={shown} />
