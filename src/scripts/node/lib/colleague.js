@@ -166,10 +166,18 @@ function classify(method) {
     return { type: "Lec", kind: "lecture" };
 }
 
-/** "Norris, D" -> "Norris D.", the same shape as Dal's timetable, so RateMyProfessors names match alike. */
+/**
+ * "Norris, D" -> "Norris D.", the same shape as Dal's timetable, so RateMyProfessors names match alike.
+ * Some universities (CBU) list full names instead: "Mr. Kevin F. Deveaux" -> "Kevin Deveaux".
+ */
 function instructorName(name) {
     const [last, first] = name.split(",").map((part) => part.trim());
-    if (!first) return last;
+    if (!first) {
+        return last
+            .replace(/^(dr|prof|professor|mr|mrs|ms|mx)\.?\s+/i, "")
+            .replace(/^(\S+)(\s+[A-Z]\.)+\s+(?=\S)/, "$1 ")
+            .trim();
+    }
     return `${last} ${first.replace(/\.$/, "")}.`;
 }
 
@@ -192,6 +200,7 @@ function toMeeting(meeting) {
         const method = (meeting.InstructionalMethodDisplay ?? "")
             .toLowerCase()
             .replace(/\bonline\b/, "")
+            .replace(/[()]/g, "")
             .trim();
         location = method ? `Online (${method})` : "Online";
     } else if (building) {
@@ -380,7 +389,8 @@ export function colleague({ baseUrl, describeTerm: nameTerm = describeTerm }) {
 
         return {
             terms,
-            subjects,
+            // Codes with punctuation ("AN/S" at CBU) can't be stored; they're catalog subjects with no courses.
+            subjects: subjects.filter((subject) => /^[A-Z0-9]{1,10}$/.test(subject.code)),
             courses: [...courses.values()],
             sections: allSections,
             exams: exams.filter((exam) => terms.some((term) => term.code === exam.term)),

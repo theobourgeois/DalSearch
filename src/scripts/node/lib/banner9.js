@@ -27,7 +27,11 @@ const codePart = (text) =>
         .toUpperCase();
 
 /** Text a timetable puts where nothing is set ("None specified", "TBA"). */
-const isBlank = (text) => !text || /^(none specified|tba|tbd|to be announced)$/i.test(text);
+const isBlank = (text) => !text || /^(none|none specified|tba|tbd|to be announced)$/i.test(text);
+/** Buildings that stand for "somewhere off campus" ("Off Campus", "Off-Campus Locations"), not a room. */
+const isOffCampus = (building) => /^off[- ]?campus/i.test(building);
+/** How an online meeting is described: its delivery method when that says how ("Online Synchronous"). */
+const onlineLabel = (method) => (/online|remote|virtual|distance|web|sync|stream/i.test(method) ? method : "Online");
 
 /** A Banner session: the cookies its class search keeps the chosen term in. */
 async function openSession(base) {
@@ -349,10 +353,12 @@ export function banner9({
                             start_time: timed ? start : null,
                             end_time: timed ? end : null,
                             location: online
-                                ? decode(section.instructionalMethodDescription) || "Online"
-                                : [building, room].filter(Boolean).join(" ") || null,
+                                ? onlineLabel(decode(section.instructionalMethodDescription))
+                                : isOffCampus(building)
+                                  ? "Off campus"
+                                  : [building, room].filter(Boolean).join(" ") || null,
                             rooms:
-                                online || !building
+                                online || !building || isOffCampus(building)
                                     ? []
                                     : [
                                           {

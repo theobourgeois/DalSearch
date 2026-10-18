@@ -233,8 +233,8 @@ def clean_comment(raw: str | None) -> str | None:
     return None if not text or text.lower() == "no comments" else text
 
 
-# Universities whose timetables list "Sarhan A."; the rest (the Banner 9 ones) list full names ("Paul Muir").
-LAST_NAME_INITIAL = {"dal", "msvu", "upei", "laurentian"}
+# Universities whose timetables list "Sarhan A."; the rest (Banner 9, and Colleague at CBU) list full names ("Paul Muir").
+LAST_NAME_INITIAL = {"dal", "msvu", "upei", "laurentian", "guelph"}
 
 
 def match_name(teacher: dict, university: str) -> str:
