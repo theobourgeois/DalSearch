@@ -389,7 +389,8 @@ export function colleague({ baseUrl, describeTerm: nameTerm = describeTerm }) {
 
         return {
             terms,
-            subjects,
+            // Codes with punctuation ("AN/S" at CBU) can't be stored; they're catalog subjects with no courses.
+            subjects: subjects.filter((subject) => /^[A-Z0-9]{1,10}$/.test(subject.code)),
             courses: [...courses.values()],
             sections: allSections,
             exams: exams.filter((exam) => terms.some((term) => term.code === exam.term)),
