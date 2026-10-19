@@ -13,10 +13,15 @@
  * Every run that isn't a dry run is recorded in refresh_runs, with what lib/health.js found. A dry
  * run only needs the publishable key, so it can be run by anyone (or any agent) without write access.
  */
+import { pathToFileURL } from "node:url";
 import { checkHealth, measure } from "./lib/health.js";
-import { chunk, connect, log, zonedToUtc } from "./lib/import.js";
+import { connect, log, zonedToUtc } from "./lib/import.js";
 
 const SUBJECTS_PER_IMPORT = 20;
+// Limit the work per API call to reduce statement timeouts when universities import together.
+// Keep each term/subject whole: splitting it would delete sections saved by earlier pieces.
+// A single subject within one term can therefore exceed this target.
+const SECTIONS_PER_IMPORT = 400;
 // How many courses a dry run fetches details for.
 const DETAILS_SAMPLE = 20;
 
@@ -59,7 +64,7 @@ async function check(db, university, metrics) {
     return result;
 }
 
-async function importTimetable(db, university, timetable) {
+export async function importTimetable(db, university, timetable) {
     // Saving nothing would delete every section, so not even --force does it.
     if (timetable.sections.length === 0) throw new Error("Scraped no sections, not saving");
     const listedCodes = timetable.terms.map((term) => term.code);
@@ -76,26 +81,55 @@ async function importTimetable(db, university, timetable) {
     if (failed.size) log(`Keeping stored sections for subjects that failed: ${[...failed].join(", ")}`);
 
     const totals = { sections: 0, deleted: 0 };
-    for (const codes of chunk(subjectCodes, SUBJECTS_PER_IMPORT)) {
+    for (const { term, codes } of importChunks(subjectCodes, timetable)) {
         const inChunk = new Set(codes);
         const courses = timetable.courses.filter((course) => inChunk.has(course.subject_code));
         const courseCodes = new Set(courses.map((course) => course.code));
         const result = await db.rpc("import_timetable", {
             p_university: university,
             p_payload: {
-                scope: listedCodes.flatMap((term) => codes.map((subject) => ({ term, subject }))),
+                scope: codes.map((subject) => ({ term, subject })),
                 subjects: codes.map((code) => scraped.get(code)).filter(Boolean),
                 courses,
-                sections: timetable.sections.filter((section) => courseCodes.has(section.course)),
+                sections: timetable.sections.filter((section) => section.term === term && courseCodes.has(section.course)),
             },
         });
         totals.sections += result.sections;
         totals.deleted += result.deleted;
-        log(`Saved ${codes[0]}-${codes.at(-1)}: ${result.sections} sections, ${result.deleted} removed`);
+        log(`Saved ${term} ${codes[0]}-${codes.at(-1)}: ${result.sections} sections, ${result.deleted} removed`);
     }
 
     await db.rpc("list_terms", { p_university: university, p_codes: listedCodes });
     log(`Timetable saved: ${totals.sections} sections, ${totals.deleted} removed; listed ${listedCodes.join(", ")}`);
+}
+
+/** Groups whole term/subject scopes, targeting SECTIONS_PER_IMPORT sections per import. */
+function importChunks(subjectCodes, timetable) {
+    const subjectOf = new Map(timetable.courses.map((course) => [course.code, course.subject_code]));
+    const termCounts = new Map(timetable.terms.map(({ code }) => [code, new Map()]));
+    for (const section of timetable.sections) {
+        const subject = subjectOf.get(section.course);
+        const counts = termCounts.get(section.term);
+        if (counts) counts.set(subject, (counts.get(subject) ?? 0) + 1);
+    }
+
+    const chunks = [];
+    for (const [term, counts] of termCounts) {
+        let current = [];
+        let sections = 0;
+        for (const code of subjectCodes) {
+            const count = counts.get(code) ?? 0;
+            if (current.length && (current.length === SUBJECTS_PER_IMPORT || sections + count > SECTIONS_PER_IMPORT)) {
+                chunks.push({ term, codes: current });
+                current = [];
+                sections = 0;
+            }
+            current.push(code);
+            sections += count;
+        }
+        if (current.length) chunks.push({ term, codes: current });
+    }
+    return chunks;
 }
 
 /** Replaces each scraped term's final exams, converting their campus times to UTC. */
@@ -113,7 +147,7 @@ async function importExams(db, university, timetable) {
 }
 
 /** @returns {Promise<string[]>} Warnings about what came back. */
-async function importDetails(db, university, scraper, timetable, mode) {
+export async function importDetails(db, university, scraper, timetable, mode) {
     if (mode === "none") return [];
     if (!scraper.scrapeCourseDetails) {
         log("This university's scraper doesn't read course details");
@@ -131,7 +165,9 @@ async function importDetails(db, university, scraper, timetable, mode) {
         saved += await db.rpc("import_course_details", { p_university: university, p_courses: batch });
     }
     log(`Saved details for ${saved} courses`);
-    return courses.length >= DETAILS_SAMPLE && saved === 0
+    // With "missing", the courses fetched are the ones that had no description last time, which for
+    // most of them is because the calendar has none, so finding none again says nothing.
+    return mode === "all" && courses.length >= DETAILS_SAMPLE && saved === 0
         ? [`Fetched details for ${courses.length} courses and none had a description`]
         : [];
 }
@@ -229,7 +265,9 @@ async function main() {
     }
 }
 
-main().catch((error) => {
-    console.error(error);
-    process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+    main().catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });
+}
