@@ -83,6 +83,38 @@ import { fileURLToPath } from "url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../..");
 const PAGE_SIZE = 1000;
+/** How long to wait before each new try of an import that a busy database cancelled. */
+const RETRY_DELAYS_MS = [15_000, 45_000, 90_000];
+/** Postgres codes for a statement cancelled by statement_timeout or lock_timeout. */
+const BUSY_CODES = new Set(["57014", "55P03"]);
+const BUSY_STATUSES = new Set([502, 503, 504]);
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Whether a request failed because the database or the API was busy, rather than because of what
+ * was sent. A network error (fetch's TypeError) counts too.
+ */
+export function isBusy(error) {
+    if (error instanceof TypeError) return true;
+    return BUSY_CODES.has(error.code) || BUSY_STATUSES.has(error.status);
+}
+
+/**
+ * Runs `attempt` and tries again after each of `delays` while it fails with isBusy. Only for calls
+ * that are safe to repeat: every import_* function is one transaction of upserts, so a cancelled
+ * call saved nothing and the next try starts clean.
+ */
+export async function retryBusy(label, attempt, { delays = RETRY_DELAYS_MS, sleep = wait } = {}) {
+    for (let tries = 0; ; tries++) {
+        try {
+            return await attempt();
+        } catch (error) {
+            if (tries >= delays.length || !isBusy(error)) throw error;
+            log(`${label} failed (${error.message}); trying again in ${delays[tries] / 1000}s`);
+            await sleep(delays[tries]);
+        }
+    }
+}
 
 function loadEnv() {
     const env = {};
@@ -117,17 +149,25 @@ export function connect({ readOnly = false } = {}) {
     async function request(pathname, init = {}) {
         const response = await fetch(`${base}/${pathname}`, { ...init, headers: { ...headers, ...init.headers } });
         if (!response.ok) {
-            throw new Error(`${init.method ?? "GET"} ${pathname}: HTTP ${response.status} ${await response.text()}`);
+            const body = await response.text();
+            const error = new Error(`${init.method ?? "GET"} ${pathname}: HTTP ${response.status} ${body}`);
+            error.status = response.status;
+            try {
+                error.code = JSON.parse(body).code;
+            } catch {}
+            throw error;
         }
         return response;
     }
 
     return {
-        /** Calls one of the import_* functions. */
+        /** Calls one of the import_* functions, trying again when the database is too busy. */
         async rpc(name, args) {
-            const response = await request(`rpc/${name}`, { method: "POST", body: JSON.stringify(args) });
-            const text = await response.text();
-            return text ? JSON.parse(text) : null;
+            return retryBusy(`rpc/${name}`, async () => {
+                const response = await request(`rpc/${name}`, { method: "POST", body: JSON.stringify(args) });
+                const text = await response.text();
+                return text ? JSON.parse(text) : null;
+            });
         },
 
         /**
