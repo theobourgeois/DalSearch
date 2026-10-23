@@ -3,7 +3,7 @@
  * ../lib/banner9.js), and descriptions and prerequisites from its CourseLeaf catalog.
  */
 import { banner9, decode } from "../lib/banner9.js";
-import { log } from "../lib/import.js";
+import { httpError, log } from "../lib/import.js";
 
 const CATALOG = "https://smu-ca-public.courseleaf.com/course-search/api/?page=fose";
 const CONCURRENCY = 4;
@@ -73,7 +73,7 @@ async function catalog(route, body) {
                 headers: { "content-type": "application/json", "user-agent": "Mozilla/5.0" },
                 body: JSON.stringify(body),
             });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            if (!response.ok) throw httpError(response);
             return await response.json();
         } catch (error) {
             if (attempt >= 3) throw error;

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { retryBusy } from "./import.js";
+import { httpError, isUnreachable, retryBusy } from "./import.js";
 
 const busy = () => Object.assign(new Error("canceling statement due to statement timeout"), { status: 500, code: "57014" });
 
@@ -32,4 +32,15 @@ test("does not repeat a call the database refused for what was sent", async () =
         /Duplicate sections/,
     );
     assert.equal(calls, 1);
+});
+
+test("tells a university's server being down from a broken scraper", () => {
+    const timeout = new TypeError("fetch failed", { cause: Object.assign(new Error("Connect Timeout Error"), { code: "UND_ERR_CONNECT_TIMEOUT" }) });
+    assert.ok(isUnreachable(new Error("classSearch/getTerms: fetch failed", { cause: timeout })));
+    assert.ok(isUnreachable(new Error("Course search page: HTTP 503", { cause: httpError({ status: 503 }) })));
+
+    assert.ok(!isUnreachable(new Error("Course search page: HTTP 404", { cause: httpError({ status: 404 }) })));
+    assert.ok(!isUnreachable(new TypeError("Cannot read properties of undefined (reading 'code')")));
+    // Wrapped without its cause, the message alone isn't trusted.
+    assert.ok(!isUnreachable(new Error("classSearch/getTerms: fetch failed")));
 });
