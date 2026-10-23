@@ -87,7 +87,8 @@ const PAGE_SIZE = 1000;
 const RETRY_DELAYS_MS = [15_000, 45_000, 90_000];
 /** Postgres codes for a statement cancelled by statement_timeout or lock_timeout. */
 const BUSY_CODES = new Set(["57014", "55P03"]);
-const BUSY_STATUSES = new Set([502, 503, 504]);
+// What a proxy answers when the server behind it is down or too slow.
+const GATEWAY_STATUSES = new Set([502, 503, 504]);
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
@@ -96,7 +97,7 @@ const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  */
 export function isBusy(error) {
     if (error instanceof TypeError) return true;
-    return BUSY_CODES.has(error.code) || BUSY_STATUSES.has(error.status);
+    return BUSY_CODES.has(error.code) || GATEWAY_STATUSES.has(error.status);
 }
 
 /**
@@ -114,6 +115,25 @@ export async function retryBusy(label, attempt, { delays = RETRY_DELAYS_MS, slee
             await sleep(delays[tries]);
         }
     }
+}
+
+/** A response that wasn't ok, as an error that keeps its status for isUnreachable. */
+export function httpError(response) {
+    return Object.assign(new Error(`HTTP ${response.status}`), { status: response.status });
+}
+
+/**
+ * Whether a scrape failed because the university's server didn't answer (down, offline, its gateway
+ * giving up) rather than because the scraper is broken. Looks through the errors it was wrapped in,
+ * so scrapers should keep the original as `cause`.
+ */
+export function isUnreachable(error) {
+    for (let cause = error; cause; cause = cause.cause) {
+        // fetch's own error when it gets no response at all: refused, timed out, no such host.
+        if (cause instanceof TypeError && cause.message === "fetch failed") return true;
+        if (GATEWAY_STATUSES.has(cause.status)) return true;
+    }
+    return false;
 }
 
 function loadEnv() {

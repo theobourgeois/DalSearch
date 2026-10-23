@@ -3,7 +3,7 @@
  * descriptions and requisites from academiccalendar.dal.ca. See ../lib/import.js for what this returns.
  */
 import * as cheerio from "cheerio";
-import { log } from "../lib/import.js";
+import { httpError, log } from "../lib/import.js";
 
 const TIMETABLE = "https://self-service.dal.ca/BannerExtensibility/internalPb/virtualDomains";
 const HEADERS = {
@@ -42,7 +42,7 @@ async function fetchJson(url, attempts = 3) {
     for (let attempt = 1; ; attempt++) {
         try {
             const response = await fetch(url, { headers: HEADERS });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            if (!response.ok) throw httpError(response);
             return await response.json();
         } catch (error) {
             if (attempt >= attempts) throw error;
@@ -430,7 +430,7 @@ async function fetchCalendarPage(course, knownCodes, attempts = 3) {
     for (let attempt = 1; ; attempt++) {
         try {
             const response = await fetch(`${CALENDAR}${course.subject_code}+${course.number}`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            if (!response.ok) throw httpError(response);
             const details = parseCalendarPage(await response.text(), course.code, knownCodes);
             if (!details) throw new Error("no course on the page");
             return details;

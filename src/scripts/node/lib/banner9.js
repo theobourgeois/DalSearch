@@ -6,7 +6,7 @@
  * The search returns sections; meetings, instructors and final exams come from one request per section.
  */
 import { decodeHTML } from "entities";
-import { log } from "./import.js";
+import { httpError, log } from "./import.js";
 
 const USER_AGENT =
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36";
@@ -58,12 +58,12 @@ async function openSession(base) {
                     body: form ? new URLSearchParams(form).toString() : undefined,
                 });
                 keep(response);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                if (!response.ok) throw httpError(response);
                 const text = await response.text();
                 if (raw) return text;
                 return text ? JSON.parse(text) : null;
             } catch (error) {
-                if (attempt >= attempts) throw new Error(`${path.split("?")[0]}: ${error.message}`);
+                if (attempt >= attempts) throw new Error(`${path.split("?")[0]}: ${error.message}`, { cause: error });
                 await new Promise((resolve) => setTimeout(resolve, 2000 * attempt));
             }
         }

@@ -4,13 +4,25 @@
  * the search page hands out. Descriptions and requisites come with the search results. One
  * university's scraper configures this with its address; see universities/msvu.js.
  */
-import { log } from "./import.js";
+import { httpError, log } from "./import.js";
 
 const USER_AGENT =
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36";
 const PAGE_SIZE = 100;
 const CONCURRENCY = 4;
 const REQUEST_DELAY_MS = 150;
+
+/** Runs `attempt`, trying twice more if it fails; the error names `label`. */
+async function withRetries(label, attempt, attempts = 3) {
+    for (let tries = 1; ; tries++) {
+        try {
+            return await attempt();
+        } catch (error) {
+            if (tries >= attempts) throw new Error(`${label}: ${error.message}`, { cause: error });
+            await new Promise((resolve) => setTimeout(resolve, 2000 * tries));
+        }
+    }
+}
 
 /** A Self-Service session: the cookies and anti-forgery token every JSON request needs. */
 async function openSession(BASE) {
@@ -24,36 +36,33 @@ async function openSession(BASE) {
     };
     const cookieHeader = () => [...cookies].map(([name, value]) => `${name}=${value}`).join("; ");
 
-    const page = await fetch(`${BASE}/courses/`, { headers: { "user-agent": USER_AGENT } });
-    if (!page.ok) throw new Error(`Course search page: HTTP ${page.status}`);
+    const page = await withRetries("Course search page", async () => {
+        const response = await fetch(`${BASE}/courses/`, { headers: { "user-agent": USER_AGENT } });
+        if (!response.ok) throw httpError(response);
+        return response;
+    });
     keep(page);
     const token = (await page.text()).match(/name="__RequestVerificationToken" type="hidden" value="([^"]+)"/)?.[1];
     if (!token) throw new Error("No anti-forgery token on the course search page");
 
-    return async function request(path, body, attempts = 3) {
-        for (let attempt = 1; ; attempt++) {
-            try {
-                const response = await fetch(`${BASE}/${path}`, {
-                    method: body === undefined ? "GET" : "POST",
-                    headers: {
-                        "user-agent": USER_AGENT,
-                        "content-type": "application/json, charset=utf-8",
-                        "x-requested-with": "XMLHttpRequest",
-                        __RequestVerificationToken: token,
-                        cookie: cookieHeader(),
-                    },
-                    body: body === undefined ? undefined : JSON.stringify(body),
-                });
-                // Later responses can hand out a new anti-forgery cookie that no longer matches the page's
-                // token, so the cookies from the search page are kept as they are.
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                return await response.json();
-            } catch (error) {
-                if (attempt >= attempts) throw new Error(`${path}: ${error.message}`);
-                await new Promise((resolve) => setTimeout(resolve, 2000 * attempt));
-            }
-        }
-    };
+    return (path, body) =>
+        withRetries(path, async () => {
+            const response = await fetch(`${BASE}/${path}`, {
+                method: body === undefined ? "GET" : "POST",
+                headers: {
+                    "user-agent": USER_AGENT,
+                    "content-type": "application/json, charset=utf-8",
+                    "x-requested-with": "XMLHttpRequest",
+                    __RequestVerificationToken: token,
+                    cookie: cookieHeader(),
+                },
+                body: body === undefined ? undefined : JSON.stringify(body),
+            });
+            // Later responses can hand out a new anti-forgery cookie that no longer matches the page's
+            // token, so the cookies from the search page are kept as they are.
+            if (!response.ok) throw httpError(response);
+            return response.json();
+        });
 }
 
 function searchCriteria(term, subject, pageNumber) {

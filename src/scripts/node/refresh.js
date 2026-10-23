@@ -12,10 +12,14 @@
  *
  * Every run that isn't a dry run is recorded in refresh_runs, with what lib/health.js found. A dry
  * run only needs the publishable key, so it can be run by anyone (or any agent) without write access.
+ *
+ * When the university's server doesn't answer, the run is recorded as "unreachable" and exits
+ * successfully with a warning: the school is down, the scraper isn't broken. triage.js only reports
+ * it if it lasts.
  */
 import { pathToFileURL } from "node:url";
 import { checkHealth, measure } from "./lib/health.js";
-import { connect, log, zonedToUtc } from "./lib/import.js";
+import { connect, isUnreachable, log, zonedToUtc } from "./lib/import.js";
 
 const SUBJECTS_PER_IMPORT = 20;
 // Limit the work per API call to reduce statement timeouts when universities import together.
@@ -29,6 +33,14 @@ class HealthError extends Error {
     constructor(failures) {
         super(`Health checks failed, not saving: ${failures.join("; ")}`);
         this.problems = failures;
+    }
+}
+
+class UnreachableError extends Error {
+    constructor(error) {
+        const messages = [];
+        for (let cause = error; cause; cause = cause.cause) messages.push(cause.message);
+        super(`Couldn't reach the university's server, not saving: ${messages.join(": ")}`, { cause: error });
     }
 }
 
@@ -240,7 +252,9 @@ async function main() {
     const runId = await startRun(db, university);
     let metrics = null;
     try {
-        const timetable = await scraper.scrapeTimetable();
+        const timetable = await scraper.scrapeTimetable().catch((error) => {
+            throw isUnreachable(error) ? new UnreachableError(error) : error;
+        });
         metrics = measure(timetable);
         const { failures, warnings } = await check(db, university, metrics);
         if (failures.length && !options.force) throw new HealthError(failures);
@@ -255,10 +269,11 @@ async function main() {
         ];
         await finishRun(db, runId, { status: problems.length ? "warning" : "ok", problems, metrics });
     } catch (error) {
+        const expected = error instanceof HealthError || error instanceof UnreachableError;
         await finishRun(db, runId, {
-            status: "failed",
+            status: error instanceof UnreachableError ? "unreachable" : "failed",
             problems: error.problems ?? [],
-            error: (error instanceof HealthError ? error.message : String(error.stack ?? error)).slice(0, 4000),
+            error: (expected ? error.message : String(error.stack ?? error)).slice(0, 4000),
             metrics,
         });
         throw error;
@@ -267,6 +282,11 @@ async function main() {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
     main().catch((error) => {
+        if (error instanceof UnreachableError) {
+            // An annotation on the run in GitHub Actions, rather than a failed job.
+            console.log(`${process.env.GITHUB_ACTIONS ? "::warning::" : ""}${error.message}`);
+            return;
+        }
         console.error(error);
         process.exit(1);
     });
